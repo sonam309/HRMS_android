@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Login from './src/component/pages/Login';
+import Employee_Login from './src/component/pages/Employee_Login';
 const App = () => {
 
   return (
     <View style={styles.container}>
-      <Login />
+      {/* <Login /> */}
+      <Employee_Login/>
     </View>
   );
 }
