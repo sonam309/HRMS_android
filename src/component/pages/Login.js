@@ -28,15 +28,15 @@ const Login = () => {
         axios.post('http://192.168.1.169:7038/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
-            result[0] === "S"? Alert.alert("Congratulations","Succesfully logged in"):Alert.alert("Failure","Please enter correct credentials")
+            result[0] === "S" ? Alert.alert("Congratulations", "Succesfully logged in") : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
     return (
-        <View>
+        <View style={styles.container}>
 
             {/* Company Logo */}
-            <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 60, width: '100%', height: 120 }} />
+            <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 30, width: '100%', height: 120 }} />
 
             {/* user credentials */}
             <Text style={{ marginRight: 25, marginLeft: 25, marginBottom: 8, fontWeight: 'bold', color: 'grey' }}>Candidate Login</Text>
@@ -96,7 +96,12 @@ const Login = () => {
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        height: '100%',
+        width: '100%'
+    },
     loginOption: {
         marginLeft: 25,
         marginRight: 25,
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
     },
     bottomElement: {
         position: 'absolute',
-        bottom: -80,
+        bottom: 0,
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',

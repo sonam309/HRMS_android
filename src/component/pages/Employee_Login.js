@@ -32,10 +32,10 @@ const Employee_Login = () => {
         })
     }
     return (
-        <View>
+        <View style={styles.container}>
 
             {/* Company Logo */}
-            <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 60, width: '100%', height: 120 }} />
+            <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 30, width: '100%', height: 120 }} />
 
             {/* user credentials */}
             <Text style={{ marginRight: 25, marginLeft: 25, marginBottom: 8, fontWeight: 'bold', color: 'grey' }}>Employee Login</Text>
@@ -102,7 +102,12 @@ const Employee_Login = () => {
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        height: '100%',
+        width: '100%'
+      },
     loginOption: {
         marginLeft: 25,
         marginRight: 25,
@@ -184,7 +189,7 @@ const styles = StyleSheet.create({
     },
     bottomElement: {
         position: 'absolute',
-        bottom: -40,
+        bottom: 0,
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
