@@ -14,22 +14,19 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
 
-          <Stack.Screen name='Home' component={Entry_page} />
-          <Stack.Screen name='Employee' component={Employee_Login} />
-          <Stack.Screen name='Candidate' component={Login} />
+        <Stack.Screen name='Home' options={{
+          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
+        }} component={Entry_page} />
+        <Stack.Screen name='Employee' options={{
+          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
+        }} component={Employee_Login} />
+        <Stack.Screen name='Candidate' options={{
+          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
+        }} component={Login} />
 
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    height: '100%',
-    width: '100%'
-  }
-})
 
 export default App;
