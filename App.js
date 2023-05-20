@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import Login from './src/component/pages/Login';
 import Employee_Login from './src/component/pages/Employee_Login';
 import Entry_page from './src/component/pages/Entry_Page';
@@ -17,10 +16,10 @@ const App = () => {
         <Stack.Screen name='Home' options={{
           gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
         }} component={Entry_page} />
-        <Stack.Screen name='Employee' options={{
+        <Stack.Screen name='Employee' options={{ orientation: 'portrait',
           gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
         }} component={Employee_Login} />
-        <Stack.Screen name='Candidate' options={{
+        <Stack.Screen name='Candidate' options={{orientation: 'portrait',
           gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
         }} component={Login} />
 

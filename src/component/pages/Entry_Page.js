@@ -1,9 +1,28 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React,{useEffect} from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Entry_page = (props) => {
+    let page = null
+
+    
+    const setEmployee = async () => {
+       await AsyncStorage.setItem("type", "employee")
+    }
+    const setCandidate = async () => {
+       await AsyncStorage.setItem("type", "candidate")
+    }
+    const getType = async () =>{
+        page = await AsyncStorage.getItem("type")
+        // console.warn(page);
+        {
+            page?(page==='employee'?props.navigation.navigate("Employee"):props.navigation.navigate("Candidate")):null
+        }
+    }
+    useEffect(() => {
+     getType()
+    }, [])
+    
     return (
         <View style={styles.container}>
 
@@ -14,10 +33,10 @@ const Entry_page = (props) => {
 
             {/* Options */}
             <TouchableOpacity style={styles.loginButton}>
-                <Text onPress={()=>props.navigation.navigate("Employee")} style={[styles.loginButtonText, { backgroundColor: '#1157bf' }]}>Employee</Text>
+                <Text onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButtonText, { backgroundColor: '#1157bf' }]}>Employee</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.loginButton}>
-                <Text onPress={()=>props.navigation.navigate("Candidate")} style={[styles.loginButtonText, { backgroundColor: 'red' }]}>Candidate</Text>
+                <Text onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButtonText, { backgroundColor: 'red' }]}>Candidate</Text>
             </TouchableOpacity>
 
         </View>

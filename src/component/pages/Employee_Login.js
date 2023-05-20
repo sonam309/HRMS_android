@@ -1,10 +1,11 @@
 import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
+import { useNavigation } from '@react-navigation/native';
 
 const Employee_Login = () => {
     const [selectedValue, setSelectedValue] = useState(null);
@@ -12,20 +13,33 @@ const Employee_Login = () => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
+    // preventing going to entry page
+    const navigation = useNavigation();
+    useEffect(()=>{
+        const preventBack = navigation.addListener('beforeRemove',event=>{
+            event.preventDefault();
+        })
+        return preventBack
+    },[navigation])
+
+    // checking 'remember me' box
     const handleValueChange = (value) => {
         setSelectedValue(value);
     };
+
+    // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
     }
 
+    // logging in function
     const submit = () => {
         const userData = {
             loginId: userName,
             password: password,
             oprFlag: 'L',
         };
-        axios.post('http://192.168.1.169:7038/api/User/login', userData).then((response) => {
+        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             result[0] === "S" ? Alert.alert("Congratulations", "Succesfully logged in") : Alert.alert("Failure", "Please enter correct credentials")
