@@ -1,5 +1,5 @@
 import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native'
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -7,7 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 
-const Employee_Login = () => {
+const Employee_Login = (props) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("");
@@ -15,12 +15,12 @@ const Employee_Login = () => {
 
     // preventing going to entry page
     const navigation = useNavigation();
-    useEffect(()=>{
-        const preventBack = navigation.addListener('beforeRemove',event=>{
+    useEffect(() => {
+        const preventBack = navigation.addListener('beforeRemove', event => {
             event.preventDefault();
         })
         return preventBack
-    },[navigation])
+    }, [navigation])
 
     // checking 'remember me' box
     const handleValueChange = (value) => {
@@ -42,9 +42,39 @@ const Employee_Login = () => {
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
-            result[0] === "S" ? Alert.alert("Congratulations", "Succesfully logged in") : Alert.alert("Failure", "Please enter correct credentials")
+            let full_name = returnedData.map(b => b.FIRST_NAME)
+            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
+
+    // Punching In and Out from login page
+    const punchInOut = (val) => {
+        const userData = {
+            loginId: userName,
+            password: password,
+            oprFlag: 'L',
+        };
+        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+            const returnedData = response.data.Result;
+            let result = returnedData.map(a => a.FLAG);
+            result[0] === "S" ? (fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    operFlag: val,
+                    userId: userName,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseData) => {
+                    console.warn(JSON.stringify(responseData.Result));
+                })) : Alert.alert("Failure", "Please enter correct credentials")
+        })
+    }
+    
     return (
         <View style={styles.container}>
 
@@ -97,11 +127,11 @@ const Employee_Login = () => {
             </TouchableOpacity>
 
             {/* Punching Option */}
-            <View style={{flexDirection:'row',marginLeft:25,marginRight:25, marginTop:15,justifyContent:'space-between'}}>
-                <TouchableOpacity style={[styles.punchButton,{backgroundColor:'blue'}]}>
+            <View style={{ flexDirection: 'row', marginLeft: 25, marginRight: 25, marginTop: 15, justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => punchInOut("I")} style={[styles.punchButton, { backgroundColor: 'blue' }]}>
                     <Text style={styles.loginButtonText}>Punch In</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.punchButton,{backgroundColor:'red'}]}>
+                <TouchableOpacity onPress={() => punchInOut("O")} style={[styles.punchButton, { backgroundColor: 'red' }]}>
                     <Text style={[styles.loginButtonText]}>Punch Out</Text>
                 </TouchableOpacity>
             </View>
@@ -121,7 +151,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%'
-      },
+    },
     loginOption: {
         marginLeft: 25,
         marginRight: 25,
@@ -157,12 +187,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 20
     },
-    punchButton:{
-        width:'50%',
+    punchButton: {
+        width: '50%',
         height: 50,
         borderRadius: 35,
         justifyContent: 'center',
-        textAlign:'center', 
+        textAlign: 'center',
         alignItems: 'center',
         elevation: 7,
         shadowColor: '#000',
@@ -181,7 +211,7 @@ const styles = StyleSheet.create({
         height: 60,
         backgroundColor: '#72c26b',
         borderRadius: 35,
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center',
         elevation: 7,
         shadowColor: '#000',
