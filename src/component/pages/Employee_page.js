@@ -6,10 +6,10 @@ import Attendance from './Employee_pages/Attendance';
 const Drawer = createDrawerNavigator();
 
 const Employee_page = (props) => {
-  const { full_name } = props.route.params;
+  const { full_name, userName } = props.route.params;
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" options={{title:`Welcome | ${full_name}`, drawerLabel:'Home'}} component={Home} />
+      <Drawer.Screen name="Home" options={{title:`Welcome | ${full_name}`, drawerLabel:'Home'}} component={Home} initialParams={{userName:userName}} />
       <Drawer.Screen name="Attendance" component={Attendance} />
     </Drawer.Navigator>
   )

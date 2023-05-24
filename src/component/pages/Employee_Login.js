@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -6,12 +6,50 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
+import GetLocation from 'react-native-get-location'
 
 const Employee_Login = (props) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    
+    const deg2rad = (deg) => {
+        return deg * (Math.PI / 180)
+    }
+
+    // distance from longitude and latitutde in KM
+    const getDistInKm = (lat1, lon1, lat2, lon2) => {
+        let R = 6371; // Radius of the earth in km
+        let dLat = deg2rad(lat2 - lat1);  // deg2rad above
+        let dLon = deg2rad(lon2 - lon1);
+        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        let d = R * c; // Distance in km
+        return d;
+    }
+
+    const getCurrentLocation = async (val) => {
+        let inOut = (val === 'I'?"In":"Out")   
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+        );
+        granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
+            enableHighAccuracy: false,
+            timeout: 30000,
+        })
+            .then(location => {
+                console.log(location);
+                let dist = getDistInKm(location.latitude, location.longitude, 28.54054054054054, 77.34496209068595)
+                if (dist < 0.5) {
+                    punchInClick(val);
+                } else { Alert.alert(`Punch ${inOut} from your office`) }
+            })
+            .catch(error => {
+                const { code, message } = error;
+                Alert.alert(code, message);
+            })) : (Alert.alert("Location permission not granted"))
+    }
 
     // preventing going to entry page
     const navigation = useNavigation();
@@ -43,17 +81,18 @@ const Employee_Login = (props) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             let full_name = returnedData.map(b => b.FIRST_NAME)
-            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name })) : Alert.alert("Failure", "Please enter correct credentials")
+            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
     // Punching In and Out from login page
-    const punchInOut = (val) => {
+    const punchInClick = (val) => {
         const userData = {
             loginId: userName,
             password: password,
             oprFlag: 'L',
         };
+        let action = (val === 'I' ? "In" : "Out")
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
@@ -70,11 +109,11 @@ const Employee_Login = (props) => {
             })
                 .then((response) => response.json())
                 .then((responseData) => {
-                    console.warn(JSON.stringify(responseData.Result));
+                    Alert.alert("Success", `Punched ${action} Successfully`)
                 })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
-    
+
     return (
         <View style={styles.container}>
 
@@ -128,10 +167,10 @@ const Employee_Login = (props) => {
 
             {/* Punching Option */}
             <View style={{ flexDirection: 'row', marginLeft: 25, marginRight: 25, marginTop: 15, justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => punchInOut("I")} style={[styles.punchButton, { backgroundColor: 'blue' }]}>
+                <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton, { backgroundColor: 'blue' }]}>
                     <Text style={styles.loginButtonText}>Punch In</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => punchInOut("O")} style={[styles.punchButton, { backgroundColor: 'red' }]}>
+                <TouchableOpacity onPress={() => getCurrentLocation("O")} style={[styles.punchButton, { backgroundColor: 'red' }]}>
                     <Text style={[styles.loginButtonText]}>Punch Out</Text>
                 </TouchableOpacity>
             </View>
