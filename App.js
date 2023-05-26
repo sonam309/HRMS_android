@@ -2,10 +2,10 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import Login from './src/component/pages/Login';
 import Employee_Login from './src/component/pages/Employee_Login';
+import Employee_page from './src/component/pages/Employee_page';
 import Entry_page from './src/component/pages/Entry_Page';
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Employee_page from './src/component/pages/Employee_page';
 
 const Stack = createNativeStackNavigator();
 

@@ -7,13 +7,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import GetLocation from 'react-native-get-location'
+import company_logo from '../images/company_logo.jpg'
 
 const Employee_Login = (props) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
     }
@@ -30,7 +31,7 @@ const Employee_Login = (props) => {
     }
 
     const getCurrentLocation = async (val) => {
-        let inOut = (val === 'I'?"In":"Out")   
+        let inOut = (val === 'I' ? "In" : "Out")
         const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
         );
@@ -118,7 +119,7 @@ const Employee_Login = (props) => {
         <View style={styles.container}>
 
             {/* Company Logo */}
-            <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 30, width: '100%', height: 120 }} />
+            <Image source={company_logo} style={{ marginTop: 30, width: '100%', height: 120 }} />
 
             {/* user credentials */}
             <Text style={{ marginRight: 25, marginLeft: 25, marginBottom: 8, fontWeight: 'bold', color: 'grey' }}>Employee Login</Text>

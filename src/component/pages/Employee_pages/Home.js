@@ -9,16 +9,15 @@ import GetLocation from 'react-native-get-location'
 import { useNavigation } from '@react-navigation/native';
 
 const Home = (props) => {
-  const {userName} = props.route.params;
-  // console.warn({userName});
+  const { userName } = props.route.params;
 
   // preventing going to entry page
   const navigation = useNavigation();
   useEffect(() => {
-      const preventBack = navigation.addListener('beforeRemove', event => {
-          event.preventDefault();
-      })
-      return preventBack
+    const preventBack = navigation.addListener('beforeRemove', event => {
+      event.preventDefault();
+    })
+    return preventBack
   }, [navigation])
 
   let loginId = userName
@@ -39,7 +38,7 @@ const Home = (props) => {
     let R = 6371; // Radius of the earth in km
     let dLat = deg2rad(lat2 - lat1);  // deg2rad above
     let dLon = deg2rad(lon2 - lon1);
-    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     let d = R * c; // Distance in km
     return d;
@@ -50,14 +49,15 @@ const Home = (props) => {
       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
     );
     granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       timeout: 30000,
     })
       .then(location => {
         console.log(location);
-        let dist = getDistInKm(location.latitude, location.longitude, 28.54054054054054, 77.34496209068595)
+        let dist = getDistInKm(location.latitude, location.longitude, 28.5443907, 77.3310235)
         if (dist < 0.5) {
           punchInClick(val);
+          Alert.alert("Punched Out Succesfully")
         } else { Alert.alert(`Punch ${inOut} from your office`) }
       })
       .catch(error => {
@@ -80,10 +80,7 @@ const Home = (props) => {
       }),
     })
       .then((response) => response.json())
-      // .then((responseData) => {
-      //   console.warn(JSON.stringify(responseData.Result));
-      // });
-      loadingData(val);
+    loadingData(val);
   }
 
   const loadingData = async (val) => {
@@ -104,8 +101,8 @@ const Home = (props) => {
     data = await data.json()
     data = data.Result;
     // console.warn(data);
-    inTime = data.map(a => a.IN.trim())
-    timeIn = data.map(b => b.DUR.trim())
+    data.map(a => a.IN) != "" ? (inTime = data.map(a => a.IN.trim())) : inTime = ""
+    data.map(b => b.DUR) != "" ? (timeIn = data.map(b => b.DUR.trim())) : timeIn = "";
     setPunchInTime(inTime);
     setDuration(timeIn)
     inTime != "" ? setPunchButtonColor('red') : setPunchButtonColor('blue')
@@ -118,84 +115,99 @@ const Home = (props) => {
   }, [])
 
   return (
-    <ScrollView>
-      {/* Main Content-Calendar */}
+    <View style={{ flex: 1, padding: 0, margin: 0 }}>
+      <ScrollView>
+        {/* Main Content-Calendar */}
 
-      <Calendar style={{ margin: 0, marginBottom: 20, elevation: 4, backgroundColor: '#fff' }} headerStyle={{ backgroundColor: 'blue', color: 'red' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }} />
+        <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }} headerStyle={{ backgroundColor: 'blue' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }} />
 
+        {/* Punch In Button */}
 
-      {/* Actions */}
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', margin: 7, marginLeft: 12 }}>
-
-        {/* Punch In Button  */}
-        <View>
-          <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: 160, height: 160, borderRadius: 80, backgroundColor: `${punchButtonColor}` }} >
-            <MaterialCommunityIcons name='gesture-double-tap' size={65} color='white' style={{ marginTop: 30, marginBottom: 0 }} />
-            <Text style={[styles.actionText, { marginTop: -40 }]}>Punch {inOut}</Text>
+        <View style={styles.attendance}>
+          <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchInOutButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
+            <MaterialCommunityIcons name='gesture-double-tap' size={37} color='white' />
+            <Text style={[styles.punchInOutButtonText]}>Punch {inOut}</Text>
           </TouchableOpacity>
+
+          <View>
+
+            <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
+              <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
+              <View>
+                <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'} hrs</Text>
+                <Text style={{ color: 'black' }}>Spent Today</Text>
+              </View>
+            </View>
+            <View style={{ flex: 1, paddingLeft: 8 }}>
+              <Text style={{ color: 'black' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
+            </View>
+          </View>
+
         </View>
 
-        {/* other actions */}
-        <View>
-          <TouchableOpacity style={[styles.actionButton, { backgroundColor: 'orange' }]} >
-            <Text style={styles.actionText}>Leave apply</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, { backgroundColor: 'red' }]} >
-            <Text style={styles.actionText}>Regularize</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, { backgroundColor: '#721885' }]} >
-            <Text style={styles.actionText}>Outdoor</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        {/* Attendance and Time Options */}
 
-      {/* Login Details */}
+        <Text style={styles.headerText}>Your Time & Attendance </Text>
 
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginVertical: 14, marginHorizontal: 10 }}>
-        <View>
-          <Text>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
-          <Text>Time Spent: <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'}</Text> </Text>
-        </View>
-        <View>
-          <Text>Absences this month:</Text>
-          <Text>Leaves Available:</Text>
-        </View>
-      </View>
+        <View style={[styles.attendance]}>
 
+          <View>
 
-      {/* Other */}
-      <Text style={{ fontSize: 20, fontWeight: 500, color: 'black' }}>Others</Text>
+            <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
+              <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
+              <View>
+                <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'} hrs</Text>
+                <Text style={{ color: 'black' }}>Spent Today</Text>
+              </View>
+            </View>
 
-      {/* Other options */}
-      <View style={styles.others}>
-        <View style={styles.otherOptions}>
-          <MaterialCommunityIcons name='timetable' size={30} color='blue' />
-          <Text>Pending Approval</Text>
-        </View>
-        <View style={styles.otherOptions}>
-          <Foundation name='megaphone' size={30} color='blue' />
-          <Text>Company Announcement</Text>
-        </View>
-        <View style={styles.otherOptions}>
-          <FontAwesome5 name='birthday-cake' size={30} color="blue" />
-          <Text>Birthday & Anniversary</Text>
-        </View>
-      </View>
+            <View style={{ flex: 1, paddingLeft: 8 }}>
+              <Text style={{ color: 'black' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
+            </View>
 
-    </ScrollView>
+          </View>
+
+          <View>
+            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#0ce83f' }]} >
+              <Text style={styles.actionText}>Leave apply</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: 'red' }]} >
+              <Text style={[styles.actionText, { color: 'white' }]}>Regularize</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: 'orange' }]} >
+              <Text style={styles.actionText}>Outdoor</Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        {/* Other */}
+        <Text style={styles.headerText}>Others</Text>
+
+        {/* Other options */}
+        <View style={styles.others}>
+          <View style={[styles.otherOptions, styles.Elevation]}>
+            <MaterialCommunityIcons name='timetable' size={30} color='blue' />
+            <Text style={{ color: 'black' }}>Pending Approval</Text>
+          </View>
+          <View style={[styles.otherOptions, styles.Elevation]}>
+            <Foundation name='megaphone' size={30} color='blue' />
+            <Text style={{ color: 'black' }}>Company Announcement</Text>
+          </View>
+          <View style={[styles.otherOptions, styles.Elevation]}>
+            <FontAwesome5 name='birthday-cake' size={30} color="blue" />
+            <Text style={{ color: 'black' }}>Birthday & Anniversary</Text>
+          </View>
+        </View>
+
+      </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  others: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  otherOptions: {
-    height: 90,
-    flex: 1,
-    backgroundColor: 'white',
-    borderRadius: 8,
+  Elevation: {
+    elevation: 7,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -203,9 +215,43 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 7,
-    marginTop: 12,
-    marginHorizontal: 7,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 500,
+    color: 'black',
+    marginHorizontal: 16
+  },
+  attendance: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    elevation: 4,
+    marginHorizontal: 2,
+    marginVertical: 8
+  },
+  attendanceButton: {
+    height: 40,
+    paddingHorizontal: 10,
+    width: 160,
+    borderRadius: 35,
+    marginVertical: 4
+  },
+  others: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  otherOptions: {
+    height: 100,
+    flex: 1,
+    backgroundColor: 'beige',
+    borderRadius: 8,
+    marginVertical: 12,
+    marginHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -214,14 +260,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 0
   },
-  buttonContainer: {
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 20,
-    marginBottom: 20
-  },
   actionButton: {
-    width: 200,
+    width: 180,
     height: 40,
     borderRadius: 15,
     marginVertical: 6
@@ -230,10 +270,31 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlignVertical: 'center',
     textAlign: 'center',
+    color: 'black',
+    fontSize: 15
+  },
+  leaveButton: {
+    marginBottom: 12,
+    marginHorizontal: 25,
+    height: 40,
+    borderRadius: 35,
+  },
+  punchInOutButton: {
+    flex: 1,
+    marginVertical: 12,
+    marginHorizontal: 25,
+    height: 75,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  punchInOutButtonText: {
+    marginHorizontal: 15,
     color: 'white',
-    fontSize: 20
-  }
+    textAlign: 'center',
+    fontSize: 22,
+    paddingBottom:4
+  },
 })
-
 
 export default Home
