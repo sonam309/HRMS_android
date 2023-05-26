@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, TextInput,StatusBar, View, Image, Alert, PermissionsAndroid } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -115,8 +115,62 @@ const Employee_Login = (props) => {
         })
     }
 
+
+
+    //Random Number
+    const RandomNumber = (length) => {
+
+        return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 *
+            Math.pow(10, length - 1));
+
+    }
+
+
+
+
+    //forgetPassword api Call
+    const forgetPasswordApi = () => {
+
+
+        // Simple_If_Else=()=>{
+
+        //     if(userName.trim.length!=0){
+
+        let otp = RandomNumber("6")
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
+            params: {
+                loginId: userName, operFlag: "E", message: otp +
+                    " Is the OTP for your mobile verfication on Satya One."
+
+            }
+        }).then((response) => {
+
+
+
+            const returnedData = response.data.Result;
+
+            // console.warn(returnedData);
+            let result = returnedData.map(a => a.FLAG);
+            let contact = returnedData.map(b => b.MSG.trim());
+
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName }))
+                : Alert.alert("Failure", "Please enter correct credentials")
+
+            // result[0] === "S" ? (Alert.alert("Sucess", "Contcat "+contact))
+            //  : Alert.alert("Failure", "Please enter correct credentials")
+
+
+
+        })
+
+
+
+    }
+
     return (
         <View style={styles.container}>
+
+            <StatusBar backgroundColor="#220046" />
 
             {/* Company Logo */}
             <Image source={company_logo} style={{ marginTop: 30, width: '100%', height: 120 }} />
@@ -143,10 +197,13 @@ const Employee_Login = (props) => {
             <View style={styles.loginOption}>
 
                 {/* Quick Pin option */}
-                <View style={{ alignItems: 'center' }}>
-                    <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
-                    <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
-                </View>
+                <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin",{userName})} >
+                    <View style={{ alignItems: 'center' }}>
+                        <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
+                        <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                    </View>
+                </TouchableOpacity>
+
 
                 {/* Remember me option */}
                 <View>
@@ -177,7 +234,11 @@ const Employee_Login = (props) => {
             </View>
 
             {/* Forgot Password */}
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            <TouchableOpacity >
+
+                <Text style={styles.forgotPassword} onPress={() => forgetPasswordApi()}>Forgot Password?</Text>
+
+            </TouchableOpacity>
 
             {/* Bottom element */}
             <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>

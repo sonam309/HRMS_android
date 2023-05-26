@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
-import BoldText from '../../Utility/BoldText';
 import axios from "axios";
+import BoldText from '../Utility/BoldText';
 
 
 const Otp_Verification = (props) => {
@@ -123,7 +123,7 @@ const Otp_Verification = (props) => {
 
 
             {/* Top Image */}
-            <Image source={require('/Users/sk17321/Desktop/Hrms react/KoshishApp/src/component/images/mobile_otp.png')}
+            <Image source={require('../images/mobile_otp.png')}
                 style={{ width: 150, height: 150, alignSelf: 'center', marginTop: 120, marginBottom: -10 }} />
 
             {/* OTP Verificataion text */}
