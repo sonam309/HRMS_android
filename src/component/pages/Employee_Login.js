@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -118,11 +118,12 @@ const Employee_Login = (props) => {
     return (
         <View style={styles.container}>
 
+            <StatusBar backgroundColor="#220046" />
             {/* Company Logo */}
-            <Image source={company_logo} style={{ marginTop: 30, width: '100%', height: 120 }} />
+            <Image source={company_logo} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: 250 }} />
 
             {/* user credentials */}
-            <Text style={{ marginRight: 25, marginLeft: 25, marginBottom: 8, fontWeight: 'bold', color: 'grey' }}>Employee Login</Text>
+            <Text style={{ marginHorizontal: 25, marginVertical: 8, fontWeight: 'bold', color: 'grey' }}>Employee Login</Text>
 
             {/* Username */}
             <View style={styles.textInputBox}>
@@ -144,18 +145,8 @@ const Employee_Login = (props) => {
 
                 {/* Quick Pin option */}
                 <View style={{ alignItems: 'center' }}>
-                    <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
+                    <Image source={require('../images/Pinlock.png')} style={{ width: 40, height: 40 }} />
                     <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
-                </View>
-
-                {/* Remember me option */}
-                <View>
-                    <RadioButton.Group onValueChange={handleValueChange}
-                        value={selectedValue}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton value='rememberMe' /><Text>Remember Me</Text>
-                        </View>
-                    </RadioButton.Group>
                 </View>
 
             </View>
@@ -167,7 +158,7 @@ const Employee_Login = (props) => {
             </TouchableOpacity>
 
             {/* Punching Option */}
-            <View style={{ flexDirection: 'row', marginLeft: 25, marginRight: 25, marginTop: 15, justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', marginHorizontal: 25, marginVertical: 15, justifyContent: 'space-between' }}>
                 <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton, { backgroundColor: 'blue' }]}>
                     <Text style={styles.loginButtonText}>Punch In</Text>
                 </TouchableOpacity>
@@ -180,7 +171,9 @@ const Employee_Login = (props) => {
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
 
             {/* Bottom element */}
-            <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
+            <View style={{flex:1}}>
+                <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
+            </View>
         </View>
     )
 }
@@ -189,25 +182,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        height: '100%',
-        width: '100%'
+        paddingHorizontal: 25
     },
     loginOption: {
-        marginLeft: 25,
-        marginRight: 25,
+        marginHorizontal: 25,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        marginTop: 16
+        marginTop: 12
     },
     textInputBox: {
-        marginLeft: 21,
-        marginRight: 25,
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: 'white',
-        marginTop: 4,
-        marginBottom: 4,
+        marginVertical: 6,
         backgroundColor: 'white',
         borderRadius: 8,
         shadowColor: '#000',
@@ -220,15 +207,13 @@ const styles = StyleSheet.create({
         elevation: 7
     },
     forgotPassword: {
-        marginLeft: 25,
-        marginRight: 25,
         color: 'orange',
         fontSize: 15,
         textAlign: 'center',
         margin: 20
     },
     punchButton: {
-        width: '50%',
+        width: 150,
         height: 50,
         borderRadius: 35,
         justifyContent: 'center',
@@ -244,12 +229,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
     },
     loginButton: {
-        marginLeft: 25,
-        marginRight: 25,
+        marginHorizontal: 25,
         flexDirection: 'row',
-        marginTop: 40,
-        height: 60,
-        backgroundColor: '#72c26b',
+        marginVertical: 20,
+        height: 50,
+        backgroundColor: '#300161',
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -263,13 +247,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4
     },
     loginButtonText: {
-        marginLeft: 25,
-        marginRight: 25,
         color: 'white',
         textAlign: 'center',
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginLeft: 11
+        fontSize: 22,
+        fontWeight: 300,
+        marginHorizontal: 15
     },
     bottomElement: {
         position: 'absolute',
@@ -278,7 +260,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         color: 'grey',
-        fontSize: 15
+        fontSize: 15,
     }
 })
 

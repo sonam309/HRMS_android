@@ -1,7 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, View, Text, Image } from 'react-native'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import Home from './Employee_pages/Home'
+import DashBoard from './Employee_pages/Dashboard'
 import Attendance from './Employee_pages/Attendance';
 import DrawerData from './Employee_pages/DrawerData';
 import Holiday_list from './Employee_pages/Holiday_list';
@@ -24,8 +24,12 @@ const Employee_page = (props) => {
   function CustomDrawer(props) {
     return (
       <DrawerContentScrollView {...props} >
-        <SafeAreaView style={{ backgroundColor: 'blue'}} >
-          <Icons name='logout' size={20} style={{position:'absolute', right:10, top:10, color:'white'}} onPress={() => { navigator("Employee") }}/>
+        <View style={{backgroundColor: 'blue'}}>
+          <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'flex-end'}}>
+            <TouchableOpacity style={{ backgroundColor: 'blue', color: 'white' }} onPress={() => { console.warn("Logout clicked"); navigator('Employee'); }}>
+              <Icons name='logout' size={20} style={{ color: 'white', padding: 8 }} />
+            </TouchableOpacity>
+          </View>
 
           <View style={{ flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', margin: 0 }}>
             <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
@@ -33,7 +37,7 @@ const Employee_page = (props) => {
             <Text style={{ fontSize: 16, color: 'white' }}>Product Manager</Text>
           </View>
 
-        </SafeAreaView>
+        </View>
 
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginHorizontal: 12 }}>
           {DrawerData.map((item) => <DrawerIcons icon={item.icon} header={item.header} navigator={navigator} />)}
@@ -54,9 +58,9 @@ const Employee_page = (props) => {
     )
   }
   return (
-    <Drawer.Navigator screenOptions={{ drawerStyle: { backgroundColor: '#c6cbef' } }} drawerContent={() => <CustomDrawer {...props} />}>
+    <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: '#c6cbef' } }} drawerContent={() => <CustomDrawer {...props} />}>
 
-      <Drawer.Screen name="DashBoard" component={Home} options={{ title: `Welcome | ${full_name}` }} initialParams={{ userName: userName }} />
+      <Drawer.Screen name="DashBoard" component={DashBoard} options={{ title: `Welcome | ${full_name}` }} initialParams={{ userName: userName }} />
       <Drawer.Screen name="Attendance" component={Attendance} />
       <Drawer.Screen name="Holiday List" component={Holiday_list} />
       <Drawer.Screen name="PaySlip" component={PaySlip} />
