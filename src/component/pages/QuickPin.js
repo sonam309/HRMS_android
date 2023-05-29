@@ -1,12 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 
-<<<<<<< HEAD
 const QuickPin = () => {
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
 
-=======
->>>>>>> 01c37c6bbc16c407b5ecf19b76a44c932a5c9113
     const [f1, setF1] = useState('');
     const [f2, setF2] = useState('');
     const [f3, setF3] = useState('');
@@ -17,15 +14,12 @@ const QuickPin = () => {
             {/* sk */}
             {/* <StatusBar backgroundColor="#220046" /> */}
             <View style={styles.container}>
-<<<<<<< HEAD
-                <Text style={styles.HeaderText}>Quick Pin</Text>
-
-=======
-
                 <Text style={styles.HeaderText}>Quick Pin</Text>
 
 
->>>>>>> 01c37c6bbc16c407b5ecf19b76a44c932a5c9113
+                <Text style={styles.HeaderText}>Quick Pin</Text>
+
+
                 {/* Top Image */}
                 <Image source={require('../images/security_pin_icon.png')} style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10, marginTop: 20 }} />
 
@@ -166,10 +160,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 4
     },
-<<<<<<< HEAD
-=======
 
->>>>>>> 01c37c6bbc16c407b5ecf19b76a44c932a5c9113
 })
 
 export default QuickPin
