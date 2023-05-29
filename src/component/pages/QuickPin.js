@@ -10,7 +10,6 @@ const QuickPin = (props) => {
     const et3 = useRef();
     const et4 = useRef();
 
-
     const [f1, setF1] = useState('');
     const [f2, setF2] = useState('');
     const [f3, setF3] = useState('');
@@ -23,9 +22,7 @@ const QuickPin = (props) => {
 
             <View style={styles.container}>
 
-
                 <Text style={styles.HeaderText}>Quick Pin</Text>
-
 
 
                 {/* Top Image */}
@@ -212,11 +209,6 @@ const styles = StyleSheet.create({
         shadowRadius: 4
     },
 
-
-
-
-
 })
-
 
 export default QuickPin
