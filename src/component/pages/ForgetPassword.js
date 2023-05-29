@@ -67,14 +67,14 @@ const ForgetPassword = (props) => {
 
     <View style={styles.container}>
 
-    
+
       {
-        type === "N" ? 
-        <Text style={styles.HeaderText}>
-          New Mpin
-        </Text> :
-        type === "F" ? <Text style={styles.HeaderText}>Forget Mpin</Text> : <Text style={styles.HeaderText}>Forget Password</Text>
-      } 
+        type === "N" ?
+          <Text style={styles.HeaderText}>
+            New Mpin
+          </Text> :
+          type === "F" ? <Text style={styles.HeaderText}>Forget Mpin</Text> : <Text style={styles.HeaderText}>Forget Password</Text>
+      }
 
       {/* new Password */}
       <View style={[styles.textInputBox, styles.elevation]}>
@@ -98,7 +98,7 @@ const ForgetPassword = (props) => {
       {/* chnage password button */}
 
       <TouchableOpacity
-        disabled={ newPassword !== '' && confirmPassword !== '' ? false : true }
+        disabled={newPassword !== '' && confirmPassword !== '' ? false : true}
         style={[styles.changePasswordBtn, styles.elevation,
         {
           backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#03a157' : "#9D9D9D"
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
-  elevation:{
+  elevation: {
     elevation: 7,
     shadowColor: '#000',
     shadowOffset: {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginTop: 50,
     flexDirection: 'row', justifyContent: 'center',
-    marginHorizontal:20
+    marginHorizontal: 20
   }
 })
 
