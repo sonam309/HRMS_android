@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 
+
 const QuickPin = () => {
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
 
@@ -69,12 +70,16 @@ const QuickPin = () => {
                 </TouchableOpacity>
 
                 {/* botton options sk */}
+
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
                     <TouchableOpacity >
                         <Text style={styles.QuickPinBottomBtn}>Create Quick Pin</Text>
                     </TouchableOpacity>
                     <TouchableOpacity >
-                        <Text style={[styles.QuickPinBottomBtn]}>Forgot Quick Pin?</Text>
+                        <Text style={[styles.QuickPinBottomBtn]}
+                        //  onPress={() => {setType('F'),props.navigation.navigate("CreateMpin",{type})}}
+                        onPress={() => (props.navigation.navigate("CreateMpin",{type:"F"}))}
+                        >Forgot Quick Pin?</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -120,8 +125,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     quickLoginBtn: {
-        marginLeft: 60,
-        marginRight: 60,
+        marginLeft: 40,
+        marginRight: 40,
         flexDirection: 'row',
         marginTop: 60,
         height: 40,
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
         marginTop: 200,
         height: 35,
         width: '100%',
-        fontSize: 15,
+        fontSize: 12,
         backgroundColor: '#220046',
         borderRadius: 35,
         color: 'white',
@@ -155,12 +160,10 @@ const styles = StyleSheet.create({
         shadowOffset: {
             width: 0,
             height: 2,
-
         },
         shadowOpacity: 0.3,
         shadowRadius: 4
     },
-
 })
 
 export default QuickPin

@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
 import axios from "axios";
 import BoldText from '../Utility/BoldText';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Otp_Verification = (props) => {
-    const { contact, otp, userName } = props.route.params;
+    const { contact, otp, userName, type } = props.route.params;
 
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef(); et5 = useRef(); et6 = useRef();
 
@@ -139,6 +140,7 @@ const Otp_Verification = (props) => {
             </View>
 
             {/* verify otp button */}
+
             <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? false : true} style={[style.otpVerifyBtn,
             { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? '#03a157' : "#9D9D9D" }]} onPress={() => { validateOtp() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
@@ -168,7 +170,7 @@ const style = StyleSheet.create({
         marginTop: 40,
         height: 45,
         fontSize: 15,
-        backgroundColor: '#03a157',
+        backgroundColor: '#220046',
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',

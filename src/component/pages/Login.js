@@ -41,7 +41,6 @@ const Login = (props) => {
         })
         return preventBack
     }, [navigation])
-
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 15
     },
     bottomElement: {
+
         position: 'absolute',
         bottom: 0,
         width: '100%',
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'grey',
         fontSize: 15,
+
     }
 })
 

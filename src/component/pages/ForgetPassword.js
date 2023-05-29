@@ -6,7 +6,7 @@ import axios from "axios";
 
 const ForgetPassword = (props) => {
 
-  const { userName } = props.route.params;
+  const { userName, type } = props.route.params;
 
   const [showNewPassword, setShowNewPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
@@ -67,10 +67,14 @@ const ForgetPassword = (props) => {
 
     <View style={styles.container}>
 
-
-      <Text style={styles.HeaderText}>
-        Forget Password
-      </Text>
+    
+      {
+        type === "N" ? 
+        <Text style={styles.HeaderText}>
+          New Mpin
+        </Text> :
+        type === "F" ? <Text style={styles.HeaderText}>Forget Mpin</Text> : <Text style={styles.HeaderText}>Forget Password</Text>
+      } 
 
       {/* new Password */}
       <View style={[styles.textInputBox, styles.elevation]}>
@@ -106,7 +110,14 @@ const ForgetPassword = (props) => {
 
       {/* enter otp msg */}
       <View style={styles.Message}>
-    <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 15, textAlign: 'center' }}> Once the password successfully changed, you will need to login again </Text>
+
+
+        <Text style={{
+          color: '#474E68', fontWeight: 300, fontSize: 15,
+          textAlign: 'center'
+        }}>
+          Once the password successfully changed, you will need to login again
+        </Text>
       </View>
     </View>
   )
@@ -164,7 +175,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     textAlignVertical: 'center',
-    backgroundColor: '#03a157',
+    backgroundColor: '#220046',
     color: 'white',
     fontWeight: '500'
   },
