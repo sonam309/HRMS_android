@@ -220,9 +220,9 @@ const Employee_Login = (props) => {
             </View>
 
             {/* Forgot Password */}
-            <TouchableOpacity >
+            <TouchableOpacity onPress={() => forgetPasswordApi()}>
 
-                <Text style={styles.forgotPassword} onPress={() => forgetPasswordApi()}>Forgot Password?</Text>
+                <Text style={styles.forgotPassword}>Forgot Password?</Text>
 
             </TouchableOpacity>
 
