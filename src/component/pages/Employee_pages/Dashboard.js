@@ -1,33 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler, Modal } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Calendar from 'react-native-calendars/src/calendar';
 import GetLocation from 'react-native-get-location'
-import { useNavigation } from '@react-navigation/native';
 
 const Home = (props) => {
   const { userName } = props.route.params;
-
-  // preventing going to entry page
-  const navigation = useNavigation();
-  useEffect(() => {
-    const preventBack = navigation.addListener('beforeRemove', event => {
-      event.preventDefault();
-    })
-    return preventBack
-  }, [navigation])
-
   let loginId = userName
   const [punchButtonColor, setPunchButtonColor] = useState("blue")
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
   const [punchInTime, setPunchInTime] = useState("");
   const [duration, setDuration] = useState("");
+  const [visible, setVisible] = useState(false)
+
   let inTime = "";
   let timeIn = "";
+
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Wait", "Are you sure, you want to exit the App?", [{
+        text: "No",
+        onPress: () => null
+      }, {
+        text: "Yes",
+        onPress: () => BackHandler.exitApp()
+      }]);
+      return true;
+    }
+    const backPressHandler = BackHandler.addEventListener(
+      "hardwareBackPress",backAction
+    );
+    return () => {
+      backPressHandler.remove();
+    }
+  }, []);
+
 
   const deg2rad = (deg) => {
     return deg * (Math.PI / 180)
@@ -57,7 +69,7 @@ const Home = (props) => {
         let dist = getDistInKm(location.latitude, location.longitude, 28.5443907, 77.3310235)
         if (dist < 0.5) {
           punchInClick(val);
-          Alert.alert("Punched Out Succesfully")
+          Alert.alert(`Punch ${inOut} Successfully`)
         } else { Alert.alert(`Punch ${inOut} from your office`) }
       })
       .catch(error => {
@@ -124,9 +136,9 @@ const Home = (props) => {
         {/* Punch In Button */}
 
         <View style={styles.attendance}>
-          <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchInOutButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
+          <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
             <MaterialCommunityIcons name='gesture-double-tap' size={37} color='white' />
-            <Text style={[styles.punchInOutButtonText]}>Punch {inOut}</Text>
+            <Text style={[styles.punchButtonText]}>Punch {inOut}</Text>
           </TouchableOpacity>
 
           <View>
@@ -138,7 +150,7 @@ const Home = (props) => {
                 <Text style={{ color: 'black' }}>Spent Today</Text>
               </View>
             </View>
-            <View style={{ flex: 1, paddingLeft: 8 }}>
+            <View style={{ flex: 1, paddingLeft: 10 }}>
               <Text style={{ color: 'black' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
             </View>
           </View>
@@ -235,11 +247,11 @@ const styles = StyleSheet.create({
     marginVertical: 8
   },
   attendanceButton: {
-    height: 40,
+    height: 35,
     paddingHorizontal: 10,
     width: 160,
     borderRadius: 35,
-    marginVertical: 4
+    marginVertical: 6
   },
   others: {
     flexDirection: 'row',
@@ -279,21 +291,21 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 35,
   },
-  punchInOutButton: {
+  punchButton: {
     flex: 1,
     marginVertical: 12,
-    marginHorizontal: 25,
+    marginHorizontal: 10,
     height: 75,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  punchInOutButtonText: {
+  punchButtonText: {
     marginHorizontal: 15,
     color: 'white',
     textAlign: 'center',
     fontSize: 22,
-    paddingBottom:4
+    paddingBottom: 4
   },
 })
 
