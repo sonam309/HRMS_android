@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert, ScrollView, StatusBar } from 'react-native'
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Feather from 'react-native-vector-icons/Feather';
-import axios from "axios";
-import { useNavigation } from '@react-navigation/native';
-import BoldText from '../Utility/BoldText';
-
 
 const QuickPin = (props) => {
 
@@ -37,7 +30,7 @@ const QuickPin = (props) => {
 
                 {/* Top Image */}
                 <Image source={require('../images/security_pin_icon.png')}
-                    style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10 , marginTop:20}} />
+                    style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10, marginTop: 20 }} />
 
                 <Text style={styles.QuickPinTxt} >
                     Enter Your Quick Pin
@@ -99,8 +92,6 @@ const QuickPin = (props) => {
 
                 </View>
 
-
-
                 {/* Done Button sk */}
 
                 <TouchableOpacity
@@ -139,8 +130,6 @@ const QuickPin = (props) => {
     )
 
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
