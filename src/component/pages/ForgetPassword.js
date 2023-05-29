@@ -72,21 +72,12 @@ const ForgetPassword = (props) => {
         type === "N" ? 
         <Text style={styles.HeaderText}>
           New Mpin
-          
         </Text> :
-        type === "F" ?
-
-        <Text style={styles.HeaderText}>Forget Mpin</Text> :
-
-        <Text style={styles.HeaderText}>Forget Password</Text>
-      }
-
-
-
-    
+        type === "F" ? <Text style={styles.HeaderText}>Forget Mpin</Text> : <Text style={styles.HeaderText}>Forget Password</Text>
+      } 
 
       {/* new Password */}
-      <View style={styles.textInputBox}>
+      <View style={[styles.textInputBox, styles.elevation]}>
         <Feather name='lock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
 
         <TextInput placeholder='New Password' secureTextEntry={showNewPassword}
@@ -98,42 +89,28 @@ const ForgetPassword = (props) => {
       </View>
 
       {/* Confirm Password */}
-      <View style={styles.textInputBox}>
+      <View style={[styles.textInputBox, styles.elevation]}>
         <Feather name='unlock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
-        <TextInput placeholder='Confirm Password' secureTextEntry={showConfirmPassword}
-          returnKeyType="done"
-          autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384'
-          value={confirmPassword} onChangeText={(security) => setConfirmPassword(security)} />
-
+        <TextInput placeholder='Confirm Password' secureTextEntry={showConfirmPassword} returnKeyType="done" autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={confirmPassword} onChangeText={(security) => setConfirmPassword(security)} />
         <AntDesign name='eye' onPress={changeVisibilityConfirm} style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
       </View>
-
-
 
       {/* chnage password button */}
 
       <TouchableOpacity
-        disabled={
-          newPassword !== '' && confirmPassword !== '' ?
-            false : true
-        }
-        style={[styles.changePasswordBtn,
+        disabled={ newPassword !== '' && confirmPassword !== '' ? false : true }
+        style={[styles.changePasswordBtn, styles.elevation,
         {
-          backgroundColor: newPassword !== '' && confirmPassword !== '' ?
-            '#03a157' : "#9D9D9D"
+          backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#03a157' : "#9D9D9D"
         }
-        ]}
-        onPress={() => { MatchPasswordValidation() }}
-      >
-        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
-          Change Password
-        </Text>
+        ]} onPress={() => { MatchPasswordValidation() }} >
+        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Change Password </Text>
 
       </TouchableOpacity>
 
-
       {/* enter otp msg */}
       <View style={styles.Message}>
+
 
         <Text style={{
           color: '#474E68', fontWeight: 300, fontSize: 15,
@@ -141,18 +118,10 @@ const ForgetPassword = (props) => {
         }}>
           Once the password successfully changed, you will need to login again
         </Text>
-
-
       </View>
-
-
     </View>
-
-
   )
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -161,39 +130,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
-
-  textInputBox: {
-    marginLeft: 21,
-    marginRight: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: 'white',
-    marginTop: 30,
-    marginBottom: 4,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 7
-  },
-
-
-  changePasswordBtn: {
-    marginLeft: 25,
-    marginRight: 25,
-    flexDirection: 'row',
-    marginTop: 100,
-    height: 45,
-    fontSize: 15,
-    backgroundColor: '#03a157',
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
+  elevation:{
     elevation: 7,
     shadowColor: '#000',
     shadowOffset: {
@@ -203,17 +140,35 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4
   },
+  textInputBox: {
+    marginHorizontal: 21,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: 'white',
+    marginTop: 30,
+    marginBottom: 4,
+    backgroundColor: 'white',
+    borderRadius: 8,
+  },
+  changePasswordBtn: {
+    marginHorizontal: 25,
+    flexDirection: 'row',
+    marginTop: 100,
+    height: 45,
+    fontSize: 15,
+    backgroundColor: '#03a157',
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   chnagePasswordBtnTxt: {
-    marginLeft: 25,
-    marginRight: 25,
+    marginHorizontal: 25,
     color: 'white',
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: 11
   },
   HeaderText: {
-
     width: '100%',
     fontSize: 18,
     height: 35,
@@ -223,16 +178,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#220046',
     color: 'white',
     fontWeight: '500'
-
   },
   Message: {
     backgroundColor: 'white',
     marginTop: 50,
     flexDirection: 'row', justifyContent: 'center',
-    marginLeft: 20, marginRight: 20
+    marginHorizontal:20
   }
 })
-
-
 
 export default ForgetPassword

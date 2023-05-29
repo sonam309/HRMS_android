@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert, ScrollView, StatusBar } from 'react-native'
+import React, { useRef, useState } from 'react';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 
-const QuickPin = (props) => {
 
-//   const [type, setType]=useState();
-
-    const et1 = useRef();
-    const et2 = useRef();
-    const et3 = useRef();
-    const et4 = useRef();
+const QuickPin = () => {
+    const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
 
     const [f1, setF1] = useState('');
     const [f2, setF2] = useState('');
@@ -19,41 +14,28 @@ const QuickPin = (props) => {
         <View>
             {/* sk */}
             {/* <StatusBar backgroundColor="#220046" /> */}
-
             <View style={styles.container}>
+                <Text style={styles.HeaderText}>Quick Pin</Text>
+
 
                 <Text style={styles.HeaderText}>Quick Pin</Text>
 
 
                 {/* Top Image */}
-                <Image source={require('../images/security_pin_icon.png')}
-                    style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10, marginTop: 20 }} />
+                <Image source={require('../images/security_pin_icon.png')} style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10, marginTop: 20 }} />
 
-                <Text style={styles.QuickPinTxt} >
-                    Enter Your Quick Pin
-                </Text>
+                <Text style={styles.QuickPinTxt} > Enter Your Quick Pin </Text>
 
                 {/* Quick pin input box sk */}
-                <View style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row', justifyContent: 'center'
-                }}>
+                <View style={{ backgroundColor: 'white',flexDirection: 'row', justifyContent: 'center'}}>
 
-                    <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]}
-                        keyboardType="number-pad"
-                        maxLength={1}
-                        value={f1}
-                        onChangeText={txt => {
+                    <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
                             setF1(txt);
                             if (txt.length >= 1) {
                                 et2.current.focus();
                             }
                         }} />
-                    <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ? '#F99417' : '#220046' }]}
-                        keyboardType="number-pad"
-                        maxLength={1}
-                        value={f2}
-                        onChangeText={txt => {
+                    <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
                             setF2(txt)
                             if (txt.length >= 1) {
                                 et3.current.focus();
@@ -62,10 +44,7 @@ const QuickPin = (props) => {
                                 et1.current.focus();
                             }
                         }} />
-                    <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? '#F99417' : '#220046' }]}
-                        keyboardType="number-pad"
-                        maxLength={1} value={f3}
-                        onChangeText={txt => {
+                    <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
                             setF3(txt)
                             if (txt.length >= 1) {
                                 et4.current.focus();
@@ -74,51 +53,27 @@ const QuickPin = (props) => {
                                 et2.current.focus();
                             }
                         }} />
-                    <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? '#F99417' : '#220046' }]}
-                        keyboardType="number-pad"
-                        maxLength={1} value={f4}
-                        onChangeText={txt => {
+                    <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
                             setF4(txt)
                             if (txt.length >= 1) {
 
-                            } else if (txt.length < 1) {
-
-                                et3.current.focus();
-                            }
+                            } else if (txt.length < 1) et3.current.focus();
                         }} />
-
                 </View>
 
                 {/* Done Button sk */}
-
-                <TouchableOpacity
-                    disabled={
-                        f1 !== '' && f2 !== '' &&
-                            f3 !== '' && f4 !== '' ?
-                            false : true
-                    }
-                    style={[styles.quickLoginBtn, {
-                        backgroundColor: f1 !== '' && f2 !== '' &&
-                            f3 !== '' && f4 !== '' ?
-                            '#220046' : "#9D9D9D"
-                    }]}
-
-                >
-
+                <TouchableOpacity disabled={ f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ?false : true } style={[styles.quickLoginBtn, { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? '#220046' : "#9D9D9D" }]}>
                     {/* onPress={() => {validateOtp()}} */}
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
                         Quick Login
                     </Text>
-
                 </TouchableOpacity>
 
                 {/* botton options sk */}
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 40, marginRight: 40 }}>
+
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
                     <TouchableOpacity >
-                        <Text style={styles.QuickPinBottomBtn}
-                    
-                        onPress={() => (props.navigation.navigate("CreateMpin",{type:"N"}))}
-                        >Create Quick Pin?</Text>
+                        <Text style={styles.QuickPinBottomBtn}>Create Quick Pin</Text>
                     </TouchableOpacity>
                     <TouchableOpacity >
                         <Text style={[styles.QuickPinBottomBtn]}
@@ -131,7 +86,6 @@ const QuickPin = (props) => {
 
         </View>
     )
-
 }
 
 const styles = StyleSheet.create({
@@ -151,7 +105,6 @@ const styles = StyleSheet.create({
         height: 38
     },
     QuickPinTxt: {
-
         color: '#220046',
         padding: 6,
         textAlign: 'center',
@@ -192,29 +145,25 @@ const styles = StyleSheet.create({
         shadowRadius: 4
     },
     QuickPinBottomBtn: {
-
-        marginTop: 20,
+        marginTop: 200,
         height: 35,
         width: '100%',
         fontSize: 12,
         backgroundColor: '#220046',
         borderRadius: 35,
         color: 'white',
-        elevation: 12,
-        paddingLeft: 15,
-        paddingRight: 15,
+        elevation: 7,
+        paddingHorizontal: 20,
         textAlign: 'center',
         textAlignVertical: 'center',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 2,
-
         },
         shadowOpacity: 0.3,
         shadowRadius: 4
     },
-
 })
 
 export default QuickPin
