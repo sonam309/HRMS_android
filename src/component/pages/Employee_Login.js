@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -170,6 +170,7 @@ const Employee_Login = (props) => {
     return (
         <View style={styles.container}>
 
+            <StatusBar backgroundColor="#220046" />
             {/* Company Logo */}
             <Image source={company_logo} style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: 250 }} />
 
@@ -196,7 +197,7 @@ const Employee_Login = (props) => {
 
                 {/* Quick Pin option */}
                 <View style={{ alignItems: 'center' }}>
-                    <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
+                    <Image source={require('../images/Pinlock.png')} style={{ width: 40, height: 40 }} />
                     <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
                 </View>
 
