@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
 import axios from "axios";
 import BoldText from '../Utility/BoldText';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Otp_Verification = (props) => {
-    const { contact, otp, userName } = props.route.params;
+    const { contact, otp, userName, type } = props.route.params;
 
 
 
@@ -110,7 +111,12 @@ const Otp_Verification = (props) => {
 
         if (sendOtp == inputOtp) {
 
-            (props.navigation.navigate("ForgetPassword",{userName}))
+            console.warn(sendOtp + "&&" + inputOtp);
+
+            (props.navigation.navigate("ForgetPassword", { userName, type }))
+
+
+
 
         } else {
             console.warn("Wrong OTP");
@@ -255,7 +261,7 @@ const Otp_Verification = (props) => {
                         f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ?
                         '#03a157' : "#9D9D9D"
                 }]}
-                onPress={() => {validateOtp()}}
+                onPress={() => { validateOtp() }}
             >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
                     Verify OTP
@@ -286,7 +292,7 @@ const style = StyleSheet.create({
         marginTop: 40,
         height: 45,
         fontSize: 15,
-        backgroundColor: '#03a157',
+        backgroundColor: '#220046',
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',

@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Otp_Verification from './src/component/pages/Otp_Verification'
 import ForgetPassword from './src/component/pages/ForgetPassword';
 import QuickPin from './src/component/pages/QuickPin';
+import CreateMpin from './src/component/pages/CreateMpin';
 
 
 const Stack = createNativeStackNavigator();
@@ -43,6 +44,10 @@ const App = () => {
           orientation: 'portrait',
           gestureEnabled: false, headerLeft: () => <></>, headerShown: false
         }} component={QuickPin} />
+        <Stack.Screen name='CreateMpin' options={{
+          orientation: 'portrait',
+          gestureEnabled: false, headerLeft: () => <></>, headerShown: false
+        }} component={CreateMpin} />
 
       </Stack.Navigator>
     </NavigationContainer>

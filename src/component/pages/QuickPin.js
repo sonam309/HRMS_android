@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert, Scro
 
 const QuickPin = (props) => {
 
-    const { userName } = props.route.params;
+//   const [type, setType]=useState();
 
     const et1 = useRef();
     const et2 = useRef();
@@ -113,12 +113,18 @@ const QuickPin = (props) => {
                 </TouchableOpacity>
 
                 {/* botton options sk */}
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 10, marginRight: 10 }}>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 40, marginRight: 40 }}>
                     <TouchableOpacity >
-                        <Text style={styles.QuickPinBottomBtn}>Create Quick Pin?</Text>
+                        <Text style={styles.QuickPinBottomBtn}
+                    
+                        onPress={() => (props.navigation.navigate("CreateMpin",{type:"N"}))}
+                        >Create Quick Pin?</Text>
                     </TouchableOpacity>
                     <TouchableOpacity >
-                        <Text style={[styles.QuickPinBottomBtn]}>Forgot Quick Pin?</Text>
+                        <Text style={[styles.QuickPinBottomBtn]}
+                        //  onPress={() => {setType('F'),props.navigation.navigate("CreateMpin",{type})}}
+                        onPress={() => (props.navigation.navigate("CreateMpin",{type:"F"}))}
+                        >Forgot Quick Pin?</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -166,8 +172,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     quickLoginBtn: {
-        marginLeft: 60,
-        marginRight: 60,
+        marginLeft: 40,
+        marginRight: 40,
         flexDirection: 'row',
         marginTop: 60,
         height: 40,
@@ -187,16 +193,16 @@ const styles = StyleSheet.create({
     },
     QuickPinBottomBtn: {
 
-        marginTop: 200,
+        marginTop: 20,
         height: 35,
         width: '100%',
-        fontSize: 15,
+        fontSize: 12,
         backgroundColor: '#220046',
         borderRadius: 35,
         color: 'white',
-        elevation: 7,
-        paddingLeft: 20,
-        paddingRight: 20,
+        elevation: 12,
+        paddingLeft: 15,
+        paddingRight: 15,
         textAlign: 'center',
         textAlignVertical: 'center',
         shadowColor: '#000',

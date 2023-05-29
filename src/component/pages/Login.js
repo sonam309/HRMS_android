@@ -1,5 +1,5 @@
 import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native'
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -7,7 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 
-const Login = () => {
+const Login = (props) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("");
@@ -15,12 +15,12 @@ const Login = () => {
 
     // preventing going to entry page
     const navigation = useNavigation();
-    useEffect(()=>{
-        const preventBack = navigation.addListener('beforeRemove',event=>{
+    useEffect(() => {
+        const preventBack = navigation.addListener('beforeRemove', event => {
             event.preventDefault();
         })
         return preventBack
-    },[navigation])
+    }, [navigation])
 
     // checking 'remember me' box
     const handleValueChange = (value) => {
@@ -74,10 +74,14 @@ const Login = () => {
             <View style={styles.loginOption}>
 
                 {/* Quick Pin option */}
-                <View style={{ alignItems: 'center' }}>
-                    <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
-                    <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
-                </View>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("QuickPin") }}>
+
+                    <View style={{ alignItems: 'center' }} >
+                        <Image source={require('../images/Pinlock.png')} style={{ width: 60, height: 60 }} />
+                        <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                    </View>
+
+                </TouchableOpacity>
 
                 {/* Remember me option */}
                 <View>
@@ -182,12 +186,12 @@ const styles = StyleSheet.create({
     bottomElement: {
         // position: 'absolute',
         // bottom: 0,
-        marginTop:95,
+        marginTop: 95,
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
         color: 'grey',
-        fontSize: 15,left:0,right:0
+        fontSize: 15, left: 0, right: 0
     }
 })
 

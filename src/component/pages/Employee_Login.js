@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import GetLocation from 'react-native-get-location'
 import company_logo from '../images/company_logo.jpg'
 
+
 const Employee_Login = (props) => {
     const [selectedValue, setSelectedValue] = useState(null);
     const [showVisibility, setShowVisibility] = useState(true);
@@ -196,10 +197,14 @@ const Employee_Login = (props) => {
             <View style={styles.loginOption}>
 
                 {/* Quick Pin option */}
-                <View style={{ alignItems: 'center' }}>
-                    <Image source={require('../images/Pinlock.png')} style={{ width: 40, height: 40 }} />
-                    <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
-                </View>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("QuickPin") }}>
+
+                    <View style={{ alignItems: 'center' }} >
+                        <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
+                        <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                    </View>
+
+                </TouchableOpacity>
 
             </View>
 
@@ -227,7 +232,7 @@ const Employee_Login = (props) => {
             </TouchableOpacity>
 
             {/* Bottom element */}
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
             </View>
         </View>
