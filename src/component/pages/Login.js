@@ -13,7 +13,8 @@ const Login = (props) => {
 
     //Random Number
     const RandomNumber = (length) => {
-        return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 *Math.pow(10, length - 1));}
+        return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
+    }
 
     // forgetpassword
     const forgetPasswordApi = () => {
@@ -48,7 +49,7 @@ const Login = (props) => {
 
     // logging in function
     const submit = () => {
-        const userData = {loginId: userName,password: password,oprFlag: 'L'};
+        const userData = { loginId: userName, password: password, oprFlag: 'L' };
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
@@ -100,9 +101,11 @@ const Login = (props) => {
                 </TouchableOpacity>
 
                 {/* Sign up */}
-                <Text style={{ fontWeight: 'bold', textAlign: 'center' }} >Don't Have an account <Text style={{ color: 'orange', fontWeight: 'bold' }}>Sign Up?</Text> </Text>
+                <TouchableOpacity onPress={()=>props.navigation.navigate("Candidate_SignUp")}>
+                    <Text style={{ fontWeight: 'bold', textAlign: 'center' }} >Don't Have an account <Text style={{ color: 'orange', fontWeight: 'bold' }}>Sign Up?</Text> </Text>
+                </TouchableOpacity>
             </View>
-            
+
             {/* Bottom element */}
             <View style={{ flex: 0.2 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>

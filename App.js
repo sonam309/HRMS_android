@@ -10,7 +10,7 @@ import Otp_Verification from './src/component/pages/Otp_Verification'
 import ForgetPassword from './src/component/pages/ForgetPassword';
 import QuickPin from './src/component/pages/QuickPin';
 import CreateMpin from './src/component/pages/CreateMpin';
-
+import Candidate_SignUp from './src/component/pages/Candidate_SignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,34 +20,17 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
 
-        <Stack.Screen name='Home' options={{
-          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
-        }} component={Entry_page} />
-        <Stack.Screen name='Employee' options={{ orientation: 'portrait',
-          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
+        <Stack.Screen name='Home' options={{ orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>,}} component={Entry_page} />
+        <Stack.Screen name='Employee' options={{ orientation: 'portrait',gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
         }} component={Employee_Login} />
-        <Stack.Screen name='Candidate' options={{orientation: 'portrait',
-          gestureEnabled: false, headerShown: false, headerLeft: () => <></>,
-        }} component={Login} />
-        <Stack.Screen name='Employee_page' options={{orientation: 'portrait',
-          gestureEnabled: false, headerLeft: () => <></>,  headerShown: false
-        }} component={Employee_page} />
-         <Stack.Screen name='Otp_Verification' options={{
-          orientation: 'portrait',
-          gestureEnabled: false, headerLeft: () => <></>, headerShown: false
+        <Stack.Screen name='Candidate' options={{orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>,}} component={Login} />
+        <Stack.Screen name='Employee_page' options={{orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>,  headerShown: false }} component={Employee_page} />
+         <Stack.Screen name='Otp_Verification' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false
         }} component={Otp_Verification} />
-        <Stack.Screen name='ForgetPassword' options={{
-          orientation: 'portrait',
-          gestureEnabled: false, headerLeft: () => <></>, headerShown: false
-        }} component={ForgetPassword} />
-        <Stack.Screen name='QuickPin' options={{
-          orientation: 'portrait',
-          gestureEnabled: false, headerLeft: () => <></>, headerShown: false
-        }} component={QuickPin} />
-        <Stack.Screen name='CreateMpin' options={{
-          orientation: 'portrait',
-          gestureEnabled: false, headerLeft: () => <></>, headerShown: false
-        }} component={CreateMpin} />
+        <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={ForgetPassword} />
+        <Stack.Screen name='QuickPin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={QuickPin} />
+        <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={CreateMpin} />
+        <Stack.Screen name='Candidate_SignUp' options={{ title:'Register', orientation: 'portrait'}} component={Candidate_SignUp} />
 
       </Stack.Navigator>
     </NavigationContainer>
