@@ -63,19 +63,19 @@ const Otp_Verification = (props) => {
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
         if (sendOtp == inputOtp) {
-            (props.navigation.navigate("ForgetPassword", { userName }))
+            (props.navigation.navigate("ForgetPassword", { userName ,type}))
         } else console.warn("Wrong OTP");
     }
 
     return (
 
-        <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'column' }}>
+        <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'column',justifyContent:'center' }}>
 
             {/* Top Image */}
-            <Image source={require('../images/mobile_otp.png')} style={{ width: 150, height: 150, alignSelf: 'center', marginTop: 120, marginBottom: -10 }} />
+            <Image source={require('../images/mobile_otp.png')} style={{ width: 150, height: 150, alignSelf: 'center' }}     />
 
             {/* OTP Verificataion text */}
-            <Text style={BoldText.BoldText} > Otp Verification {/* {contact} */} </Text>
+            <Text style={BoldText.BoldText} > OTP Verification {/* {contact} */} </Text>
 
             {/* enter otp msg */}
             <View style={{ backgroundColor: 'white', height: 30, flexDirection: 'row', justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
@@ -135,14 +135,15 @@ const Otp_Verification = (props) => {
 
             {/* resend otp text */}
             <View style={style.resendView}>
-                <Text style={{ fontSize: 15, fontWeight: '400', color: count == 0 ? '#03a157' : "#9D9D9D" }} onPress={() => { setCount(60); forgetPasswordApi() }}>Resend</Text>
+                <Text style={{ fontSize: 15, fontWeight: '400', color: count == 0 ? '#03a157' : "#9D9D9D" }} onPress={() => { 
+                    setCount(30); forgetPasswordApi() }}>Resend</Text>
                 {count !== 0 && ( <Text style={{ marginLeft: 5, fontSize: 15 }}> {count + ' seconds'} </Text> )}
             </View>
 
             {/* verify otp button */}
 
             <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? false : true} style={[style.otpVerifyBtn,
-            { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? '#03a157' : "#9D9D9D" }]} onPress={() => { validateOtp() }} >
+            { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? '#220046' : "#9D9D9D" }]} onPress={() => { validateOtp() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
                     Verify OTP
                 </Text>
@@ -167,7 +168,7 @@ const style = StyleSheet.create({
         marginLeft: 25,
         marginRight: 25,
         flexDirection: 'row',
-        marginTop: 40,
+        marginTop: 10,
         height: 45,
         fontSize: 15,
         backgroundColor: '#220046',

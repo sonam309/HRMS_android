@@ -72,6 +72,21 @@ const Employee_Login = (props) => {
         })
     }
 
+
+    const clickQuickPin=()=>{
+
+        if(userName!=''){
+
+            props.navigation.navigate("QuickPin",{userName})
+
+        }else{
+
+            Alert.alert("Please enter User Name")
+
+        }
+
+    }
+
     // Punching In and Out from login page
     const punchInClick = (val) => {
         const userData = {loginId: userName,password: password,oprFlag: 'L'};
@@ -139,7 +154,7 @@ const Employee_Login = (props) => {
 
                 {/* Quick Pin option */}  
                 <View style={styles.loginOption}>
-            <TouchableOpacity onPress={() => { props.navigation.navigate("QuickPin") }}>
+            <TouchableOpacity onPress={() => clickQuickPin()}>
 
                     <View style={{ alignItems: 'center' }} >
                         <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />

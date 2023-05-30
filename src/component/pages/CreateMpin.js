@@ -72,10 +72,14 @@ const CreateMpin = (props) => {
     return (
         <View>
 
-            <Text style={styles.HeaderText} > {type === 'N' ? "Set New Mpin" : "Forget Mpin"}</Text>
+            <Text style={styles.HeaderText} > {type === 'N' ? "Set New Quick Pin" : "Forgot Quick Pin"}</Text>
 
-            {/* Username */}
-            <View style={styles.textInputBox}>
+           <View style={{ height:'100%',width:'100%',justifyContent:'center'}} >
+
+           <Image source={require('../images/create_mpin.png')} style={{ width: '50%', height: '30%', alignSelf: 'center', marginTop:-100, marginBottom:10,}} />
+
+             {/* Username */}
+             <View style={styles.textInputBox}>
                 <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
                 <TextInput placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
             </View>
@@ -98,10 +102,11 @@ const CreateMpin = (props) => {
                 }]} onPress={() => getOTPMethod()}
             >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
-                    Get Otp
+                    Get OTP
                 </Text>
 
             </TouchableOpacity>
+           </View>
 
         </View>
 
@@ -128,8 +133,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 6,
-        marginLeft: 20, marginRight: 20,
-        marginTop: 30,
+        marginLeft: 20,
+         marginRight: 20,
         backgroundColor: 'white',
         borderRadius: 8,
         shadowColor: '#000',

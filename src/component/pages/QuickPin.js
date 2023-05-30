@@ -3,12 +3,44 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 
 
 const QuickPin = (props) => {
+
+    const { userName } = props.route.params;
+
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
 
     const [f1, setF1] = useState('');
     const [f2, setF2] = useState('');
     const [f3, setF3] = useState('');
     const [f4, setF4] = useState('');
+
+    const [mpin, setMpin] = useState('');
+
+    // Change PAssword in function
+    const LoginWithMpin = () => {
+        // const userData = {
+        //     loginId: userName,
+        //     password: newPassword,
+        //     oldPassword: '99999',
+        //     oprFlag: 'L',
+        // };
+
+        // console.warn(userData);
+
+        // // https://econnectsatya.com:7033/api/User/login
+        // axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+        //     const returnedData = response.data.Result;
+        //     let result = returnedData.map(a => a.FLAG);
+        //     console.warn(result);
+        //     result[0] === "S" ? (props.navigation.navigate("Employee_page",
+        //         { full_name, userName })) :
+        //         Alert.alert("Failure", "Please enter correct credentials")
+        // })
+
+        props.navigation.navigate("Employee_page", { userName })
+
+    }
+
+
 
     return (
         <View style={styles.container}>
@@ -18,67 +50,73 @@ const QuickPin = (props) => {
             <Text style={styles.HeaderText}>Quick Pin</Text>
 
 
-            {/* Top Image */}
-            <Image source={require('../images/security_pin_icon.png')} style={{ width: 150, height: 150, alignSelf: 'center', marginBottom: -10, marginTop: 20 }} />
+            <View style={{flex:1,justifyContent:'center'}}>
 
-            <Text style={styles.QuickPinTxt} > Enter Your Quick Pin </Text>
+                {/* Top Image */}
+                <Image source={require('../images/security_pin_icon.png')} style={{ width: 180, height: 180, alignSelf: 'center', marginTop:-50 }} />
 
-            {/* Quick pin input box sk */}
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
+                <Text style={styles.QuickPinTxt} > Enter Your Quick Pin </Text>
 
-                <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
-                    setF1(txt);
-                    if (txt.length >= 1) {
-                        et2.current.focus();
-                    }
-                }} />
-                <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
-                    setF2(txt)
-                    if (txt.length >= 1) {
-                        et3.current.focus();
-                    } else if (txt.length < 1) {
+                {/* Quick pin input box sk */}
+                <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
 
-                        et1.current.focus();
-                    }
-                }} />
-                <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
-                    setF3(txt)
-                    if (txt.length >= 1) {
-                        et4.current.focus();
-                    } else if (txt.length < 1) {
+                    <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
+                        setF1(txt);
+                        if (txt.length >= 1) {
+                            et2.current.focus();
+                        }
+                    }} />
+                    <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
+                        setF2(txt)
+                        if (txt.length >= 1) {
+                            et3.current.focus();
+                        } else if (txt.length < 1) {
 
-                        et2.current.focus();
-                    }
-                }} />
-                <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
-                    setF4(txt)
-                    if (txt.length >= 1) {
+                            et1.current.focus();
+                        }
+                    }} />
+                    <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
+                        setF3(txt)
+                        if (txt.length >= 1) {
+                            et4.current.focus();
+                        } else if (txt.length < 1) {
 
-                    } else if (txt.length < 1) et3.current.focus();
-                }} />
-            </View>
+                            et2.current.focus();
+                        }
+                    }} />
+                    <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
+                        setF4(txt)
+                        setMpin(f1 + f2 + f3 + f4);
+                        if (txt.length >= 1) {
 
-            {/* Done Button sk */}
-            <View style={{ marginHorizontal: 25 }}>
-                <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? false : true} style={[styles.quickLoginBtn, styles.elevation, { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? '#220046' : "#9D9D9D" }]}>
-                    {/* onPress={() => {validateOtp()}} */}
-                    <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
-                        Quick Login
-                    </Text>
-                </TouchableOpacity>
-            </View>
+                        } else if (txt.length < 1) et3.current.focus();
+                    }} />
+                </View>
 
-            {/* botton options sk */}
+                {/* Done Button sk */}
+                <View style={{ marginHorizontal: 25 }}>
+                    <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? false : true} style={[styles.quickLoginBtn, styles.elevation,
+                    {
+                        backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? '#220046' : "#9D9D9D"
+                    }]} onPress={() => { LoginWithMpin() }}>
+                        <Text style={{ color: 'white', fontSize: 15, fontWeight: 500 }}>
+                            Quick Login
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 55, marginVertical: 20 }}>
-                <TouchableOpacity  style={styles.elevation}>
-                    <Text style={styles.QuickPinBottomBtn} onPress={() => { setType('N'), props.navigation.navigate("CreateMpin", { type }) }}>Create Quick Pin</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.elevation} >
-                    <Text style={[styles.QuickPinBottomBtn]}
-                        onPress={() => (props.navigation.navigate("CreateMpin", { type: "F" }))}
-                    >Forgot Quick Pin?</Text>
-                </TouchableOpacity>
+                {/* botton options sk */}
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 55, marginVertical: 20 }}>
+                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]}>
+                        <Text style={styles.QuickPinBottomBtnText} onPress={() => (props.navigation.navigate("CreateMpin", { type: "N" }))}>Create Pin</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]} >
+                        <Text style={styles.QuickPinBottomBtnText} onPress={() => (props.navigation.navigate("CreateMpin", { type: "F" }))}
+                        >Forgot Pin?</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
 
         </View>
@@ -89,8 +127,9 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1
+
     },
-    elevation:{
+    elevation: {
         elevation: 7,
         shadowColor: '#000',
         shadowOffset: {
@@ -141,16 +180,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     QuickPinBottomBtn: {
-        height: 35,
-        width: '100%',
-        fontSize: 12,
+        height: 45,
+        width: '47%',
         backgroundColor: '#220046',
         borderRadius: 35,
-        color: 'white',
         paddingHorizontal: 20,
-        textAlign: 'center',
-        textAlignVertical: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
+    QuickPinBottomBtnText: {
+        color: 'white',
+        fontSize: 13,
+    }
 })
 
 export default QuickPin
