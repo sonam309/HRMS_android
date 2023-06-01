@@ -2,7 +2,6 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 
 import React, { useEffect, useState } from 'react'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import SelectDropdown from 'react-native-select-dropdown'
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Candidate_SignUp = () => {
     const marriage = ["Single", "Married", "Divorced", "Widowed"]

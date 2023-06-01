@@ -18,7 +18,7 @@ export default LeaveBalanceList = [
         "Color":"blue",
     },
     {
-        "Icon": "birthday-cake",
+        "Icon": "abacus",
         "Title": "Birthday Leave",
         "LeaveCount": "6",
         "Color":"#220046",
