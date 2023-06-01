@@ -84,14 +84,13 @@ const Holiday_list = () => {
           const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
             'YYYY-MM-DD',
           );
-          console.log(obj);
 
           // Determine markedDotColor based on ATTENDANCE_FLAG
           let markedDotColor = '';
 
-          if (obj.ATTENDANCE_FLAG === 'P') {
+          if (obj.ATTENDANCE_FLAG === 'A') {
             markedDotColor = 'red';
-          } else if (obj.ATTENDANCE_FLAG === 'A') {
+          } else if (obj.ATTENDANCE_FLAG === 'P') {
             markedDotColor = '#33AA54';
           } else if (obj.ATTENDANCE_FLAG === 'S') {
             markedDotColor = 'orange';
@@ -167,15 +166,19 @@ const Holiday_list = () => {
                     }}
                   />
                 </View>
-              ) : ( marking &&
-                <View
-                  style={{
-                    height: 10,
-                    width: 10,
-                    backgroundColor: marking?.dotColor ? marking.dotColor : "#87CEEB",
-                    borderRadius: 5,
-                  }}
-                />
+              ) : (
+                marking && (
+                  <View
+                    style={{
+                      height: 10,
+                      width: 10,
+                      backgroundColor: marking?.dotColor
+                        ? marking.dotColor
+                        : '#87CEEB',
+                      borderRadius: 5,
+                    }}
+                  />
+                )
               )}
             </TouchableOpacity>
           );
