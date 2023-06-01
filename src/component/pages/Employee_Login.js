@@ -142,13 +142,13 @@ const Employee_Login = (props) => {
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox, styles.elevation]}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1 }} placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
+                    <TextInput style={{ flex: 1, height: 40 }} placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
                 </View>
 
                 {/* Password */}
                 <View style={[styles.textInputBox, styles.elevation]}>
                     <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1 }} placeholder='Password' secureTextEntry={showVisibility} autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={password} onChangeText={(security) => setPassword(security)} />
+                    <TextInput style={{ flex: 1, height: 40 }} placeholder='Password' secureTextEntry={showVisibility} autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={password} onChangeText={(security) => setPassword(security)} />
                     <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
                 </View>
 
