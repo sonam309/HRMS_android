@@ -11,3 +11,5 @@ export default TextBold = StyleSheet.create({
         textAlign: 'center',
     }
 })
+
+
