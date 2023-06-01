@@ -1,10 +1,13 @@
 import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import SelectDropdown from 'react-native-select-dropdown'
-import {positions,gender,marriage,state,bloodGroup} from './Candidate_DropDownData'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Candidate_SignUp = () => {
+    const marriage = ["Single", "Married", "Divorced", "Widowed"]
+    const bloodGroup = ["O+", "A+", "B+", "AB+", "O-", "A-", "B-", "AB-"]
+    const gender = ["Male", "Female", "Other"]
     const [appliedView, setAppliedView] = useState(false)
     const [personalView, setPersonalView] = useState(false)
     const [educationView, setEducationView] = useState(false)
@@ -15,6 +18,22 @@ const Candidate_SignUp = () => {
     const [martialStatus, setMartialStatus] = useState("Select Martial Status")
     const [homeState, setHomeState] = useState("Select Home State")
     const [myBloodGroup, setMyBloodGroup] = useState("Select Blood Group")
+    const [openPositions, setOpenPositions] = useState([])
+    const [myState, setMyState] = useState([])
+    const [showCalendar,setShowCalendar] = useState(false)
+    let positions, states;
+
+    const fetchDropDowndata = async (param) => {
+        let data = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${param}`);
+        data = await data.json();
+        param === "C" ? (positions = data.map(a => a.PARAM_NAME), setOpenPositions(positions)) : null;
+        param === "7" ? (states = data.map(b => b.PARAM_NAME), setMyState(states)) : null;
+    }
+
+    useEffect(() => {
+        openPositions.length === 0 ? fetchDropDowndata("C") : null;
+        myState.length === 0 ? fetchDropDowndata("7") : null;
+    }, [])
 
     return (
         <View style={{ flex: 1 }}>
@@ -29,7 +48,7 @@ const Candidate_SignUp = () => {
                     {
                         appliedView ? (
                             <View style={{ margin: 10 }}>
-                                <SelectDropdown data={positions} buttonStyle={[styles.elevation, styles.dropDownStyle, { width: '100%'}]} onSelect={(value) => { setSelectedPosition(value) }} defaultButtonText={selectedPosition} buttonTextStyle={{fontSize:15}}/>
+                                <SelectDropdown data={openPositions} buttonStyle={[styles.elevation, styles.dropDownStyle, { width: '100%' }]} onSelect={(value) => { setSelectedPosition(value) }} defaultButtonText={openPositions[0]} buttonTextStyle={{ fontSize: 15 }} />
                             </View>
                         ) : null
                     }
@@ -52,7 +71,7 @@ const Candidate_SignUp = () => {
 
                                 <View style={styles.viewHolder}>
                                     <TextInput placeholder='Last Name' style={[styles.inputHolder, styles.elevation]} />
-                                    <SelectDropdown data={gender} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setSelectedGender(value) }} defaultButtonText={selectedGender} buttonTextStyle={{fontSize:15}} />
+                                    <SelectDropdown data={gender} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setSelectedGender(value) }} defaultButtonText={selectedGender} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
@@ -60,10 +79,10 @@ const Candidate_SignUp = () => {
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TouchableOpacity onPress={() => setOpen(true)} style={[styles.inputHolder, styles.elevation]}>
+                                    <TouchableOpacity onPress={()=>setShowCalendar(true)} style={[styles.inputHolder, styles.elevation]}>
                                         <Text style={{ textAlign: 'center', paddingTop: 15 }}>Select Date of Birth</Text>
                                     </TouchableOpacity>
-                                    <SelectDropdown data={marriage} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMartialStatus(value) }} defaultButtonText={martialStatus} buttonTextStyle={{fontSize:15}} />
+                                    <SelectDropdown data={marriage} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMartialStatus(value) }} defaultButtonText={martialStatus} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
@@ -72,7 +91,7 @@ const Candidate_SignUp = () => {
 
                                 <View style={styles.viewHolder}>
                                     <TextInput placeholder='Pincode' keyboardType='number-pad' style={[styles.inputHolder, styles.elevation]} />
-                                    <SelectDropdown data={state} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setHomeState(value) }} defaultButtonText={homeState} buttonTextStyle={{fontSize:15}} />
+                                    <SelectDropdown data={myState} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setHomeState(value) }} defaultButtonText={myState[0]} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
@@ -88,7 +107,7 @@ const Candidate_SignUp = () => {
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                     <SelectDropdown data={bloodGroup} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMyBloodGroup(value) }} defaultButtonText={myBloodGroup} buttonTextStyle={{fontSize:15}} />
+                                    <SelectDropdown data={bloodGroup} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMyBloodGroup(value) }} defaultButtonText={myBloodGroup} buttonTextStyle={{ fontSize: 15 }} />
                                     <TextInput placeholder='PAN No.' style={[styles.inputHolder, styles.elevation]} />
                                 </View>
 
@@ -199,7 +218,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
         marginHorizontal: 3,
-        height:40
+        height: 40
     },
     viewHolder: {
         flexDirection: 'row',

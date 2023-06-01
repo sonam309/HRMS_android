@@ -12,7 +12,6 @@ import E_Resign from './Employee_pages/E_Resign';
 import Jobs from './Employee_pages/Jobs';
 import Hiring from './Employee_pages/Hiring';
 import Help_desk from './Employee_pages/Help_desk';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Icons from 'react-native-vector-icons/SimpleLineIcons'
 import user_profile from '../images/user.png'
 
@@ -24,9 +23,9 @@ const Employee_page = (props) => {
   function CustomDrawer(props) {
     return (
       <DrawerContentScrollView {...props} >
-        <View style={{backgroundColor: 'blue'}}>
+        <View style={{backgroundColor: '#220046'}}>
           <View style={{flex:1, alignItems: 'flex-end', justifyContent: 'flex-end'}}>
-            <TouchableOpacity style={{ backgroundColor: 'blue', color: 'white' }} onPress={() => { console.warn("Logout clicked"); navigator('Employee'); }}>
+            <TouchableOpacity style={{ backgroundColor: '#220046', color: 'white' }} onPress={() => { navigator('Employee'); }}>
               <Icons name='logout' size={20} style={{ color: 'white', padding: 8 }} />
             </TouchableOpacity>
           </View>
@@ -40,7 +39,7 @@ const Employee_page = (props) => {
         </View>
 
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginHorizontal: 12 }}>
-          {DrawerData.map((item) => <DrawerIcons icon={item.icon} header={item.header} navigator={navigator} />)}
+          {DrawerData.map((item) => <DrawerIcons key={item.id} icon={item.icon} header={item.header} navigator={navigator} />)}
 
         </View>
 
@@ -52,8 +51,8 @@ const Employee_page = (props) => {
     const header = props.header, icon = props.icon, navigator = props.navigator
     return (
       <TouchableOpacity key={header} style={{ backgroundColor: 'white', width: '45%', height: 90, alignItems: 'center', marginVertical: 8, borderRadius: 8, justifyContent: 'center', paddingVertical: 4 }} onPress={() => { navigator(`${header}`) }}>
-        <Icon name={icon} color='blue' size={40} style={{ marginVertical: 4 }} />
-        <Text style={{ color: 'black' }}>{header}</Text>
+        <Icon name={icon} color='#e10092' size={40} style={{ marginVertical: 4 }} />
+        <Text style={{ color: '#220046',textAlign:'center' }}>{header}</Text>
       </TouchableOpacity>
     )
   }

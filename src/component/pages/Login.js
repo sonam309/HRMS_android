@@ -83,7 +83,7 @@ const Login = (props) => {
 
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin")} style={{ alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin",{userName})} style={{ alignItems: 'center' }}>
                         <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
                         <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
                     </TouchableOpacity>

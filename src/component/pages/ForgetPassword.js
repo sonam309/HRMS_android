@@ -82,7 +82,7 @@ const ForgetPassword = (props) => {
 
     } else {
 
-      console.warn("Mpin and Confirm Mpin should be same")
+      console.warn("Quick Pin and Confirm Quick Pin should be same")
 
     }
 
@@ -99,10 +99,10 @@ const ForgetPassword = (props) => {
       oprFlag: 'R',
     };
 
-    console.warn(userData);
+    // console.warn(userData);
 
     // https://econnectsatya.com:7033/api/User/login
-    axios.post('http://192.168.1.169:7038/api/User/login', userData).then((response) => {
+    axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
       const returnedData = response.data.Result;
       let result = returnedData.map(a => a.FLAG);
       console.warn(result);
@@ -119,9 +119,9 @@ const ForgetPassword = (props) => {
       {
         type === "N" ?
           <Text style={styles.HeaderText}>
-            New Mpin
+            New Quick Pin
           </Text> :
-          type === "F" ? <Text style={styles.HeaderText}>Forgot Mpin</Text> : <Text style={styles.HeaderText}>Forgot Password</Text>
+          type === "F" ? <Text style={styles.HeaderText}>Forgot Quick Pin</Text> : <Text style={styles.HeaderText}>Forgot Password</Text>
       }
       <View style={{flex:1,justifyContent:'center'}}>
 
@@ -132,12 +132,12 @@ const ForgetPassword = (props) => {
           type === "N" || type === "F" ?
             <View>
 
-              {/* Enter mpin Text */}
+              {/* Enter Quick Pin Text */}
               <Text style={styles.enterMpinTxt}>
-                Enter Mpin
+                Enter Quick Pin
               </Text>
 
-              {/* Enter mpin input box sk */}
+              {/* Enter Quick Pin input box sk */}
               <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
 
                 <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
@@ -172,12 +172,12 @@ const ForgetPassword = (props) => {
                 }} />
               </View>
 
-              {/* Confirm Mpin Text */}
+              {/* Confirm Quick Pin Text */}
               <Text style={styles.confirmMpintxt}>
-                Confirm Mpin
+                Confirm Quick Pin
               </Text>
 
-              {/* Confirm mpin input box sk */}
+              {/* Confirm Quick Pin input box sk */}
               <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
 
                 <TextInput ref={cet1} style={[styles.txtbox, { borderColor: f5.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
@@ -224,7 +224,7 @@ const ForgetPassword = (props) => {
                 >
                   {/* onPress={() => {validateOtp()}} */}
                   <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
-                    Set Mpin
+                    Set Quick Pin
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -237,7 +237,7 @@ const ForgetPassword = (props) => {
                   color: '#474E68', fontWeight: 300, fontSize: 15,
                   textAlign: 'center', marginTop: 20
                 }}>
-                  Once the Mpin is successfully changed, you will need to login again
+                  Once the Quick Pin is successfully changed, you will need to login again
                 </Text>
               </View>
 
@@ -269,7 +269,7 @@ const ForgetPassword = (props) => {
                 disabled={newPassword !== '' && confirmPassword !== '' ? false : true}
                 style={[styles.changePasswordBtn, styles.elevation,
                 {
-                  backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#03a157' : "#9D9D9D"
+                  backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#220046' : "#9D9D9D"
                 }
                 ]} onPress={() => { MatchPasswordValidation() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Change Password </Text>

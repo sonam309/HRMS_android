@@ -182,13 +182,14 @@ const styles = StyleSheet.create({
     QuickPinBottomBtn: {
         height: 45,
         width: '47%',
-        backgroundColor: '#220046',
+        backgroundColor: '#30A2FF',
         borderRadius: 35,
         paddingHorizontal: 20,
         alignItems: 'center',
         justifyContent: 'center',
     },
     QuickPinBottomBtnText: {
+        fontWeight:'bold',
         color: 'white',
         fontSize: 13,
     }

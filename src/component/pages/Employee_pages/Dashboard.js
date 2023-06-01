@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler, Modal } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -9,17 +9,15 @@ import GetLocation from 'react-native-get-location'
 
 const Home = (props) => {
   const { userName } = props.route.params;
-  let loginId = userName
   const [punchButtonColor, setPunchButtonColor] = useState("blue")
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
   const [punchInTime, setPunchInTime] = useState("");
   const [duration, setDuration] = useState("");
-  const [visible, setVisible] = useState(false)
 
+  let loginId = userName
   let inTime = "";
   let timeIn = "";
-
 
   useEffect(() => {
     const backAction = () => {
@@ -40,7 +38,7 @@ const Home = (props) => {
     }
   }, []);
 
-
+  // degree to radian converter
   const deg2rad = (deg) => {
     return deg * (Math.PI / 180)
   }
@@ -58,14 +56,14 @@ const Home = (props) => {
 
   const getCurrentLocation = async (val) => {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
     granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 30000,
     })
       .then(location => {
-        console.log(location);
+        // console.log(location);
         let dist = getDistInKm(location.latitude, location.longitude, 28.5443907, 77.3310235)
         if (dist < 0.5) {
           punchInClick(val);
@@ -127,7 +125,7 @@ const Home = (props) => {
   }, [])
 
   return (
-    <View style={{ flex: 1, padding: 0, margin: 0 }}>
+    <View style={styles.container}>
       <ScrollView>
         {/* Main Content-Calendar */}
 
@@ -136,16 +134,18 @@ const Home = (props) => {
         {/* Punch In Button */}
 
         <View style={styles.attendance}>
-          <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
-            <MaterialCommunityIcons name='gesture-double-tap' size={37} color='white' />
-            <Text style={[styles.punchButtonText]}>Punch {inOut}</Text>
-          </TouchableOpacity>
+          <View style={{ width: '50%' }}>
+            <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
+              <MaterialCommunityIcons name='gesture-double-tap' size={37} color='white' />
+              <Text style={[styles.punchButtonText]}>Punch {inOut}</Text>
+            </TouchableOpacity>
+          </View>
 
-          <View>
+          <View style={{ width: '50%', alignItems: 'center' }}>
 
             <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
               <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'} hrs</Text>
                 <Text style={{ color: 'black' }}>Spent Today</Text>
               </View>
@@ -163,7 +163,7 @@ const Home = (props) => {
 
         <View style={[styles.attendance]}>
 
-          <View>
+          <View style={{ flex: 1 }}>
 
             <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
               <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
@@ -179,7 +179,7 @@ const Home = (props) => {
 
           </View>
 
-          <View>
+          <View style={{ flex: 1 }}>
             <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#0ce83f' }]} >
               <Text style={styles.actionText}>Leave apply</Text>
             </TouchableOpacity>
@@ -198,18 +198,18 @@ const Home = (props) => {
 
         {/* Other options */}
         <View style={styles.others}>
-          <View style={[styles.otherOptions, styles.Elevation]}>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <MaterialCommunityIcons name='timetable' size={30} color='blue' />
-            <Text style={{ color: 'black' }}>Pending Approval</Text>
-          </View>
-          <View style={[styles.otherOptions, styles.Elevation]}>
+            <Text style={{color:'black',textAlign:'center'}}>Pending Approval</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <Foundation name='megaphone' size={30} color='blue' />
-            <Text style={{ color: 'black' }}>Company Announcement</Text>
-          </View>
-          <View style={[styles.otherOptions, styles.Elevation]}>
+            <Text style={{color:'black',textAlign:'center'}}>Company Announcement</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <FontAwesome5 name='birthday-cake' size={30} color="blue" />
-            <Text style={{ color: 'black' }}>Birthday & Anniversary</Text>
-          </View>
+            <Text style={{color:'black',textAlign:'center'}}>Birthday & Anniversary</Text>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>
@@ -243,13 +243,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 8,
     elevation: 4,
-    marginHorizontal: 2,
+    marginHorizontal: 5,
     marginVertical: 8
   },
   attendanceButton: {
     height: 35,
     paddingHorizontal: 10,
-    width: 160,
     borderRadius: 35,
     marginVertical: 6
   },
@@ -260,7 +259,7 @@ const styles = StyleSheet.create({
   otherOptions: {
     height: 100,
     flex: 1,
-    backgroundColor: 'beige',
+    backgroundColor: 'white',
     borderRadius: 8,
     marginVertical: 12,
     marginHorizontal: 5,
@@ -272,24 +271,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 0
   },
-  actionButton: {
-    width: 180,
-    height: 40,
-    borderRadius: 15,
-    marginVertical: 6
-  },
   actionText: {
     flex: 1,
     textAlignVertical: 'center',
     textAlign: 'center',
     color: 'black',
     fontSize: 15
-  },
-  leaveButton: {
-    marginBottom: 12,
-    marginHorizontal: 25,
-    height: 40,
-    borderRadius: 35,
   },
   punchButton: {
     flex: 1,
