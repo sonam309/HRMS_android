@@ -32,15 +32,15 @@ const Employee_Login = (props) => {
     const getCurrentLocation = async (val) => {
         let inOut = (val === 'I' ? "In" : "Out")
         const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
         granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             timeout: 30000,
         })
             .then(location => {
                 console.log(location);
-                let dist = getDistInKm(location.latitude, location.longitude, 28.54054054054054, 77.34496209068595)
+                let dist = getDistInKm(location.latitude, location.longitude, 28.5444665, 77.3309966)
                 if (dist < 0.5) {
                     punchInClick(val);
                 } else { Alert.alert(`Punch ${inOut} from your office`) }

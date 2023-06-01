@@ -37,12 +37,12 @@ const Entry_page = (props) => {
 
 
             {/* Options */}
-            <View style={{ flex: 3,justifyContent:'center' }}>
-                <TouchableOpacity style={styles.loginButton}>
-                    <Text onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButtonText, { backgroundColor: '#1157bf' }]}>Employee</Text>
+            <View style={{ flex: 3, justifyContent: 'center' }}>
+                <TouchableOpacity style={[styles.loginButton,styles.elevation, { backgroundColor: '#1157bf' }]}>
+                    <Text onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButtonText]}>Employee</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.loginButton}>
-                    <Text onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButtonText, { backgroundColor: 'red' }]}>Candidate</Text>
+                <TouchableOpacity style={[styles.loginButton,styles.elevation, { backgroundColor: 'red' }]}>
+                    <Text onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButtonText]}>Candidate</Text>
                 </TouchableOpacity>
             </View>
 
@@ -57,13 +57,22 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%'
     },
+    elevation: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 7
+    },
     loginButton: {
-        marginLeft: 25,
-        marginRight: 25
+        marginHorizontal:25,
+        borderRadius: 10,
+        marginVertical:10
     },
     loginButtonText: {
-        marginTop: 15,
-        borderRadius: 10,
         height: 50,
         textAlignVertical: 'center',
         textAlign: 'center',
