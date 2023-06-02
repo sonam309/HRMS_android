@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert,Image } from 'react-native'
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
+import CustomPasswordInput from '../Utility/CustomPasswordInput';
 
 const ForgetPassword = (props) => {
 
@@ -115,18 +116,16 @@ const ForgetPassword = (props) => {
 
     <View style={styles.container}>
 
+      <View style={styles.Header}>
+        <Text style={styles.HeaderText}> {type === "N" ? ("New Quick Pin") : (type === "F" ? "Forgot Quick Pin" : "Forgot Password")} </Text>
+      </View>
 
-      {
-        type === "N" ?
-          <Text style={styles.HeaderText}>
-            New Quick Pin
-          </Text> :
-          type === "F" ? <Text style={styles.HeaderText}>Forgot Quick Pin</Text> : <Text style={styles.HeaderText}>Forgot Password</Text>
-      }
-      <View style={{flex:1,justifyContent:'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
 
-      <Image source={require('../images/new_mpin.png')} style={{ width: '50%', height: '30%',
-      marginTop:-30, alignSelf: 'center',}} />
+        <Image source={require('../images/new_mpin.png')} style={{
+          width: '50%', height: '30%',
+          marginTop: -30, alignSelf: 'center',
+        }} />
 
         {
           type === "N" || type === "F" ?
@@ -233,10 +232,7 @@ const ForgetPassword = (props) => {
               <View style={styles.Message}>
 
 
-                <Text style={{
-                  color: '#474E68', fontWeight: 300, fontSize: 15,
-                  textAlign: 'center', marginTop: 20
-                }}>
+                <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 15, textAlign: 'center', marginTop: 20 }}>
                   Once the Quick Pin is successfully changed, you will need to login again
                 </Text>
               </View>
@@ -245,22 +241,18 @@ const ForgetPassword = (props) => {
 
 
               {/* new Password */}
-              <View style={[styles.textInputBox, styles.elevation]}>
+              <View style={styles.textInputBox}>
                 <Feather name='lock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
 
-                <TextInput placeholder='New Password' secureTextEntry={showNewPassword}
-                  autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384'
-                  returnKeyType="next"
-                  value={newPassword} onChangeText={(security) => setnewPassword(security)} />
-                <AntDesign name='eye' onPress={changeVisibilitynew}
-                  style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
+                <CustomPasswordInput placeholder='New Password' secureTextEntry={showNewPassword} value={newPassword} onChangeText={(security) => setnewPassword(security)} />
+                <AntDesign name='eye' onPress={changeVisibilitynew} style={{ position: 'absolute', right: 9 }} size={22} />
               </View>
 
               {/* Confirm Password */}
-              <View style={[styles.textInputBox, styles.elevation]}>
+              <View style={[styles.textInputBox]}>
                 <Feather name='unlock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
-                <TextInput placeholder='Confirm Password' secureTextEntry={showConfirmPassword} returnKeyType="done" autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={confirmPassword} onChangeText={(security) => setConfirmPassword(security)} />
-                <AntDesign name='eye' onPress={changeVisibilityConfirm} style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
+                <CustomPasswordInput placeholder='Confirm Password' secureTextEntry={showConfirmPassword} value={confirmPassword} onChangeText={(security) => setConfirmPassword(security)} />
+                <AntDesign name='eye' onPress={changeVisibilityConfirm} style={{ position: 'absolute', right: 9 }} size={22} />
               </View>
 
               {/* chnage password button */}
@@ -343,14 +335,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  HeaderText: {
-    width: '100%',
-    fontSize: 18,
-    height: 35,
-    alignSelf: 'center',
-    textAlign: 'center',
-    textAlignVertical: 'center',
+  Header: {
+    // width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#220046',
+  },
+  HeaderText: {
+    fontSize: 20,
+    height: 38,
     color: 'white',
     fontWeight: '500'
   },

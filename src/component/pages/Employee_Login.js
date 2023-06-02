@@ -7,6 +7,8 @@ import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import GetLocation from 'react-native-get-location'
 import company_logo from '../images/company_logo.jpg'
+import CustomTextInput from '../Utility/CustomTextInput';
+import CustomPasswordInput from '../Utility/CustomPasswordInput';
 
 
 const Employee_Login = (props) => {
@@ -44,7 +46,7 @@ const Employee_Login = (props) => {
                 if (dist < 0.5) {
                     punchInClick(val);
                 } else { Alert.alert(`Punch ${inOut} from your office`) }
-            }).catch(error => { const { code, message } = error; Alert.alert(code, message);})) : (Alert.alert("Location permission not granted"))
+            }).catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
     }
 
     // preventing going to entry page
@@ -63,7 +65,7 @@ const Employee_Login = (props) => {
 
     // logging in function
     const submit = () => {
-        const userData = {loginId: userName,password: password,oprFlag: 'L'};
+        const userData = { loginId: userName, password: password, oprFlag: 'L' };
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
@@ -73,13 +75,13 @@ const Employee_Login = (props) => {
     }
 
 
-    const clickQuickPin=()=>{
+    const clickQuickPin = () => {
 
-        if(userName!=''){
+        if (userName != '') {
 
-            props.navigation.navigate("QuickPin",{userName})
+            props.navigation.navigate("QuickPin", { userName })
 
-        }else{
+        } else {
 
             Alert.alert("Please enter User Name")
 
@@ -89,7 +91,7 @@ const Employee_Login = (props) => {
 
     // Punching In and Out from login page
     const punchInClick = (val) => {
-        const userData = {loginId: userName,password: password,oprFlag: 'L'};
+        const userData = { loginId: userName, password: password, oprFlag: 'L' };
 
         let action = (val === 'I' ? "In" : "Out")
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
@@ -97,8 +99,8 @@ const Employee_Login = (props) => {
             let result = returnedData.map(a => a.FLAG);
             result[0] === "S" ? (fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
                 method: "POST",
-                headers: {Accept: "application/json", "Content-Type": "application/json"},
-                body: JSON.stringify({operFlag: val,userId: userName}),
+                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({ operFlag: val, userId: userName }),
             })
                 .then((response) => response.json())
                 .then((responseData) => {
@@ -115,7 +117,8 @@ const Employee_Login = (props) => {
     const forgetPasswordApi = () => {
         let otp = RandomNumber("6")
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
-            params: { loginId: userName, operFlag: "E", message: otp +" Is the OTP for your mobile verfication on Satya One."
+            params: {
+                loginId: userName, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
             }
         }).then((response) => {
 
@@ -134,40 +137,40 @@ const Employee_Login = (props) => {
 
             {/* Company Logo */}
             <View style={{ flex: 0.8 }}>
-                <Image source={company_logo} style={{ marginTop: 30,width: "100%", height: '100%' }} />
+                <Image source={company_logo} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
             <View style={{ justifyContent: 'center', flex: 2.6 }}>
                 <Text style={styles.header}>Employee Login</Text>
                 {/* user credentials -username */}
-                <View style={[styles.textInputBox, styles.elevation]}>
+                <View style={[styles.textInputBox]}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1, height: 40 }} placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
+                    <CustomTextInput placeholder='Username' value={userName} onChangeText={(name) => setUserName(name)} />
                 </View>
 
                 {/* Password */}
-                <View style={[styles.textInputBox, styles.elevation]}>
+                <View style={[styles.textInputBox]}>
                     <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1, height: 40 }} placeholder='Password' secureTextEntry={showVisibility} autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={password} onChangeText={(security) => setPassword(security)} />
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} />
                     <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
                 </View>
 
-                {/* Quick Pin option */}  
+                {/* Quick Pin option */}
                 <View style={styles.loginOption}>
-            <TouchableOpacity onPress={() => clickQuickPin()}>
+                    <TouchableOpacity onPress={() => clickQuickPin()}>
 
-                    <View style={{ alignItems: 'center' }} >
-                        <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
-                        <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
-                    </View>
+                        <View style={{ alignItems: 'center' }} >
+                            <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
+                            <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                        </View>
 
-                </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Log In Button */}
-                <TouchableOpacity style={[styles.loginButton, styles.elevation]}>
+                <TouchableOpacity style={[styles.loginButton, styles.elevation]} onPress={() => submit()}>
                     <AntDesign name='poweroff' color='white' size={20} />
-                    <Text style={[styles.loginButtonText, { marginHorizontal: 15 }]} onPress={() => submit()}>Log In</Text>
+                    <Text style={[styles.loginButtonText, { marginHorizontal: 15 }]}>Log In</Text>
                 </TouchableOpacity>
 
                 {/* Punching Option */}

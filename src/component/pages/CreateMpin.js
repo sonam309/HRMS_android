@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert, ScrollView, StatusBar } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import CustomTextInput from '../Utility/CustomTextInput';
+import CustomPasswordInput from '../Utility/CustomPasswordInput';
 
 const CreateMpin = (props) => {
 
@@ -54,7 +55,7 @@ const CreateMpin = (props) => {
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName,type }))
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName, type }))
                 : Alert.alert("Failure", "Please enter correct credentials")
 
             // result[0] === "S" ? (Alert.alert("Sucess", "Contcat "+contact))
@@ -71,42 +72,41 @@ const CreateMpin = (props) => {
 
     return (
         <View>
-
-            <Text style={styles.HeaderText} > {type === 'N' ? "Set New Quick Pin" : "Forgot Quick Pin"}</Text>
-
-           <View style={{ height:'100%',width:'100%',justifyContent:'center'}} >
-
-           <Image source={require('../images/create_mpin.png')} style={{ width: '50%', height: '30%', alignSelf: 'center', marginTop:-100, marginBottom:10,}} />
-
-             {/* Username */}
-             <View style={styles.textInputBox}>
-                <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
-                <TextInput placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
+            <View style={styles.Header}>
+                <Text style={styles.HeaderText} > {type === 'N' ? "Set New Quick Pin" : "Forgot Quick Pin"}</Text>
             </View>
 
-            {/* Password */}
-            <View style={styles.textInputBox}>
-                <Feather name='lock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
+            <View style={{ height: '100%', width: '100%', justifyContent: 'center' }} >
 
-                <TextInput placeholder='Password' secureTextEntry={showVisibility} autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={password} onChangeText={(security) => setPassword(security)} />
+                <Image source={require('../images/create_mpin.png')} style={{ width: '50%', height: '30%', alignSelf: 'center', marginTop: -100, marginBottom: 10, }} />
 
-                <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
+                {/* Username */}
+                <View style={styles.textInputBox}>
+                    <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
+                    <CustomTextInput placeholder='Username' value={userName} onChangeText={(name) => setUserName(name)} />
+                </View>
+
+                {/* Password */}
+                <View style={styles.textInputBox}>
+                    <Feather name='lock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
+
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} />
+
+                    <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
+                </View>
+                <TouchableOpacity disabled={
+                    userName !== '' && password !== '' ?
+                        false : true
+                }
+                    style={[styles.quickLoginBtn, {
+                        backgroundColor: userName !== '' && password !== '' ?
+                            '#220046' : "#9D9D9D"
+                    }]} onPress={() => getOTPMethod()}
+                >
+                    <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Get OTP</Text>
+
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity disabled={
-                userName !== '' && password !== '' ?
-                    false : true
-            }
-                style={[styles.quickLoginBtn, {
-                    backgroundColor: userName !== '' && password !== '' ?
-                        '#220046' : "#9D9D9D"
-                }]} onPress={() => getOTPMethod()}
-            >
-                <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
-                    Get OTP
-                </Text>
-
-            </TouchableOpacity>
-           </View>
 
         </View>
 
@@ -114,40 +114,27 @@ const CreateMpin = (props) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        height: '100%',
+    Header: {
         width: '100%',
-
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#220046',
     },
     HeaderText: {
         padding: 4,
         backgroundColor: '#220046',
-        textAlign: 'center',
         color: 'white',
         fontWeight: '400',
-        textAlignVertical: 'center',
-        fontSize: 18,
+        fontSize: 20,
         height: 38
     }, textInputBox: {
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 6,
-        marginLeft: 20,
-         marginRight: 20,
-        backgroundColor: 'white',
+        marginHorizontal: 20,
         borderRadius: 8,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 7
     }, quickLoginBtn: {
-        marginLeft: 40,
-        marginRight: 40,
+        marginHorizontal: 40,
         flexDirection: 'row',
         marginTop: 60,
         height: 40,

@@ -5,6 +5,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
+import CustomTextInput from '../Utility/CustomTextInput';
+import CustomPasswordInput from '../Utility/CustomPasswordInput';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -69,16 +71,16 @@ const Login = (props) => {
             <View style={{ justifyContent: 'center', flex: 2.6 }}>
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - Username */}
-                <View style={[styles.textInputBox, styles.elevation]}>
+                <View style={styles.textInputBox}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1 }} placeholder='Username' placeholderTextColor='#999384' value={userName} onChangeText={(name) => setUserName(name)} />
+                    <CustomTextInput placeholder='Username' value={userName} onChangeText={(name) => setUserName(name)} />
                 </View>
 
                 {/* Password */}
-                <View style={[styles.textInputBox, styles.elevation]}>
+                <View style={styles.textInputBox}>
                     <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <TextInput style={{ flex: 1 }} placeholder='Password' secureTextEntry={showVisibility} autoCapitalize='none' autoCorrect={false} placeholderTextColor='#999384' value={password} onChangeText={(security) => setPassword(security)} />
-                    <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 0, marginRight: 9 }} size={22} />
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} />
+                    <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
                 </View>
 
                 {/* Quick Pin Option */}
@@ -90,9 +92,9 @@ const Login = (props) => {
                 </View>
 
                 {/* Log In Button */}
-                <TouchableOpacity style={[styles.loginButton, styles.elevation]}>
+                <TouchableOpacity style={[styles.loginButton, styles.elevation]} onPress={() => submit()}>
                     <AntDesign name='poweroff' color='white' size={20} />
-                    <Text style={styles.loginButtonText} onPress={() => submit()}>Log In</Text>
+                    <Text style={styles.loginButtonText}>Log In</Text>
                 </TouchableOpacity>
 
                 {/* Forgot Password */}
@@ -174,7 +176,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 15
     },
     bottomElement: {
-
         position: 'absolute',
         bottom: 0,
         width: '100%',
@@ -182,7 +183,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'grey',
         fontSize: 15,
-
     }
 })
 

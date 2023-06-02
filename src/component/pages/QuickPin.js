@@ -46,9 +46,9 @@ const QuickPin = (props) => {
         <View style={styles.container}>
             {/* sk */}
             {/* <StatusBar backgroundColor="#220046" /> */}
-
-            <Text style={styles.HeaderText}>Quick Pin</Text>
-
+            <View style={styles.Header}>
+                <Text style={styles.HeaderText}>Quick Pin</Text>
+            </View>
 
             <View style={{flex:1,justifyContent:'center'}}>
 
@@ -108,11 +108,11 @@ const QuickPin = (props) => {
                 {/* botton options sk */}
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 55, marginVertical: 20 }}>
-                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]}>
-                        <Text style={styles.QuickPinBottomBtnText} onPress={() => (props.navigation.navigate("CreateMpin", { type: "N" }))}>Create Pin</Text>
+                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]} onPress={() => (props.navigation.navigate("CreateMpin", { type: "N" }))}>
+                        <Text style={styles.QuickPinBottomBtnText}>Create Pin</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]} >
-                        <Text style={styles.QuickPinBottomBtnText} onPress={() => (props.navigation.navigate("CreateMpin", { type: "F" }))}
+                    <TouchableOpacity style={[styles.elevation, styles.QuickPinBottomBtn]} onPress={() => (props.navigation.navigate("CreateMpin", { type: "F" }))} >
+                        <Text style={styles.QuickPinBottomBtnText}
                         >Forgot Pin?</Text>
                     </TouchableOpacity>
                 </View>
@@ -139,14 +139,17 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 4
     },
+    Header: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#220046',
+    },
     HeaderText: {
         padding: 4,
-        backgroundColor: '#220046',
-        textAlign: 'center',
         color: 'white',
         fontWeight: '400',
-        textAlignVertical: 'center',
-        fontSize: 18,
+        fontSize: 20,
         height: 38
     },
     QuickPinTxt: {
