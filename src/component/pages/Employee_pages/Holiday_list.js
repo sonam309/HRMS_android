@@ -1,8 +1,16 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
 import moment from 'moment';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const Holiday_list = () => {
   useEffect(() => {
@@ -10,10 +18,18 @@ const Holiday_list = () => {
     getAttendance();
   }, []);
 
+  useEffect(() => {
+    getHolidayList(year);
+  }, [year]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [holidayList, setHolidayList] = useState([]);
   const [markedDate, setMarkedDate] = useState({});
   const [finalO, setFinalO] = useState({});
+
+  const [year, setYear] = useState(new Date());
 
   var markedDates = {};
   const finalObject = {};
@@ -111,9 +127,134 @@ const Holiday_list = () => {
     return `rgb(${red}, ${green}, ${blue})`;
   };
 
+  const modalData = [
+    {
+      heading: 'Shift',
+      caption: '9:30 to 6:30',
+    },
+    {
+      heading: 'Actual',
+      caption: 'none',
+    },
+    {
+      heading: 'Regularised',
+      caption: 'none',
+    },
+    {
+      heading: 'Hours',
+      caption: '00:0 Hours',
+    },
+    {
+      heading: 'Deficit',
+      caption: '9:00',
+    },
+    {
+      heading: 'Leave status',
+      caption: 'none',
+    },
+    {
+      heading: 'Reason',
+      caption: 'none',
+    },
+    {
+      heading: 'Application',
+      caption: 'none',
+    },
+    {
+      heading: 'Raw Swipes',
+      caption: 'none',
+    },
+  ];
+
   return (
     <View>
+      {/* {showBottomUpModal && (
+        <BottomUpModal
+          isVisible={showBottomUpModal}
+          onClose={() => setShowBottomUpModal(false)}
+          visibleHieght={380}>
+         { <View>
+            <Text>Modal</Text>
+          </View>}
+        </BottomUpModal>
+      )} */}
+
+      {/* //calendar modal start  */}
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                }}>
+                {modalData.map(data => {
+                  return (
+                    <View style={styles.modalWrap}>
+                      <Text style={styles.modalTextHeading}>
+                        {data.heading}
+                      </Text>
+                      <Text style={styles.modalTextCaption}>
+                        {data.caption}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}>Okay</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+
+      {/* //calendar modal end */}
+
+      {/* dropdown start */}
+      <View style={{margin: 10}}>
+        <SelectDropdown
+          data={Array.from(
+            {length: new Date().getFullYear() - 1990 + 1},
+            (_, index) => (1990 + index).toString(),
+          )}
+          onSelect={selectedItem => {
+            setYear(selectedItem);
+          }}
+          buttonStyle={[
+            styles.elevation,
+            styles.dropDownStyle,
+            {width: '100%'},
+          ]}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem;
+          }}
+          defaultButtonText={'Select an Year'}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item;
+          }}
+        />
+      </View>
+      {/* dropdown end */}
+
       <Calendar
+        initialDate={year}
         style={{marginBottom: 20, elevation: 4, backgroundColor: '#fff'}}
         headerStyle={{backgroundColor: '#220046'}}
         theme={{
@@ -131,6 +272,10 @@ const Holiday_list = () => {
         dayComponent={({date, state, marking}) => {
           return (
             <TouchableOpacity
+              onLongPress={() => {
+                setModalVisible(true);
+                console.log('selected day', date.day);
+              }}
               style={{
                 padding: 5,
                 alignItems: 'center',
@@ -235,3 +380,66 @@ const Holiday_list = () => {
 };
 
 export default Holiday_list;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    width: '80%',
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+
+  buttonClose: {
+    backgroundColor: '#220046',
+    width: 100,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalWrap: {
+    minWidth: 100,
+    marginVertical: 10,
+  },
+  modalTextHeading: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  elevation: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 7,
+  },
+  dropDownStyle: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    height: 40,
+  },
+});

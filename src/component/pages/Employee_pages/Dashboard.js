@@ -6,14 +6,34 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Calendar from 'react-native-calendars/src/calendar';
 import GetLocation from 'react-native-get-location'
+import axios from 'axios';
+import moment from 'moment';
 
 const Home = (props) => {
+
+  var d = new Date();
+
+
+  var m_names = ['Jan', 'Feb', 'Mar', 
+               'Apr', 'May', 'Jun', 'Jul', 
+               'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   const { userName } = props.route.params;
   const [punchButtonColor, setPunchButtonColor] = useState("blue")
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
   const [punchInTime, setPunchInTime] = useState("");
   const [duration, setDuration] = useState("");
+
+  const [selectedMonth, setSelectedMonth] = useState(new Date())
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [markedDate, setMarkedDate] = useState({});
+
+  const [year, setYear] = useState(new Date());
+
+  var markedDates = {};
+
+  
 
   let loginId = userName
   let inTime = "";
@@ -122,14 +142,133 @@ const Home = (props) => {
 
   useEffect(() => {
     loadingData("O");
+    getAttendance();
   }, [])
+
+  useEffect(() => {
+   getAttendance()
+  }, [selectedMonth])
+  
+
+  const getAttendance = () => {
+    axios
+      .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
+        userId: '10011',
+        monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
+      })
+      .then(response => {
+        const returnedData = response?.data?.Result;
+
+        // Create the final object
+
+        returnedData.map(obj => {
+          // Extract the date from the DATED field
+          const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
+            'YYYY-MM-DD',
+          );
+
+          // Determine markedDotColor based on ATTENDANCE_FLAG
+          let markedDotColor = '';
+
+          if (obj.ATTENDANCE_FLAG === 'A') {
+            markedDotColor = 'red';
+          } else if (obj.ATTENDANCE_FLAG === 'P') {
+            markedDotColor = '#33AA54';
+          } else if (obj.ATTENDANCE_FLAG === 'S') {
+            markedDotColor = 'orange';
+          } else {
+            markedDotColor = 'gray';
+          }
+
+          // Add the date as a key to the final object
+          markedDates[date] = {marked: true, dotColor: markedDotColor};
+        });
+        setMarkedDate(markedDates)
+      });
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         {/* Main Content-Calendar */}
 
-        <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }} headerStyle={{ backgroundColor: 'blue' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }} />
+        <Calendar
+        initialDate={year}
+        style={{marginBottom: 20, elevation: 4, backgroundColor: '#fff'}}
+        headerStyle={{backgroundColor: '#220046'}}
+        theme={{
+          arrowColor: 'white',
+          monthTextColor: 'white',
+          textSectionTitleColor: 'white',
+        }}
+        markedDates={markedDate}
+        onMonthChange={month => {
+         
+            setSelectedYear(month.year);
+            setSelectedMonth(new Date(month?.dateString));
+            
+         
+        }}
+        dayComponent={({date, state, marking}) => {
+          return (
+            <TouchableOpacity
+              onLongPress={() => {
+                setModalVisible(true);
+                console.log('selected day', date.day);
+              }}
+              style={{
+                padding: 5,
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                }}>
+                {date.day}
+              </Text>
+              {marking && marking.dotColor === 'orange' ? (
+                <View
+                  style={{
+                    height: 10,
+                    width: 10,
+                    borderRadius: 5,
+                    overflow: 'hidden',
+                    transform: [{rotate: '90deg'}],
+                    elevation: 2,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: '#DDE6ED',
+                      height: 5,
+                      width: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: '#88C385',
+                      height: 5,
+                      width: 10,
+                    }}
+                  />
+                </View>
+              ) : (
+                marking && (
+                  <View
+                    style={{
+                      height: 10,
+                      width: 10,
+                      backgroundColor: marking?.dotColor
+                        ? marking.dotColor
+                        : '#87CEEB',
+                      borderRadius: 5,
+                    }}
+                  />
+                )
+              )}
+            </TouchableOpacity>
+          );
+        }}
+      />
 
         {/* Punch In Button */}
 
