@@ -10,7 +10,6 @@ import Otp_Verification from './src/component/pages/Otp_Verification'
 import ForgetPassword from './src/component/pages/ForgetPassword';
 import QuickPin from './src/component/pages/QuickPin';
 import CreateMpin from './src/component/pages/CreateMpin';
-import Candidate_SignUp from './src/component/pages/Candidate_SignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +29,6 @@ const App = () => {
         <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={ForgetPassword} />
         <Stack.Screen name='QuickPin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={QuickPin} />
         <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={CreateMpin} />
-        <Stack.Screen name='Candidate_SignUp' options={{ title:'Register', orientation: 'portrait'}} component={Candidate_SignUp} />
 
       </Stack.Navigator>
     </NavigationContainer>

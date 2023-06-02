@@ -102,10 +102,6 @@ const Login = (props) => {
                     <Text style={styles.forgotPassword} onPress={() => forgetPasswordApi()}>Forgot Password?</Text>
                 </TouchableOpacity>
 
-                {/* Sign up */}
-                <TouchableOpacity onPress={()=>props.navigation.navigate("Candidate_SignUp")}>
-                    <Text style={{ fontWeight: 'bold', textAlign: 'center' }} >Don't Have an account <Text style={{ color: 'orange', fontWeight: 'bold' }}>Sign Up?</Text> </Text>
-                </TouchableOpacity>
             </View>
 
             {/* Bottom element */}
