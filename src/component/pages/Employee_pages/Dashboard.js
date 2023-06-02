@@ -31,7 +31,7 @@ const Home = (props) => {
       return true;
     }
     const backPressHandler = BackHandler.addEventListener(
-      "hardwareBackPress",backAction
+      "hardwareBackPress", backAction
     );
     return () => {
       backPressHandler.remove();
@@ -200,15 +200,15 @@ const Home = (props) => {
         <View style={styles.others}>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <MaterialCommunityIcons name='timetable' size={30} color='blue' />
-            <Text style={{color:'black',textAlign:'center'}}>Pending Approval</Text>
+            <Text style={{ color: 'black', textAlign: 'center' }}>Pending Approval</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <Foundation name='megaphone' size={30} color='blue' />
-            <Text style={{color:'black',textAlign:'center'}}>Company Announcement</Text>
+            <Text style={{ color: 'black', textAlign: 'center' }}>Company Announcement</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
             <FontAwesome5 name='birthday-cake' size={30} color="blue" />
-            <Text style={{color:'black',textAlign:'center'}}>Birthday & Anniversary</Text>
+            <Text style={{ color: 'black', textAlign: 'center' }}>Birthday & Anniversary</Text>
           </TouchableOpacity>
         </View>
 
@@ -250,7 +250,9 @@ const styles = StyleSheet.create({
     height: 35,
     paddingHorizontal: 10,
     borderRadius: 35,
-    marginVertical: 6
+    marginVertical: 6,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   others: {
     flexDirection: 'row',
@@ -272,9 +274,6 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   actionText: {
-    flex: 1,
-    textAlignVertical: 'center',
-    textAlign: 'center',
     color: 'black',
     fontSize: 15
   },

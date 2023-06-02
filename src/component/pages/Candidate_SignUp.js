@@ -1,7 +1,9 @@
-import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import SelectDropdown from 'react-native-select-dropdown'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import CustomTextInput from '../Utility/CustomTextInput';
 
 const Candidate_SignUp = () => {
     const marriage = ["Single", "Married", "Divorced", "Widowed"]
@@ -19,9 +21,23 @@ const Candidate_SignUp = () => {
     const [myBloodGroup, setMyBloodGroup] = useState("Select Blood Group")
     const [openPositions, setOpenPositions] = useState([])
     const [myState, setMyState] = useState([])
-    const [showCalendar,setShowCalendar] = useState(false)
+    const [showCalendar, setShowCalendar] = useState(false)
+    const [selectedDate, setSelectedDate] = useState();
+
     let positions, states;
 
+    // on changing the value of date
+    const handleDateChange = (event, date) => {
+        setShowCalendar(false)
+        const {
+            type,
+            nativeEvent: { timestamp },
+        } = event;
+        let time = date.getDate() + "/" + (date.getMonth() + 1) + '/' + date.getFullYear()
+        setSelectedDate(time);
+    };
+
+    //  function for getting the data for open positions and states from API
     const fetchDropDowndata = async (param) => {
         let data = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${param}`);
         data = await data.json();
@@ -29,6 +45,7 @@ const Candidate_SignUp = () => {
         param === "7" ? (states = data.map(b => b.PARAM_NAME), setMyState(states)) : null;
     }
 
+    // getting the data for open positions and states from API
     useEffect(() => {
         openPositions.length === 0 ? fetchDropDowndata("C") : null;
         myState.length === 0 ? fetchDropDowndata("7") : null;
@@ -64,54 +81,57 @@ const Candidate_SignUp = () => {
                             <View style={{ marginHorizontal: 3, marginVertical: 10 }}>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='First Name' style={[styles.inputHolder, styles.elevation]} />
-                                    <TextInput placeholder='Middle Name' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='First Name' />
+                                    <CustomTextInput style={styles.elevation} placeholder='Middle Name' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Last Name' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Last Name' />
                                     <SelectDropdown data={gender} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setSelectedGender(value) }} defaultButtonText={selectedGender} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Father Name' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Father Name' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TouchableOpacity onPress={()=>setShowCalendar(true)} style={[styles.inputHolder, styles.elevation]}>
-                                        <Text style={{ textAlign: 'center', paddingTop: 15 }}>Select Date of Birth</Text>
+                                    <TouchableOpacity onPress={() => setShowCalendar(true)} style={[styles.inputHolder, styles.elevation]}>
+                                        <Text>Select Date of Birth</Text>
+                                        {
+                                            showCalendar ? <DateTimePicker value={new Date()} onChange={handleDateChange} /> : null
+                                        }
                                     </TouchableOpacity>
                                     <SelectDropdown data={marriage} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMartialStatus(value) }} defaultButtonText={martialStatus} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Permanent Address' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Permanent Address' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Pincode' keyboardType='number-pad' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Pincode' />
                                     <SelectDropdown data={myState} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setHomeState(value) }} defaultButtonText={myState[0]} buttonTextStyle={{ fontSize: 15 }} />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Mobile No.' keyboardType='number-pad' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Mobile No.' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Aadhaar No.' keyboardType='number-pad' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Aadhaar No.' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Current Address' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Current Address' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
                                     <SelectDropdown data={bloodGroup} buttonStyle={[styles.elevation, styles.dropDownStyle, styles.inputHolder]} onSelect={(value) => { setMyBloodGroup(value) }} defaultButtonText={myBloodGroup} buttonTextStyle={{ fontSize: 15 }} />
-                                    <TextInput placeholder='PAN No.' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='PAN No.' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Email' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Email' />
                                 </View>
 
                             </View>
@@ -129,10 +149,10 @@ const Candidate_SignUp = () => {
                         educationView ? (
                             <View style={{ margin: 10 }}>
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Highest Qualification' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Highest Qualification' />
                                 </View>
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='University' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='University' />
                                 </View>
                             </View>
                         ) : null
@@ -149,7 +169,7 @@ const Candidate_SignUp = () => {
                         referenceView ? (
                             <View style={{ margin: 10 }}>
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Please Enter Name' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Please Enter Name' />
                                 </View>
                             </View>
                         ) : null
@@ -166,19 +186,19 @@ const Candidate_SignUp = () => {
                         experienceView ? (
                             <View style={{ margin: 10 }}>
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Last Employement' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Last Employement' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Current Employement' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Current Employement' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Current CTC' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput style={styles.elevation} placeholder='Current CTC' />
                                 </View>
 
                                 <View style={styles.viewHolder}>
-                                    <TextInput placeholder='Upload Resume' style={[styles.inputHolder, styles.elevation]} />
+                                    <CustomTextInput placeholder='Upload Resume' />
                                 </View>
 
                             </View>
@@ -217,7 +237,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
         marginHorizontal: 3,
-        height: 40
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     viewHolder: {
         flexDirection: 'row',
