@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
-
+import { security_pin_icon } from '../../assets';
 
 const QuickPin = (props) => {
 
@@ -53,7 +53,7 @@ const QuickPin = (props) => {
             <View style={{flex:1,justifyContent:'center'}}>
 
                 {/* Top Image */}
-                <Image source={require('../images/security_pin_icon.png')} style={{ width: 180, height: 180, alignSelf: 'center', marginTop:-50 }} />
+                <Image source={security_pin_icon} style={{ width: 180, height: 180, alignSelf: 'center', marginTop:-50 }} />
 
                 <Text style={styles.QuickPinTxt} > Enter Your Quick Pin </Text>
 

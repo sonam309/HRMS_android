@@ -1,10 +1,8 @@
-import { View, Text, ScrollView, Alert, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
 import Calendar from 'react-native-calendars/src/calendar';
-import React, { useState } from 'react'
+import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import LeaveBalanceList from '../LeaveBalanceList';
-import Icons from 'react-native-vector-icons'
-import {setCustomText, setCustomTextInput} from 'react-native-global-props';
+import LeaveBalanceList from '../../data/LeaveBalanceList';
 
 const Attendance = (props) => {
 

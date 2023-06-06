@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Entry_logo, company_logo } from '../../assets';
 
 const Entry_page = (props) => {
     let page = null
-
 
     const setEmployee = async () => {
         await AsyncStorage.setItem("type", "employee")
@@ -27,13 +27,12 @@ const Entry_page = (props) => {
 
             {/* Company Logo */}
             <View style={{ flex: 2 }}>
-                <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 30, width: '100%', height: '100%' }} />
+                <Image source={company_logo} style={{ marginTop: 30, width: '100%', height: '100%' }} />
             </View>
             {/* Middle Image */}
             <View style={{ flex: 4 }}>
-                <Image resizeMode='contain' source={require('../images/Entry_page.png')} style={{ marginTop: 30, width: '100%', height: '100%' }} />
+                <Image resizeMode='contain' source={Entry_logo} style={{ marginTop: 30, width: '100%', height: '100%' }} />
             </View>
-
 
             {/* Options */}
             <View style={{ flex: 3, justifyContent: 'center' }}>

@@ -1,12 +1,13 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, StatusBar } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import CustomTextInput from '../Utility/CustomTextInput';
-import CustomPasswordInput from '../Utility/CustomPasswordInput';
+import CustomTextInput from '../../components/CustomTextInput';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
+import { Pinlock,company_logo_2} from '../../assets';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -22,16 +23,11 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
 
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
-            params: {
-                loginId: userName, operFlag: "E", message: otp +
-                    " Is the OTP for your mobile verfication on Satya One."
-            }
-        }).then((response) => {
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userName, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."}})
+        .then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
-
             result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
@@ -44,6 +40,7 @@ const Login = (props) => {
         })
         return preventBack
     }, [navigation])
+
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -64,11 +61,11 @@ const Login = (props) => {
             <StatusBar backgroundColor="#220046" />
 
             {/* Company Logo */}
-            <View style={{ flex: 0.8 }}>
-                <Image source={require('../images/company_logo.jpg')} style={{ marginTop: 30, width: '100%', height: '100%' }} />
+            <View style={{ flex: 1, backgroundColor:'#220046', paddingHorizontal:20 }}>
+                <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
-            <View style={{ justifyContent: 'center', flex: 2.6 }}>
+            <View style={{ justifyContent: 'center', flex: 2, borderRadius:20, marginTop:-40, backgroundColor:'white', paddingHorizontal:20 }}>
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - Username */}
                 <View style={styles.textInputBox}>
@@ -86,7 +83,7 @@ const Login = (props) => {
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
                     <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin",{userName})} style={{ alignItems: 'center' }}>
-                        <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
+                        <Image source={Pinlock} style={{ width: 35, height: 35 }} />
                         <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View>
@@ -105,7 +102,7 @@ const Login = (props) => {
             </View>
 
             {/* Bottom element */}
-            <View style={{ flex: 0.2 }}>
+            <View style={{ flex: 0.5, marginBottom:5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
             </View>
 
@@ -117,7 +114,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        padding: 20,
     },
     header: {
         marginVertical: 8,

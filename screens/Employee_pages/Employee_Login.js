@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View, Image, Alert, PermissionsAndroid, StatusBar } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, PermissionsAndroid, StatusBar, ActivityIndicator, Modal } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -6,15 +6,17 @@ import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import GetLocation from 'react-native-get-location'
-import company_logo from '../images/company_logo.jpg'
-import CustomTextInput from '../Utility/CustomTextInput';
-import CustomPasswordInput from '../Utility/CustomPasswordInput';
+import { company_logo_2 } from '../../assets';
+import { Pinlock } from '../../assets';
+import CustomTextInput from '../../components/CustomTextInput';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [loaderVisible, setLoaderVisible] = useState(false);
 
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
@@ -65,11 +67,13 @@ const Employee_Login = (props) => {
 
     // logging in function
     const submit = () => {
+        setLoaderVisible(true)
         const userData = { loginId: userName, password: password, oprFlag: 'L' };
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             let full_name = returnedData.map(b => b.FIRST_NAME)
+            setLoaderVisible(false)
             result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
@@ -134,13 +138,22 @@ const Employee_Login = (props) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="#220046" />
+            {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5, backgroundColor: 'black', zIndex: 1 }}>
+                <Modal transparent={true} animationType='slide' visible={loaderVisible}>
+                    <View style={styles.wrapper}>
+                        <View style={styles.boxer}>
+                            <ActivityIndicator color='#ec672f' size={70} />
+                        </View>
+                    </View>
+                </Modal>
+            </View > : null}
 
             {/* Company Logo */}
-            <View style={{ flex: 0.8 }}>
-                <Image source={company_logo} style={{ marginTop: 30, width: "100%", height: '100%' }} />
+            <View style={{ flex: 1, backgroundColor: '#220046', paddingHorizontal: 20 }}>
+                <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
-            <View style={{ justifyContent: 'center', flex: 2.6 }}>
+            <View style={{ justifyContent: 'center', flex: 2, borderRadius: 20, marginTop: -40, backgroundColor: 'white', paddingHorizontal: 20 }}>
                 <Text style={styles.header}>Employee Login</Text>
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}>
@@ -160,7 +173,7 @@ const Employee_Login = (props) => {
                     <TouchableOpacity onPress={() => clickQuickPin()}>
 
                         <View style={{ alignItems: 'center' }} >
-                            <Image source={require('../images/Pinlock.png')} style={{ width: 35, height: 35 }} />
+                            <Image source={Pinlock} style={{ width: 35, height: 35 }} />
                             <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
                         </View>
 
@@ -191,10 +204,11 @@ const Employee_Login = (props) => {
 
             {/* Bottom element */}
 
-            <View style={{ flex: 0.2 }}>
+            <View style={{ flex: 0.5, marginBottom:5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
             </View>
         </View>
+
     )
 }
 
@@ -202,7 +216,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        padding: 20,
+        zIndex: 0
     },
     header: {
         marginVertical: 8,
@@ -266,8 +280,8 @@ const styles = StyleSheet.create({
     loginButtonText: {
         color: 'white',
         textAlign: 'center',
-        fontSize: 20,
-        fontWeight: 300,
+        fontSize: 17,
+        fontWeight: 400,
         marginHorizontal: 5
     },
     bottomElement: {
@@ -278,6 +292,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'grey',
         fontSize: 15,
+    },
+    wrapper: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    boxer: {
+        padding: 30,
+        borderRadius: 20
     }
 })
 

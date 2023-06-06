@@ -168,17 +168,6 @@ const Holiday_list = () => {
 
   return (
     <View>
-      {/* {showBottomUpModal && (
-        <BottomUpModal
-          isVisible={showBottomUpModal}
-          onClose={() => setShowBottomUpModal(false)}
-          visibleHieght={380}>
-         { <View>
-            <Text>Modal</Text>
-          </View>}
-        </BottomUpModal>
-      )} */}
-
       {/* //calendar modal start  */}
       <View style={styles.centeredView}>
         <Modal

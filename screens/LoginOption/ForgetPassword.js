@@ -3,7 +3,8 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, Image } fro
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
-import CustomPasswordInput from '../Utility/CustomPasswordInput';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
+import { new_mpin } from '../../assets';
 
 const ForgetPassword = (props) => {
 
@@ -22,7 +23,6 @@ const ForgetPassword = (props) => {
   const [f6, setF6] = useState('');
   const [f7, setF7] = useState('');
   const [f8, setF8] = useState('');
-
 
   const [showNewPassword, setShowNewPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
@@ -57,39 +57,25 @@ const ForgetPassword = (props) => {
       ChangePasswordApi()
 
     } else {
-
       console.warn("Missmatch Passwords");
-
     }
-
   }
 
   const newMpinMatchValidation = () => {
     let mpin1 = f1 + f2 + f3 + f4;
     let mpin2 = f5 + f6 + f7 + f8;
-
     // setmpin(mpin1);
-
     // Alert.alert(mpin);
-
     if (mpin1 == mpin2 && mpin1 != '1234') {
 
       // console.warn("hit api");
       // ChangePasswordApi()
       // reset flag=R, create mpin flag=M
-
       props.navigation.navigate("Employee")
-
-
     } else {
-
       console.warn("Quick Pin and Confirm Quick Pin should be same")
-
     }
-
-
   }
-
 
   // Change PAssword in function
   const ChangePasswordApi = () => {
@@ -99,10 +85,8 @@ const ForgetPassword = (props) => {
       oldPassword: '',
       oprFlag: 'R',
     };
-
     // console.warn(userData);
 
-    // https://econnectsatya.com:7033/api/User/login
     axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
       const returnedData = response.data.Result;
       let result = returnedData.map(a => a.FLAG);
@@ -122,10 +106,7 @@ const ForgetPassword = (props) => {
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
 
-        <Image source={require('../images/new_mpin.png')} style={{
-          width: '50%', height: '30%',
-          marginTop: -30, alignSelf: 'center',
-        }} />
+        <Image source={new_mpin} style={{ width: '50%', height: '30%', marginTop: -30, alignSelf: 'center' }} />
 
         {
           type === "N" || type === "F" ?
@@ -150,7 +131,6 @@ const ForgetPassword = (props) => {
                   if (txt.length >= 1) {
                     et3.current.focus();
                   } else if (txt.length < 1) {
-
                     et1.current.focus();
                   }
                 }} />
@@ -215,12 +195,7 @@ const ForgetPassword = (props) => {
               {/* Submit Button sk */}
               <View style={{ marginHorizontal: 25 }}>
                 <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' && f7 !== '' && f8 !== ''
-                  ? false : true} style={[styles.quickLoginBtn, styles.elevation, {
-                    backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== ''
-                      && f5 !== '' && f6 !== '' && f7 !== '' && f8 !== '' ? '#220046' : "#9D9D9D"
-                  }]}
-                  onPress={() => { newMpinMatchValidation() }}
-                >
+                  ? false : true} style={[styles.quickLoginBtn, styles.elevation, { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' && f7 !== '' && f8 !== '' ? '#220046' : "#9D9D9D" }]} onPress={() => { newMpinMatchValidation() }}>
                   {/* onPress={() => {validateOtp()}} */}
                   <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
                     Set Quick Pin
@@ -230,8 +205,6 @@ const ForgetPassword = (props) => {
 
               {/*   msg */}
               <View style={styles.Message}>
-
-
                 <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 15, textAlign: 'center', marginTop: 20 }}>
                   Once the Quick Pin is successfully changed, you will need to login again
                 </Text>
@@ -243,7 +216,6 @@ const ForgetPassword = (props) => {
               {/* new Password */}
               <View style={styles.textInputBox}>
                 <Feather name='lock' color='orange' size={17} style={{ marginRight: 10, marginLeft: 10 }} />
-
                 <CustomPasswordInput placeholder='New Password' secureTextEntry={showNewPassword} value={newPassword} onChangeText={(security) => setnewPassword(security)} />
                 <AntDesign name='eye' onPress={changeVisibilitynew} style={{ position: 'absolute', right: 9 }} size={22} />
               </View>
@@ -259,23 +231,13 @@ const ForgetPassword = (props) => {
 
               <TouchableOpacity
                 disabled={newPassword !== '' && confirmPassword !== '' ? false : true}
-                style={[styles.changePasswordBtn, styles.elevation,
-                {
-                  backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#220046' : "#9D9D9D"
-                }
-                ]} onPress={() => { MatchPasswordValidation() }} >
+                style={[styles.changePasswordBtn, styles.elevation, { backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#220046' : "#9D9D9D" }]} onPress={() => { MatchPasswordValidation() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Change Password </Text>
-
               </TouchableOpacity>
 
               {/*   msg */}
               <View style={styles.Message}>
-
-
-                <Text style={{
-                  color: '#474E68', fontWeight: 300, fontSize: 15,
-                  textAlign: 'center'
-                }}>
+                <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 15, textAlign: 'center' }}>
                   Once the password successfully changed, you will need to login again
                 </Text>
               </View>
@@ -336,7 +298,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   Header: {
-    // width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#220046',

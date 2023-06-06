@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler, Modal, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -11,12 +11,7 @@ import moment from 'moment';
 
 const Home = (props) => {
 
-  var d = new Date();
-
-
-  var m_names = ['Jan', 'Feb', 'Mar', 
-               'Apr', 'May', 'Jun', 'Jul', 
-               'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const { userName } = props.route.params;
   const [punchButtonColor, setPunchButtonColor] = useState("blue")
@@ -28,35 +23,14 @@ const Home = (props) => {
   const [selectedMonth, setSelectedMonth] = useState(new Date())
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
-
+  const [loaderVisible, setLoaderVisible] = useState(true);
   const [year, setYear] = useState(new Date());
 
   var markedDates = {};
 
-  
-
   let loginId = userName
   let inTime = "";
   let timeIn = "";
-
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Wait", "Are you sure, you want to exit the App?", [{
-        text: "No",
-        onPress: () => null
-      }, {
-        text: "Yes",
-        onPress: () => BackHandler.exitApp()
-      }]);
-      return true;
-    }
-    const backPressHandler = BackHandler.addEventListener(
-      "hardwareBackPress", backAction
-    );
-    return () => {
-      backPressHandler.remove();
-    }
-  }, []);
 
   // degree to radian converter
   const deg2rad = (deg) => {
@@ -98,18 +72,6 @@ const Home = (props) => {
 
   // Punch In, Out function on clicking
   const punchInClick = (val) => {
-    fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        operFlag: val,
-        userId: loginId,
-      }),
-    })
-      .then((response) => response.json())
     loadingData(val);
   }
 
@@ -138,17 +100,34 @@ const Home = (props) => {
     inTime != "" ? setPunchButtonColor('red') : setPunchButtonColor('blue')
     inTime != "" ? setInOut('Out') : setInOut('In')
     inTime != "" ? setPunchInToken('O') : setPunchInToken('I')
+    setLoaderVisible(false)
   }
 
   useEffect(() => {
     loadingData("O");
     getAttendance();
+    // for handling back button in android
+    const backAction = () => {
+      Alert.alert("Wait", "Are you sure, you want to exit the App?", [{
+        text: "No",
+        onPress: () => null
+      }, {
+        text: "Yes",
+        onPress: () => BackHandler.exitApp()
+      }]);
+      return true;
+    }
+    const backPressHandler = BackHandler.addEventListener(
+      "hardwareBackPress", backAction
+    );
+    return () => {
+      backPressHandler.remove();
+    }
   }, [])
 
   useEffect(() => {
-   getAttendance()
+    getAttendance()
   }, [selectedMonth])
-  
 
   const getAttendance = () => {
     axios
@@ -160,7 +139,6 @@ const Home = (props) => {
         const returnedData = response?.data?.Result;
 
         // Create the final object
-
         returnedData.map(obj => {
           // Extract the date from the DATED field
           const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
@@ -181,7 +159,7 @@ const Home = (props) => {
           }
 
           // Add the date as a key to the final object
-          markedDates[date] = {marked: true, dotColor: markedDotColor};
+          markedDates[date] = { marked: true, dotColor: markedDotColor };
         });
         setMarkedDate(markedDates)
       });
@@ -189,86 +167,95 @@ const Home = (props) => {
 
   return (
     <View style={styles.container}>
+      {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5, backgroundColor: 'black', zIndex: 1 }}>
+        <Modal transparent={true} animationType='slide' visible={loaderVisible}>
+          <View style={styles.wrapper}>
+            <View style={styles.boxer}>
+              <ActivityIndicator color='#ec672f' size={70} />
+            </View>
+          </View>
+        </Modal>
+      </View > : null}
       <ScrollView>
         {/* Main Content-Calendar */}
 
         <Calendar
-        initialDate={year}
-        style={{marginBottom: 20, elevation: 4, backgroundColor: '#fff'}}
-        headerStyle={{backgroundColor: '#220046'}}
-        theme={{
-          arrowColor: 'white',
-          monthTextColor: 'white',
-          textSectionTitleColor: 'white',
-        }}
-        markedDates={markedDate}
-        onMonthChange={month => {
-         
+          initialDate={year}
+          style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }}
+          headerStyle={{ backgroundColor: '#220046' }}
+          theme={{
+            arrowColor: 'white',
+            monthTextColor: 'white',
+            textSectionTitleColor: 'white',
+          }}
+          markedDates={markedDate}
+          onMonthChange={month => {
+
             setSelectedYear(month.year);
             setSelectedMonth(new Date(month?.dateString));
-            
-         
-        }}
-        dayComponent={({date, state, marking}) => {
-          return (
-            <TouchableOpacity
-              onLongPress={() => {
-                setModalVisible(true);
-                console.log('selected day', date.day);
-              }}
-              style={{
-                padding: 5,
-                alignItems: 'center',
-              }}>
-              <Text
+
+
+          }}
+          dayComponent={({ date, state, marking }) => {
+            return (
+              <TouchableOpacity
+                onLongPress={() => {
+                  setModalVisible(true);
+                  console.log('selected day', date.day);
+                }}
                 style={{
-                  fontSize: 16,
+                  padding: 5,
+                  alignItems: 'center',
                 }}>
-                {date.day}
-              </Text>
-              {marking && marking.dotColor === 'orange' ? (
-                <View
+                <Text
                   style={{
-                    height: 10,
-                    width: 10,
-                    borderRadius: 5,
-                    overflow: 'hidden',
-                    transform: [{rotate: '90deg'}],
-                    elevation: 2,
+                    fontSize: 16,
                   }}>
-                  <View
-                    style={{
-                      backgroundColor: '#DDE6ED',
-                      height: 5,
-                      width: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      backgroundColor: '#88C385',
-                      height: 5,
-                      width: 10,
-                    }}
-                  />
-                </View>
-              ) : (
-                marking && (
+                  {date.day}
+                </Text>
+                {marking && marking.dotColor === 'orange' ? (
                   <View
                     style={{
                       height: 10,
                       width: 10,
-                      backgroundColor: marking?.dotColor
-                        ? marking.dotColor
-                        : '#87CEEB',
                       borderRadius: 5,
-                    }}
-                  />
-                )
-              )}
-            </TouchableOpacity>
-          );
-        }}
-      />
+                      overflow: 'hidden',
+                      transform: [{ rotate: '90deg' }],
+                      elevation: 2,
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: '#DDE6ED',
+                        height: 5,
+                        width: 10,
+                      }}
+                    />
+                    <View
+                      style={{
+                        backgroundColor: '#88C385',
+                        height: 5,
+                        width: 10,
+                      }}
+                    />
+                  </View>
+                ) : (
+                  marking && (
+                    <View
+                      style={{
+                        height: 10,
+                        width: 10,
+                        backgroundColor: marking?.dotColor
+                          ? marking.dotColor
+                          : '#87CEEB',
+                        borderRadius: 5,
+                      }}
+                    />
+                  )
+                )}
+              </TouchableOpacity>
+            );
+          }}
+        />
 
         {/* Punch In Button */}
 
@@ -432,6 +419,15 @@ const styles = StyleSheet.create({
     fontSize: 22,
     paddingBottom: 4
   },
+  wrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  boxer: {
+    padding: 30,
+    borderRadius: 20
+  }
 })
 
 export default Home

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
 import axios from "axios";
-import BoldText from '../Utility/BoldText';
-import { useNavigation } from '@react-navigation/native';
+import BoldText from '../../utility/BoldText';
+import { mobile_otp } from '../../assets';
 
 
 const Otp_Verification = (props) => {
@@ -22,7 +22,7 @@ const Otp_Verification = (props) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (count == 0) { 
+            if (count == 0) {
                 clearInterval(interval)
             } else setCount(count - 1);
         }, 1000)
@@ -33,46 +33,39 @@ const Otp_Verification = (props) => {
 
     //Random Number
     const RandomNumber = (length) => {
-        return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 *
-            Math.pow(10, length - 1));
+        return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
     }
 
     //forgetPassword api Call
     const forgetPasswordApi = () => {
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
-            params: {
-                loginId: "10011", operFlag: "E", message: otp +
-                    " Is the OTP for your mobile verfication on Satya One."
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: "10011", operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+            .then((response) => {
+                const returnedData = response.data.Result;
 
-            }
-        }).then((response) => {
-            const returnedData = response.data.Result;
-    
-            let result = returnedData.map(a => a.FLAG);
-            let contact = returnedData.map(b => b.MSG.trim());
-            setsendOtp(otp);
+                let result = returnedData.map(a => a.FLAG);
+                let contact = returnedData.map(b => b.MSG.trim());
+                setsendOtp(otp);
 
-            if (result[0] == "S") {
-                Alert.alert("Success");
-            } else { Alert.alert("fail")}
-        })
+                if (result[0] == "S") { Alert.alert("Success");} 
+                else { Alert.alert("fail") }
+            })
     }
 
     //otp Validation
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
         if (sendOtp == inputOtp) {
-            (props.navigation.navigate("ForgetPassword", { userName ,type}))
+            (props.navigation.navigate("ForgetPassword", { userName, type }))
         } else console.warn("Wrong OTP");
     }
 
     return (
 
-        <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'column',justifyContent:'center' }}>
+        <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 
             {/* Top Image */}
-            <Image source={require('../images/mobile_otp.png')} style={{ width: 150, height: 150, alignSelf: 'center' }}     />
+            <Image source={mobile_otp} style={{ width: 150, height: 150, alignSelf: 'center' }} />
 
             {/* OTP Verificataion text */}
             <Text style={BoldText.BoldText} > OTP Verification {/* {contact} */} </Text>
@@ -84,60 +77,59 @@ const Otp_Verification = (props) => {
             </View>
 
             {/* otp input boxes */}
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center'}}>
-                <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad"  maxLength={1} value={f1}
-                    onChangeText={txt => {
-                        setF1(txt);
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
+                <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f1}
+                    onChangeText={txt => { setF1(txt);
                         if (txt.length >= 1) {
                             et2.current.focus();
-                        }
-                    }} />
+                        }}} />
                 <TextInput ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
-                        setF2(txt)
-                        if (txt.length >= 1) {
-                            et3.current.focus();
-                        } else if (txt.length < 1) {
+                    setF2(txt)
+                    if (txt.length >= 1) {
+                        et3.current.focus();
+                    } else if (txt.length < 1) {
 
-                            et1.current.focus();
-                        }
-                    }} />
+                        et1.current.focus();
+                    }
+                }} />
                 <TextInput ref={et3} style={[style.inputView, { borderColor: f3.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
-                        setF3(txt)
-                        if (txt.length >= 1) {
-                            et4.current.focus();
-                        } else if (txt.length < 1) {
-
-                            et2.current.focus();
-                        }
-                    }} />
+                    setF3(txt)
+                    if (txt.length >= 1) {
+                        et4.current.focus();
+                    } else if (txt.length < 1) {
+                        et2.current.focus();
+                    }
+                }} />
                 <TextInput ref={et4} style={[style.inputView, { borderColor: f4.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
-                        setF4(txt)
-                        if (txt.length >= 1) {
-                            et5.current.focus();
-                        } else if (txt.length < 1) {
+                    setF4(txt)
+                    if (txt.length >= 1) {
+                        et5.current.focus();
+                    } else if (txt.length < 1) {
 
-                            et3.current.focus();
-                        }
-                    }} />
+                        et3.current.focus();
+                    }
+                }} />
                 <TextInput ref={et5} style={[style.inputView, { borderColor: f5.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
-                        setF5(txt)
-                        if (txt.length >= 1) {
-                            et6.current.focus();
-                        } else if (txt.length < 1) {
-                            et4.current.focus();
-                        }
-                    }} />
-                <TextInput ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => { setF6(txt)
-                        if (txt.length >= 1) {
-                        } else if (txt.length < 1) { et5.current.focus();}
-                    }} />
+                    setF5(txt)
+                    if (txt.length >= 1) {
+                        et6.current.focus();
+                    } else if (txt.length < 1) {
+                        et4.current.focus();
+                    }
+                }} />
+                <TextInput ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => {
+                    setF6(txt)
+                    if (txt.length >= 1) {
+                    } else if (txt.length < 1) { et5.current.focus(); }
+                }} />
             </View>
 
             {/* resend otp text */}
             <View style={style.resendView}>
-                <Text style={{ fontSize: 15, fontWeight: '400', color: count == 0 ? '#03a157' : "#9D9D9D" }} onPress={() => { 
-                    setCount(30); forgetPasswordApi() }}>Resend</Text>
-                {count !== 0 && ( <Text style={{ marginLeft: 5, fontSize: 15 }}> {count + ' seconds'} </Text> )}
+                <Text style={{ fontSize: 15, fontWeight: '400', color: count == 0 ? '#03a157' : "#9D9D9D" }} onPress={() => {
+                    setCount(30); forgetPasswordApi()
+                }}>Resend</Text>
+                {count !== 0 && (<Text style={{ marginLeft: 5, fontSize: 15 }}> {count + ' seconds'} </Text>)}
             </View>
 
             {/* verify otp button */}
