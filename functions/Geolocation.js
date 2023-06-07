@@ -1,8 +1,9 @@
-
+import { Alert, PermissionsAndroid } from 'react-native'
 import GetLocation from 'react-native-get-location'
+import Punch from './Punch';
 
-const Geolocation = async () => {
-    let dist;
+const Geolocation = async ({ val, userData, userName }) => {
+    let action = (val === "I" ? "In" : "Out")
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
     }
@@ -29,13 +30,9 @@ const Geolocation = async () => {
         .then(location => {
             console.log(location);
             dist = getDistInKm(location.latitude, location.longitude, 28.5444665, 77.3309966);
-
+            dist < 0.5 ? Punch({ val, userData, userName }) : (Alert.alert(`Punch ${action} from your office`))
         })
         .catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
-    console.warn("Inside geo" + dist);
-    return (
-        { dist }
-    )
 
 }
 

@@ -20,70 +20,75 @@ export default DrawerData = [
         "id":4
     },
     {
+        "icon":"timetable",
+        "header":"Pending Approval",
+        "id":5
+    },
+    {
         "icon":"calendar-account-outline",
         "header":"Onboarding",
-        "id":5
+        "id":6
     },
     {
         "icon":"exit-run",
         "header":"E-Resign",
-        "id":6
+        "id":7
     },
     {
         "icon":"home-outline",
         "header":"Jobs",
-        "id":7
+        "id":8
     },
     {
         "icon":"account-group",
         "header":"Hiring",
-        "id":8
+        "id":9
     },
     {
         "icon":"help-network-outline",
         "header":"Help Desk",
-        "id":9
+        "id":10
     },
     {
         "icon":"map-marker-outline",
         "header":"Location Mapping",
-        "id":10
+        "id":11
     }
     ,
     {
         "icon":"cellphone",
         "header":"Device Mapping",
-        "id":11
+        "id":12
     },
     {
         "icon":"desktop-mac-dashboard",
         "header":"Zing Productivity",
-        "id":12
+        "id":13
     },
     {
         "icon":"human-male-board-poll",
         "header":"Learning",
-        "id":13
+        "id":14
     },
     {
         "icon":"form-select",
         "header":"Survey",
-        "id":14
+        "id":15
     },
     {
         "icon":"cash",
         "header":"Transaction History",
-        "id":15
+        "id":16
     },
     {
         "icon":"notebook-outline",
         "header":"HR Handbook",
-        "id":16
+        "id":17
     },
     {
         "icon":"text-box-plus-outline",
         "header":"Pending Tasks",
-        "id":17
+        "id":18
     },
 
 ]

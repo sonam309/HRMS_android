@@ -10,6 +10,7 @@ import { company_logo_2 } from '../../assets';
 import { Pinlock } from '../../assets';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
+import Geolocation from '../../functions/Geolocation';
 
 
 const Employee_Login = (props) => {
@@ -18,37 +19,10 @@ const Employee_Login = (props) => {
     const [password, setPassword] = useState("");
     const [loaderVisible, setLoaderVisible] = useState(false);
 
-    const deg2rad = (deg) => {
-        return deg * (Math.PI / 180)
-    }
-
-    // distance from longitude and latitutde in KM
-    const getDistInKm = (lat1, lon1, lat2, lon2) => {
-        let R = 6371; // Radius of the earth in km
-        let dLat = deg2rad(lat2 - lat1);  // deg2rad above
-        let dLon = deg2rad(lon2 - lon1);
-        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        let d = R * c; // Distance in km
-        return d;
-    }
+    const userData = { loginId: userName, password: password, oprFlag: 'L' };
 
     const getCurrentLocation = async (val) => {
-        let inOut = (val === 'I' ? "In" : "Out")
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-        );
-        granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
-            enableHighAccuracy: true,
-            timeout: 30000,
-        })
-            .then(location => {
-                console.log(location);
-                let dist = getDistInKm(location.latitude, location.longitude, 28.5444665, 77.3309966)
-                if (dist < 0.5) {
-                    punchInClick(val);
-                } else { Alert.alert(`Punch ${inOut} from your office`) }
-            }).catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
+        Geolocation({ val, userName, userData });
     }
 
     // preventing going to entry page
@@ -68,13 +42,12 @@ const Employee_Login = (props) => {
     // logging in function
     const submit = () => {
         setLoaderVisible(true)
-        const userData = { loginId: userName, password: password, oprFlag: 'L' };
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             let full_name = returnedData.map(b => b.FIRST_NAME)
             setLoaderVisible(false)
-            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName })) : Alert.alert("Failure", "Please enter correct credentials")
+            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName,password })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
@@ -91,26 +64,6 @@ const Employee_Login = (props) => {
 
         }
 
-    }
-
-    // Punching In and Out from login page
-    const punchInClick = (val) => {
-        const userData = { loginId: userName, password: password, oprFlag: 'L' };
-
-        let action = (val === 'I' ? "In" : "Out")
-        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
-            const returnedData = response.data.Result;
-            let result = returnedData.map(a => a.FLAG);
-            result[0] === "S" ? (fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
-                method: "POST",
-                headers: { Accept: "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({ operFlag: val, userId: userName }),
-            })
-                .then((response) => response.json())
-                .then((responseData) => {
-                    Alert.alert("Success", `Punched ${action} Successfully`)
-                })) : Alert.alert("Failure", "Please enter correct credentials")
-        })
     }
 
     //Random Number
@@ -204,7 +157,7 @@ const Employee_Login = (props) => {
 
             {/* Bottom element */}
 
-            <View style={{ flex: 0.5, marginBottom:5 }}>
+            <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
             </View>
         </View>

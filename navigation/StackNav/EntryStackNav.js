@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-
 import Login from '../../screens/Candidate_pages/Login';
 import Employee_Login from '../../screens/Employee_pages/Employee_Login';
 import Employee_page from '../../screens/Employee_pages/Employee_page';

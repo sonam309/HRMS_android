@@ -1,25 +1,23 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Alert, StyleSheet, TouchableOpacity } from 'react-native'
 import Calendar from 'react-native-calendars/src/calendar';
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import LeaveBalanceList from '../../data/LeaveBalanceList';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Attendance = (props) => {
-
-  let newDate = new Date().toLocaleString();
-
 
   return (
 
     <ScrollView>
       <View>
         {/* calender for attendence */}
-        <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: 'white' }} headerStyle={{ backgroundColor: '#220046' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }}
+        {/* <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: 'white' }} headerStyle={{ backgroundColor: '#220046' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }}
           markedDates={{
 
             newDate: { selected: true, marked: true, selectedColor: 'blue' },
 
-          }} />
+          }} /> */}
 
 
         {/* Leave Balance */}
@@ -31,8 +29,8 @@ const Attendance = (props) => {
 
           <View >
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginHorizontal: 10 }}>
-              {LeaveBalanceList.map((item) => <DrawerIcons icon={item.Icon} header={item.Title} count={item.LeaveCount} color={item.Color}/>)}
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginHorizontal: 10, marginTop: 30 }}>
+              {LeaveBalanceList.map((item) => <DrawerIcons icon={item.Icon} header={item.Title} count={item.LeaveCount} color={item.Color} id={item.id} />)}
 
             </View>
 
@@ -49,20 +47,31 @@ const Attendance = (props) => {
 
 
   function DrawerIcons(props) {
-    const title = props.header, icon = props.icon, count = props.count,color=props.color
+    const title = props.header, icon = props.icon, count = props.count, color = props.color, id = props.id
     return (
-      <TouchableOpacity key={title} style={{ backgroundColor: 'white', width: '48%', height: 90, alignItems: 'center', marginVertical: 8, justifyContent: 'center', paddingVertical: 4, elevation: 6 }} >
-       <View style={{flex:1,justifyContent:'center',flexDirection:'row',}}>
-        <View style={{ flex: .4, flexDirection: 'column', justifyContent: 'center',}}>
-          <Icon name={icon} color={color} size={40} style={{ marginVertical: 4 , marginLeft:10}} />
-          </View>
-          <View style={{ flex: .75, flexDirection: 'column', justifyContent: 'center' }}>
-            <Text style={{ color: 'black',fontSize:15, fontWeight:'600'}}>{title}</Text>
-            <Text style={{ color: 'black',fontSize:25, fontWeight:'600', marginLeft:2}}>{count}</Text>
-          </View>
+      <TouchableOpacity key={id} style={{ width: '48%', borderRadius: 20, marginVertical: 8, elevation: 6 }} onPress={() =>
+        Alert.alert("click" + id)} >
+        <LinearGradient
+          colors={['#8B1874', '#432C7A', '#432C7A']}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={{ borderRadius: 20 }}
+        >
 
+          <View  style={{height:100}} > 
+            <Icon name={icon} color='white' size={35} style={{marginLeft:20,
+            marginTop:10}}/>
+            <View style={{ justifyContent: 'center', paddingBottom:10, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',marginTop:-20 }}>
+              <Text style={{ color: 'white', fontSize: 25, fontWeight: '500', textAlign: 'center' }}>{count}</Text>
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: '500', textAlign: 'center', width: '100%', flexDirection: 'row' }}>{title}</Text>
+
+
+
+
+            </View>
           </View>
-      
+        </LinearGradient>
+
       </TouchableOpacity>
     )
   }
@@ -109,7 +118,4 @@ const styles = StyleSheet.create({
   },
 
 })
-
-
-
 export default Attendance

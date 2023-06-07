@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, PermissionsAndroid, Alert, BackHandler, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Calendar from 'react-native-calendars/src/calendar';
-import GetLocation from 'react-native-get-location'
 import axios from 'axios';
 import moment from 'moment';
+import Geolocation from '../../functions/Geolocation';
 
 const Home = (props) => {
 
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  const { userName } = props.route.params;
+  const { userName, password } = props.route.params;
   const [punchButtonColor, setPunchButtonColor] = useState("blue")
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
@@ -26,53 +26,16 @@ const Home = (props) => {
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [year, setYear] = useState(new Date());
 
+  const userData = { loginId: userName, password: password, oprFlag: 'L' };
+
   var markedDates = {};
 
   let loginId = userName
   let inTime = "";
   let timeIn = "";
 
-  // degree to radian converter
-  const deg2rad = (deg) => {
-    return deg * (Math.PI / 180)
-  }
-
-  // distance from longitude and latitutde in KM
-  const getDistInKm = (lat1, lon1, lat2, lon2) => {
-    let R = 6371; // Radius of the earth in km
-    let dLat = deg2rad(lat2 - lat1);  // deg2rad above
-    let dLon = deg2rad(lon2 - lon1);
-    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let d = R * c; // Distance in km
-    return d;
-  }
-
   const getCurrentLocation = async (val) => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-    granted === PermissionsAndroid.RESULTS.GRANTED ? (GetLocation.getCurrentPosition({
-      enableHighAccuracy: true,
-      timeout: 30000,
-    })
-      .then(location => {
-        // console.log(location);
-        let dist = getDistInKm(location.latitude, location.longitude, 28.5443907, 77.3310235)
-        if (dist < 0.5) {
-          punchInClick(val);
-          Alert.alert(`Punch ${inOut} Successfully`)
-        } else { Alert.alert(`Punch ${inOut} from your office`) }
-      })
-      .catch(error => {
-        const { code, message } = error;
-        Alert.alert(code, message);
-      })) : (Alert.alert("Location permission not granted"))
-  }
-
-  // Punch In, Out function on clicking
-  const punchInClick = (val) => {
-    loadingData(val);
+    Geolocation({ val, userName, userData });
   }
 
   const loadingData = async (val) => {
@@ -97,9 +60,7 @@ const Home = (props) => {
     data.map(b => b.DUR) != "" ? (timeIn = data.map(b => b.DUR.trim())) : timeIn = "";
     setPunchInTime(inTime);
     setDuration(timeIn)
-    inTime != "" ? setPunchButtonColor('red') : setPunchButtonColor('blue')
-    inTime != "" ? setInOut('Out') : setInOut('In')
-    inTime != "" ? setPunchInToken('O') : setPunchInToken('I')
+    inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor('blue'), setInOut('In'), setPunchInToken('I'))
     setLoaderVisible(false)
   }
 
@@ -154,8 +115,10 @@ const Home = (props) => {
             markedDotColor = '#33AA54';
           } else if (obj.ATTENDANCE_FLAG === 'S') {
             markedDotColor = 'orange';
-          } else {
+          } else if (obj.ATTENDANCE_FLAG === 'H') {
             markedDotColor = 'gray';
+          } else {
+            markedDotColor = '#fff';
           }
 
           // Add the date as a key to the final object
