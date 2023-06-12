@@ -1,6 +1,6 @@
 export default LeaveBalanceList = [
     {
-        "Icon": "island",
+        "Icon": "airplane-takeoff",
         "Title": "Casual Leave",
         "LeaveCount": "6",
         "Color":"red",
@@ -42,15 +42,16 @@ export default LeaveBalanceList = [
         "id":6
     },
     {
-        "Icon": "airplane-takeoff",
+        "Icon": "island",
         "Title": "Additional Leave",
         "LeaveCount": "6",
         "Color":"blue",
         "id":7
     },
     {
-        "Icon": "cash-remove",
-        "Title": "Leave without Pay",
+
+        "Icon": "currency-usd-off",
+        "Title": "Leave without pay",
         "LeaveCount": "6",
         "Color":"green",
         "id":8
