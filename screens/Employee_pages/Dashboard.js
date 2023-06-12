@@ -7,29 +7,24 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
 import moment from 'moment';
+import COLORS from '../../constants/theme';
 import Geolocation from '../../functions/Geolocation';
 
 const Home = (props) => {
-
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   const { userName, password } = props.route.params;
-  const [punchButtonColor, setPunchButtonColor] = useState("blue")
+  const [punchButtonColor, setPunchButtonColor] = useState(COLORS.green)
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
   const [punchInTime, setPunchInTime] = useState("");
   const [duration, setDuration] = useState("");
-
   const [selectedMonth, setSelectedMonth] = useState(new Date())
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [year, setYear] = useState(new Date());
-
   const userData = { loginId: userName, password: password, oprFlag: 'L' };
-
   var markedDates = {};
-
   let loginId = userName
   let inTime = "";
   let timeIn = "";
@@ -37,7 +32,6 @@ const Home = (props) => {
   const getCurrentLocation = async (val) => {
     Geolocation({ val, userName, userData });
   }
-
   const loadingData = async (val) => {
     // fetching data 
     let data = await fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
@@ -51,7 +45,6 @@ const Home = (props) => {
         userId: loginId,
       }),
     })
-
     // data to json form
     data = await data.json()
     data = data.Result;
@@ -60,7 +53,7 @@ const Home = (props) => {
     data.map(b => b.DUR) != "" ? (timeIn = data.map(b => b.DUR.trim())) : timeIn = "";
     setPunchInTime(inTime);
     setDuration(timeIn)
-    inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor('blue'), setInOut('In'), setPunchInToken('I'))
+    inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor(COLORS.green), setInOut('In'), setPunchInToken('I'))
     setLoaderVisible(false)
   }
 
@@ -89,7 +82,6 @@ const Home = (props) => {
   useEffect(() => {
     getAttendance()
   }, [selectedMonth])
-
   const getAttendance = () => {
     axios
       .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
@@ -98,17 +90,14 @@ const Home = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-
         // Create the final object
         returnedData.map(obj => {
           // Extract the date from the DATED field
           const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
             'YYYY-MM-DD',
           );
-
           // Determine markedDotColor based on ATTENDANCE_FLAG
           let markedDotColor = '';
-
           if (obj.ATTENDANCE_FLAG === 'A') {
             markedDotColor = 'red';
           } else if (obj.ATTENDANCE_FLAG === 'P') {
@@ -120,7 +109,6 @@ const Home = (props) => {
           } else {
             markedDotColor = '#fff';
           }
-
           // Add the date as a key to the final object
           markedDates[date] = { marked: true, dotColor: markedDotColor };
         });
@@ -141,7 +129,6 @@ const Home = (props) => {
       </View > : null}
       <ScrollView>
         {/* Main Content-Calendar */}
-
         <Calendar
           initialDate={year}
           style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }}
@@ -153,11 +140,8 @@ const Home = (props) => {
           }}
           markedDates={markedDate}
           onMonthChange={month => {
-
             setSelectedYear(month.year);
             setSelectedMonth(new Date(month?.dateString));
-
-
           }}
           dayComponent={({ date, state, marking }) => {
             return (
@@ -219,65 +203,49 @@ const Home = (props) => {
             );
           }}
         />
-
         {/* Punch In Button */}
 
+
         <View style={styles.attendance}>
+
           <View style={{ width: '50%' }}>
-            <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { backgroundColor: `${punchButtonColor}` }, styles.Elevation]} >
-              <MaterialCommunityIcons name='gesture-double-tap' size={37} color='white' />
-              <Text style={[styles.punchButtonText]}>Punch {inOut}</Text>
+            {/* <View style={{backgroundColor:'red'}}> */}
+            <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { borderColor: `${punchButtonColor}` }]} >
+              <MaterialCommunityIcons name='gesture-double-tap' size={35} color={`${punchButtonColor}`} />
+              <Text style={[styles.punchButtonText, { color: `${punchButtonColor}` }]}>Punch {inOut}</Text>
             </TouchableOpacity>
-          </View>
+            {/* </View> */}
+            <View style={[{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10 }]}>
 
-          <View style={{ width: '50%', alignItems: 'center' }}>
+              <MaterialCommunityIcons name='clock-outline' size={45} color={COLORS.voilet} />
 
-            <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
-              <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
               <View style={{ marginLeft: 10 }}>
-                <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'} hrs</Text>
-                <Text style={{ color: 'black' }}>Spent Today</Text>
+                <Text style={{ color: 'blue', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
+                <Text style={{ color: 'black', fontWeight: '500' }}>Spent Today</Text>
               </View>
-            </View>
-            <View style={{ flex: 1, paddingLeft: 10 }}>
-              <Text style={{ color: 'black' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
-            </View>
-          </View>
 
-        </View>
-
-        {/* Attendance and Time Options */}
-
-        <Text style={styles.headerText}>Your Time & Attendance </Text>
-
-        <View style={[styles.attendance]}>
-
-          <View style={{ flex: 1 }}>
-
-            <View style={[{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }]}>
-              <MaterialCommunityIcons name='clock-outline' size={50} color="black" />
-              <View>
-                <Text style={{ color: 'blue', fontWeight: '500' }}>{duration != "" ? duration : '--:--'} hrs</Text>
-                <Text style={{ color: 'black' }}>Spent Today</Text>
-              </View>
             </View>
 
-            <View style={{ flex: 1, paddingLeft: 8 }}>
-              <Text style={{ color: 'black' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'black', fontWeight: '500' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
             </View>
 
           </View>
 
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#0ce83f' }]} >
+          <View style={{ width: '50%' }}>
+
+            <TouchableOpacity style={[styles.attendanceButton, { backgroundColor: '#379237' }]} >
               <Text style={styles.actionText}>Leave apply</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: 'red' }]} >
-              <Text style={[styles.actionText, { color: 'white' }]}>Regularize</Text>
+
+            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#D21312' }]} >
+              <Text style={[styles.actionText]}>Regularize</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: 'orange' }]} >
+
+            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#EB984E' }]} >
               <Text style={styles.actionText}>Outdoor</Text>
             </TouchableOpacity>
+
           </View>
 
         </View>
@@ -287,17 +255,19 @@ const Home = (props) => {
 
         {/* Other options */}
         <View style={styles.others}>
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
-            <MaterialCommunityIcons name='timetable' size={30} color='blue' />
-            <Text style={{ color: 'black', textAlign: 'center' }}>Pending Approval</Text>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}
+          onPress={()=>(props.navigation.navigate("Pending Approval"))}
+          >
+            <MaterialCommunityIcons name='timetable' size={30} color={COLORS.pink} />
+            <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
-            <Foundation name='megaphone' size={30} color='blue' />
-            <Text style={{ color: 'black', textAlign: 'center' }}>Company Announcement</Text>
+            <Foundation name='megaphone' size={30} color={COLORS.pink} />
+            <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Company Announcement</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
-            <FontAwesome5 name='birthday-cake' size={30} color="blue" />
-            <Text style={{ color: 'black', textAlign: 'center' }}>Birthday & Anniversary</Text>
+            <FontAwesome5 name='birthday-cake' size={30} color={COLORS.pink} />
+            <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Birthday & Anniversary</Text>
           </TouchableOpacity>
         </View>
 
@@ -308,7 +278,7 @@ const Home = (props) => {
 
 const styles = StyleSheet.create({
   Elevation: {
-    elevation: 7,
+    elevation: 6,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -318,30 +288,42 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 500,
+    marginTop: 15,
     color: 'black',
     marginHorizontal: 16
   },
   attendance: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    paddingHorizontal: 10,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: 'white',
+    // paddingHorizontal: 10,
     borderRadius: 8,
-    elevation: 4,
-    marginHorizontal: 5,
-    marginVertical: 8
+    // marginHorizontal: 5,
+    // marginVertical: 8
   },
   attendanceButton: {
-    height: 35,
+    marginVertical: 4,
+    height: 37,
+    elevation: 6,
+    marginHorizontal: 5,
     paddingHorizontal: 10,
     borderRadius: 35,
-    marginVertical: 6,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  punchButton: {
+    margin: 8,
+    height: 45,
+    borderRadius: 35,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    elevation: 8,
+    borderWidth: 1.5,
+    justifyContent: 'center',
   },
   others: {
     flexDirection: 'row',
@@ -363,24 +345,16 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   actionText: {
-    color: 'black',
+    color: 'white',
     fontSize: 15
   },
-  punchButton: {
-    flex: 1,
-    marginVertical: 12,
-    marginHorizontal: 10,
-    height: 75,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   punchButtonText: {
-    marginHorizontal: 15,
-    color: 'white',
     textAlign: 'center',
-    fontSize: 22,
-    paddingBottom: 4
+    textAlignVertical: 'center',
+    fontSize: 15,
+    paddingLeft: 10,
+    color: 'red',
+    fontWeight: '500',
   },
   wrapper: {
     flex: 1,

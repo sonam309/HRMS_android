@@ -8,6 +8,7 @@ import Otp_Verification from '../../screens/LoginOption/Otp_Verification';
 import ForgetPassword from '../../screens/LoginOption/ForgetPassword';
 import QuickPin from '../../screens/LoginOption/QuickPin';
 import CreateMpin from '../../screens/LoginOption/CreateMpin';
+import Apply_Leave from '../../screens/Employee_pages/Apply_Leave';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ const EntryStackNav = () => {
             <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={ForgetPassword} />
             <Stack.Screen name='QuickPin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={QuickPin} />
             <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={CreateMpin} />
+            <Stack.Screen name='Apply_Leave' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={Apply_Leave} />
 
         </Stack.Navigator>
     )

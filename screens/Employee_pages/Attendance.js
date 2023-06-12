@@ -78,7 +78,8 @@ const Attendance = (props) => {
             flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginHorizontal: 5,
           }}>
 
-            <Text style={[styles.regilizationBtn,{backgroundColor:'#28B463',borderColor:'#239B56'}]}>
+            <Text style={[styles.regilizationBtn,{backgroundColor:'#28B463',borderColor:'#239B56'}]}
+            onPress={()=>props.navigation.navigate("Apply_Leave")}>
 
               Regulization
 
