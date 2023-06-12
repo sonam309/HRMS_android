@@ -4,11 +4,12 @@ export const COLORS = {
   white: "#ffffff",
   green: "#03a157",
   red: "red",
-  orange: "orange",
+  orange: "#ec672f",
   gray: "gray",
   skyBlue: "#87CEEB",
   lightGreen: "#88C385",
   black: "black",
+  darkerGrey:'#526D82'
 };
 
 export default COLORS;

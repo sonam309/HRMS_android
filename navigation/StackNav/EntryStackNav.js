@@ -14,16 +14,16 @@ const Stack = createNativeStackNavigator();
 
 const EntryStackNav = () => {
     return (
-        <Stack.Navigator initialRouteName='Home'>
+        <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
 
-            <Stack.Screen name='Home' options={{ orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>, }} component={Entry_page} />
-            <Stack.Screen name='Employee' options={{ orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>}} component={Employee_Login} />
-            <Stack.Screen name='Candidate' options={{ orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>, }} component={Login} />
-            <Stack.Screen name='Employee_page' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={Employee_page} />
-            <Stack.Screen name='Otp_Verification' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={Otp_Verification} />
-            <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={ForgetPassword} />
-            <Stack.Screen name='QuickPin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={QuickPin} />
-            <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait', gestureEnabled: false, headerLeft: () => <></>, headerShown: false }} component={CreateMpin} />
+            <Stack.Screen name='Home' options={{ orientation: 'portrait' }} component={Entry_page} />
+            <Stack.Screen name='Employee' options={{ orientation: 'portrait' }} component={Employee_Login} />
+            <Stack.Screen name='Candidate' options={{ orientation: 'portrait' }} component={Login} />
+            <Stack.Screen name='Employee_page' options={{ orientation: 'portrait' }} component={Employee_page} />
+            <Stack.Screen name='Otp_Verification' options={{ orientation: 'portrait' }} component={Otp_Verification} />
+            <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait' }} component={ForgetPassword} />
+            <Stack.Screen name='QuickPin' options={{ orientation: 'portrait' }} component={QuickPin} />
+            <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait' }} component={CreateMpin} />
 
         </Stack.Navigator>
     )
