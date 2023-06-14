@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator, SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
 import moment from 'moment';
 import COLORS from '../../constants/theme';
 import Geolocation from '../../functions/Geolocation';
+import { DrawerActions } from '@react-navigation/native';
 
 const Home = (props) => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const { userName, password } = props.route.params;
+  const { userName, password, full_name } = props.route.params;
   const [punchButtonColor, setPunchButtonColor] = useState(COLORS.green)
   const [inOut, setInOut] = useState("In")
   const [punchInToken, setPunchInToken] = useState("I")
@@ -127,7 +128,21 @@ const Home = (props) => {
           </View>
         </Modal>
       </View > : null}
+
       <ScrollView>
+
+        <SafeAreaView style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent:'space-between' }}>
+          <TouchableOpacity style={{paddingHorizontal:14}} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
+            <Icons name='reorder-horizontal' color="black" size={25} />
+          </TouchableOpacity>
+          <View>
+            <Text style={{ color: 'black' }}>Welcome {full_name.length < 15 ? `${full_name}` : `${full_name.substring(0, 15)}...`} </Text>
+          </View>
+          <TouchableOpacity style={{paddingRight:10}} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
+            <Icons name='bell-ring-outline' color="black" size={30} />
+          </TouchableOpacity>
+        </SafeAreaView>
+
         {/* Main Content-Calendar */}
         <Calendar
           initialDate={year}
@@ -211,13 +226,13 @@ const Home = (props) => {
           <View style={{ width: '50%' }}>
             {/* <View style={{backgroundColor:'red'}}> */}
             <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { borderColor: `${punchButtonColor}` }]} >
-              <MaterialCommunityIcons name='gesture-double-tap' size={35} color={`${punchButtonColor}`} />
+              <Icons name='gesture-double-tap' size={35} color={`${punchButtonColor}`} />
               <Text style={[styles.punchButtonText, { color: `${punchButtonColor}` }]}>Punch {inOut}</Text>
             </TouchableOpacity>
             {/* </View> */}
             <View style={[{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10 }]}>
 
-              <MaterialCommunityIcons name='clock-outline' size={45} color={COLORS.voilet} />
+              <Icons name='clock-outline' size={45} color={COLORS.voilet} />
 
               <View style={{ marginLeft: 10 }}>
                 <Text style={{ color: 'blue', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
@@ -256,9 +271,9 @@ const Home = (props) => {
         {/* Other options */}
         <View style={styles.others}>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}
-          onPress={()=>(props.navigation.navigate("Pending Approval"))}
+            onPress={() => (props.navigation.navigate("Pending Approval"))}
           >
-            <MaterialCommunityIcons name='timetable' size={30} color={COLORS.pink} />
+            <Icons name='timetable' size={30} color={COLORS.pink} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>

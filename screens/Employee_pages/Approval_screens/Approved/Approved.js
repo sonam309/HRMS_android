@@ -1,16 +1,15 @@
-import { View, Text, ScrollView, StyleSheet,TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
 
 const Approved = (props) => {
-    const {navigation} = props;
-    const { flag } = props.route.params
-
+    const { navigation, flag, notificationCat } = props;
     const [approvedData, setApprovedData] = useState([])
+    let action = "A";
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10011', operFlag: 'Y', })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10011', operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
@@ -20,28 +19,29 @@ const Approved = (props) => {
 
     useEffect(() => {
         getData();
-    }, [])
+    }, [notificationCat])
 
-    function Icons(props) {
-        const date = props.aDate, mail_body = props.mail, approved_by = props.approver, keys = props.id
+    function ListItems(props) {
+        const date = props.aDate, mail_body = props.mail, approver = props.approved_by, keys = props.id, category = props.cat
         return (
-            <TouchableOpacity key = {keys} style={[{ backgroundColor: COLORS.white, marginVertical: 4,marginHorizontal:8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, elevation: 20 }, styles.Elevation]} onPress={()=>navigation.navigate("Data",{keys})}>
-                <Text style={{ fontSize: 14, fontWeight: '500', color:COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color:COLORS.voilet }}> {date}</Text> </Text>
+            <TouchableOpacity key={keys} style={[styles.ListIcons, styles.Elevation]} onPress={() => navigation.navigate("Details", { keys, category, date,mail_body,approver, action })}>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
+                    <Text style={[{ backgroundColor: category === "New Job Opening" ? COLORS.voilet : COLORS.red }, styles.categoryTag]}>{category === "New Job Opening" ? 'New Job' : 'Salary'}</Text>
+                </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
-                {approved_by != '-' ? (<Text style={{ fontSize: 14, color: COLORS.green, fontWeight: '400' }}>Approved by {approved_by}</Text>) : null}
+                {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.green, fontWeight: '400' }}>Approved by {approver}</Text>) : null}
             </TouchableOpacity>
         )
     }
 
     const Hiring = () => {
         return (
-            <ScrollView>
-                {approvedData ?
-                    approvedData.map((item) => <Icons aDate={item.CREATED_DATE} mail={item.MAIL_BODY} approver={item.APPROVE_BY} id={item.CANDIDATE_ID}/>) :
-                    <Text>No Data Found</Text>
-                }
-            </ScrollView>
+            <>
+                {approvedData && (approvedData[0] ? approvedData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={approvedData} renderItem={({ item }) => <ListItems aDate={item.CREATED_DATE} mail={item.MAIL_BODY} approved_by={item.APPROVE_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
+            </>
         )
     }
 
@@ -66,6 +66,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 4,
     },
+    ListIcons: {
+        backgroundColor: COLORS.white,
+        marginVertical: 4,
+        marginHorizontal: 8,
+        paddingLeft: 12,
+        paddingVertical: 8,
+        borderRadius: 18,
+        overflow: 'hidden'
+    }, 
+    categoryTag:{
+        color: 'white', 
+        paddingHorizontal: 10, 
+        paddingVertical:1,
+        marginRight: -5, 
+        borderRadius: 10
+    }
 })
 
 export default Approved

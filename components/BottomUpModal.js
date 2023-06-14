@@ -34,7 +34,7 @@ const BottomUpModal = ({ isVisible, onClose, children, visibleHieght }) => {
   const navigation = useNavigation();
 
   return (
-    <Modal animationType="fade" transparent={true} visible={isVisible}>
+    <Modal animationType="slide" transparent={true} visible={isVisible}>
       <View
         style={{
           flex: 1,

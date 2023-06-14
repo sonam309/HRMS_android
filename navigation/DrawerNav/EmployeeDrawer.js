@@ -18,7 +18,6 @@ import { user_profile } from '../../assets';
 const EmployeeDrawer = (props) => {
     const Drawer = createDrawerNavigator();
     const { full_name, userName, navigator,password } = props;
-
     function CustomDrawer(props) {
         return (
             <DrawerContentScrollView {...props} >
@@ -57,11 +56,11 @@ const EmployeeDrawer = (props) => {
     return (
         <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: '#c6cbef' } }} drawerContent={() => <CustomDrawer {...props} />}>
 
-            <Drawer.Screen name="DashBoard" component={DashBoard} options={{ title: `Welcome | ${full_name}` }} initialParams={{ userName: userName, password:password }} />
+            <Drawer.Screen name="DashBoard" component={DashBoard} options={{ headerShown:false }} initialParams={{ userName: userName, password:password,full_name:full_name }} />
             <Drawer.Screen name="Attendance" component={Attendance} />
             <Drawer.Screen name="Holiday List" component={Holiday_list} />
             <Drawer.Screen name="PaySlip" component={PaySlip} />
-            <Drawer.Screen name="Pending Approval" component={Pending_Approval} />
+            <Drawer.Screen name="Pending Approval" component={Pending_Approval} options={{ headerShown:false }} />
             <Drawer.Screen name="Onboarding" component={Onboarding} />
             <Drawer.Screen name="E-Resign" component={E_Resign} />
             <Drawer.Screen name="Jobs" component={Jobs} />

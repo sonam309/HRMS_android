@@ -1,16 +1,86 @@
-import { ScrollView, useWindowDimensions } from 'react-native'
+import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import RenderHtml from 'react-native-render-html';
+import COLORS from '../../../constants/theme';
+import Icons from 'react-native-vector-icons/FontAwesome'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const Data = (props) => {
+const Details = (props) => {
     const { width } = useWindowDimensions();
-    const { keys } = props.route.params
+    const { keys, category, date, mail_body, approver, action } = props.route.params
 
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue
 
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
+    const [disableBtn, setDisableBtn] = useState(false);
+
+    var SalaryDetails = {
+        txnId: data?.Table[0]?.TXN_ID,
+        userId: 10011,
+        candidateId: data?.Table[0]?.CANDIDATE_ID,
+        previousCtc: data?.Table[0]?.PREVIOUS_CTC,
+        hike: data?.Table[0]?.HIKE,
+        camputedValue: data?.Table[0]?.COMPUTED_VALUE,
+        annuallyCtc: data?.Table[0]?.ANNUALY_CTC,
+        monthlyCtc: data?.Table[0]?.FIXED_CTC_MONTHLY,
+        grossAmount: grossAmount,
+        calGrossAmmount: data?.Table[0]?.CAL_GROS_AMT,
+        annualVariable: data?.Table[0]?.ANNUAL_VARIABLE,
+        fixedCtc: data?.Table[0]?.FIXED_CTC,
+        employerPf: employerPF,
+        employerEsic: data?.Table[0]?.EMPLOYER_ESIC,
+        professionTax: data?.Table[0]?.PROFESSION_TAX,
+        operFlag: 'C',
+        annualType: '0',
+        basicSalery: '0',
+        bikeMaintainace: '0',
+        bonusPay: '0',
+        conveyanceAllowance: '0',
+        hra: '0',
+        specialAllowance: '0',
+        fuelRembursment: '0',
+        totalAmount: '0',
+        distanceAllowance: '0',
+        driveAllowance: '0',
+        esicPercentage: '0',
+        foodAllowance: '0',
+        Remark: '',
+        approver: '',
+        salApproverId: '',
+        fixedCtcMonthly: data?.Table[0]?.FIXED_CTC_MONTHLY,
+        fixedCtcYearly: data?.Table[0]?.FIXED_CTC_ANNUALLY,
+        employeePfCheck: data?.Table[0]?.EMPLR_PF_CHECK,
+        costOfCompany: '0',
+    };
+
+
+    const approveDetail = () => {
+        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails })
+            .then(response => {
+                const returnedData = response?.data;
+                console.log(returnedData);
+                Alert.alert('Approved', returnedData?.MSG);
+                setDisableBtn(true);
+            })
+            .catch(error => {
+                console.log('error', error);
+            });
+    };
+
+    const rejectDetail = () => {
+        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: 'R' })
+            .then(response => {
+                const returnedData = response?.data;
+                Alert.alert('Rejected', returnedData?.MSG);
+                setDisableBtn(true);
+            })
+            .catch(error => {
+                console.log('error', error);
+            });
+    };
 
     const getHTMLdata = async () => {
         let totalData = await fetch('https://econnectsatya.com:7033/api/Admin/getHiringTemplate?tempId=7')
@@ -31,6 +101,7 @@ const Data = (props) => {
             });
     }
 
+    // Setting the variables data coming for Salary Allocation
     const updating = () => {
         // console.warn(data);
         fullName = data.Table1[0]?.FULL_NAME
@@ -66,6 +137,7 @@ const Data = (props) => {
         YeartotalSalValue = Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
     }
 
+    // Updating the HTML data for Salary Allocation
     const updateHTML = () => {
         // console.warn("this is data " + data);
         data ? updating() : null
@@ -108,11 +180,101 @@ const Data = (props) => {
         getHTMLdata();
     }, [])
 
+    const JobOpening = () => {
+        return (
+            <View style={{ flex: 1, marginHorizontal: 10, justifyContent: 'center' }}>
+
+                <View style={{ marginVertical: 10 }}>
+                    <Text style={styles.headers}>Applied Date</Text>
+                    <View style={styles.textBox}>
+                        <Text style={styles.textArea}>{date}</Text>
+                        <Icons name='calendar' color={COLORS.pink} size={25} />
+                    </View>
+                </View>
+
+                <View style={{ marginVertical: 10 }}>
+                    <Text style={styles.headers}>Detail</Text>
+                    <View style={styles.textBox}>
+                        <Text style={styles.textArea}>{mail_body}</Text>
+                    </View>
+                </View>
+
+                <View style={{ marginVertical: 10 }}>
+                    <Text style={styles.headers}>Pending By</Text>
+                    <View style={styles.textBox}>
+                        <Text style={styles.textArea}>{approver}</Text>
+                        <MaterialIcons name='pending-actions' color={COLORS.pink} size={25} />
+                    </View>
+                </View>
+
+            </View>
+        )
+    }
     return (
-        <ScrollView>
-            <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+            {category !== "New Job Opening" ?
+                (
+                    <ScrollView>
+                        <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
+                    </ScrollView>
+                ) :
+                (<JobOpening />)
+            }
+
+
+            {action === 'P' ? <View style={styles.footerDesign}>
+
+                <TouchableOpacity disabled={disableBtn} onPress={() => approveDetail()} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green}, styles.buttonStyle]}>
+
+                    <MaterialCommunityIcons name="check-circle-outline" size={20} color={COLORS.white} />
+                    <Text style={{ color: COLORS.white, fontWeight: '600', }}> Approve </Text>
+
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => rejectDetail()} disabled={disableBtn} style={[{ backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red }, styles.buttonStyle]}>
+                    <MaterialCommunityIcons name="close-circle-outline" size={20} color={COLORS.white} />
+                    <Text style={{ color: COLORS.white, fontWeight: '600', }}> Reject </Text>
+                </TouchableOpacity>
+            </View> : null}
+
+        </View>
     )
 }
-
-export default Data
+const styles = StyleSheet.create({
+    textBox: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 12,
+        justifyContent: 'space-between',
+        paddingHorizontal: 15
+    },
+    textArea: {
+        flex: 1,
+        paddingVertical: 10
+    },
+    headers: {
+        marginVertical: 5,
+        fontWeight: 500,
+        color: COLORS.black,
+        fontSize: 17
+    },
+    buttonStyle: {
+        padding: 12, 
+        marginLeft: 24, 
+        borderRadius: 12, 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-between',
+    },
+    footerDesign:{
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        padding: 12, 
+        height: 80, 
+        backgroundColor: COLORS.white, 
+        justifyContent: 'flex-end' 
+    }
+})
+export default Details

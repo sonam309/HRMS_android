@@ -1,15 +1,15 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
 
 const Pending = (props) => {
-    const { navigation } = props;
-    const { flag } = props.route.params
+    const { navigation, flag, notificationCat } = props;
     const [pendingData, setPendingData] = useState([])
+    let action = "P";
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10011', operFlag: 'P', })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10011', operFlag: 'P', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
@@ -19,29 +19,31 @@ const Pending = (props) => {
 
     useEffect(() => {
         getData();
-    }, [])
+    }, [notificationCat])
 
-    function Icons(props) {
-        const date = props.aDate, mail_body = props.mail, pending_by = props.approver, keys = props.id
+    function ListItems(props) {
+        const date = props.aDate, mail_body = props.mail, approver = props.pending_by, keys = props.id, category = props.cat
         return (
-            <TouchableOpacity key={keys} style={[{ backgroundColor: COLORS.white, marginVertical: 4, marginHorizontal: 8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 18, elevation: 20 }, styles.Elevation]} onPress={() => navigation.navigate("Data", { keys })}>
-                <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
+            <TouchableOpacity key={keys} style={[styles.ListIcons, styles.Elevation]} onPress={() => navigation.navigate("Details", { keys, category, date,mail_body,approver, action })}>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
+                    <Text style={[{ backgroundColor: category === "New Job Opening" ? COLORS.voilet : COLORS.red }, styles.categoryTag]}>{category === "New Job Opening" ? 'New Job' : 'Salary'}</Text>
+                </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
 
-                {pending_by != '-' ? (<Text style={{ fontSize: 14, color: COLORS.orange, fontWeight: '400' }}>Pending by {pending_by}</Text>) : null}
+                {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.orange, fontWeight: '400' }}>Pending by {approver}</Text>) : null}
             </TouchableOpacity>
         )
     }
 
     const Hiring = () => {
         return (
-            <ScrollView>
-                {pendingData ?
-                    pendingData.map((item) => <Icons aDate={item.CREATED_DATE} mail={item.MAIL_BODY} approver={item.APPROVE_BY} id={item.CANDIDATE_ID} />) :
-                    <Text>No Data Found</Text>
-                }
-            </ScrollView>
+            <>
+                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems aDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
+            </>
+
         )
     }
 
@@ -51,6 +53,7 @@ const Pending = (props) => {
             {flag === "C" ? <Text>It is inside Claim</Text> : null}
             {flag === "E" ? <Text>It is inside EResign</Text> : null}
             {flag === "H" ? <Hiring /> : null}
+            {/* {console.warn("Inside pending " + notificationCat)} */}
         </View>
     )
 }
@@ -66,6 +69,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 4,
     },
+    ListIcons: {
+        backgroundColor: COLORS.white,
+        marginVertical: 4,
+        marginHorizontal: 8,
+        paddingLeft: 12,
+        paddingVertical: 8,
+        borderRadius: 18,
+        overflow: 'hidden'
+    },
+    categoryTag: {
+        color: 'white',
+        paddingHorizontal: 10,
+        paddingVertical:1,
+        marginRight: -5,
+        borderRadius: 10
+    }
 })
 
 export default Pending

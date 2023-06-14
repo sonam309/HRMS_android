@@ -1,13 +1,23 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
+import { DrawerActions } from '@react-navigation/native';
 
 const Approval_actions = ({ navigation }) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
+            <SafeAreaView style={{ height: 50, flexDirection: 'row', alignItems: 'center' }}>
+
+                <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                    <MaterialCommunityIcons name='reorder-horizontal' color="black" size={25} />
+                </TouchableOpacity>
+
+                <Text style={{color:'black', fontSize:18}}>Pending Approval</Text>
+                
+            </SafeAreaView>
 
             <View style={{ padding: 36, alignItems: 'center' }}>
                 <Text style={{ fontSize: 22, fontWeight: "600" }}>
@@ -22,7 +32,7 @@ const Approval_actions = ({ navigation }) => {
 
                     <LinearGradient colors={['#40b3c2', '#87ecfa']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Intermediate', { flag:'A' })} style={[styles.cardWrap]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'A' })} style={[styles.cardWrap]}>
 
                             <MaterialCommunityIcons name="calendar" size={60} color={"white"} />
 
@@ -34,7 +44,7 @@ const Approval_actions = ({ navigation }) => {
 
                     <LinearGradient colors={['#FFD93D', 'rgb(255, 217, 61)']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient,styles.elevation]}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Intermediate', { flag:'C' })} style={[styles.cardWrap]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag:'C' })} style={[styles.cardWrap]}>
 
                             <MaterialCommunityIcons name="file-document-outline" size={60} color={"white"} />
 
@@ -50,7 +60,7 @@ const Approval_actions = ({ navigation }) => {
 
                     <LinearGradient colors={['#f56788', '#ffabbe']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Intermediate', { flag:'E' })} style={[styles.cardWrap]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'E' })} style={[styles.cardWrap]}>
 
                             <MaterialCommunityIcons name="exit-run" size={60} color={"white"} />
 
@@ -60,9 +70,9 @@ const Approval_actions = ({ navigation }) => {
 
                     </LinearGradient>
 
-                    <LinearGradient colors={['#8696FE', 'rgb(196, 176, 255)']} start={{ x: 0, y: 1 }} end={{x:1,y:0}} style={[styles.LinearGradient, styles.elevation]}>
+                    <LinearGradient colors={['#8696FE', 'rgb(196, 176, 255)']} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} style={[styles.LinearGradient, styles.elevation]}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Intermediate', { flag:'H' })} style={[styles.cardWrap]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'H' })} style={[styles.cardWrap]}>
 
                             <FontAwesome name="users" size={60} color={"white"} />
 
