@@ -15,8 +15,8 @@ import Geolocation from '../../functions/Geolocation';
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
+    const [userName, setUserName] = useState("10011");
+    const [password, setPassword] = useState("Kapil@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     const userData = { loginId: userName, password: password, oprFlag: 'L' };
