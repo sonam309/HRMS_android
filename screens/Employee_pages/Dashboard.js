@@ -10,6 +10,7 @@ import moment from 'moment';
 import COLORS from '../../constants/theme';
 import Geolocation from '../../functions/Geolocation';
 import { DrawerActions } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Home = (props) => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -24,11 +25,16 @@ const Home = (props) => {
   const [markedDate, setMarkedDate] = useState({});
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [year, setYear] = useState(new Date());
+  const [present, setPresent] = useState(0);
+  const [absent, setAbsent] = useState(0);
   const userData = { loginId: userName, password: password, oprFlag: 'L' };
   var markedDates = {};
   let loginId = userName
   let inTime = "";
   let timeIn = "";
+  let presentDays = 0;
+  let absentDays = 0;
+  let count = 0;
 
   const getCurrentLocation = async (val) => {
     Geolocation({ val, userName, userData });
@@ -81,22 +87,24 @@ const Home = (props) => {
   }, [])
 
   useEffect(() => {
+    count = 0;
+    presentDays = 0;
+    absentDays = 0;
     getAttendance()
   }, [selectedMonth])
+
   const getAttendance = () => {
-    axios
-      .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
-        userId: '10011',
-        monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
-      })
+    axios.post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
+      userId: userName,
+      monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
+    })
       .then(response => {
         const returnedData = response?.data?.Result;
         // Create the final object
+        // console.warn("Returned data is "+returnedData);
         returnedData.map(obj => {
           // Extract the date from the DATED field
-          const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
-            'YYYY-MM-DD',
-          );
+          const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format('YYYY-MM-DD');
           // Determine markedDotColor based on ATTENDANCE_FLAG
           let markedDotColor = '';
           if (obj.ATTENDANCE_FLAG === 'A') {
@@ -106,17 +114,23 @@ const Home = (props) => {
           } else if (obj.ATTENDANCE_FLAG === 'S') {
             markedDotColor = 'orange';
           } else if (obj.ATTENDANCE_FLAG === 'H') {
-            markedDotColor = 'gray';
+            markedDotColor = 'grey';
           } else {
             markedDotColor = '#fff';
           }
           // Add the date as a key to the final object
           markedDates[date] = { marked: true, dotColor: markedDotColor };
+          if (count < 1) {
+            markedDates[date].dotColor === 'red' ? (absentDays += 1) : null;
+            markedDates[date].dotColor === ("orange" || "#33AA54") ? (presentDays += 1) : null;
+          }
         });
         setMarkedDate(markedDates)
+        count = 1;
+        setPresent(presentDays);
+        setAbsent(absentDays);
       });
   };
-
   return (
     <View style={styles.container}>
       {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5, backgroundColor: 'black', zIndex: 1 }}>
@@ -131,139 +145,105 @@ const Home = (props) => {
 
       <ScrollView>
 
-        <SafeAreaView style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent:'space-between' }}>
-          <TouchableOpacity style={{paddingHorizontal:14}} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
+        <SafeAreaView style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name='reorder-horizontal' color="black" size={25} />
           </TouchableOpacity>
           <View>
             <Text style={{ color: 'black' }}>Welcome {full_name.length < 15 ? `${full_name}` : `${full_name.substring(0, 15)}...`} </Text>
           </View>
-          <TouchableOpacity style={{paddingRight:10}} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
+          <TouchableOpacity style={{ paddingRight: 10 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name='bell-ring-outline' color="black" size={30} />
           </TouchableOpacity>
         </SafeAreaView>
 
         {/* Main Content-Calendar */}
-        <Calendar
-          initialDate={year}
-          style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }}
-          headerStyle={{ backgroundColor: '#220046' }}
-          theme={{
-            arrowColor: 'white',
-            monthTextColor: 'white',
-            textSectionTitleColor: 'white',
-          }}
-          markedDates={markedDate}
-          onMonthChange={month => {
-            setSelectedYear(month.year);
-            setSelectedMonth(new Date(month?.dateString));
-          }}
+        <Calendar initialDate={year} style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }} headerStyle={{ backgroundColor: '#220046' }} theme={{
+          arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white',
+        }} markedDates={markedDate} onMonthChange={month => { setSelectedYear(month.year); setSelectedMonth(new Date(month?.dateString)); }}
           dayComponent={({ date, state, marking }) => {
             return (
-              <TouchableOpacity
-                onLongPress={() => {
-                  setModalVisible(true);
-                  console.log('selected day', date.day);
-                }}
-                style={{
-                  padding: 5,
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                  }}>
-                  {date.day}
-                </Text>
+              <TouchableOpacity onLongPress={() => { setModalVisible(true); console.log('selected day', date.day); }} style={{ padding: 5, alignItems: 'center', }}>
+                <Text style={{ fontSize: 16, }}> {date.day} </Text>
                 {marking && marking.dotColor === 'orange' ? (
-                  <View
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 5,
-                      overflow: 'hidden',
-                      transform: [{ rotate: '90deg' }],
-                      elevation: 2,
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: '#DDE6ED',
-                        height: 5,
-                        width: 10,
-                      }}
-                    />
-                    <View
-                      style={{
-                        backgroundColor: '#88C385',
-                        height: 5,
-                        width: 10,
-                      }}
-                    />
-                  </View>
-                ) : (
-                  marking && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        backgroundColor: marking?.dotColor
-                          ? marking.dotColor
-                          : '#87CEEB',
-                        borderRadius: 5,
-                      }}
-                    />
-                  )
-                )}
+                  <View style={{ height: 10, width: 10, borderRadius: 5, overflow: 'hidden', transform: [{ rotate: '90deg' }], elevation: 2, }}>
+                    <View style={{ backgroundColor: '#DDE6ED', height: 5, width: 10, }} />
+                    <View style={{ backgroundColor: '#88C385', height: 5, width: 10, }} />
+                  </View>) :
+                  (marking && (<View style={{ height: 10, width: 10, backgroundColor: marking?.dotColor ? marking.dotColor : '#87CEEB', borderRadius: 5, }} />))}
               </TouchableOpacity>
             );
           }}
         />
+
+
         {/* Punch In Button */}
-
-
         <View style={styles.attendance}>
 
-          <View style={{ width: '50%' }}>
-            {/* <View style={{backgroundColor:'red'}}> */}
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <TouchableOpacity onPress={() => { getCurrentLocation(punchInToken) }} style={[styles.punchButton, { borderColor: `${punchButtonColor}` }]} >
               <Icons name='gesture-double-tap' size={35} color={`${punchButtonColor}`} />
               <Text style={[styles.punchButtonText, { color: `${punchButtonColor}` }]}>Punch {inOut}</Text>
             </TouchableOpacity>
-            {/* </View> */}
-            <View style={[{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10 }]}>
-
-              <Icons name='clock-outline' size={45} color={COLORS.voilet} />
-
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{ color: 'blue', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
-                <Text style={{ color: 'black', fontWeight: '500' }}>Spent Today</Text>
-              </View>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'black', fontWeight: '500' }}>Punch In Time: <Text style={{ color: 'blue', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>  </Text>
-            </View>
-
           </View>
 
-          <View style={{ width: '50%' }}>
+          <TouchableOpacity style={[styles.otherOptions, { flexDirection: 'row', height: 60, backgroundColor: COLORS.lighterVoilet }]} >
+            <Icons name='clock-outline' size={35} color={COLORS.white} />
+            <View>
+              <Text style={{ color: 'white', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
+              <Text style={{ color: 'white', fontWeight: '500' }}>Spent Today</Text>
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.attendanceButton, { backgroundColor: '#379237' }]} >
-              <Text style={styles.actionText}>Leave apply</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#D21312' }]} >
-              <Text style={[styles.actionText]}>Regularize</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#EB984E' }]} >
-              <Text style={styles.actionText}>Outdoor</Text>
-            </TouchableOpacity>
-
-          </View>
+          <TouchableOpacity style={[styles.otherOptions, { height: 60, backgroundColor: COLORS.lighterVoilet }]} >
+            <Text style={{ color: 'white', fontWeight: '500' }}>Punch In Time: </Text>
+            <Text style={{ color: 'white', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>
+          </TouchableOpacity>
 
         </View>
+
+        <View style={{ flexDirection: 'row' }}>
+
+          <TouchableOpacity style={styles.recordButton} onPress={() => { props.navigation.navigate('Attendance') }} >
+            <LinearGradient colors={['#77037B', '#210062']} style={{ borderRadius: 8, padding: 5, width: '100%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: COLORS.white }}> {present} days</Text>
+                <Icons name='calendar-month-outline' size={30} color={COLORS.white} />
+              </View>
+              <Text style={{ color: COLORS.white, textAlign: 'center' }}> Attendance this month</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.recordButton} onPress={() => { props.navigation.navigate('Attendance') }} >
+            <LinearGradient colors={['#77037B', '#210062']} style={{ borderRadius: 8, padding: 5, width: '100%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: COLORS.white }}> {absent} days</Text>
+                <Icons name='calendar-month-outline' size={30} color={COLORS.white} />
+              </View>
+              <Text style={{ color: COLORS.white, textAlign: 'center' }}>Leaves this month</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+        </View>
+
+
+        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.MidGreen }]} >
+            <Text style={styles.actionText}>Leave apply</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.orange }]} >
+            <Text style={[styles.actionText]}>Regularize</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue }]} >
+            <Text style={styles.actionText}>Outdoor</Text>
+          </TouchableOpacity>
+
+        </View>
+
 
         {/* Other */}
         <Text style={styles.headerText}>Others</Text>
@@ -288,6 +268,7 @@ const Home = (props) => {
 
       </ScrollView>
     </View>
+
   )
 }
 
@@ -311,16 +292,19 @@ const styles = StyleSheet.create({
   },
   attendance: {
     flex: 1,
-    flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: 'white',
-    // paddingHorizontal: 10,
-    borderRadius: 8,
-    // marginHorizontal: 5,
-    // marginVertical: 8
+    flexDirection: 'row'
+  },
+  recordButton: {
+    flex: 1,
+    height: 60,
+    width: '50%',
+    marginVertical: 12,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   attendanceButton: {
+    flex: 1,
     marginVertical: 4,
     height: 37,
     elevation: 6,
@@ -331,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   punchButton: {
-    margin: 8,
+    marginVertical: 8,
     height: 45,
     borderRadius: 35,
     flexDirection: 'row',
@@ -367,8 +351,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 15,
-    paddingLeft: 10,
-    color: 'red',
+    paddingHorizontal: 5,
     fontWeight: '500',
   },
   wrapper: {

@@ -1,5 +1,6 @@
 export const COLORS = {
-  voilet: "#220046",
+  voilet: "rgb(34,0,70)",
+  lighterVoilet: "rgba(34,0,70,0.8)",
   pink: "#e10092",
   white: "#ffffff",
   green: "#03a157",
@@ -9,7 +10,9 @@ export const COLORS = {
   orange: "#ec672f",
   gray: "gray",
   skyBlue: "#87CEEB",
+  lightBlue:'#5DADE2',
   lightGreen: "#88C385",
+  MidGreen: "#28B463",
   black: "black",
   darkerGrey: '#526D82',
   transparentViolet: 'rgba(34,0,70,0.1)'
