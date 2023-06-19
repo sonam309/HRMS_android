@@ -15,7 +15,8 @@ export const COLORS = {
   MidGreen: "#28B463",
   black: "black",
   darkerGrey: '#526D82',
-  transparentViolet: 'rgba(34,0,70,0.1)'
+  transparentViolet: 'rgba(34,0,70,0.1)',
+  bg_tile_Colo:'#F5EEF8',
 };
 
 export default COLORS;
