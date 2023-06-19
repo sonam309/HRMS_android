@@ -187,19 +187,23 @@ const Home = (props) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={[styles.otherOptions, { flexDirection: 'row', height: 60, backgroundColor: COLORS.lighterVoilet }]} >
-            <Icons name='clock-outline' size={35} color={COLORS.white} />
+          <TouchableOpacity style={[styles.otherOptions, { flexDirection: 'row',  backgroundColor:COLORS.transparent }]} >
+            <Icons name='clock-outline' size={35} color={COLORS.gray} />
             <View>
-              <Text style={{ color: 'white', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
-              <Text style={{ color: 'white', fontWeight: '500' }}>Spent Today</Text>
+              <Text style={{ color: 'gray', fontWeight: '500', textAlign: 'center' }}>{duration != "" ? duration : '--:--'} hrs</Text>
+              <Text style={{ color: 'gray', fontWeight: '500' }}>Spent Today</Text>
+              <Text style={{ color: 'gray', fontWeight: '500' }}>Punch In Time: </Text>
+              <Text style={{ color: 'gray', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>
             </View>
+
+
           </TouchableOpacity>
 
 
-          <TouchableOpacity style={[styles.otherOptions, { height: 60, backgroundColor: COLORS.lighterVoilet }]} >
+          {/* <TouchableOpacity style={[styles.otherOptions, { height: 60, backgroundColor: COLORS.lighterVoilet }]} >
             <Text style={{ color: 'white', fontWeight: '500' }}>Punch In Time: </Text>
             <Text style={{ color: 'white', fontWeight: '500' }}>{punchInTime != "" ? punchInTime : '--:--'} </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
         </View>
 
