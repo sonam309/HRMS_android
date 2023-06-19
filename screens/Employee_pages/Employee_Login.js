@@ -11,6 +11,7 @@ import { Pinlock } from '../../assets';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import Geolocation from '../../functions/Geolocation';
+import Loader from '../../components/Loader';
 
 
 const Employee_Login = (props) => {
@@ -91,15 +92,7 @@ const Employee_Login = (props) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="#220046" />
-            {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5, backgroundColor: 'black', zIndex: 1 }}>
-                <Modal transparent={true} animationType='slide' visible={loaderVisible}>
-                    <View style={styles.wrapper}>
-                        <View style={styles.boxer}>
-                            <ActivityIndicator color='#ec672f' size={70} />
-                        </View>
-                    </View>
-                </Modal>
-            </View > : null}
+            <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
             <View style={{ flex: 1, backgroundColor: '#220046', paddingHorizontal: 20 }}>

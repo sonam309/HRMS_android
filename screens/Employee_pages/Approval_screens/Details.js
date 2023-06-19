@@ -11,12 +11,14 @@ const Details = (props) => {
     const { width } = useWindowDimensions();
     const { keys, category, date, mail_body, approver, action } = props.route.params
 
+    // Variables to be updated
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue
 
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
     const [disableBtn, setDisableBtn] = useState(false);
 
+    // Salary details
     var SalaryDetails = {
         txnId: data?.Table[0]?.TXN_ID,
         userId: 10011,
@@ -66,7 +68,7 @@ const Details = (props) => {
                 setDisableBtn(true);
             })
             .catch(error => {
-                console.log('error', error);
+                Alert.alert('Error', error);
             });
     };
 
@@ -78,7 +80,7 @@ const Details = (props) => {
                 setDisableBtn(true);
             })
             .catch(error => {
-                console.log('error', error);
+                Alert.alert('Error', error);
             });
     };
 
@@ -179,7 +181,7 @@ const Details = (props) => {
         getData();
         getHTMLdata();
     }, [])
-
+    // this is for new job opening
     const JobOpening = () => {
         return (
             <View style={{ flex: 1, marginHorizontal: 10, justifyContent: 'center' }}>
@@ -214,17 +216,18 @@ const Details = (props) => {
         <View style={{ flex: 1 }}>
             {category !== "New Job Opening" ?
                 (
+                    // salary allocation
                     <ScrollView>
                         <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
                     </ScrollView>
                 ) :
+                // new job opening 
                 (<JobOpening />)
             }
 
-
+            {/* Approval Buttons */}
             {action === 'P' ? <View style={styles.footerDesign}>
-
-                <TouchableOpacity disabled={disableBtn} onPress={() => approveDetail()} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green}, styles.buttonStyle]}>
+                <TouchableOpacity disabled={disableBtn} onPress={() => approveDetail()} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green }, styles.buttonStyle]}>
 
                     <MaterialCommunityIcons name="check-circle-outline" size={20} color={COLORS.white} />
                     <Text style={{ color: COLORS.white, fontWeight: '600', }}> Approve </Text>
@@ -261,20 +264,20 @@ const styles = StyleSheet.create({
         fontSize: 17
     },
     buttonStyle: {
-        padding: 12, 
-        marginLeft: 24, 
-        borderRadius: 12, 
-        flexDirection: 'row', 
-        alignItems: 'center', 
+        padding: 12,
+        marginLeft: 24,
+        borderRadius: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
     },
-    footerDesign:{
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        padding: 12, 
-        height: 80, 
-        backgroundColor: COLORS.white, 
-        justifyContent: 'flex-end' 
+    footerDesign: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 12,
+        height: 80,
+        backgroundColor: COLORS.white,
+        justifyContent: 'flex-end'
     }
 })
 export default Details
