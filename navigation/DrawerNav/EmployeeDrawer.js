@@ -64,7 +64,7 @@ const EmployeeDrawer = (props) => {
             <Drawer.Screen name="Onboarding" component={Onboarding} />
             <Drawer.Screen name="E-Resign" component={E_Resign} />
             <Drawer.Screen name="Jobs" component={Jobs} />
-            <Drawer.Screen name="Hiring" component={Hiring} />
+            <Drawer.Screen name="Hiring" component={Hiring} options={{ headerShown:false }}/>
             <Drawer.Screen name="Help Desk" component={Help_desk} />
         </Drawer.Navigator>
     )

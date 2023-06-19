@@ -11,6 +11,7 @@ import COLORS from '../../constants/theme';
 import Geolocation from '../../functions/Geolocation';
 import { DrawerActions } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import Loader from '../../components/Loader';
 
 const Home = (props) => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -133,15 +134,7 @@ const Home = (props) => {
   };
   return (
     <View style={styles.container}>
-      {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', opacity: 0.5, backgroundColor: 'black', zIndex: 1 }}>
-        <Modal transparent={true} animationType='slide' visible={loaderVisible}>
-          <View style={styles.wrapper}>
-            <View style={styles.boxer}>
-              <ActivityIndicator color='#ec672f' size={70} />
-            </View>
-          </View>
-        </Modal>
-      </View > : null}
+      <Loader loaderVisible={loaderVisible} />
 
       <ScrollView>
 
