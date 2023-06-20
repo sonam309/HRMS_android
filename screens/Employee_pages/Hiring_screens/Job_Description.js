@@ -1,4 +1,4 @@
-import { ActivityIndicator, Linking, ToastAndroid } from 'react-native';
+import { Linking, ToastAndroid } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useState } from 'react';
 import Loader from '../../../components/Loader'
