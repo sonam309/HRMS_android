@@ -8,17 +8,21 @@ import axios from 'axios'
 
 const Interview_status = (props) => {
     const { navigation } = props;
-    const [ScheduledInterview, setScheduledInterview] = useState();
+
+   const [interViewDetail, setInterViewDetail] = useState();
+    const [status, setStatus] = useState('P')
 
     const fetchInterviewData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/User/InterviewList`, {
+        axios.post(`http://192.168.1.169:7038/api/User/InterviewList`, {
+
             userId: '10011',
             operFlag: 'V',
         })
             .then(response => {
                 const returnedData = response?.data?.Result;
+
                 console.log(returnedData)
-                setScheduledInterview(returnedData)
+                setInterViewDetail(returnedData)
             }).catch((err)=>{
                 ToastAndroid.show(err,3000)
             });
@@ -29,6 +33,8 @@ const Interview_status = (props) => {
     }, [])
 
     function CandidateList(props) {
+
+
 
         const id = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume
 
@@ -41,6 +47,7 @@ const Interview_status = (props) => {
                     </View>
 
                     <View >
+
                         <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '500' }}>{name}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                             <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
@@ -48,10 +55,12 @@ const Interview_status = (props) => {
                             </Text>
                         </View>
                         {date ? <Text style={{color:COLORS.gray, fontSize:12}}>{date}</Text> : null}
+
                     </View>
 
                     <View style={{ justifyContent: 'flex-end' }}>
                         <Text style={{ backgroundColor: '#8467D7', borderRadius: 20, textAlign: 'center', alignSelf: 'center', padding: 8, color: COLORS.white, fontWeight: '500' }}>
+
                             {interviewStartTime} - {interviewEndTime}
                         </Text>
                     </View>
@@ -70,23 +79,30 @@ const Interview_status = (props) => {
                 {/* top buttons */}
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginHorizontal: 10, }}>
-                        <Text style={[styles.regilizationBtn, styles.Elevation, { backgroundColor: COLORS.voilet, borderColor: COLORS.white }]}>
+                        <TouchableOpacity onPress={() => setStatus("P")}>
+                            <Text style={[styles.Elevation, styles.regilizationBtn, {color:(status==='P'?COLORS.white:COLORS.voilet),borderColor:(status==='P'?COLORS.white:COLORS.voilet),backgroundColor:(status === 'P' ? COLORS.voilet : COLORS.white)}]} >
                             Schedule Interview </Text>
-                        <Text style={[styles.regilizationBtn, styles.Elevation, { backgroundColor: COLORS.white, borderColor: COLORS.voilet, color: COLORS.voilet }]}>
+                        </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setStatus("C")}>
+                        <Text style={[styles.Elevation, styles.regilizationBtn, {color:(status==='C'?COLORS.white:COLORS.voilet),borderColor:(status==='C'?COLORS.white:COLORS.voilet),backgroundColor:(status === 'C' ? COLORS.voilet : COLORS.white)}]}>
                             Complete Interview </Text>
-                    </View>
-
+                    </TouchableOpacity>
                 </View>
-                {/* ListView */}
 
-                <View style={{ flex: 1, flexDirection: 'row',padding:8, justifyContent: 'space-between' }}>
-                    <ScrollView >
-                        {ScheduledInterview?.map((item) => <CandidateList id={item.INTERVIEW_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} startTime={item.SCHEDULE_TIME_FROM} resume={item.RESUME} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
-                    </ScrollView>
-                </View>
 
             </View>
-        </ScrollView>
+            {/* ListView  */}
+
+            <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
+                <ScrollView >
+                    {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList id={item.INTERVIEW_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
+                </ScrollView>
+            </View>
+
+
+        </View>
+        </ScrollView >
+
     )
 }
 
