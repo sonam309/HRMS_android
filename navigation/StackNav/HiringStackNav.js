@@ -15,7 +15,7 @@ const HiringStackNav = () => {
 
             <Stack.Screen name='Hiring_page' options={{ orientation: 'portrait', gestureEnabled: false, headerShown: false, headerLeft: () => <></>, }} component={CreateHiringTab} />
             <Stack.Screen name='CreateNewJobOpening' options={{title:'Job Opening'}} component={CreateNewJobOpening} />
-            <Stack.Screen name='Job_Description' options={{title:'Job Opening'}} component={Job_Description} />
+            <Stack.Screen name='Job_Description' options={{title:'Job Description'}} component={Job_Description} />
             <Stack.Screen name='Candidate_details' options={{title:'Candidate Feedback'}} component={Candidate_details} />
             <Stack.Screen name='Candidate_Resume' options={{title:'Job Opening'}} component={Candidate_Resume} />
         </Stack.Navigator>

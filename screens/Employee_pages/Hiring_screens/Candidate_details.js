@@ -9,6 +9,7 @@ const Candidate_details = (props) => {
     const { resume, name, designation, interviewStartTime, interviewEndTime, date } = props.route.params
     const [isVisible, setIsVisible] = useState(false)
 
+    // feedback bottom up modal
     const renderFeedbackModal = () => {
         return (
             <View>
@@ -16,7 +17,7 @@ const Candidate_details = (props) => {
                     <Text>Hello</Text>
                 </View>
                 <View style={styles.footerDesign}>
-
+                    {/* accept/reject buttons */}
                     <TouchableOpacity onPress={() => approveDetail()} style={[{ backgroundColor: COLORS.green }, styles.buttonStyle]}>
                         <Text style={{ color: COLORS.white, fontWeight: '600', }}> Approve </Text>
                     </TouchableOpacity>
@@ -34,6 +35,7 @@ const Candidate_details = (props) => {
 
         <View style={{ flex: 1, margin: 10, paddingHorizontal: 10, justifyContent: 'center' }}>
 
+            {/* top icons */}
             <View style={[{ backgroundColor: COLORS.skyBlue, justifyContent: 'center', alignSelf: 'center', alignItems: 'center', width: 80, height: 80, borderRadius: 40, marginVertical: 5 }]}>
 
                 <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
@@ -43,6 +45,7 @@ const Candidate_details = (props) => {
             </View>
             <Text style={{ textAlign: 'center', fontSize: 20, marginVertical: 5 }}>Interview Schedule</Text>
 
+            {/* Minor details for candidate */}
             <View style={{ borderBottomWidth: 2, borderTopWidth: 2, borderColor: COLORS.skyBlue, paddingVertical: 10 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <View>
@@ -67,6 +70,7 @@ const Candidate_details = (props) => {
                 </TouchableOpacity>
             </View>
 
+            {/* button for feedback */}
             <TouchableOpacity onPress={() => setIsVisible(true)}>
                 <Text style={styles.ButtonStyle}>Feedback</Text>
             </TouchableOpacity>
