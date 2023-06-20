@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView,ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ToastAndroid } from 'react-native'
 import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import candidateIcon from '../../../assets/images/candidateIcon.png'
@@ -9,9 +9,10 @@ import axios from 'axios'
 const Interview_status = (props) => {
     const { navigation } = props;
 
-   const [interViewDetail, setInterViewDetail] = useState();
+    const [interViewDetail, setInterViewDetail] = useState();
     const [status, setStatus] = useState('P')
 
+    // fetching interviewer's list data
     const fetchInterviewData = () => {
         axios.post(`http://192.168.1.169:7038/api/User/InterviewList`, {
 
@@ -23,23 +24,21 @@ const Interview_status = (props) => {
 
                 console.log(returnedData)
                 setInterViewDetail(returnedData)
-            }).catch((err)=>{
-                ToastAndroid.show(err,3000)
+            }).catch((err) => {
+                ToastAndroid.show(err, 3000)
             });
     };
 
     useEffect(() => {
         fetchInterviewData();
     }, [])
-
+    // candidate icons 
     function CandidateList(props) {
-
-
 
         const id = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume
 
         return (
-            <TouchableOpacity key={id} style={{ width: '100%',padding:4 }} onPress={() => navigation.navigate('Candidate_details',{resume,name, designation,date, interviewEndTime, interviewStartTime})}>
+            <TouchableOpacity key={id} style={{ width: '100%', padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime })}>
 
                 <View style={{ borderRadius: 60, backgroundColor: COLORS.bg_tile_Colo, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, justifyContent: 'space-evenly', marginTop: 15 }}>
                     <View>
@@ -54,7 +53,7 @@ const Interview_status = (props) => {
                             <Text style={{ color: COLORS.darkerGrey, fontSize: 13, fontWeight: '500', marginHorizontal: 2 }}> {designation}
                             </Text>
                         </View>
-                        {date ? <Text style={{color:COLORS.gray, fontSize:12}}>{date}</Text> : null}
+                        {date ? <Text style={{ color: COLORS.gray, fontSize: 12 }}>{date}</Text> : null}
 
                     </View>
 
@@ -80,27 +79,26 @@ const Interview_status = (props) => {
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginHorizontal: 10, }}>
                         <TouchableOpacity onPress={() => setStatus("P")}>
-                            <Text style={[styles.Elevation, styles.regilizationBtn, {color:(status==='P'?COLORS.white:COLORS.voilet),borderColor:(status==='P'?COLORS.white:COLORS.voilet),backgroundColor:(status === 'P' ? COLORS.voilet : COLORS.white)}]} >
-                            Schedule Interview </Text>
+                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'P' ? COLORS.white : COLORS.voilet), borderColor: (status === 'P' ? COLORS.white : COLORS.voilet), backgroundColor: (status === 'P' ? COLORS.voilet : COLORS.white) }]} >
+                                Schedule Interview </Text>
                         </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setStatus("C")}>
-                        <Text style={[styles.Elevation, styles.regilizationBtn, {color:(status==='C'?COLORS.white:COLORS.voilet),borderColor:(status==='C'?COLORS.white:COLORS.voilet),backgroundColor:(status === 'C' ? COLORS.voilet : COLORS.white)}]}>
-                            Complete Interview </Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setStatus("C")}>
+                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'C' ? COLORS.white : COLORS.voilet), borderColor: (status === 'C' ? COLORS.white : COLORS.voilet), backgroundColor: (status === 'C' ? COLORS.voilet : COLORS.white) }]}>
+                                Complete Interview </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+
+                {/* ListView  */}
+                <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
+                    <ScrollView >
+                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList id={item.INTERVIEW_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
+                    </ScrollView>
                 </View>
 
 
             </View>
-            {/* ListView  */}
-
-            <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
-                <ScrollView >
-                    {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList id={item.INTERVIEW_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
-                </ScrollView>
-            </View>
-
-
-        </View>
         </ScrollView >
 
     )
