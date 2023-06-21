@@ -64,7 +64,7 @@ const Candidate_details = (props) => {
                     <Text style={{ marginHorizontal: 10 }}>{interviewStartTime} - {interviewEndTime}</Text>
                 </View>
 
-                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.lightGray, padding: 20, height: 100, borderRadius: 20 }} onPress={() => props.navigation.navigate('Candidate_Resume', { resume })}>
+                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center',overflow:'hidden', alignItems: 'center', backgroundColor: COLORS.lightGray, padding: 20, height: 100, borderRadius: 20 }} onPress={() => props.navigation.navigate('Candidate_Resume', { resume })}>
                     <Icons name='file-document-outline' color={COLORS.orange} size={40} />
                     <Text>{resume}</Text>
                 </TouchableOpacity>

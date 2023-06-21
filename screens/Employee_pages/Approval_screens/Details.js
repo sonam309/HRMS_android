@@ -12,7 +12,7 @@ const Details = (props) => {
     const { keys, category, date, mail_body, approver, action } = props.route.params
 
     // Variables to be updated
-    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue
+    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
 
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
@@ -107,8 +107,10 @@ const Details = (props) => {
     const updating = () => {
         // console.warn(data);
         fullName = data.Table1[0]?.FULL_NAME
+        JobTitle = data?.Table[0]?.DESIGNATION,
         contactPersonMob = data.Table1[0]?.CONTACT_PERSON
         contactPersonName = data.Table1[0]?.FULL_NAME
+        candidateDep = data?.Table[0]?.DEPARTMENT_NAME
         baseSalary = data.Table[0]?.BASIC_SAL
         HRA = data.Table[0]?.HRA
         foodAllowance = data.Table[0]?.FOOD_ALLOWANCE
@@ -151,15 +153,15 @@ const Details = (props) => {
                     // console.warn(HTMLdata),
                     HTMLdata
                         .replace("NameVariable", fullName ? fullName : "fullName")
-                        // .replaceAll("DesignationVariable", JobTitle == "" ? "DesignationVariable" : JobTitle)
+                        .replaceAll("DesignationVariable", JobTitle === "" ? "DesignationVariable" : JobTitle)
                         .replaceAll("contactPersonVarMob", contactPersonMob == "" ? "contactPersonVarMob" : contactPersonMob)
                         .replaceAll("contactPersonVarName", contactPersonName == "" ? "contactPersonVarName" : contactPersonName)
                         // .replaceAll("ContractionsVariable", candidateBeforeValue == "" ? "ContractionsVariable" : candidateBeforeValue)
                         // .replaceAll("CompensationVariable", compensation == "" ? "CompensationVariable" : compensation)
                         // .replaceAll('DateVariable', startDate == "" ? "DateVariable" : dateOfIssue)
-                        // .replaceAll('JoiningVariable', effTo == "" ? "JoiningVariable" : dateOfJoining)
+
                         // .replaceAll('NameVariable', candidateName == "" ? 'NameVariable' : candidateName)
-                        // .replaceAll('DepartmentVariable', candidateDep == "" ? 'DepartmentVariable' : candidateDep)
+                        .replaceAll('DepartmentVariable', candidateDep == "" ? 'DepartmentVariable' : candidateDep)
                         .replaceAll('MonthBaseVariable', baseSalary == "0" ? '0' : baseSalary)
                         .replaceAll('YearBaseVariable', yearbaseVariable == "0" ? '0' : yearbaseVariable)
                         .replaceAll('MonthHRAVariable', HRA == "0" ? '0' : HRA)
