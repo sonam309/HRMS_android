@@ -83,7 +83,7 @@ const New_hiring = (props) => {
 
             <ScrollView>
                 <View>
-                    {jobOpening ? jobOpening.map((item) => <ListData title={item.DESIGNATION_NAME} opening={item.NO_OF_POSITION} comp={item.COMPENSATION} location={item.STATE_NAME} upload={item.CREATED_DATE} experience={item.MIN_EXP} JD={item.UPLOAD_JD_DOC} />) : <Text style={{ justifyContent: 'center' }}>No Data Found</Text>}
+                    {jobOpening ? jobOpening.map((item) => <ListData key={item.TXN_ID} title={item.DESIGNATION_NAME} opening={item.NO_OF_POSITION} comp={item.COMPENSATION} location={item.STATE_NAME} upload={item.CREATED_DATE} experience={item.MIN_EXP} JD={item.UPLOAD_JD_DOC} />) : <Text style={{ justifyContent: 'center' }}>No Data Found</Text>}
                 </View>
             </ScrollView>
         </View>
