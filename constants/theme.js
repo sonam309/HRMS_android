@@ -2,6 +2,7 @@ export const COLORS = {
   voilet: "rgb(34,0,70)",
   lighterVoilet: "rgba(34,0,70,0.8)",
   pink: "#e10092",
+  lightPink:'#fcbdbd',
   white: "#ffffff",
   green: "#03a157",
   disableGreen: 'rgb(93, 176, 97)',
@@ -19,6 +20,7 @@ export const COLORS = {
   darkerGrey: '#526D82',
   transparentViolet: 'rgba(34,0,70,0.1)',
   bg_tile_Colo:'#F5EEF8',
+  lightYellow:'#fff494',
   transparentVoilet: 'rgba(34, 0, 70, 0.1)',
 };
 

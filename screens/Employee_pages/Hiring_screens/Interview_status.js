@@ -22,7 +22,7 @@ const Interview_status = (props) => {
             .then(response => {
                 const returnedData = response?.data?.Result;
 
-                console.log(returnedData)
+                // console.log(returnedData)
                 setInterViewDetail(returnedData)
             }).catch((err) => {
                 ToastAndroid.show(err, 3000)

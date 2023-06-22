@@ -127,17 +127,40 @@ const CreateNewJobOpening = () => {
     // sending formdata to backend
     const ApplyJob = async () => {
         if (validateForm()) {
+            
+            // sending notif to Kamal sir 
+            let notifData = {
+                "registration_ids": ["ctSkLjX1RG6tYuIOps4yl6:APA91bGyKsjY1uYEo7QssRkrY-Txq_3ILcSju41m6yOOhLiYZdTaFT3Dz8M3avSvR1RllH7hb9Out0Mdss6aNOxZlXyRqKVtGPYh-EPrInR8lZeL8HCdp-mLqkf0aLSF1xH8p8em-q7l"],
+                "notification": {
+                    "body": "Hello Kamal Sir, How are you?",
+                    "title": "Hello", 
+                    "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFfx54zcQWgeMidABqIECRCAEZZ_Oj-rOeQg&usqp=CAU"
+                }
+            }
+
             try {
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(jobOpeningdata))
 
                 formData.append('fileUpload', selectedDoc)
                 // console.log(formData._parts)
+                // Posting new job opening 
                 const res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
                     method: "POST",
                     body: formData
                 })
                 // console.log(res)
+
+                // API used for sending message
+                const notif = await fetch("https://fcm.googleapis.com/fcm/send", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "key=AAAASJkPezE:APA91bHR6OqAkU-hhIOTivMtnZZY7-ggAf014Ead-cRop75IwAygkpnZ8JPaD9UfcU3B7IOLacBpVZMzLsKXofWLlrGwbXR-MC8FyxwS6Thotu9brtBj0yTQZXQuvjt-oLR_PJ9WwbF0",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(notifData)
+                })
+
             } catch (error) {
                 console.log(error?.response)
             }
@@ -176,25 +199,25 @@ const CreateNewJobOpening = () => {
             {/* Posting Title dropdown */}
             <View style={{ margin: 7 }}>
                 {/* {console.warn(titleName)} */}
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title</Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{color:COLORS.red}}>* </Text></Text>
                 <SelectDropdown data={titleName} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value) }} defaultButtonText="Select Title" buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
             </View>
 
             {/* number of position */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Number of position</Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Number of position <Text style={{color:COLORS.red}}>* </Text> </Text>
                 <CustomTextInput placeholder='Number of position' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} keyboardType='numeric' value={openPosition} onChangeText={(value) => setOpenPosition(value)} />
             </View>
 
             {/* compensation */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation</Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{color:COLORS.red}}>* </Text> </Text>
                 <CustomTextInput placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric' />
             </View>
 
             {/* experience */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Minimium Experience(Years)  </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Minimium Experience(Years) <Text style={{color:COLORS.red}}>* </Text> </Text>
                 <CustomTextInput placeholder='Eg:2-4 years' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={experience} onChangeText={(value) => setExperience(value)} keyboardType='numeric' />
             </View>
 
@@ -202,13 +225,13 @@ const CreateNewJobOpening = () => {
             {/* state dropdown */}
             <View style={{ margin: 7 }}>
                 {/* {console.warn(statesName)} */}
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State</Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State <Text style={{color:COLORS.red}}>* </Text> </Text>
                 <SelectDropdown data={statesName} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText="Select State" buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
             </View>
 
             {/* job description */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}> Job Description  </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}> Job Description <Text style={{color:COLORS.red}}>* </Text> </Text>
                 <CustomTextInput placeholder='Job Description' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={jobDescription} onChangeText={(value) => setJobDescription(value)} />
             </View>
 
