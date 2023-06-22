@@ -56,9 +56,9 @@ const Home = (props) => {
       }),
     })
     // data to json form
-    data = await data.json()
-    data = data.Result;
-    // console.warn(data);
+    data = await data?.json()
+    data = data?.Result;
+    console.warn(data);
     data.map(a => a.IN) != "" ? (inTime = data.map(a => a.IN.trim())) : inTime = ""
     data.map(b => b.DUR) != "" ? (timeIn = data.map(b => b.DUR.trim())) : timeIn = "";
     setPunchInTime(inTime);
@@ -66,7 +66,6 @@ const Home = (props) => {
     inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor(COLORS.green), setInOut('In'), setPunchInToken('I'))
     setLoaderVisible(false)
   }
-
   useEffect(() => {
     loadingData("O");
     getAttendance();
@@ -198,7 +197,7 @@ const Home = (props) => {
 
             <Text style={{ color: COLORS.gray, fontSize: 12, fontWeight: '500', marginHorizontal: 5, marginVertical: 10, fontSize: 20, borderBottomColor: COLORS.gray, borderBottomWidth: 1, }}>Punch In</Text>
             <Text style={{ padding: 4 }}>{currentDate[2]} {currentDate[1]} </Text>
-            <Text style={{ padding: 4, fontSize: 24 }}>{punchInTime}</Text>
+            <Text style={{ padding: 4, fontSize: 24 }}>{punchInTime[0]}</Text>
             <Text style={{ padding: 4 }}>Punch In Time</Text>
 
             <TouchableOpacity style={{ backgroundColor: COLORS.lighterVoilet, borderRadius: 12 }}>
@@ -211,7 +210,7 @@ const Home = (props) => {
 
             <Text style={{ color: COLORS.gray, fontSize: 12, fontWeight: '500', marginHorizontal: 5, marginVertical: 10, fontSize: 20, borderBottomColor: COLORS.gray, borderBottomWidth: 1, }}>Punch Out</Text>
             <Text style={{ padding: 4 }}>{currentDate[2]} {currentDate[1]} </Text>
-            <Text style={{ padding: 4, fontSize: 24 }}>{duration} </Text>
+            <Text style={{ padding: 4, fontSize: 24 }}>{duration[0]} </Text>
             <Text style={{ padding: 4 }}> hrs spent today</Text>
 
             <TouchableOpacity style={{ backgroundColor: COLORS.lightGray, borderRadius: 12 }}>

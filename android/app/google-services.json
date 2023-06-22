@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "311805573937",
+    "project_id": "hrms-8a832",
+    "storage_bucket": "hrms-8a832.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311805573937:android:65404df2775392a73e4e10",
+        "android_client_info": {
+          "package_name": "com.koshishapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311805573937-evaftd8thtggj11e6vbiqofam40iec6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD17fUAa9PsSUVQ0DmjyC6Ss1eg4chGESY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311805573937-evaftd8thtggj11e6vbiqofam40iec6t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
