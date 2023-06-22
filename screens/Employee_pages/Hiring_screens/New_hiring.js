@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native'
-import COLORS from '../../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../components/Loader'
+import { COLORS } from '../../../constants/theme'
 
 const New_hiring = (props) => {
     const { navigation, selectedOption } = props

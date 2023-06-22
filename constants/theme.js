@@ -20,7 +20,8 @@ export const COLORS = {
   darkerGrey: '#526D82',
   transparentViolet: 'rgba(34,0,70,0.1)',
   bg_tile_Colo:'#F5EEF8',
-  lightYellow:'#fff494'
+  lightYellow:'#fff494',
+  transparentVoilet: 'rgba(34, 0, 70, 0.1)',
 };
 
 export default COLORS;

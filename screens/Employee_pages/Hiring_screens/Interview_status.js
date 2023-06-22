@@ -59,7 +59,6 @@ const Interview_status = (props) => {
 
                     <View style={{ justifyContent: 'flex-end' }}>
                         <Text style={{ backgroundColor: '#8467D7', borderRadius: 20, textAlign: 'center', alignSelf: 'center', padding: 8, color: COLORS.white, fontWeight: '500' }}>
-
                             {interviewStartTime} - {interviewEndTime}
                         </Text>
                     </View>
