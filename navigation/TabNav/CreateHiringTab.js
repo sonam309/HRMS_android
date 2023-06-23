@@ -103,9 +103,9 @@ const CreateHiringTab = (props) => {
                     tabBarAndroidRipple: { borderless: false }, // ripple effect on pressing the button
                 }}>
 
-                <Tab.Screen name="New_hiring" children={() => <New_hiring selectedOption={selectedOption} />} />
-                <Tab.Screen name="Interview_status" children={() => <Interview_status selectedOption={null} />} />
-                
+                <Tab.Screen name="New_hiring" children={() => <New_hiring selectedOption={selectedOption} navigation={props.navigation} />} />
+                <Tab.Screen name="Interview_status" children={() => <Interview_status selectedOption={null} navigation={props.navigation} />} />
+
             </Tab.Navigator>
             {isVisible && (
                 <BottomUpModal
