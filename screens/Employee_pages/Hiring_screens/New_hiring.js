@@ -179,4 +179,3 @@ const styles = StyleSheet.create({
 })
 
 export default New_hiring
-

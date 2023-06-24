@@ -1,23 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid, Alert, BackHandler } from 'react-native'
 import COLORS from '../../../constants/theme'
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
 import CustomTextInput from '../../../components/CustomTextInput'
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CreateNewJobOpening = () => {
+const CreateNewJobOpening = (props) => {
+
+    let departmentID = null
+    let Id;
+    let NAME;
     // for getting and setting data from API  
     const [titleOption, setTitleOption] = useState();
     const [titleName, setTitleName] = useState();
     const [states, setStates] = useState()
     const [statesName, setStatesName] = useState()
+    const [depIdStr, setdepIdStr] = useState();
+
 
     // for setting and posting Data to API
     const [selectedTitle, setSelectedTitle] = useState();
     const [selectedTitleValue, setSelectedTitleValue] = useState('');
     const [selectedState, setSelectedState] = useState();
     const [selectedStateValue, setSelectedStateValue] = useState('');
+    const [cityValue, setcityValue] = useState('');
+    const [postalCode, setpostalCode] = useState('');
+    const [approverName, setApprovername] = useState('');
+    const [approverId, setApproverId] = useState('');
+
 
     const [openPosition, setOpenPosition] = useState('');
     const [compensation, setCompensation] = useState('');
@@ -25,9 +38,49 @@ const CreateNewJobOpening = () => {
     const [jobDescription, setJobDescription] = useState('');
     const [selectedDoc, setSelectedDoc] = useState({});
 
+
+    const getdepId = async () => {
+
+        const res = await AsyncStorage.getItem('loggedUser');
+        // console.log("2222222222",JSON.parse(res))
+        // const user = await JSON.parse(res)
+        // console.log("41",user.DEPT_ID.toString());
+
+
+        axios
+            .post(`http://192.168.1.169:7038/api/hrms/saveApprovel`, {
+                userId: '10011',
+                operFlag: 'V',
+                departmentId: '7',
+                approvelType: 'Hire',
+            })
+            .then(response => {
+                const returnedData = response?.data?.Result;
+                console.log('85', response.data.Result);
+                //   setApproverData(returnedData[0]);
+                Id = returnedData[0].EMPLOYEE_ID
+                NAME = returnedData[0].FIRST_NAME
+
+
+                { console.log("59", Id + "$$$$" + NAME); }
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+
+        // setApproverId(Id);
+        // setApprovername(NAME);
+
+    }
+
+
     useEffect(() => {
+        getdepId();
         getDropdownData(28);
         getDropdownData(7);
+
     }, []);
 
     // Title and States Data
@@ -56,6 +109,34 @@ const CreateNewJobOpening = () => {
 
         return day + month + year + hours + minutes + seconds;
     }
+
+    // const getApproverInfo = () => {
+    //     ( console.log("45678",depIdStr))
+
+    //     axios
+    //         .post(`http://192.168.1.169:7038/api/hrms/saveApprovel`, {
+    //             userId: '10011',
+    //             operFlag: 'V',
+    //             departmentId:depIdStr,
+    //             approvelType: 'Hire',
+
+
+    //         })
+    //         .then(response => {
+    //             const returnedData = response?.data?.Result;
+    //             console.log('85', returnedData);
+    //             //   setApproverData(returnedData[0]);
+    //             setApproverId(returnedData.EMPLOYEE_ID);
+    //             setApprovername(returnedData.FIRST_NAME);
+    //         })
+    //         .catch(error => {
+    //             Toast.show({
+    //                 type: 'error',
+    //                 text1: JSON.stringify(error),
+    //             });
+    //         });
+
+    // }
 
     const generateRandomString = () => {
         const charset =
@@ -120,6 +201,8 @@ const CreateNewJobOpening = () => {
         state: selectedStateValue,
         jobDesc: jobDescription,
         jdDoc: selectedDoc?.name,
+        city: cityValue,
+        postalCode: postalCode,
         operFlag: 'A',
         userId: '10005',
     };
@@ -127,14 +210,14 @@ const CreateNewJobOpening = () => {
     // sending formdata to backend
     const ApplyJob = async () => {
         if (validateForm()) {
-            
+
             // sending notif to Kamal sir 
             let notifData = {
                 "registration_ids": ["ctSkLjX1RG6tYuIOps4yl6:APA91bGyKsjY1uYEo7QssRkrY-Txq_3ILcSju41m6yOOhLiYZdTaFT3Dz8M3avSvR1RllH7hb9Out0Mdss6aNOxZlXyRqKVtGPYh-EPrInR8lZeL8HCdp-mLqkf0aLSF1xH8p8em-q7l"],
                 "notification": {
                     "body": "Hello Kamal Sir, How are you?",
-                    "title": "Hello", 
-                    "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFfx54zcQWgeMidABqIECRCAEZZ_Oj-rOeQg&usqp=CAU"
+                    "title": "Hello",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFfx54zcQWgeMidABqIECRCAEZZ_Oj-rOeQg&usqp=CAU"
                 }
             }
 
@@ -145,11 +228,20 @@ const CreateNewJobOpening = () => {
                 formData.append('fileUpload', selectedDoc)
                 // console.log(formData._parts)
                 // Posting new job opening 
-                const res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+                let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
                     method: "POST",
                     body: formData
+
                 })
-                // console.log(res)
+                res = await res.json();
+
+                // console.log((res.Result[0].MSG))
+
+                // ToastAndroid.show(res.Result.MSG,3000);
+
+                Alert.alert(res.Result[0].MSG);
+
+
 
                 // API used for sending message
                 const notif = await fetch("https://fcm.googleapis.com/fcm/send", {
@@ -190,34 +282,37 @@ const CreateNewJobOpening = () => {
     return (
         <ScrollView style={{ backgroundColor: 'white' }}>
 
+
+
             {/* header text */}
             <View style={styles.newJobOpeneingTxt}>
                 <Icon name='book-plus-outline' color={COLORS.green} size={24} style={{ alignItems: 'center', padding: 2 }} />
-                <Text style={{ color: COLORS.green, fontSize: 14, fontWeight: '500', textAlignVertical: 'center', padding: 5 }}>New Job Opening</Text>
+                <Text style={{ color: COLORS.green, fontSize: 14, fontWeight: '500', textAlignVertical: 'center', padding: 5 }}>
+                    New Job Opening</Text>
             </View>
 
             {/* Posting Title dropdown */}
             <View style={{ margin: 7 }}>
                 {/* {console.warn(titleName)} */}
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{color:COLORS.red}}>* </Text></Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{ color: COLORS.red }}>* </Text></Text>
                 <SelectDropdown data={titleName} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value) }} defaultButtonText="Select Title" buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
             </View>
 
             {/* number of position */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Number of position <Text style={{color:COLORS.red}}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Number of position <Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <CustomTextInput placeholder='Number of position' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} keyboardType='numeric' value={openPosition} onChangeText={(value) => setOpenPosition(value)} />
             </View>
 
             {/* compensation */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{color:COLORS.red}}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <CustomTextInput placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric' />
             </View>
 
             {/* experience */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Minimium Experience(Years) <Text style={{color:COLORS.red}}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Minimium Experience(Years) <Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <CustomTextInput placeholder='Eg:2-4 years' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={experience} onChangeText={(value) => setExperience(value)} keyboardType='numeric' />
             </View>
 
@@ -225,14 +320,27 @@ const CreateNewJobOpening = () => {
             {/* state dropdown */}
             <View style={{ margin: 7 }}>
                 {/* {console.warn(statesName)} */}
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State <Text style={{color:COLORS.red}}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State <Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <SelectDropdown data={statesName} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText="Select State" buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+            </View>
+
+
+            {/* city */}
+            <View style={{ margin: 7 }}>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>City</Text>
+                <CustomTextInput placeholder='City' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setcityValue(value)} />
+            </View>
+
+            {/* Postal Code */}
+            <View style={{ margin: 7 }}>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Postal Code</Text>
+                <CustomTextInput placeholder='Postal Code' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setpostalCode(value)} keyboardType='numeric' />
             </View>
 
             {/* job description */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}> Job Description <Text style={{color:COLORS.red}}>* </Text> </Text>
-                <CustomTextInput placeholder='Job Description' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={jobDescription} onChangeText={(value) => setJobDescription(value)} />
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}> Job Remarks <Text style={{ color: COLORS.red }}>* </Text> </Text>
+                <CustomTextInput placeholder='Job Remarks' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={jobDescription} onChangeText={(value) => setJobDescription(value)} />
             </View>
 
             <View style={[{ height: 100, margin: 7 }]}>
@@ -240,6 +348,23 @@ const CreateNewJobOpening = () => {
                     <Icon name={Object.keys(selectedDoc).length > 0 ? 'file' : 'cloud-upload-outline'} color={Object.keys(selectedDoc).length > 0 ? COLORS.orange : COLORS.green} size={40} style={{ padding: 2 }} />
                     <Text style={{ color: COLORS.black, fontWeight: '500' }}> {Object.keys(selectedDoc).length > 0 ? selectedDoc.name : 'Job Description'} </Text>
                 </TouchableOpacity>
+            </View>
+
+            {/* approver view */}
+            <View style={[{ margin: 10 }]}>
+                <View>
+                    <Text style={{ color: COLORS.black, fontSize: 15, fontWeight: '500', marginLeft: 5 }}>Approver</Text>
+                    <View style={{
+                        borderWidth: 1, borderColor: COLORS.skyBlue, flex: 1, borderRadius: 10, backgroundColor: 'white', marginHorizontal: 0, marginVertical: 5, height: 100, width: '100%', alignItems: 'center', paddingHorizontal: 10, flexDirection: 'row',
+                    }}>
+                        <Icon name='account-circle' color={COLORS.gray} size={55} />
+                        <View>
+                            {console.log(Id + "&&&&" + NAME)}
+                            <Text style={{ color: COLORS.gray }}>{NAME}</Text>
+                            <Text style={{ color: COLORS.gray }}>{Id}</Text>
+                        </View>
+                    </View>
+                </View>
             </View>
 
             {/* bottom Buttons */}

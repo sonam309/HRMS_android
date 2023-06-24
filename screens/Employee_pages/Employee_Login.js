@@ -12,15 +12,24 @@ import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import Geolocation from '../../functions/Geolocation';
 import Loader from '../../components/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Employee_Login = (props) => {
+
     const [showVisibility, setShowVisibility] = useState(true);
     const [userName, setUserName] = useState("10011");
     const [password, setPassword] = useState("Kapil@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
+    
 
     const userData = { loginId: userName, password: password, oprFlag: 'L' };
+
+    const setDepartmentId= async(param)=>{
+
+        await AsyncStorage.setItem("loggedUser", JSON.stringify(param))
+        console.log(param);
+    }
 
     const getCurrentLocation = async (val) => {
         Geolocation({ val, userName, userData });
@@ -46,9 +55,17 @@ const Employee_Login = (props) => {
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
+            console.log(returnedData);
             let full_name = returnedData.map(b => b.FIRST_NAME)
+            let dep_ID=returnedData.map(c=>c.DEPT_ID)
+
+            // console.log(dep_ID);
+
             setLoaderVisible(false)
             result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName,password })) : Alert.alert("Failure", "Please enter correct credentials")
+
+            setDepartmentId(JSON.stringify(returnedData[0]))
+
         })
     }
 
