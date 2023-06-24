@@ -121,7 +121,7 @@ const CreateNewJobOpening = () => {
         jobDesc: jobDescription,
         jdDoc: selectedDoc?.name,
         operFlag: 'A',
-        userId: '10011',
+        userId: '10005',
     };
 
     // sending formdata to backend

@@ -8,7 +8,7 @@ const New_hiring = (props) => {
     const { navigation, selectedOption } = props
     const [jobOpening, setJobOpening] = useState()
     const [loaderVisible, setLoaderVisible] = useState(true);
-    const [statusColor, setStatusColor] = useState(COLORS.voilet)
+    let bannerColor;
     let counting = 0;
 
     // all job opening data
@@ -16,7 +16,7 @@ const New_hiring = (props) => {
         try {
             var formData = new FormData();
             formData.append('data', JSON.stringify({ "operFlag": "V", "userId": "10011" }))
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+            let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
                 method: "POST",
                 body: formData
             })
@@ -25,10 +25,9 @@ const New_hiring = (props) => {
             setJobOpening(res);
             setLoaderVisible(false)
         } catch (error) {
-            console.log("this is the error",error)
+            console.log("this is the error", error)
         }
     }
-
     useEffect(() => {
         getJobOpening();
     }, [])
@@ -40,28 +39,28 @@ const New_hiring = (props) => {
 
         switch (job_status) {
             case 'Pending':
-                setStatusColor(COLORS.orange);
+                bannerColor = (COLORS.orange);
                 break;
             case 'Rejected':
-                setStatusColor(COLORS.red);
+                bannerColor = (COLORS.red);
                 break;
             case 'Open':
-                setStatusColor(COLORS.green);
+                bannerColor = (COLORS.green);
                 break;
             case 'On Hold':
-                setStatusColor(COLORS.lightYellow);
+                bannerColor = (COLORS.lightYellow);
                 break;
             case 'Filled':
-                setStatusColor(COLORS.lighterVoilet);
+                bannerColor = (COLORS.lighterVoilet);
                 break;
             case 'Draft':
-                setStatusColor(COLORS.lightBlue);
+                bannerColor = (COLORS.lightBlue);
                 break;
             case 'Deleted':
-                setStatusColor(COLORS.lightPink);
+                bannerColor = (COLORS.lightPink);
                 break;
             case 'Cancelled':
-                setStatusColor(COLORS.gray);
+                bannerColor = (COLORS.gray);
                 break;
         }
         return (
@@ -78,7 +77,7 @@ const New_hiring = (props) => {
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 15, fontWeight: 500 }}>{title}</Text>
-                            {job_status && <Text style={[{ backgroundColor: statusColor }, styles.categoryTag]}>{job_status}</Text>}
+                            {job_status && <Text style={[{ backgroundColor: bannerColor }, styles.categoryTag]}>{job_status}</Text>}
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
@@ -87,7 +86,7 @@ const New_hiring = (props) => {
                             <Text style={{ color: 'black', marginHorizontal: 5 }}><Icons name='cash' color={COLORS.gray} size={20} /> {compensation}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 5 }}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={20} />{experience} years of experience</Text>
+                            <Text style={{paddingHorizontal:5}}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={20} /> <Text style={{ color: 'black', marginHorizontal: 5 }}>{experience} years of experience</Text></Text>
                         </View>
                     </View>
 
@@ -109,9 +108,11 @@ const New_hiring = (props) => {
             <Loader loaderVisible={loaderVisible} />
 
             {/* Posting a new Job */}
-            <View style={styles.newJobOpeneingTxt}>
-                <Text style={{ color: COLORS.green, fontSize: 20, fontWeight: '500', textAlignVertical: 'center', padding: 5 }}>Post a New Job</Text>
-            </View>
+            <TouchableOpacity style={styles.newJobOpeneingTxt} onPress={() => navigation.navigate('CreateNewJobOpening')}>
+                <Text style={{ color: COLORS.green, fontSize: 16, borderRadius: 12, fontWeight: '500', borderColor: COLORS.green, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 10 }}>
+                    <Icons name='book-plus-outline' color={COLORS.green} size={20} />
+                    Post a New Job</Text>
+            </TouchableOpacity>
 
             <ScrollView>
                 <View>
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     },
     container: {
         flex: 1,

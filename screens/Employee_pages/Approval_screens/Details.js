@@ -1,4 +1,4 @@
-import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native'
+import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, Alert, StyleSheet, ToastAndroid } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import RenderHtml from 'react-native-render-html';
@@ -9,16 +9,64 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
-    const { keys, category, date, mail_body, approver, action } = props.route.params
-
-    // Variables to be updated
-    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
-
+    const { candidate_ID, category, date, mail_body, approver, action, jobId } = props.route.params
+    const [jobRequestData, setJobRequestData] = useState({});
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
     const [disableBtn, setDisableBtn] = useState(false);
 
-    // Salary details
+    useEffect(() => {
+        {
+            category === "Salary Allocation" ?
+                (getSalaryData(), getSalaryHTMLData()) : (getJobRequestData())
+
+            switch (category) {
+                case "Salary Allocation":
+                    (getSalaryData(), getSalaryHTMLData())
+                    break;
+                case "New Job Opening":
+                    (getJobOpeningData())
+                    break;
+                case "New Job Request":
+                    (getJobRequestData())
+                    break;
+            }
+        }
+    }, [])
+
+    // Variables to be updated for salary allocation
+    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
+
+    // for Approving
+    const approveDetail = () => {
+        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails })
+            .then(response => {
+                const returnedData = response?.data;
+                console.log(returnedData);
+                // Alert.alert('Approved', returnedData?.MSG);
+                ToastAndroid(returnedData?.MSG, 3000)
+                setDisableBtn(true);
+            })
+            .catch(error => {
+                Alert.alert('Error', error);
+            });
+    };
+
+    // for Rejecting
+    const rejectDetail = () => {
+        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: 'R' })
+            .then(response => {
+                const returnedData = response?.data;
+                // Alert.alert('Rejected', returnedData?.MSG);
+                ToastAndroid(returnedData?.MSG, 3000)
+                setDisableBtn(true);
+            })
+            .catch(error => {
+                Alert.alert('Error', error);
+            });
+    };
+
+    // Updating Salary details
     var SalaryDetails = {
         txnId: data?.Table[0]?.TXN_ID,
         userId: 10011,
@@ -58,44 +106,19 @@ const Details = (props) => {
         costOfCompany: '0',
     };
 
-
-    const approveDetail = () => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails })
-            .then(response => {
-                const returnedData = response?.data;
-                console.log(returnedData);
-                Alert.alert('Approved', returnedData?.MSG);
-                setDisableBtn(true);
-            })
-            .catch(error => {
-                Alert.alert('Error', error);
-            });
-    };
-
-    const rejectDetail = () => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: 'R' })
-            .then(response => {
-                const returnedData = response?.data;
-                Alert.alert('Rejected', returnedData?.MSG);
-                setDisableBtn(true);
-            })
-            .catch(error => {
-                Alert.alert('Error', error);
-            });
-    };
-
-    const getHTMLdata = async () => {
+    // Fetching salary allocation template
+    const getSalaryHTMLData = async () => {
         let totalData = await fetch('https://econnectsatya.com:7033/api/Admin/getHiringTemplate?tempId=7')
         totalData = await totalData.json()
         totalData = totalData.Result[0]?.MAIL_BODY
         setHTMLdata(totalData)
     }
 
-
-    const getData = () => {
+    // Fetching salary allocation data
+    const getSalaryData = () => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', {
             operFlag: "V",
-            candidateId: keys
+            candidateId: candidate_ID
         })
             .then(response => {
                 const returnedData = response?.data;
@@ -108,7 +131,7 @@ const Details = (props) => {
         // console.warn(data);
         fullName = data.Table1[0]?.FULL_NAME
         JobTitle = data?.Table[0]?.DESIGNATION,
-        contactPersonMob = data.Table1[0]?.CONTACT_PERSON
+            contactPersonMob = data.Table1[0]?.CONTACT_PERSON
         contactPersonName = data.Table1[0]?.FULL_NAME
         candidateDep = data?.Table[0]?.DEPARTMENT_NAME
         baseSalary = data.Table[0]?.BASIC_SAL
@@ -177,13 +200,31 @@ const Details = (props) => {
                         .replaceAll('YearSpecialVariable', YearspecialAllowance == "0" ? '0' : YearspecialAllowance).replaceAll('MonthdvrVariable', dvrAllowance == "0" ? '0' : dvrAllowance).replaceAll('YeardvrVariable', YeardvrAllowance == "0" ? '0' : YeardvrAllowance).replaceAll('MonthFuelVariable', fuelAllowance == "0" ? '0' : fuelAllowance).replaceAll('YearFuelVariable', YearfuelAllowance == "0" ? '0' : YearfuelAllowance).replaceAll('MonthGrossVariable', grossAmount == "0" ? '0' : grossAmount).replaceAll('YearGrossVariable', YeargrossAmount == "0" ? '0' : YeargrossAmount).replaceAll('MonthemployerPF', employerPF == "0" ? '0' : employerPF).replaceAll('YearemployerPF', YearemployerPF == "0" ? '0' : YearemployerPF).replaceAll('MonthTotalCompVariable', MonthtotalSalValue == "0" ? '0' : MonthtotalSalValue).replaceAll('YearTotalCompVariable', YeartotalSalValue == "0" ? '0' : YeartotalSalValue)) : null)
     }
 
+    // function call for updating the HTML for Salary Allocation
     let modifiedTemplate = updateHTML()
 
-    useEffect(() => {
-        getData();
-        getHTMLdata();
-    }, [])
-    // this is for new job opening
+    // Fetching data for new job request
+    const getJobRequestData = async () => {
+        let formData = new FormData();
+        formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: '10005' }))
+        let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+            method: "POST",
+            body: formData
+        })
+        res ? res = await res.json() : null
+        res ? res = await res.Result[0] : null
+        res ? setJobRequestData(res) : null
+
+    }
+
+    // Fetching data for new job opening
+    const getJobOpeningData = async () => {
+        let res = await fetch(`http://192.168.1.169:7038/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
+        res = await res.json();
+        console.warn(res);
+    }
+
+    // Displaying data for new job opening
     const JobOpening = () => {
         return (
             <View style={{ flex: 1, marginHorizontal: 10, justifyContent: 'center' }}>
@@ -214,18 +255,116 @@ const Details = (props) => {
             </View>
         )
     }
+
+    // Displaying data new for job request
+    const JobRequest = () => {
+        // console.warn("Job request Data", jobRequestData);
+
+        let JD = jobRequestData?.UPLOAD_JD_DOC
+        return (jobRequestData != null ? (
+            <ScrollView style={{ backgroundColor: COLORS.white, padding: 10, flex: 1 }}>
+
+                <View style={styles.topIcon}>
+
+                    <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
+                        <Icons name='building-o' color={COLORS.white} size={35} />
+                    </View>
+
+                </View>
+
+                {/* Position */}
+                <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
+
+                {/* Location & Job type */}
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+
+                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+
+                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='clock' size={20} color={COLORS.lightOrange} /> {jobRequestData?.JOB_STATUS}</Text>
+
+                </View>
+
+
+                {/* Basic Info -> No. of position, Job type, Compensation */}
+                <View style={{ flexDirection: 'row', borderWidth: 1, borderColor: COLORS.lightGray, marginVertical: 5, paddingVertical: 15, paddingHorizontal: 10, borderRadius: 12 }}>
+
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Icons name='briefcase' size={25} color={COLORS.purple} />
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>No. of Positions</Text>
+                        <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Type</Text>
+                        <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
+                            <Icons name='rupee' size={25} />
+                        </View>
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
+                        <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobRequestData?.COMPENSATION}</Text>
+                    </View>
+                </View>
+
+
+                {/* More details -> Posted by, Location, experience, Date Posted */}
+                <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
+
+                    <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.HIRING_LEAD_NAME}</Text>
+
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Minimum Experience </Text>
+                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.MIN_EXP} years</Text>
+
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Location</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.CITY}, {jobRequestData?.STATE_NAME}, {jobRequestData?.POSTAL_CODE}</Text>
+
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Date Posted:</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobRequestData?.CREATED_DATE}</Text>
+                </View>
+
+                {/* More about the job */}
+                <Text style={{ fontWeight: 600, fontSize: 20, color: COLORS.black }}>Job Remarks</Text>
+                <Text>{jobRequestData?.JOB_DESCRIPTION}</Text>
+
+                {/* Job desciption */}
+                <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}>Job Description</Text>
+                <TouchableOpacity style={{ backgroundColor: COLORS.green, borderRadius: 12, padding: 10, marginVertical: 5 }} onPress={() => props.navigation.navigate('Job Desc', { JD })}>
+                    <Text>{jobRequestData?.UPLOAD_JD_DOC} </Text>
+                </TouchableOpacity>
+
+
+            </ScrollView>
+        ) : null)
+
+    }
+
+    const Type = () => {
+        switch (category) {
+            case "Salary Allocation":
+                {
+                    return (
+                        <ScrollView>
+                            <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
+                        </ScrollView>
+                    )
+                }
+
+            case "New Job Opening":
+                return <JobOpening />
+
+            case "New Job Request":
+                return <JobRequest />
+
+        }
+    }
+
     return (
         <View style={{ flex: 1 }}>
-            {category !== "New Job Opening" ?
-                (
-                    // salary allocation
-                    <ScrollView>
-                        <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
-                    </ScrollView>
-                ) :
-                // new job opening 
-                (<JobOpening />)
-            }
+
+            <Type />
 
             {/* Approval Buttons */}
             {action === 'P' ? <View style={styles.footerDesign}>
@@ -280,6 +419,16 @@ const styles = StyleSheet.create({
         height: 80,
         backgroundColor: COLORS.white,
         justifyContent: 'flex-end'
-    }
+    },
+    topIcon: {
+        backgroundColor: COLORS.skyBlue,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        alignItems: 'center',
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginVertical: 5
+    },
 })
 export default Details
