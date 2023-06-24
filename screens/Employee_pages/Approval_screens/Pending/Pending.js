@@ -7,9 +7,10 @@ const Pending = (props) => {
     const { navigation, flag, notificationCat } = props;
     const [pendingData, setPendingData] = useState([])
     let action = "P";
+    let openingCategory, backColor;
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10011', operFlag: 'P', notificationCat: notificationCat })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10005', operFlag: 'P', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
@@ -22,13 +23,29 @@ const Pending = (props) => {
     }, [notificationCat])
 
     function ListItems(props) {
-        const date = props.aDate, mail_body = props.mail, approver = props.pending_by, keys = props.id, category = props.cat
+        const date = props.applyDate, mail_body = props.mail, approver = props.pending_by, candidate_ID = props.id, category = props.cat, jobId = props.jobId
+
+        switch (category) {
+            case 'New Job Opening':
+                openingCategory = 'Job Opening'
+                backColor = COLORS.voilet
+                break;
+            case 'New Job Request':
+                openingCategory = 'Job Request'
+                backColor = COLORS.lightBlue
+                break;
+            case 'Salary Allocation':
+                openingCategory = 'Salary'
+                backColor = COLORS.red
+                break;
+        }
+
         return (
-            <TouchableOpacity key={keys} style={[styles.ListIcons, styles.Elevation]} onPress={() => navigation.navigate("Details", { keys, category, date,mail_body,approver, action })}>
+            <TouchableOpacity key={candidate_ID} style={[styles.ListIcons, styles.Elevation]} onPress={() => navigation.navigate("Details", { candidate_ID, category, date, mail_body, approver, action, jobId })}>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
-                    <Text style={[{ backgroundColor: category === "New Job Opening" ? COLORS.voilet : COLORS.red }, styles.categoryTag]}>{category === "New Job Opening" ? 'New Job' : 'Salary'}</Text>
+                    <Text style={[{ backgroundColor: backColor }, styles.categoryTag]}>{ openingCategory}</Text>
                 </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
@@ -41,7 +58,7 @@ const Pending = (props) => {
     const Hiring = () => {
         return (
             <>
-                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems aDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
+                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
             </>
 
         )

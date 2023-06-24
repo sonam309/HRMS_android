@@ -1,9 +1,8 @@
-import { View, Animated, TouchableWithoutFeedback, Modal, Dimensions } from "react-native";
+import { View, Animated, TouchableWithoutFeedback, Modal, Dimensions, Keyboard } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 
-const BottomUpModal = ({ isVisible, onClose, children, visibleHieght }) => {
-
+const BottomUpModal = ({ isVisible, onClose, children, visibleHeight }) => {
+  const [visibleScreenHeight, setVisibleScreenHeight] = useState(Dimensions.get('window').height);
   const modalAnimatedValue = useRef(new Animated.Value(0)).current;
 
   const [matterSelectModal, setMatterSelectModal] = useState(isVisible);
@@ -26,15 +25,33 @@ const BottomUpModal = ({ isVisible, onClose, children, visibleHieght }) => {
     }
   }, [matterSelectModal]);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      const screenHeight = Dimensions.get('window').height;
+      const keyboardHeight = e.endCoordinates.height;
+      const screenVisibleHeight = screenHeight - keyboardHeight;
+      setVisibleScreenHeight(screenVisibleHeight);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      const screenHeight = Dimensions.get('window').height;
+      setVisibleScreenHeight(screenHeight);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   const modalY = modalAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [height, height - visibleHieght],
+    outputRange: [visibleScreenHeight, visibleScreenHeight - visibleHeight],
   });
 
-  const navigation = useNavigation();
-
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible}>
+    <Modal avoidKeyboard={false} animationType="slide" transparent={true} visible={isVisible}>
       <View
         style={{
           flex: 1,

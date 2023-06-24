@@ -204,7 +204,7 @@ const CreateNewJobOpening = (props) => {
         city: cityValue,
         postalCode: postalCode,
         operFlag: 'A',
-        userId: '10011',
+        userId: '10005',
     };
 
     // sending formdata to backend

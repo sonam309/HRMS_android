@@ -114,7 +114,7 @@ const CreateHiringTab = (props) => {
                         setSelectedOption('')
                         setIsVisible(false);
                     }}
-                    visibleHieght={350}>
+                    visibleHeight={350}>
                     {renderFilterModal()}
                 </BottomUpModal>
             )}

@@ -36,18 +36,24 @@ const EmployeeActionsTab = (props) => {
                     <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.gray }}>
                         <Text style={{ fontSize: 16, color: COLORS.darkerGrey }}> Categories </Text>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 12 }}>
-                            <Pressable onPress={() => setSelectedOption('')} style={[styles.filterCatBtn, { flex: 0.4, borderColor: selectedOption === '' ? COLORS.voilet : 'gray', borderWidth: selectedOption === '' ? 2 : 1.2, },]}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 6, flexWrap: 'wrap' }}>
+                            <Pressable onPress={() => setSelectedOption('')} style={[styles.filterCatBtn, { width: '48%', borderColor: selectedOption === '' ? COLORS.voilet : 'gray', borderWidth: selectedOption === '' ? 2 : 1.2, },]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === '' ? COLORS.darkerGrey : COLORS.darkGray2, fontWeight: selectedOption === '' ? '600' : '500', },]}> All </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('New Job Opening')} style={[styles.filterCatBtn, { flex: 0.8, borderColor: selectedOption === 'New Job Opening' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'New Job Opening' ? 2 : 1.2, },]}>
+                            <Pressable onPress={() => setSelectedOption('New Job Opening')} style={[styles.filterCatBtn, { width: '48%', borderColor: selectedOption === 'New Job Opening' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'New Job Opening' ? 2 : 1.2, },]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'New Job Opening' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'New Job Opening' ? '600' : '500', },]}> New Job Opening </Text>
                             </Pressable>
+                        </View>
 
-                            <Pressable onPress={() => setSelectedOption('salary Allocation')} style={[styles.filterCatBtn, { flex: 0.8, borderColor: selectedOption === 'salary Allocation' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'salary Allocation' ? 2 : 1.2, },
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 6, flexWrap: 'wrap' }}>
+                            <Pressable onPress={() => setSelectedOption('Salary Allocation')} style={[styles.filterCatBtn, { width: '48%', borderColor: selectedOption === 'Salary Allocation' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Salary Allocation' ? 2 : 1.2, },
                             ]}>
-                                <Text style={[styles.filterCatTxt, { color: selectedOption === 'salary Allocation' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'salary Allocation' ? '600' : '500', },]}> Salary Allocation </Text>
+                                <Text style={[styles.filterCatTxt, { color: selectedOption === 'Salary Allocation' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Salary Allocation' ? '600' : '500', },]}> Salary Allocation </Text>
+                            </Pressable>
+
+                            <Pressable onPress={() => setSelectedOption('New Job Request')} style={[styles.filterCatBtn, { width: '48%', borderColor: selectedOption === 'New Job Request' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'New Job Request' ? 2 : 1.2, }]}>
+                                <Text style={[styles.filterCatTxt, { color: selectedOption === 'New Job Request' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'New Job Request' ? '600' : '500', },]}> New Job Request </Text>
                             </Pressable>
                         </View>
 
@@ -66,6 +72,23 @@ const EmployeeActionsTab = (props) => {
         );
     };
 
+    let heading;
+
+    switch (flag) {
+        case 'H':
+            heading = "Hiring Approval"
+            break;
+        case 'A':
+            heading = "Attendance Approval"
+            break;
+        case 'C':
+            heading = "Claim Approval"
+            break;
+        default:
+            heading = "EResign Approval"
+            break;
+    }
+
     return (
         <>
             {/* Header */}
@@ -74,7 +97,7 @@ const EmployeeActionsTab = (props) => {
                     <Icons name='arrow-left' color="black" size={25} />
                 </TouchableOpacity>
                 <View>
-                    <Text style={{ color: 'black', fontSize: 18 }}> {flag === "H" ? `Hiring Approval` : (flag === "A" ? `Attendance Approval` : (flag === "C" ? `Claim Approval` : `EResign Approval`))} </Text>
+                    <Text style={{ color: 'black', fontSize: 18 }}> {heading} </Text>
                 </View>
                 <TouchableOpacity style={{ paddingRight: 10 }} onPress={() => setIsVisible(true)}>
                     <Icons name='filter-outline' color="black" size={30} />
@@ -83,7 +106,7 @@ const EmployeeActionsTab = (props) => {
 
             <Tab.Navigator initialRouteName='Pending' screenOptions={{
                 tabBarActiveTintColor: COLORS.white,
-                tabBarIndicatorStyle: { backgroundColor: COLORS.voilet, width: '33.34%', height: '100%' }, 
+                tabBarIndicatorStyle: { backgroundColor: COLORS.voilet, width: '33.34%', height: '100%' },
                 tabBarIndicatorContainerStyle: { backgroundColor: COLORS.voilet, opacity: 0.8 },
                 tabBarAndroidRipple: { borderless: false },
             }}>
@@ -100,7 +123,7 @@ const EmployeeActionsTab = (props) => {
                         setSelectedOption('')
                         setIsVisible(false);
                     }}
-                    visibleHieght={250}>
+                    visibleHeight={270}>
                     {renderFilterModal()}
                 </BottomUpModal>
             )}
