@@ -36,7 +36,7 @@ const Candidate_details = (props) => {
   const onSelectPress = (operFlag) => {
     if (validateForm()) {
       axios
-        .post(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
+        .post(`https://econnectsatya.com:7033/api/hrms/interViewDeatils`, {
           candidateId: candidateId,
           feedbackStatus: 'S',
           intervierwerId: interviewMail,
@@ -216,7 +216,7 @@ const Candidate_details = (props) => {
   // For showing Feedback in case of Completed Interview
   const getFeedback = () => {
     axios
-      .post(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
+      .post(`https://econnectsatya.com:7033/api/hrms/interViewDeatils`, {
         candidateId: candidateId,
         operFlag: 'V',
       })

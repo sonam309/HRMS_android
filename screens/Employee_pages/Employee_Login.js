@@ -21,14 +21,18 @@ const Employee_Login = (props) => {
     const [userName, setUserName] = useState("10011");
     const [password, setPassword] = useState("Kapil@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
-    
+
 
     const userData = { loginId: userName, password: password, oprFlag: 'L' };
 
-    const setDepartmentId= async(param)=>{
 
-        await AsyncStorage.setItem("loggedUser", JSON.stringify(param))
-        console.log(param);
+    const setUserData = async ({ userId, full_name, deptID }) => {
+
+        await AsyncStorage.setItem("userId", userId)
+        await AsyncStorage.setItem("Name", full_name)
+        await AsyncStorage.setItem("deptID", deptID)
+        // console.log("deptId",deptID);
+        // console.log("full Name", full_name);
     }
 
     const getCurrentLocation = async (val) => {
@@ -55,16 +59,21 @@ const Employee_Login = (props) => {
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
-            console.log(returnedData);
+            
+            let userId = returnedData.map(a => a.USER_ID);
             let full_name = returnedData.map(b => b.FIRST_NAME)
-            let dep_ID=returnedData.map(c=>c.DEPT_ID)
+            // console.log(full_name)
+            // console.log(userId)
+            let deptID = returnedData.map(c => c.DEPT_ID)
 
             // console.log(dep_ID);
 
             setLoaderVisible(false)
-            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName,password })) : Alert.alert("Failure", "Please enter correct credentials")
-
-            setDepartmentId(JSON.stringify(returnedData[0]))
+            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName, password })) : Alert.alert("Failure", "Please enter correct credentials")
+            userId = userId[0];
+            full_name = full_name[0];
+            deptID = deptID[0];
+            setUserData({ userId, full_name, deptID })
 
         })
     }

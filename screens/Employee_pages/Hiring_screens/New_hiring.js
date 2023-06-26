@@ -11,12 +11,16 @@ const New_hiring = (props) => {
     let bannerColor;
     let counting = 0;
 
+    useEffect(() => {
+        getJobOpening();
+    }, [])
+    
     // all job opening data
     const getJobOpening = async () => {
         try {
             var formData = new FormData();
-            formData.append('data', JSON.stringify({ "operFlag": "V", "userId": "10011" }))
-            let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+            formData.append('data', JSON.stringify({ "operFlag": "V", "userId": "10005" }))
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
                 method: "POST",
                 body: formData
             })
@@ -28,9 +32,6 @@ const New_hiring = (props) => {
             console.log("this is the error", error)
         }
     }
-    useEffect(() => {
-        getJobOpening();
-    }, [])
 
     // Item Icon for each data item from job opening array
     function ListData(props) {

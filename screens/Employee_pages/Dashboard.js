@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator, SafeAreaView,} from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator, SafeAreaView, } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -10,25 +10,11 @@ import axios from 'axios';
 import moment from 'moment';
 import Geolocation from '../../functions/Geolocation';
 import { DrawerActions } from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient';
 import Loader from '../../components/Loader';
 import COLORS from '../../constants/theme';
 
 const Home = props => {
-  var m_names = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
+  var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let currentDate = new Date().toDateString().split(' ');
   const { userName, password, full_name } = props.route.params;
   let Name = full_name[0];
@@ -47,13 +33,7 @@ const Home = props => {
   const [absent, setAbsent] = useState(0);
   const userData = { loginId: userName, password: password, oprFlag: 'L' };
   var markedDates = {};
-  let loginId = userName;
-  let inTime = '';
-  let outTime = '';
-  let timeSpent = '';
-  let presentDays = 0;
-  let absentDays = 0;
-  let count = 0;
+  let loginId = userName, inTime = '', outTime = '', timeSpent = '', presentDays = 0, absentDays = 0, count = 0
 
   const getCurrentLocation = async val => {
     Geolocation({ val, userName, userData });
@@ -80,14 +60,15 @@ const Home = props => {
     // console.warn(data);
     data.map(a => a.IN) != "" ? (inTime = data.map(a => a.IN.trim())) : inTime = "00:00"
     data.map(b => b.DUR) != "" ? (timeSpent = data.map(b => b.DUR.trim())) : timeSpent = "--:--";
-    data.map(b => b.OUT) != "" ? (outTime = data.map(b => b.OUT.trim())) : outTime = "00:00";
+    data.map(b => b.OUT) != "" ? (outTime = data.map(c => c.OUT.trim())) : outTime = "00:00";
     setPunchInTime(inTime);
     setPunchOutTime(outTime);
+    // console.warn(outTime);
     setDuration(timeSpent)
     inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor(COLORS.green), setInOut('In'), setPunchInToken('I'))
     setLoaderVisible(false)
   }
-  
+
   useEffect(() => {
     loadingData('O');
     getAttendance();
@@ -169,18 +150,20 @@ const Home = props => {
       <Loader loaderVisible={loaderVisible} />
 
       <ScrollView>
+
         {/* header */}
-        <SafeAreaView style={{ height: 50, flexDirection: 'row', backgroundColor: COLORS.voilet, alignItems: 'center', width: '100%', }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', }}>
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
-            <Icons name="reorder-horizontal" color="white" size={25} />
+            <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
           </TouchableOpacity>
           <View>
-            <Text style={{ color: 'white' }}>
-              Welcome | {Name.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
+            <Text style={{fontWeight:500}}>Welcome</Text>
+            <Text style={{ color: COLORS.orange, fontSize: 16 }}>
+               {Name.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
             </Text>
           </View>
           <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
-            <Icons name="bell-ring-outline" color="white" size={30} />
+            <Icons name="bell-ring-outline" color={COLORS.green} size={30} />
           </TouchableOpacity>
         </SafeAreaView>
 
@@ -347,30 +330,15 @@ const Home = props => {
         </View> */}
 
         <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-          <TouchableOpacity
-            style={[
-              styles.attendanceButton,
-              styles.Elevation,
-              { backgroundColor: COLORS.green },
-            ]}>
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
             <Text style={styles.actionText}>Leave apply</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.attendanceButton,
-              styles.Elevation,
-              { backgroundColor: '#E41B17' },
-            ]}>
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#E41B17' },]}>
             <Text style={[styles.actionText]}>Regularize</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.attendanceButton,
-              styles.Elevation,
-              { backgroundColor: COLORS.orange },
-            ]}>
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.orange },]}>
             <Text style={styles.actionText}>Outdoor</Text>
           </TouchableOpacity>
         </View>
@@ -380,22 +348,23 @@ const Home = props => {
         {/* Other options */}
         <View style={styles.others}>
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]} onPress={() => props.navigation.navigate('Pending Approval')}>
-            <Icons name="timetable" size={30} color={COLORS.pink} />
+            <Icons name="timetable" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
-            <Foundation name="megaphone" size={30} color={COLORS.pink} />
+            <Foundation name="megaphone" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Company Announcement</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
-            <FontAwesome5 name="birthday-cake" size={30} color={COLORS.pink} />
+            <FontAwesome5 name="birthday-cake" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Birthday & Anniversary</Text>
           </TouchableOpacity>
         </View>
 
       </ScrollView>
+      
     </View>
   );
 };
