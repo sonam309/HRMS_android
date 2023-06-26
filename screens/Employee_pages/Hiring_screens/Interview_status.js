@@ -13,7 +13,7 @@ const Interview_status = (props) => {
 
     // fetching interviewer's list data
     const fetchInterviewData = () => {
-        axios.post(`http://192.168.1.169:7038/api/User/InterviewList`, {
+        axios.post(`https://econnectsatya.com:7033/api/User/InterviewList`, {
             userId: '10011',
             operFlag: 'V',
         })

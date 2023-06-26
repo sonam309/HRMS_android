@@ -17,9 +17,6 @@ const Details = (props) => {
 
     useEffect(() => {
         {
-            category === "Salary Allocation" ?
-                (getSalaryData(), getSalaryHTMLData()) : (getJobRequestData())
-
             switch (category) {
                 case "Salary Allocation":
                     (getSalaryData(), getSalaryHTMLData())
@@ -37,7 +34,7 @@ const Details = (props) => {
     // Variables to be updated for salary allocation
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
 
-    // for Approving
+    // for Approving in pending approvals
     const approveDetail = () => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails })
             .then(response => {
@@ -52,7 +49,7 @@ const Details = (props) => {
             });
     };
 
-    // for Rejecting
+    // for Rejecting in pending approvals
     const rejectDetail = () => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: 'R' })
             .then(response => {
@@ -207,19 +204,20 @@ const Details = (props) => {
     const getJobRequestData = async () => {
         let formData = new FormData();
         formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: '10005' }))
-        let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+        let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
             method: "POST",
             body: formData
         })
         res ? res = await res.json() : null
         res ? res = await res.Result[0] : null
         res ? setJobRequestData(res) : null
-
+        console.warn(res);
     }
 
     // Fetching data for new job opening
     const getJobOpeningData = async () => {
-        let res = await fetch(`http://192.168.1.169:7038/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
+        let res = await fetch(`https://econnectsatya.com:7033/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
+        console.warn(jobId);
         res = await res.json();
         console.warn(res);
     }
@@ -227,32 +225,95 @@ const Details = (props) => {
     // Displaying data for new job opening
     const JobOpening = () => {
         return (
-            <View style={{ flex: 1, marginHorizontal: 10, justifyContent: 'center' }}>
+            <>
 
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.headers}>Applied Date</Text>
-                    <View style={styles.textBox}>
-                        <Text style={styles.textArea}>{date}</Text>
-                        <Icons name='calendar' color={COLORS.pink} size={25} />
+                <ScrollView style={{ backgroundColor: COLORS.white, padding: 10, flex: 1 }}>
+
+                    {/* Top Icon */}
+                    <View style={styles.topIcon}>
+
+                        <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
+                            <Icons name='building-o' color={COLORS.white} size={35} />
+                        </View>
+
                     </View>
-                </View>
 
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.headers}>Detail</Text>
-                    <View style={styles.textBox}>
-                        <Text style={styles.textArea}>{mail_body}</Text>
+                    {/* Position */}
+                    <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
+
+                    {/* Location & Job type */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobRequestData?.JOB_STATUS}</Text>
+
                     </View>
-                </View>
 
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.headers}>Pending By</Text>
-                    <View style={styles.textBox}>
-                        <Text style={styles.textArea}>{approver}</Text>
-                        <MaterialIcons name='pending-actions' color={COLORS.pink} size={25} />
+
+                    {/* Basic Info -> No. of position, Job type, Compensation */}
+                    <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, marginVertical: 5, paddingVertical: 15, paddingHorizontal: 10, borderRadius: 12 }}>
+
+                        <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <Icons name='briefcase' size={25} color={COLORS.purple} />
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Opening</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Type</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Icons name='rupee' size={25} />
+                                </View>
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobRequestData?.COMPENSATION}</Text>
+                            </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <MaterialCommunityIcons name='cash-check' color={COLORS.red} size={30} />
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Budget</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <MaterialIcons name='pending-actions' color={COLORS.pink} size={30} />
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Status</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <View style={{ backgroundColor: COLORS.lightGreen, width: 30, borderRadius: 15, height: 30, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                    <MaterialCommunityIcons name='apache-kafka' size={28} />
+                                </View>
+                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Experience</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}> {jobRequestData?.COMPENSATION}</Text>
+                            </View>
+                        </View>
+
                     </View>
-                </View>
 
-            </View>
+                    {/* More details -> Posted by, Location, experience, Date Posted */}
+                    <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
+
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.HIRING_LEAD_NAME}</Text>
+
+
+                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Address</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.CITY}, {jobRequestData?.STATE_NAME}, {jobRequestData?.POSTAL_CODE}</Text>
+
+                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Job Remarks</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobRequestData?.CREATED_DATE}</Text>
+                    </View>
+
+                </ScrollView>
+
+            </>
         )
     }
 
@@ -264,6 +325,7 @@ const Details = (props) => {
         return (jobRequestData != null ? (
             <ScrollView style={{ backgroundColor: COLORS.white, padding: 10, flex: 1 }}>
 
+                {/* Top Icons */}
                 <View style={styles.topIcon}>
 
                     <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
@@ -277,11 +339,11 @@ const Details = (props) => {
 
                 {/* Location & Job type */}
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                    <Text style={{ paddingHorizontal: 5, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='clock' size={20} color={COLORS.lightOrange} /> {jobRequestData?.JOB_STATUS}</Text>
+                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='clock' size={20} color={COLORS.lightOrange} /> {jobRequestData?.JOB_STATUS}</Text>
 
                 </View>
 
@@ -330,11 +392,12 @@ const Details = (props) => {
                 <Text>{jobRequestData?.JOB_DESCRIPTION}</Text>
 
                 {/* Job desciption */}
-                <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}>Job Description</Text>
-                <TouchableOpacity style={{ backgroundColor: COLORS.green, borderRadius: 12, padding: 10, marginVertical: 5 }} onPress={() => props.navigation.navigate('Job Desc', { JD })}>
-                    <Text>{jobRequestData?.UPLOAD_JD_DOC} </Text>
-                </TouchableOpacity>
-
+                <View style={{marginVertical: 10 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black}}>Job Description</Text>
+                    <TouchableOpacity style={{ backgroundColor: COLORS.lightGreen, height: 50, borderRadius: 12, padding: 10, marginVertical: 5, justifyContent: 'center' }} onPress={() => props.navigation.navigate('Job Desc', { JD })}>
+                        <Text >{jobRequestData?.UPLOAD_JD_DOC} </Text>
+                    </TouchableOpacity>
+                </View>
 
             </ScrollView>
         ) : null)
@@ -418,7 +481,9 @@ const styles = StyleSheet.create({
         padding: 12,
         height: 80,
         backgroundColor: COLORS.white,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        borderTopColor:COLORS.orange,
+        borderTopWidth:1
     },
     topIcon: {
         backgroundColor: COLORS.skyBlue,
