@@ -9,6 +9,7 @@ import axios from "axios";
 import { useSelector } from 'react-redux'
 
 const CreateNewJobOpening = (props) => {
+    const {navigation} = props
 
     // for getting and setting data from API  
     const [titleOption, setTitleOption] = useState();
@@ -45,9 +46,7 @@ const CreateNewJobOpening = (props) => {
         getDropdownData('j');
         getDropdownData(3);
         getDropdownData(7);
-        setTimeout(() => {
-            getdepId();
-        }, 500);
+        getdepId();
 
     }, []);
 
@@ -142,7 +141,7 @@ const CreateNewJobOpening = (props) => {
         }
     };
 
-    
+
     // validating form data
     const validateForm = () => {
         if (
@@ -151,7 +150,7 @@ const CreateNewJobOpening = (props) => {
             openPosition === '' ||
             compensation === '' ||
             experience === '' ||
-            Object.keys(selectedDoc).length === 0 || 
+            Object.keys(selectedDoc).length === 0 ||
             userId === '' ||
             userDeptId === '' ||
             approverId === '' ||
@@ -216,12 +215,11 @@ const CreateNewJobOpening = (props) => {
 
                 })
                 res = await res.json();
-                console.log(res)
+                console.log("job applied", res)
                 // console.log((res.Result[0].MSG))
+                ToastAndroid.show(res.Result[0].MSG, 3000);
 
-                // ToastAndroid.show(res.Result.MSG,3000);
-
-                res.Result[0].FLAG === S ? Alert.alert("Success", res.Result[0].MSG) : Alert.alert("Failure", res.Result[0].MSG)
+                // props.navigation.navigate("Otp_Verification", { contact, otp, userName }))
 
                 // API used for sending message
                 const notif = await fetch("https://fcm.googleapis.com/fcm/send", {
@@ -233,6 +231,7 @@ const CreateNewJobOpening = (props) => {
                     body: JSON.stringify(notifData)
                 })
 
+                { res.Result[0].FLAG === 'S' && navigation.navigate('New_hiring') }
             } catch (error) {
                 console.log(error?.response)
             }

@@ -54,11 +54,11 @@ const Employee_Login = (props) => {
             let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
             let userDept = returnedData.map(d => d.DEPT_NAME)[0]
 
-            // console.log(dep_ID);
+            console.log(returnedData);
 
             setLoaderVisible(false)
-            result[0] === "S" ? (props.navigation.navigate("Employee_page")) : Alert.alert("Failure", "Please enter correct credentials")
-            dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))
+            result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+
         })
     }
 
@@ -95,7 +95,7 @@ const Employee_Login = (props) => {
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp})) : Alert.alert("Failure", "Please enter correct credentials")
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
@@ -114,13 +114,13 @@ const Employee_Login = (props) => {
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id })))} />
+                    <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword:password })))} />
                 </View>
 
                 {/* Password */}
                 <View style={[styles.textInputBox]}>
                     <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} />
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => (setPassword(security), dispatch(authActions.logIn({ userPassword: security, userId:userId })))} />
                     <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
                 </View>
 

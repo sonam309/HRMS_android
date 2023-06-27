@@ -13,7 +13,7 @@ const Candidate_details = (props) => {
   const [isVisible, setIsVisible] = useState(false)
   const [obtainedTechScoreValue, setObtainedTechScoreValue] = useState('');
   const [obtainedSpeakScoreValue, setObtainedSpeakScoreValue] = useState('');
-  const [remarks, setRemarks] = useState('');
+  const [yourRemarks, setYourRemarks] = useState('');
   const [error, setError] = useState(false);
   const [feedback, setFeedback] = useState()
 
@@ -21,7 +21,7 @@ const Candidate_details = (props) => {
     if (
       obtainedSpeakScoreValue === '' ||
       obtainedTechScoreValue === '' ||
-      remarks === ''
+      yourRemarks === ''
     ) {
       setError(true);
       setTimeout(() => {
@@ -44,7 +44,7 @@ const Candidate_details = (props) => {
           interviewType: interviewType,
           operFlag: operFlag,
           param: `Technical~5~${obtainedTechScoreValue}$Speaking~5~${obtainedSpeakScoreValue}`,
-          remark: remarks,
+          remark: yourRemarks,
         })
         .then(response => {
           const returnedData = response?.data?.Result;
@@ -190,7 +190,7 @@ const Candidate_details = (props) => {
             <View style={{ marginVertical: 12 }}>
               <Text style={{ color: COLORS.black }}>Remarks</Text>
 
-              <TextInput value={remarks} onChangeText={text => setRemarks(text)} multiline placeholder="Your Feedback" style={{ marginVertical: 12, height: 70, paddingLeft: 24, borderWidth: 0.5, borderColor: COLORS.lightGray, borderRadius: 12, }} />
+              <TextInput value={yourRemarks} onChangeText={text => setYourRemarks(text)} multiline placeholder="Your Feedback" style={{ marginVertical: 12, height: 70, paddingLeft: 24, borderWidth: 0.5, borderColor: COLORS.lightGray, borderRadius: 12, }} />
 
             </View>
 
@@ -201,7 +201,7 @@ const Candidate_details = (props) => {
                 <Text style={{ color: COLORS.green, fontSize: 18, fontWeight: 600 }}>Select</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => onSelectPress('R')} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.lightRed }]}>
+              <TouchableOpacity onPress={() => { onSelectPress('R'), props.navigation.navigate('Interview_status') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.lightRed }]}>
                 <Text style={{ color: COLORS.red, fontSize: 18, fontWeight: 600 }}>Reject</Text>
               </TouchableOpacity>
             </View>
@@ -272,6 +272,7 @@ const Candidate_details = (props) => {
   }
 
 
+  // Main component to return
   return (
 
     <View style={{ flex: 1, margin: 10, paddingHorizontal: 10, justifyContent: 'center' }}>
