@@ -16,7 +16,7 @@ const New_hiring = (props) => {
     useEffect(() => {
         getJobOpening();
     }, [])
-    
+
     // all job opening data
     const getJobOpening = async () => {
         try {
@@ -67,36 +67,33 @@ const New_hiring = (props) => {
                 break;
         }
         return (
-            <View style={[{ margin: 10, paddingLeft: 10, paddingVertical: 5, borderColor: COLORS.gray, borderWidth: 1, borderRadius: 12, backgroundColor: 'white' }, styles.Elevation]}>
+            <View style={[{ margin: 10, paddingLeft: 10, paddingVertical: 5, borderColor: COLORS.gray, borderWidth: 1, borderRadius: 12, backgroundColor: 'white', overflow: 'hidden' }, styles.Elevation]}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5 }}>
 
-                    <View style={[{ justifyContent: 'center', backgroundColor: 'white', alignItems: 'center', width: 40, height: 40, borderRadius: 20 }, styles.Elevation]}>
+                    <View style={[{ justifyContent: 'center', backgroundColor: 'white', alignItems: 'center', width: 40, height: 40, borderRadius: 20, marginHorizontal: 5 }, styles.Elevation]}>
                         <Text style={{ backgroundColor: COLORS.green, width: 36, height: 36, borderRadius: 18, textAlignVertical: 'center', textAlign: 'center' }}>{counting}</Text>
                     </View>
+                    {job_status && <Text style={[{ backgroundColor: bannerColor }, styles.categoryTag]}>{job_status}</Text>}
 
                     {/* major details -> Location,compensation */}
                     <View style={{ justifyContent: 'space-between' }}>
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 14, fontWeight: 500 }}>{title}</Text>
-                            {job_status && <Text style={[{ backgroundColor: bannerColor }, styles.categoryTag]}>{job_status}</Text>}
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignItems:'center' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='cash' color={COLORS.gray} size={16} />{compensation}</Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{paddingHorizontal:5}}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={20} /> <Text style={{ color: 'black', marginHorizontal: 5 }}>{experience} years of experience</Text></Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='cash' color={COLORS.gray} size={16} />{compensation}</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={16} />{experience} years of experience</Text>
                         </View>
                     </View>
 
                 </View>
                 {/* Job description */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, paddingHorizontal: 15 }}>
                     <Text>{upload}</Text>
                     <TouchableOpacity onPress={() => navigation.navigate("Job_Description", { Job_Desc })}>
                         <Text style={{ color: COLORS.green, fontWeight: 500 }}>View JD {'>'}</Text>
@@ -172,12 +169,13 @@ const styles = StyleSheet.create({
     },
     categoryTag: {
         color: 'white',
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
         paddingVertical: 1,
-        // marginRight: -5,
+        marginRight: -8,
         borderRadius: 10,
-        // position:'absolute',
-        // right:-10
+        position: 'absolute',
+        right: 0,
+        top: -2
 
     }
 })

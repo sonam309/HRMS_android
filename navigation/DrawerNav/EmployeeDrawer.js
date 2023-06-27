@@ -23,12 +23,18 @@ const EmployeeDrawer = (props) => {
     const { navigator } = props;
     const userData = useSelector(state => state.auth)
 
-    function CustomDrawer(props) {
+    const CustomDrawer = (props) => {
+
+        const logUserOut = (dispatch) => {
+            navigator('Employee')
+            dispatch(authActions.logOut())
+        }
+
         return (
             <DrawerContentScrollView {...props} >
                 <View style={{ backgroundColor: '#220046' }}>
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor: '#220046', color: 'white' }} onPress={() => { logUserOut({dispatch}) }}>
+                        <TouchableOpacity style={{ backgroundColor: '#220046', color: 'white' }} onPress={() => logUserOut(dispatch)}>
                             <Icons name='logout' size={20} style={{ color: 'white', padding: 8 }} />
                         </TouchableOpacity>
                     </View>
@@ -47,11 +53,6 @@ const EmployeeDrawer = (props) => {
 
             </DrawerContentScrollView>
         )
-    }
-
-    const logUserOut = () => {
-        navigator('Employee')
-        dispatch(authActions.logOut())
     }
 
     function DrawerIcons(props) {

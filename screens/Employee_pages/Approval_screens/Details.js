@@ -76,7 +76,7 @@ const Details = (props) => {
     };
 
     // for Approving salary pending approvals
-    const SalaryDetail = (oprFlag) => {
+    const SalaryAction = (oprFlag) => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: oprFlag })
             .then(response => {
                 const returnedData = response?.data;
@@ -90,42 +90,46 @@ const Details = (props) => {
             });
     };
 
-    // R -> reject & C -> approve
-
-    const RequestDetail = (opr) => {
-        // console.log(obj?.TXN_ID, '    ', opr);
+    const jobRequestAction = async (opr) => {
+        // console.warn("opr flag", opr);
         var formData = new FormData();
-        formData.append(
-            'data',
-            JSON.stringify({ operFlag: opr, txnId: '185' }),
-        );
-        axios
-            .post('https://econnectsatya.com:7033/api/hrms/jobOpeningRequest', formData)
-            .then(response => {
-                const returnedData = response?.data?.Result;
-                console.log(returnedData);
+        formData.append('data', JSON.stringify({ operFlag: opr, txnId: jobId }),);
+
+        try {
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+                method: "POST",
+                body: formData
+
             })
-            .catch(error => {
-                console.log(error);
-            });
+            res = await res.json();
+            res = res?.Result;
+            // console.warn(res);
+            ToastAndroid.show(res[0].MSG, 3000)
+
+        } catch (error) {
+            console.log(error)
+        }
     };
 
-    const OpeningDetail = (opr) => {
-        console.log(obj?.TXN_ID, '    ', opr);
+    const jobOpeningAction = async (opr) => {
+        console.warn("opr flag", opr);
         var formData = new FormData();
-        formData.append(
-            'data',
-            JSON.stringify({ operFlag: opr, txnId: '185' }),
-        );
-        axios
-            .post('https://econnectsatya.com:7033/api/hrms/jobOpeningRequest', formData)
-            .then(response => {
-                const returnedData = response?.data?.Result;
-                console.log(returnedData);
+        formData.append('data', JSON.stringify({ operFlag: opr, jobId: jobId }),);
+
+        try {
+            let res = await fetch("https://econnectsatya.com:7033/api/createNewJob", {
+                method: "POST",
+                body: formData
+
             })
-            .catch(error => {
-                console.log(error);
-            });
+            res = await res.json();
+            res = res?.Result;
+            
+            ToastAndroid.show(res[0].MSG, 3000)
+
+        } catch (error) {
+            console.log(error)
+        }
     };
 
 
@@ -436,8 +440,8 @@ const Details = (props) => {
         switch (category) {
             case "Salary Allocation":
                 {
-                    approveType = SalaryDetail('C');
-                    rejectType = SalaryDetail('R');
+                    approveType = SalaryAction;
+                    rejectType = SalaryAction;
                     return (
                         <ScrollView>
                             <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
@@ -446,13 +450,13 @@ const Details = (props) => {
                 }
 
             case "New Job Opening":
-                approveType = OpeningDetail('C');
-                rejectType = OpeningDetail('R');
+                approveType = jobOpeningAction;
+                rejectType = jobOpeningAction;
                 return <JobOpening />
 
             case "New Job Request":
-                approveType = RequestDetail('C');
-                rejectType = RequestDetail('R')
+                approveType = jobRequestAction;
+                rejectType = jobRequestAction
                 return <JobRequest />
 
         }
@@ -465,14 +469,14 @@ const Details = (props) => {
 
             {/* Approval Buttons */}
             {action === 'P' && <View style={styles.footerDesign}>
-                <TouchableOpacity disabled={disableBtn} onPress={() => approveType} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green }, styles.buttonStyle]}>
+                <TouchableOpacity disabled={disableBtn} onPress={() => approveType('C')} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green }, styles.buttonStyle]}>
 
                     <MaterialCommunityIcons name="check-circle-outline" size={20} color={COLORS.white} />
                     <Text style={{ color: COLORS.white, fontWeight: '600', }}> Approve </Text>
 
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => rejectType} disabled={disableBtn} style={[{ backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red }, styles.buttonStyle]}>
+                <TouchableOpacity onPress={() => rejectType('R')} disabled={disableBtn} style={[{ backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red }, styles.buttonStyle]}>
                     <MaterialCommunityIcons name="close-circle-outline" size={20} color={COLORS.white} />
                     <Text style={{ color: COLORS.white, fontWeight: '600', }}> Reject </Text>
                 </TouchableOpacity>

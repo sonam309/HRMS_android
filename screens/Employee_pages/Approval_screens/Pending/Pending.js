@@ -12,7 +12,7 @@ const Pending = (props) => {
     const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10005', operFlag: 'P', notificationCat: notificationCat })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'P', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);

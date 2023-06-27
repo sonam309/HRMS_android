@@ -60,7 +60,7 @@ const Rejected = (props) => {
     const Hiring = () => {
         return (
             <>
-                {rejectedData && (rejectedData[0] ? rejectedData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={rejectedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} jobId={item.JOB_ID} rejected_by={item.APPROVE_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
+                {rejectedData && (rejectedData[0] ? rejectedData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={rejectedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} jobId={item.JOB_ID} rejected_by={item.REJECT_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
             </>
         )
     }
