@@ -16,8 +16,6 @@ const CreateMpin = (props) => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
-
-
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -34,35 +32,24 @@ const CreateMpin = (props) => {
     //forgetPassword api Call
     const getOTPMethod = () => {
 
-
-        // Simple_If_Else=()=>{
-
-        //     if(userName.trim.length!=0){
-
         let otp = RandomNumber("6")
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
             params: {
                 loginId: userName, operFlag: "E", message: otp +
                     " Is the OTP for your mobile verfication on Satya One."
-
             }
         }).then((response) => {
 
-
-
             const returnedData = response.data.Result;
-
             // console.warn(returnedData);
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName, type }))
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, type }))
                 : Alert.alert("Failure", "Please enter correct credentials")
 
         })
-
     }
-
 
     return (
         <View>

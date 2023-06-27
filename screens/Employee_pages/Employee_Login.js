@@ -1,42 +1,31 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, PermissionsAndroid, StatusBar, ActivityIndicator, Modal } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import GetLocation from 'react-native-get-location'
-import { company_logo_2 } from '../../assets';
-import { Pinlock } from '../../assets';
+import { company_logo_2, Pinlock } from '../../assets';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import Geolocation from '../../functions/Geolocation';
 import Loader from '../../components/Loader';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux'
+import { authActions } from '../../redux/authSlice';
 
 
 const Employee_Login = (props) => {
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userName, setUserName] = useState("10011");
+    const [userId, setUserId] = useState("10011");
     const [password, setPassword] = useState("Kapil@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
+    const dispatch = useDispatch();
 
-
-    const userData = { loginId: userName, password: password, oprFlag: 'L' };
-
-
-    const setUserData = async ({ userId, full_name, deptID }) => {
-
-        await AsyncStorage.setItem("userId", userId)
-        await AsyncStorage.setItem("Name", full_name)
-        await AsyncStorage.setItem("deptID", deptID)
-        // console.log("deptId",deptID);
-        // console.log("full Name", full_name);
-    }
+    const userData = { loginId: userId, password: password, oprFlag: 'L' };
 
     const getCurrentLocation = async (val) => {
-        Geolocation({ val, userName, userData });
+        Geolocation({ val });
     }
 
     // preventing going to entry page
@@ -57,33 +46,28 @@ const Employee_Login = (props) => {
     const submit = () => {
         setLoaderVisible(true)
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
-            const returnedData = response.data.Result;
+            const returnedData = response?.data?.Result;
+
             let result = returnedData.map(a => a.FLAG);
-            
-            let userId = returnedData.map(a => a.USER_ID);
-            let full_name = returnedData.map(b => b.FIRST_NAME)
-            // console.log(full_name)
-            // console.log(userId)
-            let deptID = returnedData.map(c => c.DEPT_ID)
+            let userId = returnedData.map(a => a.USER_ID)[0]
+            let userName = returnedData.map(b => b.FIRST_NAME)[0]
+            let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
+            let userDept = returnedData.map(d => d.DEPT_NAME)[0]
 
             // console.log(dep_ID);
 
             setLoaderVisible(false)
-            result[0] === "S" ? (props.navigation.navigate("Employee_page", { full_name, userName, password })) : Alert.alert("Failure", "Please enter correct credentials")
-            userId = userId[0];
-            full_name = full_name[0];
-            deptID = deptID[0];
-            setUserData({ userId, full_name, deptID })
-
+            result[0] === "S" ? (props.navigation.navigate("Employee_page")) : Alert.alert("Failure", "Please enter correct credentials")
+            dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))
         })
     }
 
 
     const clickQuickPin = () => {
 
-        if (userName != '') {
+        if (userId != '') {
 
-            props.navigation.navigate("QuickPin", { userName })
+            props.navigation.navigate("QuickPin")
 
         } else {
 
@@ -102,7 +86,7 @@ const Employee_Login = (props) => {
         let otp = RandomNumber("6")
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
             params: {
-                loginId: userName, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
+                loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
             }
         }).then((response) => {
 
@@ -111,7 +95,7 @@ const Employee_Login = (props) => {
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userName })) : Alert.alert("Failure", "Please enter correct credentials")
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp})) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
@@ -130,7 +114,7 @@ const Employee_Login = (props) => {
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomTextInput placeholder='Username' value={userName} onChangeText={(name) => setUserName(name)} />
+                    <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id })))} />
                 </View>
 
                 {/* Password */}
@@ -264,15 +248,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'grey',
         fontSize: 15,
-    },
-    wrapper: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    boxer: {
-        padding: 30,
-        borderRadius: 20
     }
 })
 

@@ -14,24 +14,29 @@ import Pending_Approval from '../../screens/Employee_pages/Pending_Approval';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { user_profile } from '../../assets';
+import { useDispatch, useSelector } from 'react-redux'
+import { authActions } from '../../redux/authSlice';
 
 const EmployeeDrawer = (props) => {
     const Drawer = createDrawerNavigator();
-    const { full_name, userName, navigator,password } = props;
+    const dispatch = useDispatch
+    const { navigator } = props;
+    const userData = useSelector(state => state.auth)
+
     function CustomDrawer(props) {
         return (
             <DrawerContentScrollView {...props} >
                 <View style={{ backgroundColor: '#220046' }}>
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor: '#220046', color: 'white' }} onPress={() => { navigator('Employee') }}>
+                        <TouchableOpacity style={{ backgroundColor: '#220046', color: 'white' }} onPress={() => { logUserOut({dispatch}) }}>
                             <Icons name='logout' size={20} style={{ color: 'white', padding: 8 }} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={{ flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', margin: 0 }}>
                         <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-                        <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginVertical: 6, textAlign: 'center' }}>{full_name}</Text>
-                        <Text style={{ fontSize: 16, color: 'white' }}>Product Manager</Text>
+                        <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
+                        <Text style={{ fontSize: 16, color: 'white' }}>{userData.userDept}</Text>
                     </View>
 
                 </View>
@@ -42,6 +47,11 @@ const EmployeeDrawer = (props) => {
 
             </DrawerContentScrollView>
         )
+    }
+
+    const logUserOut = () => {
+        navigator('Employee')
+        dispatch(authActions.logOut())
     }
 
     function DrawerIcons(props) {
@@ -56,15 +66,15 @@ const EmployeeDrawer = (props) => {
     return (
         <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: '#c6cbef' } }} drawerContent={() => <CustomDrawer {...props} />}>
 
-            <Drawer.Screen name="DashBoard" component={DashBoard} options={{ headerShown:false }} initialParams={{ userName: userName, password:password,full_name:full_name }} />
+            <Drawer.Screen name="DashBoard" component={DashBoard} options={{ headerShown: false }} />
             <Drawer.Screen name="Attendance" component={Attendance} />
             <Drawer.Screen name="Holiday List" component={Holiday_list} />
             <Drawer.Screen name="PaySlip" component={PaySlip} />
-            <Drawer.Screen name="Pending Approval" component={Pending_Approval} options={{ headerShown:false }} />
+            <Drawer.Screen name="Pending Approval" component={Pending_Approval} options={{ headerShown: false }} />
             <Drawer.Screen name="Onboarding" component={Onboarding} />
             <Drawer.Screen name="E-Resign" component={E_Resign} />
             <Drawer.Screen name="Jobs" component={Jobs} />
-            <Drawer.Screen name="Hiring" component={Hiring} options={{ headerShown:false }}/>
+            <Drawer.Screen name="Hiring" component={Hiring} options={{ headerShown: false }} />
             <Drawer.Screen name="Help Desk" component={Help_desk} />
         </Drawer.Navigator>
     )

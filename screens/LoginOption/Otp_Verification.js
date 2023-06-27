@@ -3,10 +3,11 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } fro
 import axios from "axios";
 import BoldText from '../../utility/BoldText';
 import { mobile_otp } from '../../assets';
-
+import { useSelector } from 'react-redux';
 
 const Otp_Verification = (props) => {
-    const { contact, otp, userName, type } = props.route.params;
+    const { contact, otp, type } = props.route.params;
+    const userId = useSelector(state => state.auth.userId)
 
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef(); et5 = useRef(); et6 = useRef();
 
@@ -39,7 +40,7 @@ const Otp_Verification = (props) => {
     //forgetPassword api Call
     const forgetPasswordApi = () => {
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: "10011", operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
 
@@ -47,7 +48,7 @@ const Otp_Verification = (props) => {
                 let contact = returnedData.map(b => b.MSG.trim());
                 setsendOtp(otp);
 
-                if (result[0] == "S") { Alert.alert("Success");} 
+                if (result[0] == "S") { Alert.alert("Success"); }
                 else { Alert.alert("fail") }
             })
     }
@@ -56,7 +57,7 @@ const Otp_Verification = (props) => {
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
         if (sendOtp == inputOtp) {
-            (props.navigation.navigate("ForgetPassword", { userName, type }))
+            (props.navigation.navigate("ForgetPassword", { type }))
         } else console.warn("Wrong OTP");
     }
 
@@ -79,10 +80,12 @@ const Otp_Verification = (props) => {
             {/* otp input boxes */}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
                 <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f1}
-                    onChangeText={txt => { setF1(txt);
+                    onChangeText={txt => {
+                        setF1(txt);
                         if (txt.length >= 1) {
                             et2.current.focus();
-                        }}} />
+                        }
+                    }} />
                 <TextInput ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
                     setF2(txt)
                     if (txt.length >= 1) {

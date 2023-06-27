@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
 import CustomTextInput from '../../../components/CustomTextInput'
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux'
 
 const CreateNewJobOpening = (props) => {
 
@@ -35,14 +35,13 @@ const CreateNewJobOpening = (props) => {
     const [approverName, setApproverName] = useState('');
     const [approverId, setApproverId] = useState('');
     const [approverMail, setApproverMail] = useState('');
-    const [loginUserId, setLoginUserId] = useState('')
-    const [loginUserName, setLoginUserName] = useState('')
-    const [loginUserDept, setLoginUserDept] = useState('')
-    let UserId, UserName, UserDept
+
+    const userId = useSelector(state => state.auth.userId)
+    const userName = useSelector(state => state.auth.userName)
+    const userDeptId = useSelector(state => state.auth.userDeptId)
 
 
     useEffect(() => {
-        getUserData();
         getDropdownData('j');
         getDropdownData(3);
         getDropdownData(7);
@@ -52,25 +51,15 @@ const CreateNewJobOpening = (props) => {
 
     }, []);
 
-    const getUserData = async () => {
-        UserId = await AsyncStorage.getItem('userId');
-        UserDept = await AsyncStorage.getItem('deptID');
-        UserName = await AsyncStorage.getItem('Name');
-        setLoginUserId(UserId)
-        setLoginUserDept(UserDept)
-        setLoginUserName(UserName)
-    }
-
     const getdepId = async () => {
 
-
-        console.log("Inside axios", UserId)
-        console.log("Inside axios", UserDept)
+        console.log("Inside axios", userId)
+        console.log("Inside axios", userDeptId)
         axios
             .post(`https://econnectsatya.com:7033/api/hrms/saveApprovel`, {
-                userId: UserId,
+                userId: userId,
                 operFlag: 'V',
-                departmentId: UserDept,
+                departmentId: userDeptId,
                 approvelType: 'Hire',
             })
             .then(response => {
@@ -151,9 +140,9 @@ const CreateNewJobOpening = (props) => {
             }
             else ToastAndroid.show(error)
         }
-
-        // console.warn(selectedDoc.name);
     };
+
+    
     // validating form data
     const validateForm = () => {
         if (
@@ -163,8 +152,8 @@ const CreateNewJobOpening = (props) => {
             compensation === '' ||
             experience === '' ||
             Object.keys(selectedDoc).length === 0 || 
-            loginUserId === '' ||
-            loginUserDept === '' ||
+            userId === '' ||
+            userDeptId === '' ||
             approverId === '' ||
             approverMail === '' ||
             selectedEmploymentValue === '' ||
@@ -188,9 +177,9 @@ const CreateNewJobOpening = (props) => {
         jobdesc: jobDescription,
         jddoc: selectedDoc?.name,
         operflag: 'a',
-        userid: loginUserId,
+        userid: userId,
         jobstatus: '181',
-        depid: loginUserDept,
+        depid: userDeptId,
         approverid: approverId,
         approvermail: approverMail,
         employementType: selectedEmploymentValue,

@@ -4,17 +4,19 @@ import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import candidateIcon from '../../../assets/images/candidateIcon.png'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 
 const Interview_status = (props) => {
     const { navigation } = props;
     const [interViewDetail, setInterViewDetail] = useState();
     const [status, setStatus] = useState('P')
+    const userId = useSelector(state => state.auth.userId)
 
     // fetching interviewer's list data
     const fetchInterviewData = () => {
         axios.post(`https://econnectsatya.com:7033/api/User/InterviewList`, {
-            userId: '10011',
+            userId: userId,
             operFlag: 'V',
         })
             .then(response => {

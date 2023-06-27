@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { security_pin_icon } from '../../assets';
+import { useSelector } from 'react-redux';
 
 const QuickPin = (props) => {
 
-    const { userName } = props.route.params;
+    const userId = useSelector(state => state.auth.userId)
 
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
 
@@ -18,7 +19,7 @@ const QuickPin = (props) => {
     // Change PAssword in function
     const LoginWithMpin = () => {
         // const userData = {
-        //     loginId: userName,
+        //     loginId: userId,
         //     password: newPassword,
         //     oldPassword: '99999',
         //     oprFlag: 'L',
@@ -32,15 +33,13 @@ const QuickPin = (props) => {
         //     let result = returnedData.map(a => a.FLAG);
         //     console.warn(result);
         //     result[0] === "S" ? (props.navigation.navigate("Employee_page",
-        //         { full_name, userName })) :
+        //         { full_name, userId })) :
         //         Alert.alert("Failure", "Please enter correct credentials")
         // })
 
-        props.navigation.navigate("Employee_page", { userName })
+        props.navigation.navigate("Employee_page")
 
     }
-
-
 
     return (
         <View style={styles.container}>

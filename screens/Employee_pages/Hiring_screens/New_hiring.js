@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid } fr
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../components/Loader'
 import { COLORS } from '../../../constants/theme'
+import { useSelector } from 'react-redux'
 
 const New_hiring = (props) => {
     const { navigation, selectedOption } = props
@@ -10,6 +11,7 @@ const New_hiring = (props) => {
     const [loaderVisible, setLoaderVisible] = useState(true);
     let bannerColor;
     let counting = 0;
+    const userId = useSelector(state => state.auth.userId)
 
     useEffect(() => {
         getJobOpening();
@@ -19,7 +21,7 @@ const New_hiring = (props) => {
     const getJobOpening = async () => {
         try {
             var formData = new FormData();
-            formData.append('data', JSON.stringify({ "operFlag": "V", "userId": "10005" }))
+            formData.append('data', JSON.stringify({ "operFlag": "V", "userId": userId }))
             let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
                 method: "POST",
                 body: formData
@@ -65,7 +67,7 @@ const New_hiring = (props) => {
                 break;
         }
         return (
-            <View style={[{ margin: 10, paddingHorizontal: 20, paddingVertical: 5, borderColor: COLORS.gray, borderWidth: 1, borderRadius: 12, backgroundColor: 'white' }, styles.Elevation]}>
+            <View style={[{ margin: 10, paddingLeft: 10, paddingVertical: 5, borderColor: COLORS.gray, borderWidth: 1, borderRadius: 12, backgroundColor: 'white' }, styles.Elevation]}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5 }}>
 
@@ -77,15 +79,16 @@ const New_hiring = (props) => {
                     <View style={{ justifyContent: 'space-between' }}>
 
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 15, fontWeight: 500 }}>{title}</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 14, fontWeight: 500 }}>{title}</Text>
                             {job_status && <Text style={[{ backgroundColor: bannerColor }, styles.categoryTag]}>{job_status}</Text>}
                         </View>
 
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 5 }}><Icons name='map-marker-outline' color={COLORS.gray} size={20} /> {location}</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 5 }}><Icons name='account-outline' color={COLORS.gray} size={20} /> {positions} Opening</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 5 }}><Icons name='cash' color={COLORS.gray} size={20} /> {compensation}</Text>
+                        <View style={{ flexDirection: 'row', alignItems:'center' }}>
+                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2 }}><Icons name='cash' color={COLORS.gray} size={16} />{compensation}</Text>
                         </View>
+
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{paddingHorizontal:5}}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={20} /> <Text style={{ color: 'black', marginHorizontal: 5 }}>{experience} years of experience</Text></Text>
                         </View>

@@ -2,15 +2,17 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const Approved = (props) => {
     const { navigation, flag, notificationCat } = props;
     const [approvedData, setApprovedData] = useState([])
     let action = "A";
     let openingCategory, backColor;
+    const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10005', operFlag: 'Y', notificationCat: notificationCat })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
@@ -45,7 +47,7 @@ const Approved = (props) => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
-                    <Text style={[{ backgroundColor: backColor }, styles.categoryTag]}>{ openingCategory}</Text>
+                    <Text style={[{ backgroundColor: backColor }, styles.categoryTag]}>{openingCategory}</Text>
                 </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
@@ -91,12 +93,12 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 18,
         overflow: 'hidden'
-    }, 
-    categoryTag:{
-        color: 'white', 
-        paddingHorizontal: 10, 
-        paddingVertical:1,
-        marginRight: -5, 
+    },
+    categoryTag: {
+        color: 'white',
+        paddingHorizontal: 10,
+        paddingVertical: 1,
+        marginRight: -5,
         borderRadius: 10
     }
 })

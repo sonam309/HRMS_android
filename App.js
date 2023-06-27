@@ -5,6 +5,8 @@ import EntryStackNav from './navigation/StackNav/EntryStackNav';
 import messaging from '@react-native-firebase/messaging';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 const App = () => {
 
@@ -52,9 +54,11 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <EntryStackNav />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <EntryStackNav />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

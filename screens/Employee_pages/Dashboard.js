@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, Modal, ActivityIndicator, SafeAreaView, } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -12,18 +12,23 @@ import Geolocation from '../../functions/Geolocation';
 import { DrawerActions } from '@react-navigation/native';
 import Loader from '../../components/Loader';
 import COLORS from '../../constants/theme';
+import { useSelector } from "react-redux";
 
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let currentDate = new Date().toDateString().split(' ');
-  const { userName, password, full_name } = props.route.params;
-  let Name = full_name[0];
+  const logInUserData = useSelector(state => state.auth)
+
+  let Name = logInUserData.userName
   const [punchButtonColor, setPunchButtonColor] = useState(COLORS.green);
   const [inOut, setInOut] = useState('In');
   const [punchInToken, setPunchInToken] = useState('I');
   const [punchInTime, setPunchInTime] = useState('--:--');
   const [punchOutTime, setPunchOutTime] = useState('--:--');
   const [duration, setDuration] = useState('');
+  let userId = logInUserData.userId, inTime = '', outTime = '', timeSpent = '', presentDays = 0, absentDays = 0, count = 0
+
+  // Calendar
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
@@ -31,13 +36,12 @@ const Home = props => {
   const [year, setYear] = useState(new Date());
   const [present, setPresent] = useState(0);
   const [absent, setAbsent] = useState(0);
-  const userData = { loginId: userName, password: password, oprFlag: 'L' };
   var markedDates = {};
-  let loginId = userName, inTime = '', outTime = '', timeSpent = '', presentDays = 0, absentDays = 0, count = 0
 
   const getCurrentLocation = async val => {
-    Geolocation({ val, userName, userData });
+    Geolocation({ val });
   };
+
   const loadingData = async val => {
     // fetching data
     let data = await fetch(
@@ -50,10 +54,11 @@ const Home = props => {
         },
         body: JSON.stringify({
           operFlag: val,
-          userId: loginId,
+          userId: userId,
         }),
       },
     );
+
     // data to json form
     data = await data.json()
     data = data.Result;
@@ -63,7 +68,6 @@ const Home = props => {
     data.map(b => b.OUT) != "" ? (outTime = data.map(c => c.OUT.trim())) : outTime = "00:00";
     setPunchInTime(inTime);
     setPunchOutTime(outTime);
-    // console.warn(outTime);
     setDuration(timeSpent)
     inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor(COLORS.green), setInOut('In'), setPunchInToken('I'))
     setLoaderVisible(false)
@@ -86,10 +90,12 @@ const Home = props => {
       ]);
       return true;
     };
+
     const backPressHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
+
     return () => {
       backPressHandler.remove();
     };
@@ -105,7 +111,7 @@ const Home = props => {
   const getAttendance = () => {
     axios
       .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
-        userId: userName,
+        userId: logInUserData.userId,
         monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
       })
       .then(response => {
@@ -145,6 +151,9 @@ const Home = props => {
         setAbsent(absentDays);
       });
   };
+
+
+
   return (
     <View style={styles.container}>
       <Loader loaderVisible={loaderVisible} />
@@ -153,18 +162,22 @@ const Home = props => {
 
         {/* header */}
         <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', }}>
+
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
           </TouchableOpacity>
+
           <View>
-            <Text style={{fontWeight:500}}>Welcome</Text>
+            <Text style={{ fontWeight: 500 }}>Welcome</Text>
             <Text style={{ color: COLORS.orange, fontSize: 16 }}>
-               {Name.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
+              {Name?.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
             </Text>
           </View>
+
           <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="bell-ring-outline" color={COLORS.green} size={30} />
           </TouchableOpacity>
+
         </SafeAreaView>
 
         {/* Main Content-Calendar */}
@@ -244,11 +257,11 @@ const Home = props => {
             <View style={{ borderTopWidth: 0.5, borderColor: COLORS.lightGray, paddingTop: 12, }}>
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchInTime} </Text>
 
-              <Text style={{ color: COLORS.darkGray, }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
+              <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
 
             <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.transparentVoilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
-              <Text style={{ color: COLORS.voilet, }}> Punch in </Text>
+              <Text style={{ color: COLORS.voilet }}> Punch in </Text>
             </TouchableOpacity>
 
           </View>
@@ -263,11 +276,11 @@ const Home = props => {
 
             <View style={{ borderTopWidth: 0.5, borderColor: COLORS.lightGray, paddingTop: 12, }}>
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchOutTime} </Text>
-              <Text style={{ color: COLORS.darkGray, }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
+              <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
 
             <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.voilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
-              <Text style={{ color: COLORS.white, }}> Punch out </Text>
+              <Text style={{ color: COLORS.white }}> Punch out </Text>
             </TouchableOpacity>
 
           </View>
@@ -364,7 +377,7 @@ const Home = props => {
         </View>
 
       </ScrollView>
-      
+
     </View>
   );
 };
@@ -447,16 +460,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingHorizontal: 5,
     fontWeight: '500',
-  },
-  wrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxer: {
-    padding: 30,
-    borderRadius: 20,
-  },
+  }
 });
 
 export default Home;

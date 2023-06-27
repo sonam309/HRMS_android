@@ -5,11 +5,12 @@ import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { new_mpin } from '../../assets';
+import { useSelector } from 'react-redux';
 
 const ForgetPassword = (props) => {
 
-  const { userName, type } = props.route.params;
-
+  const { type } = props.route.params;
+  const userId = useSelector(state => state.auth.userId)
 
   const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
   const cet1 = useRef(); cet2 = useRef(); cet3 = useRef(); cet4 = useRef();
@@ -80,7 +81,7 @@ const ForgetPassword = (props) => {
   // Change PAssword in function
   const ChangePasswordApi = () => {
     const userData = {
-      loginId: userName,
+      loginId: userId,
       password: newPassword,
       oldPassword: '',
       oprFlag: 'R',
