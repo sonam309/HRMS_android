@@ -5,7 +5,7 @@ export const COLORS = {
   lightPink: '#fcbdbd',
   white: "#ffffff",
   green: "#03a157",
-  disableGreen: 'rgb(93, 176, 97)',
+  disableGreen: 'rgba(93, 176, 97,0.1)',
   disableRed: 'rgb(222, 111, 109)',
   darkRed: "#960202",
   orange: "#ec672f",
@@ -26,7 +26,24 @@ export const COLORS = {
   transparentVoilet: 'rgba(34, 0, 70, 0.1)',
   purple:'#9376E0',
   lightOrange:'#F79540',
-  leafGreen:'rgba(87, 153, 12, 1)'
+  leafGreen:'rgba(87, 153, 12, 1)',
+  orange1: 'rgb(255,102,0)',
+  disableOrange1: 'rgba(255,102,0, 0.1)',
+  gray: 'gray',
+  skyBlue: '#87CEEB',
+  lightGreen: '#88C385',
+  black: 'black',
+  darkGray: '#838383',
+  darkGray2: 'rgba(105, 104, 104, 1)',
+  lightGray: 'rgba(105, 104, 104, 0.3)',
+  levender: 'rgba(198, 203, 239, 1)',
+
+  transparent: 'transparent',
+  transparentBlack1: 'rgba(0, 0, 0, 0.1)',
+  transparentBlack7: 'rgba(0, 0, 0, 0.7)',
+  transparentGray: 'rgba(150, 150, 150, 0.4)',
+  transparentRed: 'rgba(255,0,0, 0.1)',
+  transparentVoilet: 'rgba(3, 161, 87, 0.1)',
 };
 
 export default COLORS;

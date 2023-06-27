@@ -57,8 +57,9 @@ const Employee_Login = (props) => {
             console.log(returnedData);
 
             setLoaderVisible(false)
-            result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
 
+            result[0] === "S" ? ((props.navigation.navigate("Employee_page")),dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+            
         })
     }
 

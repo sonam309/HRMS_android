@@ -8,11 +8,16 @@ import { useNavigation } from '@react-navigation/native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { Pinlock,company_logo_2} from '../../assets';
+import { useDispatch } from 'react-redux'
+import { authActions } from '../../redux/authSlice';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
+    const [userName, setUserName] = useState("TMP3420");
+    const [password, setPassword] = useState("Test@123");
+    const dispatch = useDispatch();
+
+    const userData = { loginId: userName, password: password, oprFlag: 'L' };
 
     //Random Number
     const RandomNumber = (length) => {
@@ -48,11 +53,20 @@ const Login = (props) => {
 
     // logging in function
     const submit = () => {
-        const userData = { loginId: userName, password: password, oprFlag: 'L' };
+        
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
-            result[0] === "S" ? Alert.alert("Congratulations", "Succesfully logged in") : Alert.alert("Failure", "Please enter correct credentials")
+            let userId = returnedData.map(a => a.USER_ID)[0]
+            let userName = returnedData.map(b => b.FIRST_NAME)[0]
+            let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
+            let userDept = returnedData.map(d => d.DEPT_NAME)[0]
+
+
+            console.log(returnedData);
+
+            result[0] === "S" ? ((props.navigation.navigate("Candidate_page"))) : Alert.alert("Failure", "Please enter correct credentials")
+            // ,dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))
         })
     }
 
