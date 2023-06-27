@@ -2,8 +2,10 @@ import { Alert, PermissionsAndroid } from 'react-native'
 import GetLocation from 'react-native-get-location'
 import Punch from './Punch';
 
-const Geolocation = async ({ val, userData, userName }) => {
+const Geolocation = async ({ val }) => {
     let action = (val === "I" ? "In" : "Out")
+
+    // Degree to radians 
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
     }
@@ -30,7 +32,7 @@ const Geolocation = async ({ val, userData, userName }) => {
         .then(location => {
             console.log(location);
             dist = getDistInKm(location.latitude, location.longitude, 28.5444665, 77.3309966);
-            dist < 0.5 ? Punch({ val, userData, userName }) : (Alert.alert(`Punch ${action} from your office`))
+            dist < 0.3 ? Punch({ val}) : (Alert.alert(`Punch ${action} from your office`))
         })
         .catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
 

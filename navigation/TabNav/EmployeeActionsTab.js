@@ -61,7 +61,7 @@ const EmployeeActionsTab = (props) => {
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => setNotificationCat('')} style={[styles.submitBtn, { backgroundColor: COLORS.transparentViolet }]}>
+                    <TouchableOpacity onPress={() => (setNotificationCat(''), setSelectedOption(''))} style={[styles.submitBtn, { backgroundColor: COLORS.transparentViolet }]}>
                         <Text style={{ color: COLORS.voilet, fontSize: 16, }}> RESET </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => applyFilter()} style={[styles.Elevation, styles.submitBtn, { backgroundColor: COLORS.voilet }]}>

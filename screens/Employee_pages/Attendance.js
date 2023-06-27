@@ -61,7 +61,7 @@ const Attendance = (props) => {
           <View >
 
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', marginHorizontal: 10 }}>
-              {LeaveBalanceList.map((item) => <DrawerIcons icon={item.Icon} header={item.Title} count={item.LeaveCount} color={item.Color} id={item.id} />)}
+              {LeaveBalanceList.map((item) => <DrawerIcons icon={item.Icon} header={item.Title} count={item.LeaveCount} color={item.Color} key={item.id} />)}
 
             </View>
 
@@ -78,18 +78,18 @@ const Attendance = (props) => {
             flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginHorizontal: 5,
           }}>
 
-            <Text style={[styles.regilizationBtn,{backgroundColor:'#28B463',borderColor:'#239B56'}]}
-            onPress={()=>props.navigation.navigate("Apply_Leave")}>
+            <Text style={[styles.regilizationBtn, { backgroundColor: '#28B463', borderColor: '#239B56' }]}
+              onPress={() => props.navigation.navigate("Apply_Leave")}>
 
               Regulization
 
             </Text>
-            <Text style={[styles.regilizationBtn,{backgroundColor:'#EB984E',borderColor:'#E67E22'}]}>
+            <Text style={[styles.regilizationBtn, { backgroundColor: '#EB984E', borderColor: '#E67E22' }]}>
 
               Outdoor
 
             </Text>
-            <Text style={[styles.regilizationBtn,{backgroundColor:'#5DADE2',borderColor:'#3498DB'}]}>
+            <Text style={[styles.regilizationBtn, { backgroundColor: '#5DADE2', borderColor: '#3498DB' }]}>
 
               Leave
 
@@ -145,12 +145,6 @@ const Attendance = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    height: '100%',
-    width: '100%'
-  },
   txtLeaveBalance: {
     color: "#220046",
     fontSize: 15,
@@ -167,20 +161,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-  },
-  otherOptions: {
-    height: 100,
-    flex: 1,
-    backgroundColor: 'beige',
-    borderRadius: 8,
-    marginVertical: 12,
-    marginHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  others: {
-    flexDirection: 'row',
-    flex: 1,
   },
   attendanceBtn: {
     color: 'white',
@@ -200,15 +180,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     elevation: 6,
     color: 'white',
-    flex:1,
-    textAlign:'center',
-    marginHorizontal:5,
+    flex: 1,
+    textAlign: 'center',
+    marginHorizontal: 5,
     borderRadius: 20,
     borderWidth: 1,
     paddingTop: 8,
     paddingBottom: 8,
-    fontSize:14,
-    fontWeight:500
+    fontSize: 14,
+    fontWeight: 500
   }
 
 })

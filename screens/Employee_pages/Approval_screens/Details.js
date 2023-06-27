@@ -6,6 +6,7 @@ import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useSelector } from 'react-redux';
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
@@ -14,6 +15,7 @@ const Details = (props) => {
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
     const [disableBtn, setDisableBtn] = useState(false);
+    const userId = useSelector(state => state.auth.userId)
 
     useEffect(() => {
         {
@@ -34,39 +36,10 @@ const Details = (props) => {
     // Variables to be updated for salary allocation
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
 
-    // for Approving in pending approvals
-    const approveDetail = () => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails })
-            .then(response => {
-                const returnedData = response?.data;
-                console.log(returnedData);
-                // Alert.alert('Approved', returnedData?.MSG);
-                ToastAndroid(returnedData?.MSG, 3000)
-                setDisableBtn(true);
-            })
-            .catch(error => {
-                Alert.alert('Error', error);
-            });
-    };
-
-    // for Rejecting in pending approvals
-    const rejectDetail = () => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: 'R' })
-            .then(response => {
-                const returnedData = response?.data;
-                // Alert.alert('Rejected', returnedData?.MSG);
-                ToastAndroid(returnedData?.MSG, 3000)
-                setDisableBtn(true);
-            })
-            .catch(error => {
-                Alert.alert('Error', error);
-            });
-    };
-
     // Updating Salary details
     var SalaryDetails = {
         txnId: data?.Table[0]?.TXN_ID,
-        userId: 10011,
+        userId: userId,
         candidateId: data?.Table[0]?.CANDIDATE_ID,
         previousCtc: data?.Table[0]?.PREVIOUS_CTC,
         hike: data?.Table[0]?.HIKE,
@@ -80,7 +53,6 @@ const Details = (props) => {
         employerPf: employerPF,
         employerEsic: data?.Table[0]?.EMPLOYER_ESIC,
         professionTax: data?.Table[0]?.PROFESSION_TAX,
-        operFlag: 'C',
         annualType: '0',
         basicSalery: '0',
         bikeMaintainace: '0',
@@ -102,6 +74,60 @@ const Details = (props) => {
         employeePfCheck: data?.Table[0]?.EMPLR_PF_CHECK,
         costOfCompany: '0',
     };
+
+    // for Approving salary pending approvals
+    const SalaryDetail = (oprFlag) => {
+        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: oprFlag })
+            .then(response => {
+                const returnedData = response?.data;
+                console.log(returnedData);
+                // Alert.alert('Approved', returnedData?.MSG);
+                ToastAndroid(returnedData?.MSG, 3000)
+                setDisableBtn(true);
+            })
+            .catch(error => {
+                Alert.alert('Error', error);
+            });
+    };
+
+    // R -> reject & C -> approve
+
+    const RequestDetail = (opr) => {
+        // console.log(obj?.TXN_ID, '    ', opr);
+        var formData = new FormData();
+        formData.append(
+            'data',
+            JSON.stringify({ operFlag: opr, txnId: '185' }),
+        );
+        axios
+            .post('https://econnectsatya.com:7033/api/hrms/jobOpeningRequest', formData)
+            .then(response => {
+                const returnedData = response?.data?.Result;
+                console.log(returnedData);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
+    const OpeningDetail = (opr) => {
+        console.log(obj?.TXN_ID, '    ', opr);
+        var formData = new FormData();
+        formData.append(
+            'data',
+            JSON.stringify({ operFlag: opr, txnId: '185' }),
+        );
+        axios
+            .post('https://econnectsatya.com:7033/api/hrms/jobOpeningRequest', formData)
+            .then(response => {
+                const returnedData = response?.data?.Result;
+                console.log(returnedData);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
 
     // Fetching salary allocation template
     const getSalaryHTMLData = async () => {
@@ -203,7 +229,7 @@ const Details = (props) => {
     // Fetching data for new job request
     const getJobRequestData = async () => {
         let formData = new FormData();
-        formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: '10005' }))
+        formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: userId }))
         let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
             method: "POST",
             body: formData
@@ -392,8 +418,8 @@ const Details = (props) => {
                 <Text>{jobRequestData?.JOB_DESCRIPTION}</Text>
 
                 {/* Job desciption */}
-                <View style={{marginVertical: 10 }}>
-                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black}}>Job Description</Text>
+                <View style={{ marginVertical: 10 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}>Job Description</Text>
                     <TouchableOpacity style={{ backgroundColor: COLORS.lightGreen, height: 50, borderRadius: 12, padding: 10, marginVertical: 5, justifyContent: 'center' }} onPress={() => props.navigation.navigate('Job Desc', { JD })}>
                         <Text >{jobRequestData?.UPLOAD_JD_DOC} </Text>
                     </TouchableOpacity>
@@ -404,10 +430,14 @@ const Details = (props) => {
 
     }
 
+    let approveType, rejectType;
+
     const Type = () => {
         switch (category) {
             case "Salary Allocation":
                 {
+                    approveType = SalaryDetail('C');
+                    rejectType = SalaryDetail('R');
                     return (
                         <ScrollView>
                             <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
@@ -416,9 +446,13 @@ const Details = (props) => {
                 }
 
             case "New Job Opening":
+                approveType = OpeningDetail('C');
+                rejectType = OpeningDetail('R');
                 return <JobOpening />
 
             case "New Job Request":
+                approveType = RequestDetail('C');
+                rejectType = RequestDetail('R')
                 return <JobRequest />
 
         }
@@ -430,19 +464,19 @@ const Details = (props) => {
             <Type />
 
             {/* Approval Buttons */}
-            {action === 'P' ? <View style={styles.footerDesign}>
-                <TouchableOpacity disabled={disableBtn} onPress={() => approveDetail()} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green }, styles.buttonStyle]}>
+            {action === 'P' && <View style={styles.footerDesign}>
+                <TouchableOpacity disabled={disableBtn} onPress={() => approveType} style={[{ backgroundColor: disableBtn ? COLORS.disableGreen : COLORS.green }, styles.buttonStyle]}>
 
                     <MaterialCommunityIcons name="check-circle-outline" size={20} color={COLORS.white} />
                     <Text style={{ color: COLORS.white, fontWeight: '600', }}> Approve </Text>
 
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => rejectDetail()} disabled={disableBtn} style={[{ backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red }, styles.buttonStyle]}>
+                <TouchableOpacity onPress={() => rejectType} disabled={disableBtn} style={[{ backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red }, styles.buttonStyle]}>
                     <MaterialCommunityIcons name="close-circle-outline" size={20} color={COLORS.white} />
                     <Text style={{ color: COLORS.white, fontWeight: '600', }}> Reject </Text>
                 </TouchableOpacity>
-            </View> : null}
+            </View>}
 
         </View>
     )
@@ -482,8 +516,8 @@ const styles = StyleSheet.create({
         height: 80,
         backgroundColor: COLORS.white,
         justifyContent: 'flex-end',
-        borderTopColor:COLORS.orange,
-        borderTopWidth:1
+        borderTopColor: COLORS.orange,
+        borderTopWidth: 1
     },
     topIcon: {
         backgroundColor: COLORS.skyBlue,

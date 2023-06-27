@@ -2,15 +2,17 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const Rejected = (props) => {
     const { navigation, flag, notificationCat } = props;
     const [rejectedData, setRejectedData] = useState([])
     let action = "R";
     let openingCategory, backColor;
+    const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: '10005', operFlag: 'R', notificationCat: notificationCat })
+        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'R', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
@@ -45,7 +47,7 @@ const Rejected = (props) => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
-                    <Text style={[{ backgroundColor: backColor }, styles.categoryTag]}>{ openingCategory}</Text>
+                    <Text style={[{ backgroundColor: backColor }, styles.categoryTag]}>{openingCategory}</Text>
                 </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
