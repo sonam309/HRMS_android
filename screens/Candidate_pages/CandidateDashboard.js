@@ -1,7 +1,6 @@
 import React from 'react'
 import COLORS from '../../constants/theme'
 import Timeline from 'react-native-simple-timeline';
-import { GestureObjects } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gestureObjects';
 import Feather from 'react-native-vector-icons/Feather';
 import { View, Text, TouchableOpacity } from 'react-native'
 
