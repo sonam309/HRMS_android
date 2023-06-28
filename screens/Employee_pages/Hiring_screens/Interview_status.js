@@ -47,7 +47,7 @@ const Interview_status = (props) => {
 
                     <View style={{ paddingHorizontal: 10 }}>
 
-                        <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '500' }}>{name}</Text>
+                        <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '500' }}>{name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}</Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
                             <Text style={{ color: COLORS.darkerGrey, fontSize: 13, fontWeight: '500', marginHorizontal: 2 }}> {designation}

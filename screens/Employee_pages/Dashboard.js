@@ -38,11 +38,11 @@ const Home = props => {
   const [absent, setAbsent] = useState(0);
   var markedDates = {};
 
-  const getCurrentLocation = async val => {
+  const getCurrentLocation = async (val) => {
     Geolocation({ val });
   };
 
-  const loadingData = async val => {
+  const loadingData = async (val) => {
     // fetching data
     let data = await fetch(
       'https://econnectsatya.com:7033/api/Admin/punchinOut',
@@ -62,7 +62,7 @@ const Home = props => {
     // data to json form
     data = await data.json()
     data = data.Result;
-    // console.warn(data);
+    console.warn(data);
     data.map(a => a.IN) != "" ? (inTime = data.map(a => a.IN.trim())) : inTime = "00:00"
     data.map(b => b.DUR) != "" ? (timeSpent = data.map(b => b.DUR.trim())) : timeSpent = "--:--";
     data.map(b => b.OUT) != "" ? (outTime = data.map(c => c.OUT.trim())) : outTime = "00:00";
