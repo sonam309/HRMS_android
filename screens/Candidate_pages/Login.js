@@ -14,7 +14,7 @@ import Loader from '../../components/Loader';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState("TMP3420");
+    const [userId, setUserId] = useState("320");
     const [password, setPassword] = useState("Test@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const Login = (props) => {
         setLoaderVisible(true)
         axios.post('https://econnectsatya.com:7033/api/User/candidateLogin', userData).then((response) => {
             const returnedData = response.data.Result;
-            // let result = returnedData.map(a => a.FLAG);
+            let result = returnedData.map(a => a.FLAG);
             // let userId = returnedData.map(a => a.USER_ID)[0]
             // let userName = returnedData.map(b => b.FIRST_NAME)[0]
             // let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
@@ -87,7 +87,7 @@ const Login = (props) => {
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomTextInput placeholder='userId' value={userId} onChangeText={(name) => setUserId(name)} />
+                    <CustomTextInput placeholder='User Id' value={userId} onChangeText={(name) => setUserId(name)} />
                 </View>
 
                 {/* Password */}
