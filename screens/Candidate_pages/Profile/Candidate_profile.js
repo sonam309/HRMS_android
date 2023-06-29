@@ -7,6 +7,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import CustomTextInput from '../../../components/CustomTextInput';
 import BottomUpModal from '../../../components/BottomUpModal';
+
+import QualificationBottomView from './qualificationPages/QualificationBottomView';
+import { FONTS,SIZES } from '../../../constants/font_size';
+import SkillsBottomView from './qualificationPages/SkillsBottomView';
+import TrainingBottomView from './qualificationPages/TrainingBottomView';
+import LanguageBottomView from './qualificationPages/LanguageBottomView';
 import BankBottomView from './AboutMe/BankBottomView';
 import PersonalBottomView from './AboutMe/PersonalBottomView';
 import ContactBottomView from './AboutMe/ContactBottomView';
@@ -16,6 +22,7 @@ import EmergencyAddressBottomView from './Address/EmergencyAddressBottomView';
 import FamilyBottomView from './Family/FamilyBottomView';
 import MedicalBottomView from './Family/MedicalBottomView';
 import NominationBottomView from './Family/NominationBottomView';
+
 
 const Candidate_profile = () => {
   // for showing data in listView
@@ -31,6 +38,24 @@ const Candidate_profile = () => {
   const [familyView, setFamilyView] = useState(false)
   const [skillView, setSkillView] = useState(false)
   const [employmentView, setEmploymentView] = useState(false)
+  const [identityView, setIdentityView] = useState(false)
+  const [userName, setUserName] = useState()
+  const [qualificationsView, setQualificationsView] = useState(false);
+  const [skillsBottomView, setSkillsBottomView] = useState(false);
+  const [trainingView, setTrainingView] = useState(false);
+  const [languagesView, setLanguagesView] = useState(false);
+  const [passportView, setPassportView] = useState(false);
+  const [panView, setPanView] = useState(false);
+  const [aadharView, setAadharView] = useState(false);
+  const [votersView, setVotersView] = useState(false);
+  const [dlView, setDlView] = useState(false);
+  const [esicView, setEsicView] = useState(false);
+  const [uanView, setUanView] = useState(false);
+  const renderPersonalView = () => {
+    return (
+
+      <ScrollView style={{ height: '100%' }}>
+
 
   // to hide and show bottomUp modal
   const [personalView, setPersonalView] = useState(false)
@@ -45,6 +70,9 @@ const Candidate_profile = () => {
   const [nominationView, setNominationView] = useState(false)
   const [medicalView, setMedicalView] = useState(false)
 
+
+
+
   return (
     <ScrollView>
       {/* Name and User id of candidate */}
@@ -57,26 +85,28 @@ const Candidate_profile = () => {
       {/* About Me header and it's dropdown content */}
       <View style={{ backgroundColor: COLORS.white, margin: 10, padding: 5, borderRadius: 6 }}>
 
+
         <TouchableOpacity onPress={() => setAboutMeView(!aboutMeView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <Ionicons name='ios-person-circle-sharp' size={25} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>About Me</Text>
+          <Ionicons name='ios-person-circle-sharp' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>About Me</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={aboutMeView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
 
-        {/* The dropdown options */}
+      {/* The dropdown options */}
         {aboutMeView && (
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setPersonalView(!personalView)}>
               <Icons name='id-card' color={'green'} size={18} />
-              <Text style={{ padding: 4, width: '100%' }}>Personal Details</Text>
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Personal Details</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setContactView(!contactView)}>
               <Icons name='cellphone' color={'green'} size={18} />
-              <Text style={{ padding: 4, width: '100%' }}>Contact Details</Text>
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Contact Details</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setBankView(!bankView)}>
               <Icons name='bank' color={'green'} size={18} />
-              <Text style={{ padding: 4, width: '100%' }}>Bank Details</Text>
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Bank Details</Text>
+
             </TouchableOpacity>
           </View>
         )}
@@ -104,8 +134,8 @@ const Candidate_profile = () => {
 
         {/* Address header and it's dropdown content */}
         <TouchableOpacity onPress={() => setAddressView(!addressView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <Ionicons name='location-sharp' size={25} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>Address</Text>
+          <Ionicons name='location-sharp' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Address</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={addressView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
 
@@ -149,8 +179,8 @@ const Candidate_profile = () => {
 
         {/* Family header and it's dropdown content */}
         <TouchableOpacity onPress={() => setFamilyView(!familyView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <Icons name='human-male-female-child' size={25} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>Family</Text>
+          <Icons name='human-male-female-child' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Family</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={familyView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
 
@@ -193,21 +223,124 @@ const Candidate_profile = () => {
 
         <TouchableOpacity onPress={() => setSkillView(!skillView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
           <FontAwesome name='graduation-cap' size={20} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>Skills & Qualification</Text>
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Skills & Qualification</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={skillView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
 
         </TouchableOpacity>
 
+        {skillView && (
+          <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setQualificationsView(!qualificationsView)}>
+              <Icons name='book-education-outline' color={'green'} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Qualifications</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setSkillsBottomView(!skillsBottomView)}>
+              <Icons name='library' color={'green'} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Skills</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setTrainingView(!trainingView)}>
+              <Icons name='human-male-board-poll' color={'green'} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Training</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setLanguagesView(!languagesView)}>
+              <Ionicons name='language' color={'green'} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Languages</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {
+          qualificationsView && (
+            <BottomUpModal
+              isVisible={qualificationsView}
+              onClose={() => {
+                setQualificationsView(false);
+              }}
+              visibleHeight={650}>
+              {<QualificationBottomView onPress={() => setQualificationsView(false)} />}
+            </BottomUpModal>
+          )}
+        {skillsBottomView && (
+          <BottomUpModal
+            isVisible={skillsBottomView}
+            onClose={() => {
+              setSkillsBottomView(false);
+            }}
+            visibleHeight={650}>
+            {<SkillsBottomView onPress={() => setSkillsBottomView(false)} />}
+          </BottomUpModal>
+        )}
+        {
+          trainingView && (
+            <BottomUpModal
+              isVisible={trainingView}
+              onClose={() => {
+                setTrainingView(false);
+              }}
+              visibleHeight={650}>
+              {<TrainingBottomView onPress={() => setTrainingView(false)} />}
+            </BottomUpModal>
+          )
+        }
+        {
+          languagesView && (
+            <BottomUpModal
+              isVisible={languagesView}
+              onClose={() => {
+                setLanguagesView(false);
+              }}
+              visibleHeight={500}>
+              {<LanguageBottomView onPress={() => setLanguagesView(false)} />}
+            </BottomUpModal>
+          )
+        }
+
         <TouchableOpacity onPress={() => setIdentityView(!identityView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <Icons name='smart-card-outline' size={25} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>Identity Proofs</Text>
+          <Icons name='smart-card-outline' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Identity Proofs</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={identityView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
 
         </TouchableOpacity>
+        {identityView && (
+          <View style={{ padding: SIZES.radius, paddingLeft: SIZES.padding }}>
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setPassportView(!passportView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Passport </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setPanView(!panView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Pan</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setAadharView(!aadharView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}>Aadhar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setVotersView(!votersView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Voters</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setDlView(!dlView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Driving liscence</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setEsicView(!esicView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> ESIC</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setUanView(!uanView)}>
+              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> UAN</Text>
+            </TouchableOpacity>
+
+          </View>
+
+        )}
+
+        
+
+
 
         <TouchableOpacity onPress={() => setEmploymentView(!employmentView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <FontAwesome name='list-alt' size={25} color={COLORS.orange} />
-          <Text style={{ fontSize: 18, paddingHorizontal: 5 }}>Employment History</Text>
+          <FontAwesome name='list-alt' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Employment History</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={employmentView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
 

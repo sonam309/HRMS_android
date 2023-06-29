@@ -9,7 +9,6 @@ import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { Pinlock,company_logo_2} from '../../assets';
 import { useDispatch } from 'react-redux'
-import { authActions } from '../../redux/authSlice';
 import Loader from '../../components/Loader';
 
 const Login = (props) => {
