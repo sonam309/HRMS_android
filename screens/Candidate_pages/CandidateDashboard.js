@@ -3,6 +3,7 @@ import COLORS from '../../constants/theme'
 import Timeline from 'react-native-simple-timeline';
 import Feather from 'react-native-vector-icons/Feather';
 import { View, Text, TouchableOpacity } from 'react-native'
+import { FONTS } from '../../constants/font_size';
 
 
 const CandidateDashboard = (props) => {
@@ -15,10 +16,10 @@ const CandidateDashboard = (props) => {
             }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
                     <View style={{ paddingLeft: 8, marginTop: 8, }}>
-                        <Text style={{ fontSize: 14, fontFamily: 'Ubuntu-Bold', fontWeight: 600, color: COLORS.orange1, }}>
+                        <Text style={{...FONTS.h4, color: COLORS.orange1, }}>
                             Welcome
                         </Text>
-                        <Text style={{ fontFamily: 'Ubuntu-Bold', fontSize: 22, fontWeight: 600, color: COLORS.darkGray2, }}>
+                        <Text style={{ ...FONTS.body2, color: COLORS.darkGray2, }}>
                             Ashutosh kumar
                         </Text>
                     </View>
@@ -35,10 +36,10 @@ const CandidateDashboard = (props) => {
             <View style={{ marginHorizontal: 12, }}>
                 <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, marginTop: 25 }}> Task
                 </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 24, }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 24, elevation:5}}>
 
                     {/* profile view */}
-                    <TouchableOpacity style={{ height: 160, width: "45%", backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, }} onPress={()=>props.navigation.navigate("Candidate_profile")}>
+                    <TouchableOpacity style={{ height: 160, width: "45%", backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }} onPress={()=>props.navigation.navigate("Candidate_profile")}>
                         <Feather name="user" size={44} color={COLORS.orange1} />
                         <Text style={{ color: COLORS.orange1, fontWeight: 500, fontSize: 16, marginTop: 12 }}>
                             Your profile
