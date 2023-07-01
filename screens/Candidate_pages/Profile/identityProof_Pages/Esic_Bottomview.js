@@ -1,322 +1,169 @@
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    ActionSheetIOS,
-    ScrollView,
-  } from 'react-native';
-  import React, {useEffect, useState} from 'react';
-  import {COLORS, FONTS, SIZES} from '../../../../constants';
-  import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  import Entypo from 'react-native-vector-icons/Entypo';
-  import CustomInput from '../../../../component/CustomInput';
-  import TextButton from '../../../../component/TextButton';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import COLORS from '../../../../constants/theme';
+import SelectDropdown from 'react-native-select-dropdown'
+import { FONTS, SIZES } from '../../../../constants/font_size';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
-const Esic_Bottomview = () => {
-    const [city, setCity] = useState('');
-    const [subCode, setSubCode] = useState('');
-    const [registationNo, setRegistationNo] = useState('');
-    const [csiNo, setCsiNo] = useState('');
-    const [residingWithhimher, setResidingWithhimher] = useState(null);
-    const [whetherResidingWithHimher, setWhetherResidingWithHimher] =
-      useState(null);
-  
-    const [ifNoStatePlace, setIfNoStatePlace] = useState('');
-    const [placeOfResidence, setPlaceOfResidence] = useState('');
-    const [prevEmpCodeNo, setPrevEmpCodeNo] = useState('');
-    const [prevInsNo, setPrevInsNo] = useState('');
-  
-    const renderClose = () => {
-      return (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: SIZES.padding,
-          }}>
-          <Text
-            style={{
-              ...FONTS.h2B,
-              fontSize: 22,
-            }}>
-            ESIC
-          </Text>
-          <TouchableOpacity onPress={onPress}>
-            <Entypo name="cross" size={34} color="black" />
-          </TouchableOpacity>
+
+
+const Esic_Bottomview = (props) => {
+
+  const [selectCountry, setselectCountry] = useState();
+  const [selecetCountryValue, setSelecetCountryValue] = useState('');
+  const [country, setCountry] = useState();
+
+
+  useEffect(() => {
+    getDropdownData(4);
+
+  }, []);
+
+  // Title, States and Employment Data
+  const getDropdownData = async (P) => {
+    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    response = await response.json();
+    const returnedData = response;
+
+    if (P === 4) {
+
+      setCountry(returnedData)
+    }
+
+  }
+
+  // getting country value
+  const checkCountryValue = (value) => {
+    {
+      for (let index = 0; index < country.length; index++) {
+        const element = country[index];
+        if (element.PARAM_NAME === value) setSelecetCountryValue(element.PARAM_ID);
+      }
+    }
+  }
+
+
+
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={{ marginBottom: 150 }} >
+        {/* close button */}
+        <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+          <Text style={{ flex: 1, ...FONTS.h3,  color: COLORS.orange1 }}>ESIC Details</Text>
+          <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
+            <TouchableOpacity onPress={props.onPress}>
+              <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+            </TouchableOpacity>
+          </View>
         </View>
-      );
-    };
-  
-    const showActionSheet = () =>
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: [
-            'Cancel',
-            'Generate number',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-            'Reset',
-          ],
-          destructiveButtonIndex: 2,
-          cancelButtonIndex: 0,
-          userInterfaceStyle: 'light',
-        },
-        buttonIndex => {
-          if (buttonIndex === 0) {
-            // cancel action
-          } else {
-          }
-        },
-      );
-  
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}>
-        {renderClose()}
-        <View
-          style={{
-            flex: 1,
-          }}>
-          <ScrollView bounces={false} showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets={true}>
-            <CustomInput
-              required={true}
-              caption={'Enter city'}
-              value={city}
-              onChangeText={setCity}
-              //   keyboardType={'numeric'}
-            />
-  
-            <CustomInput
-              required={true}
-              caption={'Sub Code'}
-              value={city}
-              onChangeText={setCity}
-              //   keyboardType={'numeric'}
-            />
-  
-            <CustomInput
-              required={true}
-              caption={'Registration No.'}
-              value={city}
-              onChangeText={setCity}
-              //   keyboardType={'numeric'}
-            />
-  
-            <CustomInput
-              required={true}
-              caption={'CSI No.'}
-              value={city}
-              onChangeText={setCity}
-              //   keyboardType={'numeric'}
-            />
-  
-            <View style={{}}>
-              <Text
-                style={{
-                  marginVertical: SIZES.base / 2,
-                  ...FONTS.h3,
-                  fontWeight: '500',
-                }}>
-                Residing with him or her{' '}
-                <Text style={{color: COLORS.red}}>*</Text>
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: SIZES.base,
-                }}>
-                <TouchableOpacity
-                  onPress={() => setResidingWithhimher(true)}
-                  style={{
-                    width: '45%',
-                    height: 45,
-                    borderWidth: residingWithhimher ? 2 : 0.5,
-                    borderColor: residingWithhimher
-                      ? COLORS.green
-                      : COLORS.lightGray,
-                    padding: SIZES.base,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: SIZES.radius,
-                  }}>
-                  <Text
-                    style={{
-                      ...FONTS.body3,
-                      color: COLORS.darkGray2,
-                    }}>
-                    yes
-                  </Text>
-                </TouchableOpacity>
-  
-                <TouchableOpacity
-                  onPress={() => setResidingWithhimher(false)}
-                  style={{
-                    width: '45%',
-                    height: 45,
-                    borderWidth: !residingWithhimher ? 2 : 0.5,
-                    borderColor: !residingWithhimher
-                      ? COLORS.green
-                      : COLORS.lightGray,
-                    padding: SIZES.base,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: SIZES.radius,
-                  }}>
-                  <Text
-                    style={{
-                      ...FONTS.body3,
-                      color: COLORS.darkGray2,
-                    }}>
-                    No
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-  
-            <View
-              style={{
-                marginTop: SIZES.base,
-              }}>
-              <Text
-                style={{
-                  marginVertical: SIZES.base / 2,
-                  ...FONTS.h3,
-                  fontWeight: '500',
-                }}>
-                Whether residing with him her{' '}
-                <Text style={{color: COLORS.red}}>*</Text>
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: SIZES.base,
-                }}>
-                <TouchableOpacity
-                  onPress={() => setWhetherResidingWithHimher(true)}
-                  style={{
-                    width: '45%',
-                    height: 45,
-                    borderWidth: whetherResidingWithHimher ? 2 : 0.5,
-                    borderColor: whetherResidingWithHimher
-                      ? COLORS.green
-                      : COLORS.lightGray,
-                    padding: SIZES.base,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: SIZES.radius,
-                  }}>
-                  <Text
-                    style={{
-                      ...FONTS.body3,
-                      color: COLORS.darkGray2,
-                    }}>
-                    yes
-                  </Text>
-                </TouchableOpacity>
-  
-                <TouchableOpacity
-                  onPress={() => setWhetherResidingWithHimher(false)}
-                  style={{
-                    width: '45%',
-                    height: 45,
-                    borderWidth: !whetherResidingWithHimher ? 2 : 0.5,
-                    borderColor: !whetherResidingWithHimher
-                      ? COLORS.green
-                      : COLORS.lightGray,
-                    padding: SIZES.base,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: SIZES.radius,
-                  }}>
-                  <Text
-                    style={{
-                      ...FONTS.body3,
-                      color: COLORS.darkGray2,
-                    }}>
-                    No
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-  
-            <CustomInput
-              required={true}
-              caption={'If No state place'}
-              value={ifNoStatePlace}
-              onChangeText={setIfNoStatePlace}
-  
-              //   keyboardType={'numeric'}
-            />
-  
-            <CustomInput
-              required={true}
-              caption={'If No state place of residence'}
-              value={placeOfResidence}
-              onChangeText={setPlaceOfResidence}
-  
-              //   keyboardType={'numeric'}
-            />
-  
-            <CustomInput
-              required={true}
-              caption={'Previous employee code no.'}
-              value={prevEmpCodeNo}
-              onChangeText={setPrevEmpCodeNo}
-  
-              //   keyboardType={'numeric'}
-            />
-  
-            
-  
-            <CustomInput
-              required={true}
-              caption={'Previous insurance no.'}
-              value={prevInsNo}
-              onChangeText={setPrevInsNo}
-  
-              //   keyboardType={'numeric'}
-            />
-            <TextButton
-              label="Save"
-              // disabled={errors.email || errors.password == null ? false : true}
-              buttonContainerStyle={{
-                height: 55,
-                alignItems: 'center',
-                marginTop: SIZES.padding,
-                borderRadius: SIZES.radius,
-                // backgroundColor: COLORS.orange1,
-              }}
-              // onPress={handleSubmit}
-            />
-            <View
-              style={{
-                marginBottom: 130,
-              }}
-            />
-          </ScrollView>
+        {/* City */}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' />
         </View>
+
+        {/* Sub code */}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Sub Code</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* Registration */}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Registration No.</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* CSI no */}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>CSI No.</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* residing with him or her */}
+        <View style={{ height: 75, marginTop: 10 }}>
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Residing with him or her</Text>
+          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+        </View>
+
+        {/* Whether residing with him  her */}
+        <View style={{ height: 75, marginTop: 10 }}>
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Whether residing with him her</Text>
+          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+        </View>
+
+        {/* If No State place*/}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* If No State place of Residence*/}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* Previous Employee code No.*/}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Employee code No.</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* Previous Insurance No.*/}
+        <View style={{ height: 75, marginTop: 10 }}>
+
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Insurance No.</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+        </View>
+
+        {/* save button */}
+        <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
+
+          <LinearGradient
+            colors={[COLORS.orange1, COLORS.disableOrange1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 2, y: 0 }}
+
+            style={{ borderRadius: 8, padding: 8, marginTop: 20 }}
+
+          >
+            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => Alert.alert("Data Save Successfull")}>
+              Save
+            </Text>
+          </LinearGradient>
+
+        </TouchableOpacity>
+
       </View>
-    );
-  };
+    </ScrollView>
+
+  )
+}
+
+const styles = StyleSheet.create({
+
+  inputHolder: {
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    flex: 1,
+    borderRadius: 10,
+    marginHorizontal: 0,
+    marginVertical: 5,
+    height: 50,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10
+  },
+})
 
 export default Esic_Bottomview

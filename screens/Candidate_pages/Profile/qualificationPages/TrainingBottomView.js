@@ -11,15 +11,30 @@ const TrainingBottomView = (props) => {
   const [selectedState, setSelectedState] = useState();
   const [selectedStateValue, setSelectedStateValue] = useState('');
   const [states, setStates] = useState();
+
   const [selectCountry, setselectCountry] = useState();
   const [selecetCountryValue, setSelecetCountryValue] = useState('');
   const [country, setCountry] = useState();
+
+  const [selectQualifications, setSelectQualifications] = useState();
+  const [selecetQualificationsValue, setSelecetQualificationsValue] = useState('');
+  const [Qualifications, setQualifications] = useState();
+
+  const [selectedQualiMode, setSelectedQualiMode] = useState();
+  const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
+  const [qulificationMode, setQualificationMode] = useState();
+
+  const [selectedStream, setSelectedStream] = useState();
+  const [selectedStreamValue, setSelectedStreamValue] = useState('');
+  const [stream, setStream] = useState();
 
 
   useEffect(() => {
     getDropdownData(7);
     getDropdownData(4);
-
+    getDropdownData(33);
+    getDropdownData(34);
+    getDropdownData(35)
   }, []);
 
 
@@ -38,8 +53,48 @@ const TrainingBottomView = (props) => {
     else if (P === 4) {
 
       setCountry(returnedData)
+    } else if (P === 33) {
+
+      setQualifications(returnedData)
+
+    } else if (P === 34) {
+
+      setQualificationMode(returnedData)
+
+    } else if (P === 35) {
+
+      setStream(returnedData)
     }
 
+  }
+  // getting state value
+  const checkStreamValue = (value) => {
+    {
+      for (let index = 0; index < stream.length; index++) {
+        const element = stream[index];
+        if (element.PARAM_NAME === value) setSelectedStreamValue(element.PARAM_ID);
+      }
+    }
+  }
+
+  // getting Qualifications  value
+  const checkQualificationsValue = (value) => {
+    {
+      for (let index = 0; index < Qualifications.length; index++) {
+        const element = Qualifications[index];
+        if (element.PARAM_NAME === value) setSelecetQualificationsValue(element.PARAM_ID);
+      }
+    }
+  }
+
+  // getting QualificationsMode  value
+  const checkQualificationsModeValue = (value) => {
+    {
+      for (let index = 0; index < qulificationMode.length; index++) {
+        const element = qulificationMode[index];
+        if (element.PARAM_NAME === value) setSelectedQualiModeValue(element.PARAM_ID);
+      }
+    }
   }
 
 
@@ -59,26 +114,26 @@ const TrainingBottomView = (props) => {
       <View style={{ marginBottom: 150 }} >
         {/* close button */}
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-                    <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Training</Text>
-                    <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity onPress={props.onPress}>
-                            <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+          <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Training</Text>
+          <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
+            <TouchableOpacity onPress={props.onPress}>
+              <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* Qualifications dropdown */}
         <View style={{ height: 75, }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
-          <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={Qualifications?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* Stream dropdown */}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
-          <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={stream?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* Specialization dropdown */}
@@ -110,7 +165,7 @@ const TrainingBottomView = (props) => {
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
-          <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={qulificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={qulificationMode?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* Country dropdown */}
