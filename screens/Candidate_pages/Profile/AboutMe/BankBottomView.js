@@ -1,19 +1,169 @@
 import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
 import COLORS from '../../../../constants/theme'
+import { useSelector } from 'react-redux'
+import SelectDropdown from 'react-native-select-dropdown'
+import { FONTS } from '../../../../constants/font_size'
 
-const BankBottomView = () => {
-  const [accountHolder, setAccountHolder] = useState()
-  const [operation, setOperation] = useState()
-  const [IFSCCode, setIFSCCode] = useState()
-  const [accountNo, setAccountNo] = useState()
-  const [cAccountNo, setCAccountNo] = useState()
+const BankBottomView = ({ filledDetails }) => {
+  const userId = useSelector(state => state.auth.userId)
+
+  // bank details for user
+  const [accountHolder, setAccountHolder] = useState('')
+  const [accountNo, setAccountNo] = useState('')
+  const [cAccountNo, setCAccountNo] = useState('')
   const [checkAccountError, setCheckAccountError] = useState(false)
-  const [selectedDoc, setSelectedDoc] = useState([]);
   const [branchHeight, setBranchHeight] = useState(40);
+  const [branchName, setBranchName] = useState('')
+  const [selectedDoc, setSelectedDoc] = useState([]);
+  const [IFSCCode, setIFSCCode] = useState('')
 
+  const [bank, setBank] = useState();
+  const [selectedBank, setSelectedBank] = useState(null);
+  const [selectedBankValue, setSelectedBankValue] = useState();
+
+  const [accountType, setAccountType] = useState();
+  const [selectedAccountType, setSelectedAccountType] = useState(null);
+  const [selectedAccountTypeValue, setSelectedAccountTypeValue] = useState();
+
+  const [operation, setOperation] = useState();
+  const [selectedOperation, setSelectedOperation] = useState(null);
+  const [selectedOperationValue, setSelectedOperationValue] = useState();
+
+  // for displaying bank documents
+  const [displayDocs, setDisplayDocs] = useState(false)
+
+  const getDropdownData = async (P) => {
+    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    response = await response.json();
+    const returnedData = response;
+
+    if (P === 36) { setBank(returnedData) }
+    else if (P === 27) { setAccountType(returnedData) }
+    else { setOperation(returnedData) }
+
+  }
+
+
+  const DisplayPreviousDetails = () => {
+    console.warn(filledDetails);
+    filledDetails && (
+      setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
+      setAccountNo(filledDetails?.ACCOUNT_NO),
+      setCAccountNo(filledDetails?.ACCOUNT_NO),
+      setBranchName(filledDetails?.BRANCH_NAME),
+      setIFSCCode(filledDetails?.IFSC_CODE),
+      setSelectedBank(filledDetails?.BANK_NAME),
+      setSelectedAccountType(filledDetails?.ACCOUNT_TYPE),
+      setSelectedOperation(filledDetails?.OPERATION_TYPE),
+      setSelectedBankValue(filledDetails?.BANK_NAME_ID),
+      setSelectedAccountTypeValue(filledDetails?.ACCOUNT_TYPE_ID),
+      setSelectedOperationValue(filledDetails?.OPERATION_ID)
+    )
+  }
+
+  useEffect(() => {
+    getDropdownData(36);
+    getDropdownData(27);
+    getDropdownData(37);
+    DisplayPreviousDetails();
+  }, [])
+
+  const ValidateForm = () => {
+
+    if (
+      accountHolder === '' ||
+      IFSCCode === '' ||
+      accountNo === '' ||
+      Object.keys(selectedDoc).length === 0 ||
+      branchName === '' ||
+      selectedOperationValue === '' ||
+      selectedBankValue === '' ||
+      selectedAccountTypeValue === ''
+    ) { return false }
+    else return true
+
+  }
+
+  const filingHandleName = () => {
+    let name = '';
+
+    for (let index = 0; index < Object.keys(selectedDoc).length; index++) {
+      if (index !== 0) name += ","
+      const element = selectedDoc[index];
+      console.warn(element);
+      name += element.name;
+    }
+
+    return name
+  }
+
+  const saveBankDetails = async () => {
+    try {
+      if (ValidateForm()) {
+        let fileName = filingHandleName();
+
+        let bankData = { txnId: "", operFlag: "B", candidateId: userId, userId: userId, accountNo: accountNo, operation: selectedOperationValue, accountHolderName: accountHolder, ifscCode: IFSCCode, bankName: selectedBankValue, branchName: branchName, accountType: selectedAccountTypeValue, fileAttachment: fileName }
+
+        var formData = new FormData();
+        formData.append('data', JSON.stringify(bankData))
+        formData.append('fileUpload', selectedDoc)
+        // console.log(formData._parts)
+
+        let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
+          method: "POST",
+          body: formData
+        })
+        res = await res.json();
+        res = await res?.Result[0]?.MSG
+        ToastAndroid.show(res, 3000);
+
+      } else {
+        ToastAndroid.show("Fill all the Marked Fields", 5000)
+      }
+
+
+    } catch (error) {
+      ToastAndroid.show(error, 3000)
+    }
+  }
+
+  // for submitting file
+  function addLeadingZero(number) {
+    return number < 10 ? '0' + number : number;
+  }
+
+  // for submitting file
+  function getFormattedTimestamp() {
+    var date = new Date();
+
+    var day = addLeadingZero(date.getDate());
+    var month = addLeadingZero(date.getMonth() + 1); // Months are zero-based
+    var year = date.getFullYear();
+    var hours = addLeadingZero(date.getHours());
+    var minutes = addLeadingZero(date.getMinutes());
+    var seconds = addLeadingZero(date.getSeconds());
+
+    return day + month + year + hours + minutes + seconds;
+  }
+
+  // for submitting file
+  const generateRandomString = () => {
+    const charset =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      randomString += charset.charAt(randomIndex);
+    }
+
+    return randomString;
+  };
+
+  // selecting bank doc from phone
   const selectDoc = async () => {
 
     try {
@@ -22,12 +172,12 @@ const BankBottomView = () => {
         type: [DocumentPicker.types.doc, DocumentPicker.types.pdf, DocumentPicker.types.docx]
       });
       // console.warn(doc);
-      setSelectedDoc({
-        name: doc[0].name,
+      setSelectedDoc(selectedDoc.concat({
+        name: "bankDoc" + getFormattedTimestamp() + generateRandomString() + doc[0].name,
         type: doc[0].type,
         uri: doc[0].uri,
+      }));
 
-      });
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
         ToastAndroid.show("Please select a file to upload", 3000)
@@ -36,39 +186,133 @@ const BankBottomView = () => {
     }
   };
 
+
+  const checkSelectedOperation = (value) => {
+    for (let index = 0; index < operation.length; index++) {
+      const element = operation[index];
+      if (element.PARAM_NAME === value) setSelectedOperationValue(element.PARAM_ID);
+    }
+  }
+
+  const checkSelectedAccountType = (value) => {
+    for (let index = 0; index < accountType.length; index++) {
+      const element = accountType[index];
+      if (element.PARAM_NAME === value) setSelectedAccountTypeValue(element.PARAM_ID);
+    }
+  }
+
+  const checkSelectedBank = (value) => {
+    for (let index = 0; index < bank.length; index++) {
+      const element = bank[index];
+      if (element.PARAM_NAME === value) setSelectedBankValue(element.PARAM_ID);
+    }
+  }
+
+  const DeleteDocs = (doc) => {
+    // console.warn(doc);
+    setSelectedDoc(selectedDoc.filter((item) => item.name !== doc.name))
+  }
+
+  const DisplayBankDocs = ({ doc }) => {
+    return (
+      <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
+        <Text style={{ flex: 1, flexWrap: 'wrap' }}>{doc.name.slice(27)}</Text>
+        <TouchableOpacity onPress={() => DeleteDocs(doc)} style={{ flex: 0.09 }}>
+          <Icon name='trash-can' size={16} color={COLORS.orange} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flex: 0.09 }}>
+          <Icon name='eye' size={16} color={COLORS.orange} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const selectDropDownValue = (id) => {
+    if (id === "accountType") {
+      return selectedAccountTypeValue ? selectedAccountTypeValue : accountType?.map(a => a.PARAM_ID)[0];
+    }
+    else if (id === "bankName") {
+      return selectedBankValue ? selectedBankValue : bank?.map(a => a.PARAM_ID)[0];
+    }
+    else return selectedOperationValue ? selectedOperationValue : operation?.map(a => a.PARAM_ID)[0]
+  }
+
+  const selectDropDownText = (id) => {
+    if (id === "accountType") {
+      return selectedAccountType ? selectedAccountType : accountType?.map(a => a.PARAM_NAME)[0];
+    }
+    else if (id === "bankName") {
+      return selectedBank ? selectedBank : bank?.map(a => a.PARAM_NAME)[0];
+    }
+    else return selectedOperation ? selectedOperation : operation?.map(a => a.PARAM_NAME)[0]
+  }
+
   return (
     <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Bank Name</Text>
-      <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account Type</Text>
+      <SelectDropdown data={accountType?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedAccountType(value), checkSelectedAccountType(value) }} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} defaultButtonText={selectDropDownText("accountType")} defaultValueByIndex={selectDropDownValue("accountType")} />
 
+      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Bank Name</Text>
+      <SelectDropdown data={bank?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedBank(value), checkSelectedBank(value) }} defaultButtonText={selectDropDownText("bankName")} defaultValueByIndex={selectDropDownValue("bankName")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Branch Name</Text>
-      <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height:branchHeight }]}  multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} />
+      <TextInput style={[styles.inputHolder, { height: branchHeight }]} multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} value={branchName} onChangeText={(val) => setBranchName(val)} />
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account No.</Text>
-      <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
+      <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder]} keyboardType='numeric' />
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Confirm Account No.</Text>
-      <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
+      <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={styles.inputHolder} keyboardType='numeric' />
       {checkAccountError && cAccountNo != accountNo && <Text style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>Account No. Fields don't match</Text>}
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account holderName</Text>
-      <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+      <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
+
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Operation</Text>
-      <TextInput value={operation} onChangeText={(val) => setOperation(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+      <SelectDropdown data={operation?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedOperation(value), checkSelectedOperation(value) }} defaultButtonText={selectDropDownText("operation")} defaultValueByIndex={selectDropDownValue("operation")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
 
       <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>IFSC Code</Text>
-      <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+      <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} />
 
-      <TouchableOpacity onPress={() => selectDoc()} style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 100, justifyContent: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white' }]}>
-        <View style={{ flexDirection: 'row' }}>
+
+      {/* <View style={{ flexDirection: 'row' }}>
           <Icon name={Object.keys(selectedDoc).length > 0 ? 'file' : 'cloud-upload-outline'} color={Object.keys(selectedDoc).length > 0 ? COLORS.orange : COLORS.green} size={40} style={{ padding: 2 }} />
         </View>
-        <Text style={{ color: COLORS.black, fontWeight: '500' }}> {Object.keys(selectedDoc).length > 0 ? selectedDoc.name : 'Upload Bank Documents'} </Text>
-      </TouchableOpacity>
+        <Text style={{ color: COLORS.black, fontWeight: '500' }}> {Object.keys(selectedDoc).length > 0 ? selectedDoc.name : 'Upload Bank Documents'} </Text> */}
 
+      <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
+
+        <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: 'white' }}>{Object.keys(selectedDoc).length}</Text>
+        </View>
+
+        <Text style={{ paddingHorizontal: 4 }}>Upload Bank Documents</Text>
+
+        <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
+
+          <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => selectDoc()}>
+            <Icon name='plus' color={COLORS.orange} size={20} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => setDisplayDocs(!displayDocs)}>
+            <Icon name={displayDocs ? 'chevron-up' : 'chevron-down'} color={COLORS.orange} size={20} />
+          </TouchableOpacity>
+
+        </View>
+
+      </View>
+
+      {displayDocs && <View style={{ margin: 7, paddingHorizontal: 7, paddingVertical: 4, backgroundColor: 'white', borderWidth: 0.5, borderColor: COLORS.orange1, borderRadius: 12 }}>
+        <Text style={[FONTS.h4, { color: COLORS.green }]}>Selected Documents</Text>
+        {Object.keys(selectedDoc).length > 0 ? (selectedDoc.map((doc) => <DisplayBankDocs doc={doc} />)) : <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>No Document Selected</Text>}
+      </View>}
+
+      <TouchableOpacity onPress={() => saveBankDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: 'white' }}>Save Bank Details</Text>
+      </TouchableOpacity>
 
       <View style={{ marginBottom: 320 }}></View>
     </ScrollView>
@@ -77,7 +321,7 @@ const BankBottomView = () => {
 
 const styles = StyleSheet.create({
   inputHolder: {
-    borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12
+    borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12, marginVertical: 3, marginHorizontal: 7
   },
 })
 

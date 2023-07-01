@@ -30,7 +30,8 @@ const FamilyBottomView = ({ members, setMembers }) => {
                 </View>
                 <Text style={{ fontWeight: 600 }}>Date of Birth:- <Text style={{ fontWeight: 400 }}>{item.BirthDate}</Text></Text>
                 <Text style={{ fontWeight: 600 }}>Contact:- <Text style={{ fontWeight: 400 }}>{item.Contact}</Text></Text>
-                <Text style={{ fontWeight: 600 }}>Address:- <Text style={{ fontWeight: 400 }}>{item.BloodGroup}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Address:- <Text style={{ fontWeight: 400 }}>{item.Address}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Blood Group:- <Text style={{ fontWeight: 400 }}>{item.BloodGroup}</Text></Text>
             </View>
         )
     }
