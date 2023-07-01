@@ -4,12 +4,12 @@ import COLORS from '../../../constants/theme'
 import { user_profile } from '../../../assets'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import CustomTextInput from '../../../components/CustomTextInput';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomUpModal from '../../../components/BottomUpModal';
-
 import QualificationBottomView from './qualificationPages/QualificationBottomView';
-import { FONTS,SIZES } from '../../../constants/font_size';
+import { FONTS, SIZES } from '../../../constants/font_size';
 import SkillsBottomView from './qualificationPages/SkillsBottomView';
 import TrainingBottomView from './qualificationPages/TrainingBottomView';
 import LanguageBottomView from './qualificationPages/LanguageBottomView';
@@ -22,6 +22,10 @@ import EmergencyAddressBottomView from './Address/EmergencyAddressBottomView';
 import FamilyBottomView from './Family/FamilyBottomView';
 import MedicalBottomView from './Family/MedicalBottomView';
 import NominationBottomView from './Family/NominationBottomView';
+import Identifications from './identityProof_Pages/Identifications';
+import Esic_Bottomview from './identityProof_Pages/Esic_Bottomview';
+import UAN_BottomView from './identityProof_Pages/UAN_BottomView';
+
 
 
 const Candidate_profile = () => {
@@ -33,7 +37,6 @@ const Candidate_profile = () => {
 
   // to hide and show Dropdown
   const [aboutMeView, setAboutMeView] = useState(false)
-  const [identityView, setIdentityView] = useState(false)
   const [addressView, setAddressView] = useState(false)
   const [familyView, setFamilyView] = useState(false)
   const [skillView, setSkillView] = useState(false)
@@ -51,10 +54,7 @@ const Candidate_profile = () => {
   const [dlView, setDlView] = useState(false);
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
-  const renderPersonalView = () => {
-    return (
-
-      <ScrollView style={{ height: '100%' }}>
+  const [identifications, setIdentifications] = useState(false);
 
 
   // to hide and show bottomUp modal
@@ -92,7 +92,7 @@ const Candidate_profile = () => {
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={aboutMeView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
 
-      {/* The dropdown options */}
+        {/* The dropdown options */}
         {aboutMeView && (
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setPersonalView(!personalView)}>
@@ -197,7 +197,7 @@ const Candidate_profile = () => {
               <Text style={{ padding: 4, width: '100%' }}>Nomination</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setMedicalView(!medicalView)}>
-              <Icons name='home-alert' color={'green'} size={20} />
+              <FontAwesome5 name='clinic-medical' color={'green'} size={16} />
               <Text style={{ padding: 4, width: '100%' }}>Medical</Text>
             </TouchableOpacity>
           </View>
@@ -211,7 +211,7 @@ const Candidate_profile = () => {
           </BottomUpModal>
         )}
         {nominationView && (
-          <BottomUpModal isVisible={nominationView} onClose={() => { setNominationView(false); }} visibleHeight={550}>
+          <BottomUpModal isVisible={nominationView} onClose={() => { setNominationView(false) }} visibleHeight={550}>
             <NominationBottomView />
           </BottomUpModal>
         )}
@@ -250,45 +250,25 @@ const Candidate_profile = () => {
         )}
         {
           qualificationsView && (
-            <BottomUpModal
-              isVisible={qualificationsView}
-              onClose={() => {
-                setQualificationsView(false);
-              }}
-              visibleHeight={650}>
+            <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} visibleHeight={650}>
               {<QualificationBottomView onPress={() => setQualificationsView(false)} />}
             </BottomUpModal>
           )}
         {skillsBottomView && (
-          <BottomUpModal
-            isVisible={skillsBottomView}
-            onClose={() => {
-              setSkillsBottomView(false);
-            }}
-            visibleHeight={650}>
+          <BottomUpModal isVisible={skillsBottomView} onClose={() => { setSkillsBottomView(false); }} visibleHeight={650}>
             {<SkillsBottomView onPress={() => setSkillsBottomView(false)} />}
           </BottomUpModal>
         )}
         {
           trainingView && (
-            <BottomUpModal
-              isVisible={trainingView}
-              onClose={() => {
-                setTrainingView(false);
-              }}
-              visibleHeight={650}>
+            <BottomUpModal isVisible={trainingView} onClose={() => { setTrainingView(false); }} visibleHeight={650}>
               {<TrainingBottomView onPress={() => setTrainingView(false)} />}
             </BottomUpModal>
           )
         }
         {
           languagesView && (
-            <BottomUpModal
-              isVisible={languagesView}
-              onClose={() => {
-                setLanguagesView(false);
-              }}
-              visibleHeight={500}>
+            <BottomUpModal isVisible={languagesView} onClose={() => { setLanguagesView(false); }} visibleHeight={500}>
               {<LanguageBottomView onPress={() => setLanguagesView(false)} />}
             </BottomUpModal>
           )
@@ -300,41 +280,47 @@ const Candidate_profile = () => {
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={identityView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
 
         </TouchableOpacity>
+
         {identityView && (
           <View style={{ padding: SIZES.radius, paddingLeft: SIZES.padding }}>
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setPassportView(!passportView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Passport </Text>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setIdentifications(!identifications)}>
+              <FontAwesome name='vcard-o' color={COLORS.green} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> Identifications </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setPanView(!panView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Pan</Text>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setEsicView(!esicView)}>
+              <FontAwesome name='id-badge' color={COLORS.green} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> ESIC</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setAadharView(!aadharView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}>Aadhar</Text>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setUanView(!uanView)}>
+              <Ionicons name='finger-print-sharp' color={COLORS.green} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> UAN</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setVotersView(!votersView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Voters</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setDlView(!dlView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> Driving liscence</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setEsicView(!esicView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> ESIC</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{ padding: SIZES.base / 2, }} onPress={() => setUanView(!uanView)}>
-              <Text style={{ borderTopWidth: 1, borderTopColor: 'black' }}> UAN</Text>
-            </TouchableOpacity>
-
           </View>
-
         )}
+        {
+          identifications && (
+            <BottomUpModal isVisible={identifications} onClose={() => { setIdentifications(false); }} visibleHeight={500}>
+              {<Identifications onPress={() => setIdentifications(false)} />}
+            </BottomUpModal>
+          )
+        }
+        {
+          esicView && (
+            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={650}>
+              {<Esic_Bottomview onPress={() => setEsicView(false)} />}
+            </BottomUpModal>
+          )
 
-        
+        }
+        {
+          uanView &&(
+            <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }} visibleHeight={650}>
+              {<UAN_BottomView onPress={() => setUanView(false)} />}
+            </BottomUpModal>
+          )
+        }
 
 
 
