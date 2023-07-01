@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { user_profile } from '../../../assets'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,19 +16,20 @@ import LanguageBottomView from './qualificationPages/LanguageBottomView';
 import BankBottomView from './AboutMe/BankBottomView';
 import PersonalBottomView from './AboutMe/PersonalBottomView';
 import ContactBottomView from './AboutMe/ContactBottomView';
-import PermanentAddressBottomView from './Address/PermanentAddressBottomView';
 import PersonalAddressBottomView from './Address/PersonalAddressBottomView';
-import EmergencyAddressBottomView from './Address/EmergencyAddressBottomView';
 import FamilyBottomView from './Family/FamilyBottomView';
 import MedicalBottomView from './Family/MedicalBottomView';
 import NominationBottomView from './Family/NominationBottomView';
 import Identifications from './identityProof_Pages/Identifications';
 import Esic_Bottomview from './identityProof_Pages/Esic_Bottomview';
 import UAN_BottomView from './identityProof_Pages/UAN_BottomView';
+import { useSelector } from 'react-redux';
 
 
 
 const Candidate_profile = () => {
+  const userId = useSelector(state => state.auth.userId)
+
   // for showing data in listView
   const [members, setMembers] = useState([])
   const [updateMember, setUpdateMember] = useState([])
@@ -42,7 +43,7 @@ const Candidate_profile = () => {
   const [skillView, setSkillView] = useState(false)
   const [employmentView, setEmploymentView] = useState(false)
   const [identityView, setIdentityView] = useState(false)
-  const [userName, setUserName] = useState()
+
   const [qualificationsView, setQualificationsView] = useState(false);
   const [skillsBottomView, setSkillsBottomView] = useState(false);
   const [trainingView, setTrainingView] = useState(false);
@@ -54,23 +55,71 @@ const Candidate_profile = () => {
   const [dlView, setDlView] = useState(false);
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
-  const [identifications, setIdentifications] = useState(false);
 
+  const [identifications, setIdentifications] = useState(false);
 
   // to hide and show bottomUp modal
   const [personalView, setPersonalView] = useState(false)
   const [contactView, setContactView] = useState(false)
   const [bankView, setBankView] = useState(false)
 
-  const [permanentAddressView, setPermanentAddressView] = useState(false)
   const [personalAddressView, setPersonalAddressView] = useState(false)
-  const [emergencyAddressView, setEmergencyAddressView] = useState(false)
 
   const [familyDetailsView, setFamilyDetailsView] = useState(false)
   const [nominationView, setNominationView] = useState(false)
   const [medicalView, setMedicalView] = useState(false)
 
+  const [filledDetails, setFilledDetails] = useState();
 
+
+  // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
+  const fetchPersonalData = async () => {
+
+    let PersonalData = { operFlag: "V", candidateId: userId }
+
+    var formData = new FormData();
+    formData.append('data', JSON.stringify(PersonalData))
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
+      method: "POST",
+      body: formData
+    })
+    res = await res.json()
+    res = await res?.Result[0]
+    console.warn(res);
+    setFilledDetails(res);
+  }
+
+  // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
+  const fetchAddressData = async () => {
+
+    // let AddressData = { operFlag: "V", candidateId: userId }
+
+    let AddressData = {  operFlag: "V", candidateId: userId, userId: userId }
+
+
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(AddressData)
+    })
+    res = await res.json()
+    res = await res?.Result[0]
+    console.warn(res);
+    setFilledDetails(res);
+  }
+
+  useEffect(() => {
+    aboutMeView && fetchPersonalData()
+  }, [aboutMeView])
+
+  useEffect(() => {
+    addressView && fetchAddressData()
+  }, [addressView])
 
 
   return (
@@ -114,20 +163,20 @@ const Candidate_profile = () => {
         {/* Content of About Me dropdown -> personal, Contact and Bank details */}
         {personalView && (
           <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={500}>
-            <PersonalBottomView />
+            <PersonalBottomView filledDetails={filledDetails} />
           </BottomUpModal>
         )}
 
         {contactView && (
-          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={350}>
-            <ContactBottomView />
+          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={400}>
+            <ContactBottomView filledDetails={filledDetails} />
           </BottomUpModal>
         )}
 
 
         {bankView && (
-          <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={700}>
-            <BankBottomView />
+          <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={500}>
+            <BankBottomView filledDetails={filledDetails} />
           </BottomUpModal>
         )}
 
@@ -142,40 +191,20 @@ const Candidate_profile = () => {
         {/* The dropdown options */}
         {addressView && (
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
-            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setPermanentAddressView(!permanentAddressView)}>
-              <Icons name='home-city' color={'green'} size={18} />
-              <Text style={{ padding: 4, width: '100%' }}>Permanent Address</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setPersonalAddressView(!personalAddressView)}>
-              <Icons name='home' color={'green'} size={18} />
+              <Icons name='home' color={'green'} size={20} />
               <Text style={{ padding: 4, width: '100%' }}>Present Address</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setEmergencyAddressView(!emergencyAddressView)}>
-              <Icons name='home-alert' color={'green'} size={20} />
-              <Text style={{ padding: 4, width: '100%' }}>Emergency Address</Text>
             </TouchableOpacity>
           </View>
         )}
 
 
         {/* Content of Address dropdown -> Permanent, personal and emergency address */}
-        {permanentAddressView && (
-          <BottomUpModal isVisible={permanentAddressView} onClose={() => { setPermanentAddressView(false); }} visibleHeight={500}>
-            <PermanentAddressBottomView />
-          </BottomUpModal>
-        )}
         {personalAddressView && (
-          <BottomUpModal isVisible={personalAddressView} onClose={() => { setPersonalAddressView(false); }} visibleHeight={550}>
-            <PersonalAddressBottomView />
+          <BottomUpModal isVisible={personalAddressView} onClose={() => { setPersonalAddressView(false); }} visibleHeight={500}>
+            <PersonalAddressBottomView filledDetails={filledDetails}/>
           </BottomUpModal>
         )}
-        {emergencyAddressView && (
-          <BottomUpModal isVisible={emergencyAddressView} onClose={() => { setEmergencyAddressView(false); }} visibleHeight={600}>
-            <EmergencyAddressBottomView />
-          </BottomUpModal>
-        )}
-
-
 
         {/* Family header and it's dropdown content */}
         <TouchableOpacity onPress={() => setFamilyView(!familyView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
@@ -222,7 +251,7 @@ const Candidate_profile = () => {
         )}
 
         <TouchableOpacity onPress={() => setSkillView(!skillView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
-          <FontAwesome name='graduation-cap' size={20} color={COLORS.orange} />
+          <FontAwesome name='graduation-cap' size={16} color={COLORS.orange} />
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Skills & Qualification</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={skillView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
 
@@ -278,7 +307,6 @@ const Candidate_profile = () => {
           <Icons name='smart-card-outline' size={20} color={COLORS.orange} />
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Identity Proofs</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={identityView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
-
         </TouchableOpacity>
 
         {identityView && (
@@ -312,7 +340,7 @@ const Candidate_profile = () => {
               {<Esic_Bottomview onPress={() => setEsicView(false)} />}
             </BottomUpModal>
           )
-
+          
         }
         {
           uanView &&(
@@ -321,8 +349,6 @@ const Candidate_profile = () => {
             </BottomUpModal>
           )
         }
-
-
 
         <TouchableOpacity onPress={() => setEmploymentView(!employmentView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
           <FontAwesome name='list-alt' size={20} color={COLORS.orange} />

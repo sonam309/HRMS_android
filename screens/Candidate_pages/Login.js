@@ -7,9 +7,10 @@ import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
-import { Pinlock,company_logo_2} from '../../assets';
+import { Pinlock, company_logo_2 } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
+import { authActions } from '../../redux/authSlice';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -18,7 +19,7 @@ const Login = (props) => {
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 
-    const userData = { loginId: userId, password: password, oprFlag: 'L', oldPassword:"" };
+    const userData = { loginId: userId, password: password, oprFlag: 'L', oldPassword: "" };
 
     //Random Number
     const RandomNumber = (length) => {
@@ -29,13 +30,13 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
 
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."}})
-        .then((response) => {
-            const returnedData = response.data.Result;
-            let result = returnedData.map(a => a.FLAG);
-            let contact = returnedData.map(b => b.MSG.trim());
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Alert.alert("Failure", "Please enter correct credentials")
-        })
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+            .then((response) => {
+                const returnedData = response.data.Result;
+                let result = returnedData.map(a => a.FLAG);
+                let contact = returnedData.map(b => b.MSG.trim());
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Alert.alert("Failure", "Please enter correct credentials")
+            })
     }
 
     // preventing going to entry page
@@ -66,22 +67,22 @@ const Login = (props) => {
 
             console.log(returnedData);
             setLoaderVisible(false)
-            result[0] === "S" ? ((props.navigation.navigate("Candidate_page"))) : Alert.alert("Failure", "Please enter correct credentials")
-            // ,dispatch(authActions.logIn({ userId, userId, userDeptId, userDept, userPassword: password }))
+            result[0] === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(authActions.logIn({ userId, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+
         })
     }
 
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="#220046" />
-            <Loader loaderVisible={loaderVisible}/>
+            <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
-            <View style={{ flex: 1, backgroundColor:'#220046', paddingHorizontal:20 }}>
+            <View style={{ flex: 1, backgroundColor: '#220046', paddingHorizontal: 20 }}>
                 <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
-            <View style={{ justifyContent: 'center', flex: 2, borderRadius:20, marginTop:-40, backgroundColor:'white', paddingHorizontal:20 }}>
+            <View style={{ justifyContent: 'center', flex: 2, borderRadius: 20, marginTop: -40, backgroundColor: 'white', paddingHorizontal: 20 }}>
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
@@ -98,7 +99,7 @@ const Login = (props) => {
 
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin",{userId})} style={{ alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin", { userId })} style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 35, height: 35 }} />
                         <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
                     </TouchableOpacity>
@@ -118,7 +119,7 @@ const Login = (props) => {
             </View>
 
             {/* Bottom element */}
-            <View style={{ flex: 0.5, marginBottom:5 }}>
+            <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
             </View>
 
