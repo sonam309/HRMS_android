@@ -227,8 +227,6 @@ const QualificationBottomView = (props) => {
                 </View>
                 {/* hieghest Qualification check  */}
                 <View style={{ height: 55, flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-
-
                     <TouchableOpacity onPress={() => setIsHighestQualification(!isHighestQualification)}
                         style={{
                             alignItems: "center",
@@ -236,16 +234,8 @@ const QualificationBottomView = (props) => {
                             padding: SIZES.base,
                             flexDirection: "row",
                             justifyContent: "space-between",
-
                         }} >
                         <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Is Highest setQualification</Text>
-                        {/* <View style={{
-                          
-                            borderRadius: SIZES.radius*2,
-                            borderWidth: isHighestQualification ? 2 : 0.5,
-                            borderColor: isHighestQualification ? COLORS.orange1 : COLORS.orange1,
-                            // backgroundColor: isHighestQualification ? COLORS.orange1 : COLORS.white,     
-                        }} > */}
                         {isHighestQualification ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
                         {/* </View> */}
                     </TouchableOpacity>

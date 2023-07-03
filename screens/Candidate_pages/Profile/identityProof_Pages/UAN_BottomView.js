@@ -9,38 +9,58 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const UAN_BottomView = (props) => {
 
-  const [selectCountry, setselectCountry] = useState();
-  const [selecetCountryValue, setSelecetCountryValue] = useState('');
-  const [country, setCountry] = useState();
+  const [openEarlierEps, setOpenEarlierEps] = useState(false);
+  const [selectedEarlierEps, setSelectedEarlierEps] = useState();
+  // const [EarlierEps, setEarlierEps] = useState([{ lable: 'Yes', value: 'Yes' },
+  // { lable: 'No', value: 'No' }]);
+
+  const EarlierEps=["YES","NO"] 
+  const InternationalWork=["YES","NO"]
+  const MemberEps1952=["YES","NO"]
+  const MemberEps1995=["YES","NO"]
+
 
 
   useEffect(() => {
-    getDropdownData(4);
+    setOpenEarlierEps(true);
 
   }, []);
 
-  // Title, States and Employment Data
-  const getDropdownData = async (P) => {
-    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
-    response = await response.json();
-    const returnedData = response;
 
-    if (P === 4) {
+  const saveUANDetails=()=>{
 
-      setCountry(returnedData)
+    const body={
+      txnId:'',
+      candidateId:'',
+      uanNo:'',
+      uanName:'',
+      uEPS1995:'',
+      unationalWorker:'',
+      uMembrOfEPS1952:'',
+      uMembrOfEPS1995:'',
+      uPPOno:'',
+      uPreviousAcc:'',
+
     }
+
+    console.log("request", body);
+    axios
+      .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, body)
+      .then(response => {
+        const returnedData = response?.data?.Result;
+        console.log("result..", returnedData);
+        const msg = returnedData[0].MSG
+        ToastAndroid.show(msg, 5000);
+        {props.onPress}
+
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
   }
 
-  // getting country value
-  const checkCountryValue = (value) => {
-    {
-      for (let index = 0; index < country.length; index++) {
-        const element = country[index];
-        if (element.PARAM_NAME === value) setSelecetCountryValue(element.PARAM_ID);
-      }
-    }
-  }
+
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -57,7 +77,8 @@ const UAN_BottomView = (props) => {
         {/* esic number */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>ESIC Number</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'
+          />
         </View>
 
         {/* esic name */}
@@ -69,24 +90,24 @@ const UAN_BottomView = (props) => {
         {/* Earlier a member of EPS 1995 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* International Worker*/}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>International Worker</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* member of EPS 1952 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of Eps 1952</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
         {/* member of EPS 1995 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of EPS 1995</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown data={MemberEps1995} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* PPO no if Issued */}

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, editable } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ToastAndroid, editable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -48,12 +48,13 @@ const Identifications = (props) => {
   const [driverIssuePlace, setDriverIssuePlace] = useState('');
 
   const [error, setError] = useState('');
+  const [operFlag, setOperFlag] = useState("A");
 
   const actualDateSelector = (date) => {
     setPassportIssuedDateOpen(false)
     let newDate = date.toDateString().split(' ')
     newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3]
-    
+
     setSelectedIssuedDate(newDate);
     setPassportIssuedDate(date)
 
@@ -119,7 +120,7 @@ const Identifications = (props) => {
   };
 
 
-  const handleSubmit = operFlag => {
+  const handleSubmit = () => {
     if (isFormValidated()) {
       const body = {
         aadhaarNo: aadharNumber,
@@ -128,10 +129,12 @@ const Identifications = (props) => {
         panName: nameInPan,
         voterNo: votersNumber,
         voterPlaceIssue: votersIssuePlace,
+
         passportNo: passportnumber,
         passportIssueDate: selectedIssuedDate,
         passportExpiryDate: selectedExpiryDate,
         passportIssuePlace: passportissuePlace,
+
         dlNo: driverNumber,
         dlIssueDate: selectedDlIssuedDate,
         dlExpiryDate: selectedDlExpiryDate,
@@ -148,6 +151,10 @@ const Identifications = (props) => {
         .then(response => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
+          const msg = returnedData[0].MSG
+          ToastAndroid.show(msg, 5000);
+          {props.onPress}
+
         })
         .catch(err => {
           console.log(err);
@@ -166,6 +173,9 @@ const Identifications = (props) => {
         const returnedData = response?.data?.Result;
         console.log("getData", returnedData);
         const preFilledData = returnedData[0];
+        const msg = returnedData[0].MSG
+        ToastAndroid.show(msg, 5000);
+        
         setPassportNumber(preFilledData?.PASSPORT_NO);
         setSelectedIssuedDate(preFilledData?.PASSPORT_DATE_OF_ISSUE);
         setSelectedExpiryDate(preFilledData?.PASSPORT_DATE_OF_EXPIRY);
@@ -181,7 +191,8 @@ const Identifications = (props) => {
         setSelectedDlExpiryDate(preFilledData?.DL_DATE_OF_EXPIRY);
         setDriverIssuePlace(preFilledData?.DL_PLACE_OF_ISSUE);
         setEdit(returnedData[0]);
-        console.log("editdata",edit);
+        (preFilledData.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
+        console.log("editdata", edit);
       })
       .catch(err => {
         console.log(err);
@@ -342,7 +353,7 @@ const Identifications = (props) => {
         </View>
 
         {/* save button */}
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => handleSubmit()} >
 
           <LinearGradient
             colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -350,9 +361,7 @@ const Identifications = (props) => {
             end={{ x: 2, y: 0 }}
             style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
 
-            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}
-              onPress={() => handleSubmit(edit.length > 0 ? 'E' : 'A')}>
-              {edit.length > 0 ? 'Update' : 'Save'}</Text>
+            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save</Text>
           </LinearGradient>
         </TouchableOpacity>
 

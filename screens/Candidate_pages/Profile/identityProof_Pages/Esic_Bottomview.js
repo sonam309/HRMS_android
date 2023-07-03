@@ -14,6 +14,17 @@ const Esic_Bottomview = (props) => {
   const [selecetCountryValue, setSelecetCountryValue] = useState('');
   const [country, setCountry] = useState();
 
+  const[city,setCity]=useState();
+  const[subcode,setSubCode]=useState();
+  const[RegNumber,setRegNumber]=useState();
+  const[csiNum,setCsiNum]=useState();
+  const[residingWith,setResidingWith]=useState();
+  const[weatherResiding,setWeatherResiding]=useState();
+  const[noStatePlace,setNoStatePlace]=useState();
+  const[noStatePlaceResidence,setNoStatePlaceResidence]=useState();
+  const[priEmpCode,setPriEmpCode]=useState();
+  const[priInsuranceNum,setPriInsuranceNum]=useState();
+
 
   useEffect(() => {
     getDropdownData(4);
@@ -59,70 +70,82 @@ const Esic_Bottomview = (props) => {
         </View>
         {/* City */}
         <View style={{ height: 75, marginTop: 10 }}>
-
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' 
+          onChangeText={setCity} value={city}/>
         </View>
 
         {/* Sub code */}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Sub Code</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          onChangeText={setSubCode} value={subcode} />
         </View>
 
         {/* Registration */}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Registration No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} 
+          onChangeText={setRegNumber} value={RegNumber}
+          />
         </View>
 
         {/* CSI no */}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>CSI No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          onChangeText={setCsiNum} value={csiNum} />
         </View>
 
         {/* residing with him or her */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Residing with him or her</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          {/* <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          onChangeText={setResidingWith} value={residingWith} />
         </View>
 
         {/* Whether residing with him  her */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Whether residing with him her</Text>
-          <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          {/* <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={country?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} 
+          onChangeText={setWeatherResiding} value={weatherResiding}/>
         </View>
 
         {/* If No State place*/}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} 
+          onChangeText={setNoStatePlace} value={noStatePlace}/>
         </View>
 
         {/* If No State place of Residence*/}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          value={noStatePlaceResidence} onChangeText={setNoStatePlaceResidence}  />
         </View>
 
         {/* Previous Employee code No.*/}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Employee code No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          onChangeText={setPriEmpCode} value={priEmpCode} />
         </View>
 
         {/* Previous Insurance No.*/}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Insurance No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+          onChangeText={setPriInsuranceNum} value={priInsuranceNum} />
         </View>
 
         {/* save button */}
