@@ -89,26 +89,22 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.warn(res);
+    // console.warn("candidate profile",res);
     setFilledDetails(res);
   }
 
-  // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
+  // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
 
-    // let AddressData = { operFlag: "V", candidateId: userId }
-
-    let AddressData = {  operFlag: "V", candidateId: userId, userId: userId }
-
-
+    let AddressData = { operFlag: "V", candidateId: userId }
 
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(AddressData)
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(AddressData)
     })
     res = await res.json()
     res = await res?.Result[0]
@@ -116,13 +112,36 @@ const Candidate_profile = () => {
     setFilledDetails(res);
   }
 
+  // For fetching details of Family dropdown -> Personal
+  const fetchFamilyData = async () => {
+
+    let FamilyData = { operFlag: "V", candidateId: userId }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(FamilyData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.warn("family data", res);
+    setMembers(res);
+  }
+
   useEffect(() => {
     aboutMeView && fetchPersonalData()
-  }, [aboutMeView])
+  }, [aboutMeView, personalView, contactView, bankView])
 
   useEffect(() => {
     addressView && fetchAddressData()
   }, [addressView])
+
+  useEffect(() => {
+    familyView && fetchFamilyData()
+  }, [familyView])
 
 
   return (
@@ -166,20 +185,20 @@ const Candidate_profile = () => {
         {/* Content of About Me dropdown -> personal, Contact and Bank details */}
         {personalView && (
           <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={500}>
-            <PersonalBottomView filledDetails={filledDetails} />
+            <PersonalBottomView filledDetails={filledDetails} onPress={() => setPersonalView(false)} />
           </BottomUpModal>
         )}
 
         {contactView && (
-          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={400}>
-            <ContactBottomView filledDetails={filledDetails} />
+          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={420}>
+            <ContactBottomView filledDetails={filledDetails} onPress={() => setContactView(false)} />
           </BottomUpModal>
         )}
 
 
         {bankView && (
           <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={500}>
-            <BankBottomView filledDetails={filledDetails} />
+            <BankBottomView filledDetails={filledDetails} onPress={() => setBankView(false)} />
           </BottomUpModal>
         )}
 
@@ -205,7 +224,7 @@ const Candidate_profile = () => {
         {/* Content of Address dropdown -> Permanent, personal and emergency address */}
         {personalAddressView && (
           <BottomUpModal isVisible={personalAddressView} onClose={() => { setPersonalAddressView(false); }} visibleHeight={500}>
-            <PersonalAddressBottomView filledDetails={filledDetails}/>
+            <PersonalAddressBottomView filledDetails={filledDetails} onPress={() => setPersonalAddressView(false)} />
           </BottomUpModal>
         )}
 
@@ -239,7 +258,7 @@ const Candidate_profile = () => {
         {/* Content of Family dropdown -> Family, Medical and nomination */}
         {familyDetailsView && (
           <BottomUpModal isVisible={familyDetailsView} onClose={() => { setFamilyDetailsView(false); }} visibleHeight={500}>
-            <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} />
+            <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} onPress={() => setFamilyDetailsView(false)} />
           </BottomUpModal>
         )}
         {nominationView && (
@@ -343,10 +362,10 @@ const Candidate_profile = () => {
               {<Esic_Bottomview onPress={() => setEsicView(false)} />}
             </BottomUpModal>
           )
-          
+
         }
         {
-          uanView &&(
+          uanView && (
             <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }} visibleHeight={650}>
               {<UAN_BottomView onPress={() => setUanView(false)} />}
             </BottomUpModal>
@@ -358,6 +377,7 @@ const Candidate_profile = () => {
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Employment History</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={employmentView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
+
         {
           employmentView &&(
 
@@ -375,9 +395,7 @@ const Candidate_profile = () => {
             </BottomUpModal>
           )
         }
-
-
-
+        
       </View>
     </ScrollView >
   )

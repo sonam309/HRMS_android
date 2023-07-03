@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS } from '../../../../constants/font_size'
 
-const BankBottomView = ({ filledDetails }) => {
+const BankBottomView = ({ filledDetails, onPress }) => {
   const userId = useSelector(state => state.auth.userId)
 
   // bank details for user
@@ -34,6 +34,7 @@ const BankBottomView = ({ filledDetails }) => {
 
   // for displaying bank documents
   const [displayDocs, setDisplayDocs] = useState(false)
+  const [operFlag, setOperFlag] = useState("B");
 
   const getDropdownData = async (P) => {
     let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
@@ -50,6 +51,7 @@ const BankBottomView = ({ filledDetails }) => {
   const DisplayPreviousDetails = () => {
     console.warn(filledDetails);
     filledDetails && (
+      (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
       setAccountNo(filledDetails?.ACCOUNT_NO),
       setCAccountNo(filledDetails?.ACCOUNT_NO),
@@ -77,7 +79,6 @@ const BankBottomView = ({ filledDetails }) => {
       accountHolder === '' ||
       IFSCCode === '' ||
       accountNo === '' ||
-      Object.keys(selectedDoc).length === 0 ||
       branchName === '' ||
       selectedOperationValue === '' ||
       selectedBankValue === '' ||
@@ -105,7 +106,7 @@ const BankBottomView = ({ filledDetails }) => {
       if (ValidateForm()) {
         let fileName = filingHandleName();
 
-        let bankData = { txnId: "", operFlag: "B", candidateId: userId, userId: userId, accountNo: accountNo, operation: selectedOperationValue, accountHolderName: accountHolder, ifscCode: IFSCCode, bankName: selectedBankValue, branchName: branchName, accountType: selectedAccountTypeValue, fileAttachment: fileName }
+        let bankData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, accountNo: accountNo, operation: selectedOperationValue, accountHolderName: accountHolder, ifscCode: IFSCCode, bankName: selectedBankValue, branchName: branchName, accountType: selectedAccountTypeValue, fileAttachment: fileName }
 
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData))
@@ -250,31 +251,38 @@ const BankBottomView = ({ filledDetails }) => {
   return (
     <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account Type</Text>
+      <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
+        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Bank</Text>
+        <TouchableOpacity onPress={onPress}>
+          <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.inputHeader}>Account Type</Text>
       <SelectDropdown data={accountType?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedAccountType(value), checkSelectedAccountType(value) }} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} defaultButtonText={selectDropDownText("accountType")} defaultValueByIndex={selectDropDownValue("accountType")} />
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Bank Name</Text>
+      <Text style={styles.inputHeader}>Bank Name</Text>
       <SelectDropdown data={bank?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedBank(value), checkSelectedBank(value) }} defaultButtonText={selectDropDownText("bankName")} defaultValueByIndex={selectDropDownValue("bankName")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Branch Name</Text>
+      <Text style={styles.inputHeader}>Branch Name</Text>
       <TextInput style={[styles.inputHolder, { height: branchHeight }]} multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} value={branchName} onChangeText={(val) => setBranchName(val)} />
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account No.</Text>
+      <Text style={styles.inputHeader}>Account No.</Text>
       <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder]} keyboardType='numeric' />
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Confirm Account No.</Text>
+      <Text style={styles.inputHeader}>Confirm Account No.</Text>
       <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={styles.inputHolder} keyboardType='numeric' />
       {checkAccountError && cAccountNo != accountNo && <Text style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>Account No. Fields don't match</Text>}
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Account holderName</Text>
+      <Text style={styles.inputHeader}>Account holderName</Text>
       <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
 
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Operation</Text>
+      <Text style={styles.inputHeader}>Operation</Text>
       <SelectDropdown data={operation?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedOperation(value), checkSelectedOperation(value) }} defaultButtonText={selectDropDownText("operation")} defaultValueByIndex={selectDropDownValue("operation")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
 
 
-      <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>IFSC Code</Text>
+      <Text style={styles.inputHeader}>IFSC Code</Text>
       <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} />
 
 
@@ -320,6 +328,9 @@ const BankBottomView = ({ filledDetails }) => {
 }
 
 const styles = StyleSheet.create({
+  inputHeader: {
+    color: 'green', paddingHorizontal: 6, paddingVertical: 3
+  },
   inputHolder: {
     borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12, marginVertical: 3, marginHorizontal: 7
   },
