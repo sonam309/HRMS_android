@@ -6,8 +6,10 @@ import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../../components/Loader'
+import { FONTS } from '../../../../constants/font_size'
 
-const PersonalBottomView = ({ filledDetails }) => {
+
+const PersonalBottomView = ({ filledDetails, onPress }) => {
     const userId = useSelector(state => state.auth.userId)
 
     const [marital, setMarital] = useState();
@@ -17,7 +19,6 @@ const PersonalBottomView = ({ filledDetails }) => {
     const [bloodGroup, setBloodGroup] = useState();
     const [selectedBloodGroup, setSelectedBloodGroup] = useState();
     const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState();
-
 
     const [caste, setCaste] = useState();
     const [selectedCaste, setSelectedCaste] = useState();
@@ -92,13 +93,13 @@ const PersonalBottomView = ({ filledDetails }) => {
     const [TXNID, setTXNID] = useState('');
 
     const [loaderVisible, setLoaderVisible] = useState(true);
-    const [operFlag, setOperFlag] = useState("A");
+    const [operFlag, setOperFlag] = useState("P");
 
     // fetching previously filled Data
     const DisplayPreviousDetails = () => {
-        console.warn("Inside details", filledDetails);
+        // console.warn("Inside details", filledDetails);
         filledDetails && (
-            (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
+            (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("P")),
             setSalutation(filledDetails?.SALUTATION),
             setFirstName(filledDetails?.FIRST_NAME),
             setMiddleName(filledDetails?.MIDDLE_NAME),
@@ -174,12 +175,12 @@ const PersonalBottomView = ({ filledDetails }) => {
     const savePersonalDetails = async () => {
 
         try {
-            console.warn(operFlag);
+            // console.warn(operFlag);
             let PersonalData = { txnId: TXNID, salutation: salutation, firstName: firstName, middleName: middleName, lastName: lastName, fatherName: fatherName, caste: selectedCasteValue, actualBirthDate: selectedActualBirthDate, recordBirthDate: selectedRecordBirthDate, birthCountry: countryBirth, birthPlace: placeBirth, identificationMarks: identityMarks, gender: selectedGenderValue, maritalStatus: selectedMaritalValue, marriageDate: marriageDate, bloodGroup: selectedBloodGroupValue, preferredLocation: preferredLocation, currentLocation: currentLocation, resumeSource: resumeSource, refEmailId: refEmail, refContactNo: refContact, refName: refName, refOccupation: refOccupation, refAddress: refAddress, refEmailId1: refEmail1, refContactNo1: refContact1, refName1: refName1, refOccupation1: refOccupation1, refAddress1: refAddress1, operFlag: operFlag, candidateId: userId, userId: userId }
 
             var formData = new FormData();
             formData.append('data', JSON.stringify(PersonalData))
-            // console.log(formData._parts)
+            console.log(formData._parts)
 
             if (ValidateForm()) {
 
@@ -188,6 +189,7 @@ const PersonalBottomView = ({ filledDetails }) => {
                     body: formData
                 })
                 res = await res.json();
+                // console.warn(res);
                 res = await res?.Result[0]?.MSG
                 ToastAndroid.show(res, 5000);
             }
@@ -259,6 +261,12 @@ const PersonalBottomView = ({ filledDetails }) => {
     return (
         <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
             <Loader loaderVisible={loaderVisible} />
+            <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, alignItems:'center' }}>
+                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Personal</Text>
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
+                    <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
+                </TouchableOpacity>
+            </View>
 
             <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                 <View style={{ width: '48%', paddingHorizontal: 3 }}>
@@ -288,7 +296,7 @@ const PersonalBottomView = ({ filledDetails }) => {
                     <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} />
                 </View>
                 <View style={{ width: '50%', paddingHorizontal: 3 }}>
-                    <Text style={{ color: 'green' }}>caste</Text>
+                    <Text style={{ color: 'green' }}>Caste</Text>
                     <SelectDropdown data={caste?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedCaste(value), checkSelectedCaste(value) }} defaultButtonText={selectDropDownText("caste")} defaultValueByIndex={(selectDropDownValue("caste"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
                 </View>
             </View>
@@ -299,7 +307,7 @@ const PersonalBottomView = ({ filledDetails }) => {
 
             <View style={{ flexDirection: 'row', margin: 3 }}>
                 <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedActualBirthDate} />
-                <DatePicker modal open={actualOpen} mode="date" date={actualBirthDate} onConfirm={(date) => actualDateSelector(date)} onCancel={() => { setActualOpen(false) }} />
+                <DatePicker modal theme='light' open={actualOpen} mode="date" date={actualBirthDate} onConfirm={(date) => actualDateSelector(date)} onCancel={() => { setActualOpen(false) }} />
                 <TouchableOpacity onPress={() => setActualOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
                     <Icon name='calendar-month' color={COLORS.orange} size={24} />
                 </TouchableOpacity>
