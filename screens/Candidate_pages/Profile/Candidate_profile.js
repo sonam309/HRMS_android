@@ -24,6 +24,7 @@ import Identifications from './identityProof_Pages/Identifications';
 import Esic_Bottomview from './identityProof_Pages/Esic_Bottomview';
 import UAN_BottomView from './identityProof_Pages/UAN_BottomView';
 import { useSelector } from 'react-redux';
+import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 
 
 
@@ -56,7 +57,6 @@ const Candidate_profile = () => {
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
 
-  const [identifications, setIdentifications] = useState(false);
 
   // to hide and show bottomUp modal
   const [personalView, setPersonalView] = useState(false)
@@ -64,12 +64,15 @@ const Candidate_profile = () => {
   const [bankView, setBankView] = useState(false)
 
   const [personalAddressView, setPersonalAddressView] = useState(false)
+  const [identifications, setIdentifications] = useState(false);
 
   const [familyDetailsView, setFamilyDetailsView] = useState(false)
   const [nominationView, setNominationView] = useState(false)
   const [medicalView, setMedicalView] = useState(false)
 
   const [filledDetails, setFilledDetails] = useState();
+
+  const[employHistoryView, setEmployeHistoryView]=useState(false);
 
 
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
@@ -374,7 +377,25 @@ const Candidate_profile = () => {
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Employment History</Text>
           <FontAwesome style={{ position: 'absolute', right: 5 }} name={employmentView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
         </TouchableOpacity>
-        {/* {console.warn("candidate profile", members)} */}
+
+        {
+          employmentView &&(
+
+            <View style={{ padding: SIZES.radius, paddingLeft: SIZES.padding }}>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setEmployeHistoryView(!identifications)}>
+              <FontAwesome name='vcard-o' color={COLORS.green} size={18} />
+              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> Employment History </Text>
+            </TouchableOpacity>
+            </View>
+          )}
+        {
+          employHistoryView &&(
+            <BottomUpModal isVisible={employHistoryView} onClose={() => { setEmployeHistoryView(false); }} visibleHeight={650}>
+              {<Emp_HistoryBottomView onPress={() => setEmployeHistoryView(false)} />}
+            </BottomUpModal>
+          )
+        }
+        
       </View>
     </ScrollView >
   )
