@@ -111,7 +111,7 @@ const TrainingBottomView = (props) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ marginBottom: 150 }} >
+      <View style={{ marginBottom: 320 }} >
         {/* close button */}
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
           <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Training</Text>

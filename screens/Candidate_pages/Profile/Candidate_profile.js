@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { user_profile } from '../../../assets'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomUpModal from '../../../components/BottomUpModal';
@@ -32,6 +32,7 @@ const Candidate_profile = () => {
   const userId = useSelector(state => state.auth.userId)
 
   // for showing data in listView
+  const [employment, setEmployement] = useState([])
   const [members, setMembers] = useState([])
   const [updateMember, setUpdateMember] = useState([])
   const [medicalPolicy, setMedicalPolicy] = useState([])
@@ -72,7 +73,7 @@ const Candidate_profile = () => {
 
   const [filledDetails, setFilledDetails] = useState();
 
-  const[employHistoryView, setEmployeHistoryView]=useState(false);
+  const [employHistoryView, setEmployeHistoryView] = useState(false);
 
 
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
@@ -127,8 +128,27 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("family data", res);
+    // console.warn("family data", res);
     setMembers(res);
+  }
+
+  // For fetching details of Family dropdown -> Personal
+  const fetchEmploymentData = async () => {
+
+    let FamilyData = { operFlag: "V" }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(FamilyData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.warn("employment data", res);
+    setEmployement(res);
   }
 
   useEffect(() => {
@@ -141,8 +161,11 @@ const Candidate_profile = () => {
 
   useEffect(() => {
     familyView && fetchFamilyData()
-  }, [familyView])
+  }, [familyView, familyDetailsView])
 
+  useEffect(() => {
+    employmentView && fetchEmploymentData()
+  }, [employmentView, employHistoryView])
 
   return (
     <ScrollView>
@@ -215,7 +238,7 @@ const Candidate_profile = () => {
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setPersonalAddressView(!personalAddressView)}>
               <Icons name='home' color={'green'} size={20} />
-              <Text style={{ padding: 4, width: '100%' }}>Present Address</Text>
+              <Text style={{ padding: 4, width: '100%' }}>Address</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -240,11 +263,11 @@ const Candidate_profile = () => {
         {familyView && (
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setFamilyDetailsView(!familyDetailsView)}>
-              <Icons name='home-city' color={'green'} size={18} />
+              <MaterialIcons name='family-restroom' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%' }}>Family</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setNominationView(!nominationView)}>
-              <Icons name='home' color={'green'} size={18} />
+              <Icons name='form-select' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%' }}>Nomination</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setMedicalView(!medicalView)}>
@@ -301,18 +324,18 @@ const Candidate_profile = () => {
         )}
         {
           qualificationsView && (
-            <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} visibleHeight={450}>
               {<QualificationBottomView onPress={() => setQualificationsView(false)} />}
             </BottomUpModal>
           )}
         {skillsBottomView && (
-          <BottomUpModal isVisible={skillsBottomView} onClose={() => { setSkillsBottomView(false); }} visibleHeight={650}>
+          <BottomUpModal isVisible={skillsBottomView} onClose={() => { setSkillsBottomView(false); }} visibleHeight={380}>
             {<SkillsBottomView onPress={() => setSkillsBottomView(false)} />}
           </BottomUpModal>
         )}
         {
           trainingView && (
-            <BottomUpModal isVisible={trainingView} onClose={() => { setTrainingView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={trainingView} onClose={() => { setTrainingView(false); }} visibleHeight={500}>
               {<TrainingBottomView onPress={() => setTrainingView(false)} />}
             </BottomUpModal>
           )
@@ -379,23 +402,23 @@ const Candidate_profile = () => {
         </TouchableOpacity>
 
         {
-          employmentView &&(
+          employmentView && (
 
             <View style={{ padding: SIZES.radius, paddingLeft: SIZES.padding }}>
-            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setEmployeHistoryView(!identifications)}>
-              <FontAwesome name='vcard-o' color={COLORS.green} size={18} />
-              <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> Employment History </Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setEmployeHistoryView(!identifications)}>
+                <Icons name='briefcase-clock-outline' color={COLORS.green} size={20} />
+                <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> Employment History </Text>
+              </TouchableOpacity>
             </View>
           )}
         {
-          employHistoryView &&(
-            <BottomUpModal isVisible={employHistoryView} onClose={() => { setEmployeHistoryView(false); }} visibleHeight={650}>
-              {<Emp_HistoryBottomView onPress={() => setEmployeHistoryView(false)} />}
+          employHistoryView && (
+            <BottomUpModal isVisible={employHistoryView} onClose={() => { setEmployeHistoryView(false); }} visibleHeight={500}>
+              {<Emp_HistoryBottomView onPress={() => setEmployeHistoryView(false)} employment={employment} setEmployement={setEmployement} />}
             </BottomUpModal>
           )
         }
-        
+
       </View>
     </ScrollView >
   )

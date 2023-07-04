@@ -48,7 +48,7 @@ const ContactBottomView = ({ filledDetails, onPress }) => {
     const saveContactDetails = async () => {
         try {
             if (ValidateForm()) {
-                console.warn(TXNID);
+                // console.warn(TXNID);
                 let contactData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, personalEmailId: personalMail, alternateEmailId: alternateMail, phoneNo: phone, alternatePhoneNo: alternatePhone }
 
                 var formData = new FormData();
