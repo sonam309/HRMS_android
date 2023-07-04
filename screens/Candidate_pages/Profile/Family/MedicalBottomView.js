@@ -2,9 +2,21 @@ import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
+import DatePicker from 'react-native-date-picker'
 
 const MedicalBottomView = ({ medicalPolicy, setMedicalPolicy }) => {
     const [fillForm, setFillForm] = useState(false)
+
+    const [calendarOpen, setCalendarOpen] = useState(false);
+    const [selectedExpiryDate, setSelectedExpiryDate] = useState('');
+    const [expiryDate, setExpiryDate] = useState(new Date());
+
+    const [operFlag, setIOperFlag] = useState(new Date());
+
+    const [policyName, setPolicyName] = useState('');
+    const [policyNumber, setPolicyNumber] = useState('');
+    const [membershipNumber, setMembershipNumber] = useState('');
+    const [policyCategory, setPolicyCategory] = useState('');
 
     const DeletePolicy = ({ policyNumber }) => {
         console.warn(policyNumber);
@@ -25,6 +37,60 @@ const MedicalBottomView = ({ medicalPolicy, setMedicalPolicy }) => {
                 <Text style={{ fontWeight: 600 }}>Medical Policy Expiry:- <Text style={{ fontWeight: 400 }}>{item.PolicyExpiry}</Text></Text>
             </View>
         )
+    }
+
+    const ValidateForm = () => {
+        if (
+            policyName === '' ||
+            policyNumber === '' ||
+            membershipNumber === '' ||
+            policyCategory === '' ||
+            selectedExpiryDate === ''
+        ) { return false }
+        else return true
+    }
+
+
+    // saving data to backend
+    const saveMedicalPolicyDetails = async () => {
+        // console.warn("Saving data");
+        try {
+            if (ValidateForm()) {
+
+
+                let familyData = {
+                    txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, familyMember: policyName, memberFirstName: policyNumber, memberMiddleName: membershipNumber, memberLastName: policyCategory, gender: selectedExpiryDate
+                }
+                console.warn(familyData);
+
+                let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(familyData)
+                })
+                res = await res.json();
+                res = await res?.Result[0]?.MSG
+                ToastAndroid.show(res, 3000);
+            }
+            else {
+                ToastAndroid.show("Fill all the Required Fields", 3000)
+            }
+        }
+        catch (error) {
+            ToastAndroid.show(error, 3000)
+        }
+    }
+
+    const SelectExpiryDate = (date) => {
+        setCalendarOpen(false)
+        let newDate = date.toDateString().split(' ')
+        newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3]
+
+        setSelectedExpiryDate(newDate);
+        setExpiryDate(date)
     }
 
     const PolicyDetails = () => {
@@ -48,29 +114,36 @@ const MedicalBottomView = ({ medicalPolicy, setMedicalPolicy }) => {
     }
 
     const PolicyForm = () => {
-        let newPolicy = { PolicyName: null, PolicyNumber: null, MembershipNumber: null, PolicyCategory: null, PolicyExpiry: null }
 
         return (
             <View>
 
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Name</Text>
-                <TextInput value={newPolicy.PolicyName} onChangeText={(val) => newPolicy.PolicyName = val} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput value={policyName} onChangeText={(val) => setPolicyName(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
 
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number</Text>
-                <TextInput value={newPolicy.PolicyNumber} onChangeText={(val) => newPolicy.PolicyNumber = val} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput value={policyNumber} onChangeText={(val) => setPolicyNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number</Text>
-                <TextInput value={newPolicy.MembershipNumber} onChangeText={(val) => newPolicy.MembershipNumber = val} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput value={membershipNumber} onChangeText={(val) => setMembershipNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
 
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category</Text>
-                <TextInput value={newPolicy.PolicyCategory} onChangeText={(val) => newPolicy.PolicyCategory = val} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput value={policyCategory} onChangeText={(val) => setPolicyCategory(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry</Text>
-                <TextInput value={newPolicy.PolicyExpiry} onChangeText={(val) => newPolicy.PolicyExpiry = val} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
 
-                <TouchableOpacity onPress={() => (setMedicalPolicy(medicalPolicy.concat(newPolicy)), setFillForm(false))} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+
+                <View style={{ flexDirection: 'row', margin: 3 }}>
+                    <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />
+                    <DatePicker modal theme='light' open={calendarOpen} mode="date" date={expiryDate} onConfirm={(date) => SelectExpiryDate(date)} onCancel={() => { setCalendarOpen(false) }} />
+                    <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={() => saveMedicalPolicyDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: 'white' }}>Save Member Details</Text>
                 </TouchableOpacity>
             </View>

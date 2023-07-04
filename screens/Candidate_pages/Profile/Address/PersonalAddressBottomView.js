@@ -94,11 +94,11 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
         filledDetails && (
             // present address
             (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
-            // setPresentSelectedState(filledDetails);
-            // setPresentSelectedStateValue(filledDetails);
+            setPresentSelectedState(filledDetails.STATE_NAME),
+            setPresentSelectedStateValue(filledDetails.STATE_ID),
 
-            // setPresentSelectedCountry(filledDetails);
-            // setPresentSelectedCountryValue(filledDetails);
+            setPresentSelectedCountry(filledDetails.COUNTRY_NAME),
+            setPresentSelectedCountryValue(filledDetails.COUNTRY_ID),
 
             setPresentAddress(filledDetails?.PRESENT_ADDRESS),
             setPresentPostOffice(filledDetails?.POST_OFFICE),
@@ -110,11 +110,11 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
             setPresentThana(filledDetails?.THANA),
 
             // Permanent address
-            // setPermanentSelectedState(filledDetails);
-            // setPermanentSelectedStateValue(filledDetails);
+            setPermanentSelectedState(filledDetails.PERMANENT_STATE),
+            setPermanentSelectedStateValue(filledDetails.PERMANENT_STATE_ID),
 
-            // setPermanentSelectedCountry(filledDetails);
-            // setPermanentSelectedCountryValue(filledDetails);
+            setPermanentSelectedCountry(filledDetails.PERMANENT_COUNTRY),
+            setPermanentSelectedCountryValue(filledDetails.PERMANENT_COUNTRY_ID),
 
             setPermanentAddress(filledDetails?.PERMANENT_ADDRESS),
             setPermanentPostOffice(filledDetails?.PERMANENT_POST_OFFICE),
