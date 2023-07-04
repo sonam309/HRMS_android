@@ -339,7 +339,7 @@ const Candidate_profile = () => {
         }
         {
           esicView && (
-            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={500}>
               {<Esic_Bottomview onPress={() => setEsicView(false)} />}
             </BottomUpModal>
           )
@@ -347,7 +347,7 @@ const Candidate_profile = () => {
         }
         {
           uanView &&(
-            <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }} visibleHeight={500}>
               {<UAN_BottomView onPress={() => setUanView(false)} />}
             </BottomUpModal>
           )
