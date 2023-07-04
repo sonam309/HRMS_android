@@ -381,7 +381,7 @@ const Candidate_profile = () => {
         }
         {
           esicView && (
-            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={500}>
               {<Esic_Bottomview onPress={() => setEsicView(false)} />}
             </BottomUpModal>
           )

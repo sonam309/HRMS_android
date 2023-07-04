@@ -1,70 +1,154 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ToastAndroid } from 'react-native'
+import React, { useState, useEffect, isValidElement } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 
 
 const UAN_BottomView = (props) => {
 
-  const [openEarlierEps, setOpenEarlierEps] = useState(false);
-  const [selectedEarlierEps, setSelectedEarlierEps] = useState();
   // const [EarlierEps, setEarlierEps] = useState([{ lable: 'Yes', value: 'Yes' },
   // { lable: 'No', value: 'No' }]);
+  const [operFlag, setOperFlag] = useState("U");
+  const [uanNumber, setUanNumber] = useState('');
+  const [uanName, setUanName] = useState('');
+  const [ppoNOifIssues, setPpoNoIfIssued] = useState('');
+  const [priviousAccNumber, setPriviousAccNumber] = useState('');
+  const [periviousUan, setPriviousUan] = useState('');
+  const [certificateNum, setCertificatesNum] = useState('');
+  const [selectedEarlierEps, setSelectedEarlierEps] = useState('');
+  const [selectdInternationalWork, setSelectedInternationalWork] = useState('');
+  const [selectedMemberEps1952, setSelectedMemberEps1952] = useState('');
+  const [selecedMemberEps1995, setSelectedMemberEps1995] = useState('');
+  const [error, setError] = useState('');
 
-  const EarlierEps=["YES","NO"] 
-  const InternationalWork=["YES","NO"]
-  const MemberEps1952=["YES","NO"]
-  const MemberEps1995=["YES","NO"]
+  const [edit, setEdit] = useState({});
+
+  const EarlierEps = ["YES", "NO"]
+  const InternationalWork = ["YES", "NO"]
+  const MemberEps1952 = ["YES", "NO"]
+  const MemberEps1995 = ["YES", "NO"]
 
 
 
   useEffect(() => {
-    setOpenEarlierEps(true);
 
+    getData();
   }, []);
 
+  const isFormValidated = () => {
+    if (
+      uanNumber === '' ||
+      uanName === '' ||
+      selectedEarlierEps === '' ||
+      selectdInternationalWork === '' ||
+      selectedMemberEps1952 === '' ||
+      selecedMemberEps1995 === '' ||
+      ppoNOifIssues === '' ||
+      priviousAccNumber === '' ||
+      periviousUan === '' ||
+      certificateNum === ''
+    ) {
+      setError('All field are required!');
+      setTimeout(function () {
+        setError('');
+      }, 2000);
 
-  const saveUANDetails=()=>{
-
-    const body={
-      txnId:'',
-      candidateId:'',
-      uanNo:'',
-      uanName:'',
-      uEPS1995:'',
-      unationalWorker:'',
-      uMembrOfEPS1952:'',
-      uMembrOfEPS1995:'',
-      uPPOno:'',
-      uPreviousAcc:'',
-
+      return false;
+    } else {
+      setError('');
+      return true;
     }
+  };
 
-    console.log("request", body);
+  const getData = () => {
     axios
-      .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, body)
+      .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, {
+        candidateId: 333,
+        userId: 333,
+        operFlag: 'V',
+      })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("result..", returnedData);
+        console.log("getData", returnedData);
+        const UANDetails = returnedData[0];
         const msg = returnedData[0].MSG
         ToastAndroid.show(msg, 5000);
-        {props.onPress}
 
+        setUanNumber(UANDetails?.UAN_NUMBER);
+        setUanName(UANDetails?.UAN_NAME);
+        setSelectedEarlierEps(UANDetails?.EARLIER_MEMBER_EPS_1995);
+        setSelectedInternationalWork(UANDetails?.INTERNATIONAL_WORKER);
+        setSelectedMemberEps1952(UANDetails?.MEMBER_OF_EPS_1952);
+        setSelectedMemberEps1995(UANDetails?.MEMBER_OF_EPS_1995);
+        setPpoNoIfIssued(UANDetails?.PPO_NO_IF_ISSUED);
+        setPriviousAccNumber(UANDetails?.PREVIOUS_ACCOUNT_NUMBER);
+        setPriviousUan(UANDetails?.PREVIOUS_UAN);
+        setCertificatesNum(UANDetails?.SCHEME_CERTIFICATE_NO);
+
+        setEdit(returnedData[0]);
+        (UANDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("U"))
+        console.log("editdata", edit);
       })
       .catch(err => {
         console.log(err);
       });
+  };
 
-  }
+
+
+  const saveUANDetails = () => {
+    if (isFormValidated()) {
+      const body = {
+        txnId: '',
+        candidateId: 333,
+        uanNo: uanNumber,
+        uanName: uanName,
+        uEPS1995: selectedEarlierEps,
+        unationalWorker: selectdInternationalWork,
+        uMembrOfEPS1952: selectedMemberEps1952,
+        uMembrOfEPS1995: selecedMemberEps1995,
+        uPPOno: ppoNOifIssues,
+        uPreviousAcc: priviousAccNumber,
+        uPreviousUan: periviousUan,
+        uSchmeCertificateNo: certificateNum,
+        userId: 333,
+        operFlag: operFlag,
+
+      }
+
+      console.log("request", body);
+      axios
+        .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, body)
+        .then(response => {
+          const returnedData = response?.data?.Result;
+          console.log("result..", returnedData);
+          const msg = returnedData[0].MSG
+          ToastAndroid.show(msg, 5000);
+          { props.onPress }
+
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
+
+  const selectDropDownText = (id) => {
+    if (id === "Select") {
+        return selectedEarlierEps ? selectedEarlierEps :"Select";
+    }
+}
 
 
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ marginBottom: 150 }} >
+      <View>
         {/* close button */}
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
           <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange1 }}>UAN Details</Text>
@@ -74,63 +158,68 @@ const UAN_BottomView = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        {/* esic number */}
+        {/* Uan number */}
         <View style={{ height: 75, marginTop: 10 }}>
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>ESIC Number</Text>
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
           <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'
-          />
+            onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" />
         </View>
 
-        {/* esic name */}
+        {/* Uan name */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+            onChangeText={setUanName} value={uanName} />
         </View>
 
         {/* Earlier a member of EPS 1995 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
-          <SelectDropdown data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown defaultValue={selectedEarlierEps} data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedEarlierEps(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* International Worker*/}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>International Worker</Text>
-          <SelectDropdown data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown defaultValue={selectdInternationalWork} data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedInternationalWork(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* member of EPS 1952 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of Eps 1952</Text>
-          <SelectDropdown data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown defaultValue={selectedMemberEps1952} data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1952(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
         {/* member of EPS 1995 */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of EPS 1995</Text>
-          <SelectDropdown data={MemberEps1995} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem) => {console.log(selectedItem, index);}} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+          <SelectDropdown defaultValue={selecedMemberEps1995} data={MemberEps1995} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1995(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
         </View>
 
         {/* PPO no if Issued */}
         <View style={{ height: 75, marginTop: 10 }}>
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>PPO no if Issued</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' />
+          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>PPO No if Issued</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+            onChangeText={setPpoNoIfIssued} value={ppoNOifIssues} keyboardType="number-pad" />
         </View>
 
         {/* Previous Account number */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Account number</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+            onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
         </View>
         {/* Previous UAN */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous UAN</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+            onChangeText={setPriviousUan} value={periviousUan} keyboardType="number-pad" />
         </View>
 
         {/* Scheme Certificate No.*/}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Scheme Certificate No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' />
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+            onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
         </View>
         {/* save button */}
         <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
@@ -143,13 +232,17 @@ const UAN_BottomView = (props) => {
             style={{ borderRadius: 8, padding: 8, marginTop: 20 }}
 
           >
-            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => Alert.alert("Data Save Successfull")}>
+            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveUANDetails()}>
               Save
             </Text>
           </LinearGradient>
 
         </TouchableOpacity>
+
       </View>
+
+      <View style={{ marginBottom: 300 }} />
+
     </ScrollView>
   )
 }
