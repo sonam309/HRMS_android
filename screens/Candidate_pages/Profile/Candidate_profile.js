@@ -36,18 +36,19 @@ const Candidate_profile = () => {
   const [members, setMembers] = useState([])
   const [updateMember, setUpdateMember] = useState([])
   const [medicalPolicy, setMedicalPolicy] = useState([])
+  const [skills, setSkills] = useState([])
 
 
   // to hide and show Dropdown
   const [aboutMeView, setAboutMeView] = useState(false)
   const [addressView, setAddressView] = useState(false)
   const [familyView, setFamilyView] = useState(false)
-  const [skillView, setSkillView] = useState(false)
+  const [skillAndQualifView, setSkillAndQualifView] = useState(false)
   const [employmentView, setEmploymentView] = useState(false)
   const [identityView, setIdentityView] = useState(false)
 
   const [qualificationsView, setQualificationsView] = useState(false);
-  const [skillsBottomView, setSkillsBottomView] = useState(false);
+  const [skillsView, setSkillsView] = useState(false);
   const [trainingView, setTrainingView] = useState(false);
   const [languagesView, setLanguagesView] = useState(false);
   const [passportView, setPassportView] = useState(false);
@@ -79,7 +80,7 @@ const Candidate_profile = () => {
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
   const fetchPersonalData = async () => {
 
-    let PersonalData = { operFlag: "V", candidateId: userId }
+    let PersonalData = { operFlag: "V", userId: userId }
 
     var formData = new FormData();
     formData.append('data', JSON.stringify(PersonalData))
@@ -90,14 +91,14 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    // console.warn("candidate profile",res);
+    console.warn("candidate profile",res);
     setFilledDetails(res);
   }
 
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
 
-    let AddressData = { operFlag: "V", candidateId: userId }
+    let AddressData = { operFlag: "V", userId: userId }
 
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
       method: "POST",
@@ -116,7 +117,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchFamilyData = async () => {
 
-    let FamilyData = { operFlag: "V", candidateId: userId }
+    let FamilyData = { operFlag: "V", userId: userId }
 
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
       method: "POST",
@@ -128,14 +129,14 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("family data", res);
+    console.warn("family data", res);
     setMembers(res);
   }
 
   // For fetching details of Family dropdown -> Personal
   const fetchEmploymentData = async () => {
 
-    let FamilyData = { operFlag: "V" }
+    let employmentData = { operFlag: "V", userId: userId }
 
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
       method: "POST",
@@ -143,12 +144,49 @@ const Candidate_profile = () => {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(FamilyData)
+      body: JSON.stringify(employmentData)
     })
     res = await res.json()
     res = await res?.Result
     console.warn("employment data", res);
     setEmployement(res);
+  }
+
+  // For fetching details of Family dropdown -> Personal
+  const fetchSkills = async () => {
+
+    let skillsData = { operFlag: "V", userId: userId }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(skillsData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.warn("employment data", res);
+    setSkills(res);
+  }
+
+  const fetchMedicalData = async () => {
+
+    let medicalData = { operFlag: "V", userId: userId }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(medicalData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.warn("medical data", res);
+    setMedicalPolicy(res);
   }
 
   useEffect(() => {
@@ -157,15 +195,23 @@ const Candidate_profile = () => {
 
   useEffect(() => {
     addressView && fetchAddressData()
-  }, [addressView])
+  }, [addressView, personalAddressView])
 
   useEffect(() => {
     familyView && fetchFamilyData()
   }, [familyView, familyDetailsView])
 
   useEffect(() => {
+    familyView && fetchMedicalData()
+  }, [familyView, medicalView])
+
+  useEffect(() => {
     employmentView && fetchEmploymentData()
   }, [employmentView, employHistoryView])
+
+  useEffect(() => {
+    skillAndQualifView && fetchSkills()
+  }, [skillAndQualifView, skillsView])
 
   return (
     <ScrollView>
@@ -286,29 +332,29 @@ const Candidate_profile = () => {
         )}
         {nominationView && (
           <BottomUpModal isVisible={nominationView} onClose={() => { setNominationView(false) }} visibleHeight={550}>
-            <NominationBottomView />
+            <NominationBottomView onPress={() => setNominationView(false)} />
           </BottomUpModal>
         )}
         {medicalView && (
           <BottomUpModal isVisible={medicalView} onClose={() => { setMedicalView(false); }} visibleHeight={500}>
-            <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} />
+            <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} onPress={() => setMedicalView(false)} />
           </BottomUpModal>
         )}
 
-        <TouchableOpacity onPress={() => setSkillView(!skillView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => setSkillAndQualifView(!skillAndQualifView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
           <FontAwesome name='graduation-cap' size={16} color={COLORS.orange} />
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Skills & Qualification</Text>
-          <FontAwesome style={{ position: 'absolute', right: 5 }} name={skillView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
+          <FontAwesome style={{ position: 'absolute', right: 5 }} name={skillAndQualifView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
 
         </TouchableOpacity>
 
-        {skillView && (
+        {skillAndQualifView && (
           <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setQualificationsView(!qualificationsView)}>
               <Icons name='book-education-outline' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Qualifications</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setSkillsBottomView(!skillsBottomView)}>
+            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setSkillsView(!skillsView)}>
               <Icons name='library' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Skills</Text>
             </TouchableOpacity>
@@ -328,9 +374,9 @@ const Candidate_profile = () => {
               {<QualificationBottomView onPress={() => setQualificationsView(false)} />}
             </BottomUpModal>
           )}
-        {skillsBottomView && (
-          <BottomUpModal isVisible={skillsBottomView} onClose={() => { setSkillsBottomView(false); }} visibleHeight={380}>
-            {<SkillsBottomView onPress={() => setSkillsBottomView(false)} />}
+        {skillsView && (
+          <BottomUpModal isVisible={skillsView} onClose={() => { setSkillsView(false); }} visibleHeight={380}>
+            {<SkillsBottomView onPress={() => setSkillsView(false)} skills={skills} />}
           </BottomUpModal>
         )}
         {
