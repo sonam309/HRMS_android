@@ -99,6 +99,7 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
     const DisplayPreviousDetails = () => {
         // console.warn("Inside details", filledDetails);
         filledDetails && (
+            console.warn(filledDetails.FLAG),
             (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("P")),
             setSalutation(filledDetails?.SALUTATION),
             setFirstName(filledDetails?.FIRST_NAME),
@@ -233,7 +234,7 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
 
     const selectDropDownValue = (id) => {
         if (id === "caste") {
-            return selectedCasteValue ? selectedCasteValue : caste?.map(a => a.PARAM_NAME)[0];
+            return selectedCasteValue ? selectedCasteValue : caste?.map(a => a.PARAM_ID)[0];
         }
         else if (id === "gender") {
             return selectedGenderValue ? selectedGenderValue : gender?.map(a => a.PARAM_ID)[0];
