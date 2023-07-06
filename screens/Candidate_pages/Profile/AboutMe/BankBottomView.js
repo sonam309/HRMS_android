@@ -209,11 +209,6 @@ const BankBottomView = ({ filledDetails, onPress }) => {
     }
   }
 
-  const DeleteDocs = (doc) => {
-    // console.warn(doc);
-    setSelectedDoc(selectedDoc.filter((item) => item.name !== doc.name))
-  }
-
   const DisplayBankDocs = ({ doc }) => {
     return (
       <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>

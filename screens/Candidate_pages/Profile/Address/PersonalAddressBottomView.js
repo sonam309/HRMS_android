@@ -282,7 +282,7 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
 
     const selectDropDownValue = (id) => {
         if (id === "presentstates") {
-            return presentSelectedStateValue ? presentSelectedStateValue : states?.map(a => a.PARAM_NAME)[0];
+            return presentSelectedStateValue ? presentSelectedStateValue : states?.map(a => a.PARAM_ID)[0];
         }
         else if (id === "presentcountry") {
             return presentSelectedCountryValue ? presentSelectedCountryValue : country?.map(a => a.PARAM_ID)[0];
