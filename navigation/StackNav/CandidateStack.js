@@ -5,6 +5,7 @@ import CandidateDashboard from '../../screens/Candidate_pages/CandidateDashboard
 import Candidate_profile from '../../screens/Candidate_pages/Profile/Candidate_profile';
 import Candidate_Document from '../../screens/Candidate_pages/Document/Candidate_Document';
 import Offer_Letter from '../../screens/Candidate_pages/Offer_Letter';
+import Status_view_page from '../../screens/Candidate_pages/Status_view_page';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,8 @@ const CandidateStack = () => {
             <Stack.Screen name='Candidate_profile' options={{ orientation: 'portrait' }} component={Candidate_profile} />
             <Stack.Screen name='Candidate_Document' options={{ orientation: 'portrait', headerShown: false }} component={Candidate_Document} />
             <Stack.Screen name='Offer_Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
+            <Stack.Screen name='Status_view_page' options={{ orientation: 'portrait' }} component={Status_view_page} />
+            
                       
         </Stack.Navigator>
     )
