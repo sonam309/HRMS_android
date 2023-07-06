@@ -30,7 +30,6 @@ import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 
 const Candidate_profile = () => {
   const userId = useSelector(state => state.auth.userId)
-
   // for showing data in listView
   const [employment, setEmployement] = useState([])
   const [members, setMembers] = useState([])
@@ -40,7 +39,6 @@ const Candidate_profile = () => {
   const [languages, setLanguages] = useState([])
   const [qualification, setQualification] = useState([])
 
-
   // to hide and show Dropdown
   const [aboutMeView, setAboutMeView] = useState(false)
   const [addressView, setAddressView] = useState(false)
@@ -48,39 +46,29 @@ const Candidate_profile = () => {
   const [skillAndQualifView, setSkillAndQualifView] = useState(false)
   const [employmentView, setEmploymentView] = useState(false)
   const [identityView, setIdentityView] = useState(false)
-
   const [qualificationsView, setQualificationsView] = useState(false);
   const [skillsView, setSkillsView] = useState(false);
   const [languagesView, setLanguagesView] = useState(false);
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
 
-
   // to hide and show bottomUp modal
   const [personalView, setPersonalView] = useState(false)
   const [contactView, setContactView] = useState(false)
   const [bankView, setBankView] = useState(false)
-
   const [personalAddressView, setPersonalAddressView] = useState(false)
   const [identifications, setIdentifications] = useState(false);
-
   const [familyDetailsView, setFamilyDetailsView] = useState(false)
   const [nominationView, setNominationView] = useState(false)
   const [medicalView, setMedicalView] = useState(false)
-
   const [filledDetails, setFilledDetails] = useState();
-
   const [employHistoryView, setEmployeHistoryView] = useState(false);
-
 
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
   const fetchPersonalData = async () => {
-
     let PersonalData = { operFlag: "V", userId: userId }
-
     var formData = new FormData();
     formData.append('data', JSON.stringify(PersonalData))
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
       method: "POST",
       body: formData
@@ -93,9 +81,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
-
     let AddressData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
       method: "POST",
       headers: {
@@ -112,9 +98,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchFamilyData = async () => {
-
     let FamilyData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
       method: "POST",
       headers: {
@@ -131,9 +115,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchEmploymentData = async () => {
-
     let employmentData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
       method: "POST",
       headers: {
@@ -150,9 +132,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
-
     let skillsData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
       method: "POST",
       headers: {
@@ -168,9 +148,7 @@ const Candidate_profile = () => {
   }
 
   const fetchMedicalData = async () => {
-
     let medicalData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
       method: "POST",
       headers: {
@@ -186,9 +164,7 @@ const Candidate_profile = () => {
   }
 
   const fetchLanguageData = async () => {
-
     let languageData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
       method: "POST",
       headers: {
@@ -197,7 +173,6 @@ const Candidate_profile = () => {
       },
       body: JSON.stringify(languageData)
     })
-
     res = await res.json()
     res = await res?.Result
     console.warn("language data", res);
@@ -205,9 +180,7 @@ const Candidate_profile = () => {
   }
 
   const fetchQualificationData = async () => {
-
     let qualficationData = { operFlag: "V", userId: userId }
-
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateQualification", {
       method: "POST",
       headers: {
@@ -216,7 +189,6 @@ const Candidate_profile = () => {
       },
       body: JSON.stringify(qualficationData)
     })
-
     res = await res.json()
     res = await res?.Result
     console.warn("qualfication Data", res);
@@ -266,8 +238,6 @@ const Candidate_profile = () => {
 
       {/* About Me header and it's dropdown content */}
       <View style={{ backgroundColor: COLORS.white, margin: 10, padding: 5, borderRadius: 6 }}>
-
-
         <TouchableOpacity onPress={() => setAboutMeView(!aboutMeView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
           <Ionicons name='ios-person-circle-sharp' size={20} color={COLORS.orange} />
           <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>About Me</Text>
