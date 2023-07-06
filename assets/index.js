@@ -8,5 +8,6 @@ import Pinlock from './images/Pinlock.png'
 import security_pin_icon from './images/security_pin_icon.png'
 import user_profile from './images/user.png'
 import candidateIcon from './images/candidateIcon.png'
+import company_icon from './images/company_icon.png'
 
-export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon }
+export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon }
