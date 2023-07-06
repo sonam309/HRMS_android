@@ -8,7 +8,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS } from '../../../../constants/font_size'
 
 const BankBottomView = ({ filledDetails, onPress }) => {
-  const userId = useSelector(state => state.auth.userId)
+  const userId = useSelector(state => state.candidateAuth.candidateId)
 
   // bank details for user
   const [accountHolder, setAccountHolder] = useState('')

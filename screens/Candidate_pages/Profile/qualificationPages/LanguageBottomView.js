@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 
 const LanguageBottomView = ({ languages, onPress }) => {
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
     const [showForm, setShowForm] = useState(false)
 
     const [operFlag, setOperFlag] = useState("A");

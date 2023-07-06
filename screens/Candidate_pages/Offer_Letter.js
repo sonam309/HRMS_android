@@ -8,7 +8,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import COLORS from '../../constants/theme';
 
 const Offer_Letter = () => {
-  const userId = useSelector(state => state.auth.userId)
+  const userId = useSelector(state => state.candidateAuth.candidateId)
   const [offerLetter, setOfferLetter] = useState()
   const [loaderVisible, setLoaderVisible] = useState(true);
 

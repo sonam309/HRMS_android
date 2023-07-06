@@ -7,7 +7,7 @@ import { FONTS } from '../../../../constants/font_size'
 import COLORS from '../../../../constants/theme'
 
 const ContactBottomView = ({ filledDetails, onPress }) => {
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [personalMail, setPersonalMail] = useState('');
     const [alternateMail, setAlternateMail] = useState('');

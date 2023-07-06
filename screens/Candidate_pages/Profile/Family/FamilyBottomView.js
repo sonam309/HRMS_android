@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 const FamilyBottomView = ({ members, setMembers, onPress }) => {
     const [showMembers, setShowMembers] = useState(true)
     // console.warn("The members", members);
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     // getting family member & bloodgroup
     const [familyMemberDropDown, setFamilyMemberDropDown] = useState()

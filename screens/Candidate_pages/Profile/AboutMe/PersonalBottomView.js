@@ -10,7 +10,7 @@ import { FONTS } from '../../../../constants/font_size'
 
 
 const PersonalBottomView = ({ filledDetails, onPress }) => {
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [marital, setMarital] = useState();
     const [selectedMarital, setSelectedMarital] = useState();
