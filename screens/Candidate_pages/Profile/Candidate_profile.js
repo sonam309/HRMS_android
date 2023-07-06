@@ -37,6 +37,8 @@ const Candidate_profile = () => {
   const [updateMember, setUpdateMember] = useState([])
   const [medicalPolicy, setMedicalPolicy] = useState([])
   const [skills, setSkills] = useState([])
+  const [languages, setLanguages] = useState([])
+  const [qualification, setQualification] = useState([])
 
 
   // to hide and show Dropdown
@@ -49,13 +51,7 @@ const Candidate_profile = () => {
 
   const [qualificationsView, setQualificationsView] = useState(false);
   const [skillsView, setSkillsView] = useState(false);
-  const [trainingView, setTrainingView] = useState(false);
   const [languagesView, setLanguagesView] = useState(false);
-  const [passportView, setPassportView] = useState(false);
-  const [panView, setPanView] = useState(false);
-  const [aadharView, setAadharView] = useState(false);
-  const [votersView, setVotersView] = useState(false);
-  const [dlView, setDlView] = useState(false);
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
 
@@ -91,7 +87,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.warn("candidate profile",res);
+    console.warn("candidate profile", res);
     setFilledDetails(res);
   }
 
@@ -153,7 +149,7 @@ const Candidate_profile = () => {
   }
 
   // For fetching details of Family dropdown -> Personal
-  const fetchSkills = async () => {
+  const fetchSkillsData = async () => {
 
     let skillsData = { operFlag: "V", userId: userId }
 
@@ -189,6 +185,44 @@ const Candidate_profile = () => {
     setMedicalPolicy(res);
   }
 
+  const fetchLanguageData = async () => {
+
+    let languageData = { operFlag: "V", userId: userId }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(languageData)
+    })
+
+    res = await res.json()
+    res = await res?.Result
+    console.warn("language data", res);
+    setLanguages(res);
+  }
+
+  const fetchQualificationData = async () => {
+
+    let qualficationData = { operFlag: "V", userId: userId }
+
+    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateQualification", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(qualficationData)
+    })
+
+    res = await res.json()
+    res = await res?.Result
+    console.warn("qualfication Data", res);
+    setQualification(res);
+  }
+
   useEffect(() => {
     aboutMeView && fetchPersonalData()
   }, [aboutMeView, personalView, contactView, bankView])
@@ -210,8 +244,16 @@ const Candidate_profile = () => {
   }, [employmentView, employHistoryView])
 
   useEffect(() => {
-    skillAndQualifView && fetchSkills()
+    skillAndQualifView && fetchSkillsData()
   }, [skillAndQualifView, skillsView])
+
+  useEffect(() => {
+    skillAndQualifView && fetchLanguageData()
+  }, [skillAndQualifView, languagesView])
+
+  useEffect(() => {
+    skillAndQualifView && fetchQualificationData()
+  }, [skillAndQualifView, qualificationsView])
 
   return (
     <ScrollView>
@@ -358,10 +400,10 @@ const Candidate_profile = () => {
               <Icons name='library' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Skills</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setTrainingView(!trainingView)}>
+            {/* <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setTrainingView(!trainingView)}>
               <Icons name='human-male-board-poll' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Training</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setLanguagesView(!languagesView)}>
               <Ionicons name='language' color={'green'} size={18} />
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Languages</Text>
@@ -370,8 +412,8 @@ const Candidate_profile = () => {
         )}
         {
           qualificationsView && (
-            <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} visibleHeight={450}>
-              {<QualificationBottomView onPress={() => setQualificationsView(false)} />}
+            <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} visibleHeight={480}>
+              {<QualificationBottomView onPress={() => setQualificationsView(false)} qualification={qualification} />}
             </BottomUpModal>
           )}
         {skillsView && (
@@ -379,17 +421,17 @@ const Candidate_profile = () => {
             {<SkillsBottomView onPress={() => setSkillsView(false)} skills={skills} />}
           </BottomUpModal>
         )}
-        {
+        {/* {
           trainingView && (
             <BottomUpModal isVisible={trainingView} onClose={() => { setTrainingView(false); }} visibleHeight={500}>
               {<TrainingBottomView onPress={() => setTrainingView(false)} />}
             </BottomUpModal>
           )
-        }
+        } */}
         {
           languagesView && (
-            <BottomUpModal isVisible={languagesView} onClose={() => { setLanguagesView(false); }} visibleHeight={500}>
-              {<LanguageBottomView onPress={() => setLanguagesView(false)} />}
+            <BottomUpModal isVisible={languagesView} onClose={() => { setLanguagesView(false); }} visibleHeight={450}>
+              {<LanguageBottomView onPress={() => setLanguagesView(false)} languages={languages} />}
             </BottomUpModal>
           )
         }
@@ -464,7 +506,6 @@ const Candidate_profile = () => {
             </BottomUpModal>
           )
         }
-
       </View>
     </ScrollView >
   )

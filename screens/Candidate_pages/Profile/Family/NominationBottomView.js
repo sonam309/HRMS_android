@@ -53,10 +53,11 @@ const NominationBottomView = ({ nominations, onPress }) => {
   }
 
   const AddFamilyMember = () => {
+    setNomineeMember([...nomineeMember])
     setNomineeMember(nomineeMember.concat({ guardianName: null, share: null }))
   }
 
-  const FamilyMemberNominee = (item) => {
+  const AddNominee = (item) => {
 
     return (
       <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
@@ -67,11 +68,11 @@ const NominationBottomView = ({ nominations, onPress }) => {
         </View>
 
         <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Guardian Name:</Text>
-        <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} onChange={(val) => { nomineeMember.guardianName = val; setNomineeMember([...nomineeMember]) }} />
+        <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} onChange={(val) => { nomineeMember[nomineeMember.length - 1].guardianName = val }} />
 
         <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Share</Text>
-        <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={nomineeMember?.share} onChange={(val) => { nomineeMember.share = val, setNomineeMember([...nomineeMember]) }} />
-
+        <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={nomineeMember?.share} onChange={(val) => { nomineeMember[nomineeMember.length - 1].share = val }} />
+        {console.warn(nomineeMember)}
 
       </View>
     )
@@ -87,7 +88,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
           <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
         </View>
 
-        {nomineeMember?.map((item) => <FamilyMemberNominee item={item} />)}
+        {nomineeMember?.map((item) => <AddNominee item={item} />)}
 
         <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10 }} onPress={() => AddFamilyMember()}>
           <Text style={{ backgroundColor: COLORS.green, paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Add Member</Text>
@@ -98,7 +99,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
   }
 
   // all the nominee for a particular nomination
-  const Nominee = ({ item }) => {
+  const DisplayNominee = ({ item }) => {
     return (
       <View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -111,7 +112,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
     )
   }
 
-  const Nomination = ({ item }) => {
+  const DisplayNominations = ({ item }) => {
     return (
       <View style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 8 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -122,7 +123,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         </View>
 
         {
-          item.nominee.map((member) => <Nominee item={member} />)
+          item.nominee.map((member) => <DisplayNominee item={member} />)
         }
 
       </View>
@@ -142,7 +143,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         </View>
 
 
-        {/* allNominations.map((item) => <Nomination item={item} />) */}
+        {/* allNominations.map((item) => <DisplayNominations item={item} />) */}
 
 
       </View>
@@ -166,7 +167,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
       <NominationForm />
 
       <View style={{ marginBottom: 320 }}></View>
-      {console.warn(nomineeMember.length)}
+      {console.warn(nomineeMember)}
     </ScrollView>
   )
 }
