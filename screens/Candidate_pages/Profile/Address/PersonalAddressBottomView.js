@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import Loader from '../../../../components/Loader'
 
 const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     // for getting state and country data
     useEffect(() => {

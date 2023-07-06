@@ -10,7 +10,7 @@ import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { Pinlock, company_logo_2 } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
-import { authActions } from '../../redux/authSlice';
+import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -57,17 +57,18 @@ const Login = (props) => {
     const submit = () => {
         setLoaderVisible(true)
         axios.post('https://econnectsatya.com:7033/api/User/candidateLogin', userData).then((response) => {
-            const returnedData = response.data.Result;
-            let result = returnedData.map(a => a.FLAG);
-            // let userId = returnedData.map(a => a.USER_ID)[0]
-            // let userName = returnedData.map(b => b.FIRST_NAME)[0]
-            // let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
-            // let userDept = returnedData.map(d => d.DEPT_NAME)[0]
-
+            const returnedData = response.data.Result[0];
+            let result = returnedData.FLAG;
+            let candidateName = returnedData.CANDIDATE_NAME
+            let candidateStatus = returnedData.CANDIDATE_STATUS
+            let candidateRole = returnedData.JOB_TITLE
+            let candidatePhone = returnedData.PHONE
+            let candidateRoleId = returnedData.ROLE_ID
+            let candidateStatusId = returnedData.STATUS_ID
 
             console.log(returnedData);
             setLoaderVisible(false)
-            result[0] === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(authActions.logIn({ userId, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+            result === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole,candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
 
         })
     }

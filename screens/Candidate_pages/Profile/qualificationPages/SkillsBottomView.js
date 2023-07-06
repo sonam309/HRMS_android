@@ -3,15 +3,13 @@ import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import LinearGradient from 'react-native-linear-gradient';
-import DatePicker from 'react-native-date-picker'
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector } from 'react-redux';
 
 const SkillsBottomView = ({ skills, onPress }) => {
 
   // for getting candidate Id from redux
-  const userId = useSelector(state => state.auth.userId)
+  const userId = useSelector(state => state.candidateAuth.candidateId)
 
   const [skill, setSkill] = useState('');
   const [totalExperience, setTotalExperience] = useState('');

@@ -8,12 +8,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 
 const QualificationBottomView = ({ qualification, onPress }) => {
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [showForm, setShowForm] = useState(false)
 
     const [operFlag, setOperFlag] = useState("A");
-    const [edit, setEdit] = useState({});
 
     const [states, setStates] = useState();
     const [selectedState, setSelectedState] = useState();

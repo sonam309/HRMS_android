@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux'
 
 const Emp_HistoryBottomView = (props) => {
-  const userId = useSelector(state => state.auth.userId)
+  const userId = useSelector(state => state.candidateAuth.candidateId)
 
   const [fromDate, setFromDate] = useState(new Date());
   const [selcetedFromDate, setSelectedFromDate] = useState('');

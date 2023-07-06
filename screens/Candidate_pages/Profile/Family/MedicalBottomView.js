@@ -11,7 +11,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
     const [showForm, setShowForm] = useState(false)
 
     // for getting candidate Id from redux
-    const userId = useSelector(state => state.auth.userId)
+    const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [selectedExpiryDate, setSelectedExpiryDate] = useState('');

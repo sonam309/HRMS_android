@@ -29,7 +29,8 @@ import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 
 
 const Candidate_profile = () => {
-  const userId = useSelector(state => state.auth.userId)
+  const userId = useSelector(state => state.candidateAuth.candidateId)
+  const userName = useSelector(state => state.candidateAuth.candidateName)
 
   // for showing data in listView
   const [employment, setEmployement] = useState([])
@@ -260,8 +261,8 @@ const Candidate_profile = () => {
       {/* Name and User id of candidate */}
       <View style={[{ backgroundColor: COLORS.white, alignItems: 'center', margin: 10, padding: 5, borderRadius: 6 }, styles.Elevation]}>
         <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-        <Text style={{ fontWeight: 500 }}>Ashwini</Text>
-        <Text style={{ fontWeight: 500 }}>10011</Text>
+        <Text style={{ fontWeight: 500 }}>{userName}</Text>
+        <Text style={{ fontWeight: 500 }}>{userId}</Text>
       </View>
 
       {/* About Me header and it's dropdown content */}
