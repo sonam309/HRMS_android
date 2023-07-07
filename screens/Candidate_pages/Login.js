@@ -11,6 +11,9 @@ import { Pinlock, company_logo_2 } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
+import COLORS from '../../constants/theme';
+import { FONTS } from '../../constants/font_size';
+import { ColorSpace } from 'react-native-reanimated';
 
 const Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -75,11 +78,11 @@ const Login = (props) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor="#220046" />
+            <StatusBar backgroundColor={COLORS.gray} />
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
-            <View style={{ flex: 1, backgroundColor: '#220046', paddingHorizontal: 20 }}>
+            <View style={{ flex: 1,  paddingHorizontal: 20 }}>
                 <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
@@ -102,7 +105,7 @@ const Login = (props) => {
                 <View style={styles.loginOption}>
                     <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin", { userId })} style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 35, height: 35 }} />
-                        <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                        <Text style={{ color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -136,7 +139,8 @@ const styles = StyleSheet.create({
     header: {
         marginVertical: 8,
         fontWeight: 'bold',
-        color: '#220046'
+        fontSize:16,
+        color: COLORS.green,
     },
     elevation: {
         shadowColor: '#000',
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
     forgotPassword: {
         color: 'orange',
         fontSize: 14,
+        ...FONTS.h4,
         textAlign: 'center',
         marginVertical: 15
     },
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 12,
         height: 45,
-        backgroundColor: '#220046',
+        backgroundColor: COLORS.green,
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 20,
-        fontWeight: 300,
+       ...FONTS.h3,
         marginHorizontal: 15
     },
     bottomElement: {
@@ -191,8 +196,8 @@ const styles = StyleSheet.create({
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
-        color: 'grey',
-        fontSize: 15,
+        color: COLORS.darkGray2,
+        fontSize: 14,
     }
 })
 

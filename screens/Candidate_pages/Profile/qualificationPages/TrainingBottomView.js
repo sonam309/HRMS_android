@@ -257,7 +257,7 @@ const TrainingBottomView = (props) => {
       <View style={{ marginBottom: 320 }} >
         {/* close button */}
         <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-          <Text style={{ flex: 1, ...FONTS.h4, fontSize: 20, color: COLORS.orange1 }}>Training</Text>
+          <Text style={{ flex: 1, ...FONTS.h4, fontSize: 20, color: COLORS.orange }}>Training</Text>
           <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
             <TouchableOpacity onPress={props.onPress}>
               <Icons name='close-circle-outline' size={30} color={COLORS.orange} />

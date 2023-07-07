@@ -246,101 +246,33 @@ const Home = props => {
         {/* Punch In/Out Buttons */}
 
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginVertical: 10, }}>
-
           <View style={[styles.Elevation, styles.punchButton]}>
-
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
               <Text style={{ fontSize: 16, fontWeight: '500', color: COLORS.darkGray2, }}> Punch in </Text>
               <MaterialIcons name="verified" size={24} color={COLORS.green} />
             </View>
-
             <View style={{ borderTopWidth: 0.5, borderColor: COLORS.lightGray, paddingTop: 12, }}>
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchInTime} </Text>
-
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-
             <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.transparentVoilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
               <Text style={{ color: COLORS.voilet }}> Punch in </Text>
             </TouchableOpacity>
-
           </View>
-
-
           <View style={[styles.Elevation, styles.punchButton]}>
-
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
               <Text style={{ fontSize: 16, fontWeight: '500', color: COLORS.darkGray2, }}> Punch out</Text>
               <MaterialIcons name="verified" size={24} color={COLORS.green} />
             </View>
-
             <View style={{ borderTopWidth: 0.5, borderColor: COLORS.lightGray, paddingTop: 12, }}>
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchOutTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-
-            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.voilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
+            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.orange, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
               <Text style={{ color: COLORS.white }}> Punch out </Text>
             </TouchableOpacity>
-
           </View>
-
         </View>
-
-        {/* <View style={{ flexDirection: 'row', padding: 5, width: '100%' }}>
-
-          <View style={[{ borderColor: COLORS.lightGray }, styles.punchButton, styles.Elevation]}>
-
-            <Text style={{ color: COLORS.gray, fontSize: 12, fontWeight: '500', marginHorizontal: 5, marginVertical: 10, fontSize: 20, borderBottomColor: COLORS.gray, borderBottomWidth: 1, }}>Punch In</Text>
-            <Text style={{ padding: 4 }}>{currentDate[2]} {currentDate[1]} </Text>
-            <Text style={{ padding: 4, fontSize: 24 }}>{punchInTime[0]}</Text>
-            <Text style={{ padding: 4 }}>Punch In Time</Text>
-
-            <TouchableOpacity style={{ backgroundColor: COLORS.lighterVoilet, borderRadius: 12 }}>
-              <Text style={{ color: COLORS.white, paddingVertical: 10, textAlign: 'center' }}>Punch In</Text>
-            </TouchableOpacity>
-
-          </View>
-
-          <View style={[{ borderColor: COLORS.lightGray }, styles.punchButton, styles.Elevation]}>
-
-            <Text style={{ color: COLORS.gray, fontSize: 12, fontWeight: '500', marginHorizontal: 5, marginVertical: 10, fontSize: 20, borderBottomColor: COLORS.gray, borderBottomWidth: 1, }}>Punch Out</Text>
-            <Text style={{ padding: 4 }}>{currentDate[2]} {currentDate[1]} </Text>
-            <Text style={{ padding: 4, fontSize: 24 }}>{duration[0]} </Text>
-            <Text style={{ padding: 4 }}> hrs spent today</Text>
-
-            <TouchableOpacity style={{ backgroundColor: COLORS.lightGray, borderRadius: 12 }}>
-              <Text style={{ color: COLORS.white, paddingVertical: 10, textAlign: 'center' }}>Punch Out</Text>
-            </TouchableOpacity>
-
-          </View>
-
-
-        </View> */}
-
-        {/* <View style={{ flexDirection: 'row', padding: 5 }}>
-
-          <TouchableOpacity style={styles.recordButton} onPress={() => { props.navigation.navigate('Attendance') }} >
-            <LinearGradient colors={['#77037B', '#210062']} style={{ borderRadius: 8, padding: 5, width: '100%' }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <Text style={{ color: COLORS.white, textAlignVertical: 'center', fontSize: 16 }}> {present} days</Text>
-                <Icons name='calendar-month-outline' size={30} color={COLORS.white} />
-              </View>
-              <Text style={{ color: COLORS.white, textAlign: 'center' }}> Attended this month</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.recordButton} onPress={() => { props.navigation.navigate('Attendance') }} >
-            <LinearGradient colors={['#77037B', '#210062']} style={{ borderRadius: 8, padding: 5, width: '100%' }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <Text style={{ color: COLORS.white, textAlignVertical: 'center', fontSize: 16 }}> {absent} days</Text>
-                <Icons name='calendar-month-outline' size={30} color={COLORS.white} />
-              </View>
-              <Text style={{ color: COLORS.white, textAlign: 'center' }}>Leaves this month</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-        </View> */}
 
         <View style={{ flexDirection: 'row', marginVertical: 10 }}>
           <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
@@ -351,7 +283,7 @@ const Home = props => {
             <Text style={[styles.actionText]}>Regularize</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.orange },]}>
+          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue },]}>
             <Text style={styles.actionText}>Outdoor</Text>
           </TouchableOpacity>
         </View>

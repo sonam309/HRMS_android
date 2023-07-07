@@ -311,7 +311,7 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
             <Loader loaderVisible={loaderVisible} />
 
             <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
-                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Address</Text>
+                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>

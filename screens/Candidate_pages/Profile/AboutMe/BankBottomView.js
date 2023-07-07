@@ -247,7 +247,7 @@ const BankBottomView = ({ filledDetails, onPress }) => {
     <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
 
       <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Bank</Text>
+        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Bank</Text>
         <TouchableOpacity onPress={onPress}>
           <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
