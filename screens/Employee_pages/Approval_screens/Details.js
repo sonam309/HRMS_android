@@ -12,6 +12,7 @@ const Details = (props) => {
     const { width } = useWindowDimensions();
     const { candidate_ID, category, date, mail_body, approver, action, jobId } = props.route.params
     const [jobRequestData, setJobRequestData] = useState({});
+    const [jobOpeningData, setJobOpeningData] = useState({});
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
     const [disableBtn, setDisableBtn] = useState(false);
@@ -124,7 +125,7 @@ const Details = (props) => {
             })
             res = await res.json();
             res = res?.Result;
-            
+
             ToastAndroid.show(res[0].MSG, 3000)
 
         } catch (error) {
@@ -238,17 +239,19 @@ const Details = (props) => {
             method: "POST",
             body: formData
         })
-        res ? res = await res.json() : null
-        res ? res = await res.Result[0] : null
-        res ? setJobRequestData(res) : null
-        console.warn(res);
+        res = await res?.json()
+        res = await res?.Result[0]
+        setJobRequestData(res)
+        console.warn("job request", res);
     }
 
     // Fetching data for new job opening
     const getJobOpeningData = async () => {
         let res = await fetch(`https://econnectsatya.com:7033/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
         console.warn(jobId);
-        res = await res.json();
+        res = await res?.json();
+        res = await res?.Table[0];
+        setJobOpeningData(res);
         console.warn(res);
     }
 
@@ -269,15 +272,15 @@ const Details = (props) => {
                     </View>
 
                     {/* Position */}
-                    <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
+                    <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobOpeningData?.JOB_TITLE}</Text>
 
                     {/* Location & Job type */}
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobOpeningData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobOpeningData?.DEPARTMENT_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 20 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobRequestData?.JOB_STATUS}</Text>
+                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobOpeningData?.JOB_STATUS}</Text>
 
                     </View>
 
@@ -289,19 +292,19 @@ const Details = (props) => {
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <Icons name='briefcase' size={25} color={COLORS.purple} />
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Opening</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.NO_OF_POSITIONS}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Type</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.E_TYPE}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icons name='rupee' size={25} />
                                 </View>
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobRequestData?.COMPENSATION}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobOpeningData?.COMPENSATION}</Text>
                             </View>
                         </View>
 
@@ -309,19 +312,19 @@ const Details = (props) => {
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialCommunityIcons name='cash-check' color={COLORS.red} size={30} />
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Budget</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.BUDGET}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialIcons name='pending-actions' color={COLORS.pink} size={30} />
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Status</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.JOB_STATUS1}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <View style={{ backgroundColor: COLORS.lightGreen, width: 30, borderRadius: 15, height: 30, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialCommunityIcons name='apache-kafka' size={28} />
                                 </View>
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Experience</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}> {jobRequestData?.COMPENSATION}</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}> {jobOpeningData?.EXPERIENCE} years</Text>
                             </View>
                         </View>
 
@@ -331,14 +334,14 @@ const Details = (props) => {
                     <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
 
                         <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.HIRING_LEAD_NAME}</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.HIRING_LEAD_NAME}</Text>
 
 
                         <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Address</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.CITY}, {jobRequestData?.STATE_NAME}, {jobRequestData?.POSTAL_CODE}</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.CITY}, {jobOpeningData?.PROVINCE_NAME}, {jobOpeningData?.COUNTRY_NAME}</Text>
 
                         <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Job Remarks</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobRequestData?.CREATED_DATE}</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobOpeningData?.JOB_DESC}</Text>
                     </View>
 
                 </ScrollView>

@@ -27,7 +27,8 @@ const New_hiring = (props) => {
                 body: formData
             })
             res = await res?.json();
-            res = await res?.Result
+            // console.log(res)
+            res = await res?.Table
             setJobOpening(res);
             setLoaderVisible(false)
         } catch (error) {
