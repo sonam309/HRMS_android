@@ -52,8 +52,6 @@ const CreateNewJobOpening = (props) => {
 
     const getdepId = async () => {
 
-        console.log("Inside axios", userId)
-        console.log("Inside axios", userDeptId)
         axios
             .post(`https://econnectsatya.com:7033/api/hrms/saveApprovel`, {
                 userId: userId,
@@ -63,7 +61,7 @@ const CreateNewJobOpening = (props) => {
             })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                console.log('85', returnedData);
+                console.log('approver data', returnedData);
                 //   setApproverData(returnedData[0]);
                 setApproverId(returnedData[0].EMPLOYEE_ID)
                 setApproverName(returnedData[0].FIRST_NAME)
@@ -71,7 +69,7 @@ const CreateNewJobOpening = (props) => {
 
             })
             .catch(error => {
-                console.log(error)
+                console.log("error while approver info",error)
             });
 
     }
@@ -175,7 +173,7 @@ const CreateNewJobOpening = (props) => {
         state: selectedStateValue,
         jobdesc: jobDescription,
         jddoc: selectedDoc?.name,
-        operflag: 'a',
+        operflag: 'A',
         userid: userId,
         jobstatus: '181',
         depid: userDeptId,
@@ -194,8 +192,8 @@ const CreateNewJobOpening = (props) => {
             let notifData = {
                 "registration_ids": ["ctSkLjX1RG6tYuIOps4yl6:APA91bGyKsjY1uYEo7QssRkrY-Txq_3ILcSju41m6yOOhLiYZdTaFT3Dz8M3avSvR1RllH7hb9Out0Mdss6aNOxZlXyRqKVtGPYh-EPrInR8lZeL8HCdp-mLqkf0aLSF1xH8p8em-q7l"],
                 "notification": {
-                    "body": "Hello Kamal Sir, How are you?",
-                    "title": "Hello",
+                    "body": `A new job have been posted by ${userName}`,
+                    "title": "New Job",
                     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFfx54zcQWgeMidABqIECRCAEZZ_Oj-rOeQg&usqp=CAU"
                 }
             }
@@ -205,11 +203,11 @@ const CreateNewJobOpening = (props) => {
                 formData.append('data', JSON.stringify(jobOpeningdata))
 
                 formData.append('fileUpload', selectedDoc)
-                // console.log(formData._parts)
+                console.log("form info",formData._parts)
 
 
                 // Posting new job opening 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+                let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
                     method: "POST",
                     body: formData
 
@@ -231,7 +229,6 @@ const CreateNewJobOpening = (props) => {
                     body: JSON.stringify(notifData)
                 })
 
-                { res.Result[0].FLAG === 'S' && navigation.navigate('New_hiring') }
             } catch (error) {
                 console.log(error?.response)
             }
