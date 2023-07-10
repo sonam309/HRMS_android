@@ -12,6 +12,8 @@ import Geolocation from '../../functions/Geolocation';
 import Loader from '../../components/Loader';
 import { useDispatch } from 'react-redux'
 import { authActions } from '../../redux/authSlice';
+import COLORS from '../../constants/theme';
+import { FONTS } from '../../constants/font_size';
 
 
 const Employee_Login = (props) => {
@@ -102,11 +104,11 @@ const Employee_Login = (props) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor="#220046" />
+            <StatusBar backgroundColor={COLORS.gray} />
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
-            <View style={{ flex: 1, backgroundColor: '#220046', paddingHorizontal: 20 }}>
+            <View style={{ flex: 1, backgroundColor: COLORS.white, paddingHorizontal: 20 }}>
                 <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
@@ -131,7 +133,7 @@ const Employee_Login = (props) => {
 
                         <View style={{ alignItems: 'center' }} >
                             <Image source={Pinlock} style={{ width: 35, height: 35 }} />
-                            <Text style={{ color: 'darkblue' }}>Quick Pin</Text>
+                            <Text style={{  color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
                         </View>
 
                     </TouchableOpacity>
@@ -178,7 +180,8 @@ const styles = StyleSheet.create({
     header: {
         marginVertical: 8,
         fontWeight: 'bold',
-        color: '#220046'
+        fontSize:16,
+        color: COLORS.green,
     },
     elevation: {
         shadowColor: '#000',
@@ -206,9 +209,10 @@ const styles = StyleSheet.create({
     },
     forgotPassword: {
         color: 'orange',
-        fontSize: 15,
+        fontSize: 14,
+        ...FONTS.h4,
         textAlign: 'center',
-        marginVertical: 12
+        marginVertical: 15
     },
     punchArea: {
         flexDirection: 'row',
@@ -229,7 +233,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 12,
         height: 45,
-        backgroundColor: '#220046',
+        backgroundColor: COLORS.orange,
         borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -247,8 +251,8 @@ const styles = StyleSheet.create({
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
-        color: 'grey',
-        fontSize: 15,
+        color: COLORS.darkGray2,
+        fontSize: 14,
     }
 })
 

@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 
 const ForgetPassword = (props) => {
 
+  let page = null
+
   const { type } = props.route.params;
   const userId = useSelector(state => state.auth.userId)
 
@@ -30,6 +32,7 @@ const ForgetPassword = (props) => {
   const [newPassword, setnewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [mpin, setmpin] = useState('');
+  const [URL, setURL] = useState('');
 
   // displaying password
   const changeVisibilitynew = () => {
@@ -39,6 +42,13 @@ const ForgetPassword = (props) => {
   // displaying password
   const changeVisibilityConfirm = () => {
     setShowConfirmPassword(!showConfirmPassword)
+  }
+
+  const getType = async () => {
+    page = await AsyncStorage.getItem("type")
+    {
+      page ? (page === 'employee' ? setURL('https://econnectsatya.com:7033/api/User/login') : setURL('https://econnectsatya.com:7033/api/User/candidateLogin')) : null
+    }
   }
 
   {/* match password */ }
@@ -87,8 +97,9 @@ const ForgetPassword = (props) => {
       oprFlag: 'R',
     };
     // console.warn(userData);
-
-    axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+    console.log("requestparam",userData);
+    console.log("Url",URL);
+    axios.post(URL, userData).then((response) => {
       const returnedData = response.data.Result;
       let result = returnedData.map(a => a.FLAG);
       console.warn(result);
@@ -96,6 +107,10 @@ const ForgetPassword = (props) => {
         Alert.alert("Failure", "Error")
     })
   }
+
+  useEffect(() => {
+    getType()
+  }, [])
 
   return (
 

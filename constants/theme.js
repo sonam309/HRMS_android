@@ -29,6 +29,7 @@ export const COLORS = {
   leafGreen:'rgba(87, 153, 12, 1)',
   orange1: 'rgb(255,102,0)',
   disableOrange1: 'rgba(255,102,0, 0.1)',
+  disableOrange: 'rgba(243,102,0,)',
   gray: 'gray',
   skyBlue: '#87CEEB',
   lightGreen: '#88C385',

@@ -1,4 +1,4 @@
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Linking, ToastAndroid, PermissionsAndroid, SafeAreaView, View } from 'react-native';
@@ -93,10 +93,10 @@ const Offer_Letter = () => {
   return (
 
     <>
-      <View style={{ flexDirection: 'row', backgroundColor: COLORS.lightGray, paddingVertical: 20, alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row',  paddingVertical: 20, alignItems: 'center' ,marginTop:5,marginBottom:20}}>
 
         {offerLetter &&
-          <Icons name='download' onPress={() => requestFilePermission()} color={COLORS.orange} size={26} style={{ position: 'absolute', right: 20 }} />}
+          <Icons name='file-download' onPress={() => requestFilePermission()} color={COLORS.black} size={30} style={{ position: 'absolute', right: 20 }} />}
 
       </View>
       {offerLetter && (

@@ -169,7 +169,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
 
             {/* close button */}
             <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.black }}>Medical Policy</Text>
+                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Medical Policy</Text>
                 <TouchableOpacity onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
