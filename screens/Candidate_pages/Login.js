@@ -36,9 +36,11 @@ const Login = (props) => {
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
+                console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
-                let contact = returnedData.map(b => b.MSG.trim());
-                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Alert.alert("Failure", "Please enter correct credentials")
+                let msg = returnedData.map(b => b.MSG);
+              
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : console.log(msg)
             })
     }
 

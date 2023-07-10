@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { security_pin_icon } from '../../assets';
 import { useSelector } from 'react-redux';
+import COLORS from '../../constants/theme';
 
 const QuickPin = (props) => {
 
@@ -18,24 +19,24 @@ const QuickPin = (props) => {
 
     // Change PAssword in function
     const LoginWithMpin = () => {
-        // const userData = {
-        //     loginId: userId,
-        //     password: newPassword,
-        //     oldPassword: '99999',
-        //     oprFlag: 'L',
-        // };
+        const userData = {
+            loginId: userId,
+            password: newPassword,
+            oldPassword: '99999',
+            oprFlag: 'L',
+        };
 
-        // console.warn(userData);
+        console.warn(userData);
 
-        // // https://econnectsatya.com:7033/api/User/login
-        // axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
-        //     const returnedData = response.data.Result;
-        //     let result = returnedData.map(a => a.FLAG);
-        //     console.warn(result);
-        //     result[0] === "S" ? (props.navigation.navigate("Employee_page",
-        //         { full_name, userId })) :
-        //         Alert.alert("Failure", "Please enter correct credentials")
-        // })
+        // https://econnectsatya.com:7033/api/User/login
+        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+            const returnedData = response.data.Result;
+            let result = returnedData.map(a => a.FLAG);
+            console.warn(result);
+            result[0] === "S" ? (props.navigation.navigate("Employee_page",
+                { full_name, userId })) :
+                Alert.alert("Failure", "Please enter correct credentials")
+        })
 
         props.navigation.navigate("Employee_page")
 
@@ -59,13 +60,13 @@ const QuickPin = (props) => {
                 {/* Quick pin input box sk */}
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
 
-                    <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
+                    <TextInput ref={et1} style={[styles.txtbox, { borderColor: f1.length >= 1 ? COLORS.green:COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f1} onChangeText={txt => {
                         setF1(txt);
                         if (txt.length >= 1) {
                             et2.current.focus();
                         }
                     }} />
-                    <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
+                    <TextInput ref={et2} style={[styles.txtbox, { borderColor: f2.length >= 1 ?COLORS.green:COLORS.lightOrange  }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
                         setF2(txt)
                         if (txt.length >= 1) {
                             et3.current.focus();
@@ -74,7 +75,7 @@ const QuickPin = (props) => {
                             et1.current.focus();
                         }
                     }} />
-                    <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
+                    <TextInput ref={et3} style={[styles.txtbox, { borderColor: f3.length >= 1 ? COLORS.green:COLORS.lightOrange  }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
                         setF3(txt)
                         if (txt.length >= 1) {
                             et4.current.focus();
@@ -83,7 +84,7 @@ const QuickPin = (props) => {
                             et2.current.focus();
                         }
                     }} />
-                    <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? '#F99417' : '#220046' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
+                    <TextInput ref={et4} style={[styles.txtbox, { borderColor: f4.length >= 1 ? COLORS.green:COLORS.lightOrange  }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
                         setF4(txt)
                         setMpin(f1 + f2 + f3 + f4);
                         if (txt.length >= 1) {
@@ -96,7 +97,7 @@ const QuickPin = (props) => {
                 <View style={{ marginHorizontal: 25 }}>
                     <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? false : true} style={[styles.quickLoginBtn, styles.elevation,
                     {
-                        backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? '#220046' : "#9D9D9D"
+                        backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' ? COLORS.orange1 : COLORS.gray
                     }]} onPress={() => { LoginWithMpin() }}>
                         <Text style={{ color: 'white', fontSize: 15, fontWeight: 500 }}>
                             Quick Login
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#220046',
+        backgroundColor: COLORS.orange1,
     },
     HeaderText: {
         padding: 4,
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
         height: 38
     },
     QuickPinTxt: {
-        color: '#220046',
+        color: COLORS.black,
         padding: 6,
         textAlign: 'center',
         fontSize: 16,
@@ -184,9 +185,10 @@ const styles = StyleSheet.create({
     QuickPinBottomBtn: {
         height: 45,
         width: '47%',
-        backgroundColor: '#30A2FF',
+        backgroundColor: COLORS.green,
         borderRadius: 35,
         paddingHorizontal: 20,
+        marginVertical:15,
         alignItems: 'center',
         justifyContent: 'center',
     },

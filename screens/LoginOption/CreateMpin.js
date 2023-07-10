@@ -7,6 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { create_mpin } from '../../assets';
+import COLORS from '../../constants/theme';
 
 const CreateMpin = (props) => {
 
@@ -41,9 +42,11 @@ const CreateMpin = (props) => {
         }).then((response) => {
 
             const returnedData = response.data.Result;
-            // console.warn(returnedData);
+            console.warn(returnedData);
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
+
+            
 
             result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, type }))
                 : Alert.alert("Failure", "Please enter correct credentials")
@@ -81,7 +84,7 @@ const CreateMpin = (props) => {
                 }
                     style={[styles.quickLoginBtn, {
                         backgroundColor: userName !== '' && password !== '' ?
-                            '#220046' : "#9D9D9D"
+                            COLORS.green : COLORS.gray
                     }]} onPress={() => getOTPMethod()}
                 >
                     <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Get OTP</Text>
@@ -99,14 +102,13 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#220046',
+        backgroundColor: COLORS.orange1,
     },
     HeaderText: {
         padding: 4,
-        backgroundColor: '#220046',
         color: 'white',
         fontWeight: '400',
-        fontSize: 20,
+        fontSize: 18,
         height: 38
     }, textInputBox: {
         flexDirection: 'row',

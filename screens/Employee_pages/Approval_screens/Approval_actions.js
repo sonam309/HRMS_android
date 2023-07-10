@@ -19,9 +19,9 @@ const Approval_actions = ({ navigation }) => {
                 
             </SafeAreaView>
 
-            <View style={{ padding: 36, alignItems: 'center' }}>
+            {/* <View style={{ padding: 36, alignItems: 'center' }}>
                 <Text style={{fontSize:20}}>Select one action to proceed</Text>
-            </View>
+            </View> */}
 
             <View style={styles.mainWrap}>
 
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
+        marginTop:150,
         // justifyContent: 'center',
     },
     elevation: {

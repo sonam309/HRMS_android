@@ -110,7 +110,7 @@ const New_hiring = (props) => {
 
             {/* Posting a new Job */}
             <TouchableOpacity style={styles.newJobOpeneingTxt} onPress={() => navigation.navigate('CreateNewJobOpening')}>
-                <Text style={{ color: COLORS.green, fontSize: 16, borderRadius: 12, fontWeight: '500', borderColor: COLORS.green, borderWidth: 1, paddingHorizontal: 15, paddingVertical: 10 }}>
+                <Text style={{ color: COLORS.green, fontSize: 16, borderRadius: 12,marginTop:10, fontWeight: '500', borderColor: COLORS.green, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 }}>
                     <Icons name='book-plus-outline' color={COLORS.green} size={20} />
                     Post a New Job</Text>
             </TouchableOpacity>
