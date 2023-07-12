@@ -21,30 +21,25 @@ import { FONTS } from '../../constants/font_size';
 
 const EmployeeDrawer = (props) => {
     const Drawer = createDrawerNavigator();
-    const dispatch = useDispatch
+    const dispatch = useDispatch();
     const { navigator } = props;
     const userData = useSelector(state => state.auth)
 
     const CustomDrawer = (props) => {
 
-        const logUserOut = (dispatch) => {
-            navigator('Employee')
-            dispatch(authActions.logOut())
-        }
-
         return (
             <DrawerContentScrollView {...props} >
-                <View style={{ backgroundColor:'#FDEBD0' }}>
+                <View style={{ backgroundColor: '#FDEBD0' }}>
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor:'#FDEBD0', color: 'white' }} onPress={() => logUserOut(dispatch)}>
+                        <TouchableOpacity style={{ backgroundColor: '#FDEBD0', color: 'white' }} onPress={() => { navigator('Employee_Login'), dispatch(authActions.logOut()) }}>
                             <Icons name='logout' size={25} style={{ color: COLORS.darkGray2, padding: 8 }} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={{ flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', margin: 0 }}>
                         <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-                        <Text style={{ fontSize: 16,...FONTS.h3, color: COLORS.orange1, marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
-                        <Text style={{ fontSize: 16, color: COLORS.orange1,...FONTS.h4 }}>{userData.userDept}</Text>
+                        <Text style={{ fontSize: 16, ...FONTS.h3, color: COLORS.orange1, marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
+                        <Text style={{ fontSize: 16, color: COLORS.orange1, ...FONTS.h4 }}>{userData.userDept}</Text>
                     </View>
 
                 </View>
@@ -60,9 +55,9 @@ const EmployeeDrawer = (props) => {
     function DrawerIcons(props) {
         const header = props.header, icon = props.icon, navigator = props.navigator
         return (
-            <TouchableOpacity key={header} style={{ backgroundColor: 'white', elevation:5,width: '45%', height: 90, alignItems: 'center', marginVertical: 8, borderRadius: 8, justifyContent: 'center', paddingVertical: 4 }} onPress={() => { navigator(`${header}`) }}>
+            <TouchableOpacity key={header} style={{ backgroundColor: 'white', elevation: 5, width: '45%', height: 90, alignItems: 'center', marginVertical: 8, borderRadius: 8, justifyContent: 'center', paddingVertical: 4 }} onPress={() => { navigator(`${header}`) }}>
                 <Icons name={icon} color={COLORS.green} size={40} style={{ marginVertical: 4 }} />
-                <Text style={{ color: COLORS.darkGray2, textAlign: 'center',fontSize:13}}>{header}</Text>
+                <Text style={{ color: COLORS.darkGray2, textAlign: 'center', fontSize: 13 }}>{header}</Text>
             </TouchableOpacity>
         )
     }

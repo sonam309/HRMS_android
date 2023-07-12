@@ -7,16 +7,19 @@ import Icons from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux';
+import Loader from '../../../components/Loader';
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
     const { candidate_ID, category, date, mail_body, approver, action, jobId } = props.route.params
-    const [jobRequestData, setJobRequestData] = useState({});
-    const [jobOpeningData, setJobOpeningData] = useState({});
+    const [jobRequestData, setJobRequestData] = useState(null);
+    const [jobOpeningData, setJobOpeningData] = useState(null);
     const [HTMLdata, setHTMLdata] = useState(null)
     const [data, setData] = useState(null)
     const [disableBtn, setDisableBtn] = useState(false);
+    const [loaderVisible, setLoaderVisible] = useState(true);
     const userId = useSelector(state => state.auth.userId)
+    let modifiedTemplate = null;
 
     useEffect(() => {
         {
@@ -81,10 +84,9 @@ const Details = (props) => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: oprFlag })
             .then(response => {
                 const returnedData = response?.data;
-                console.log(returnedData);
-                // Alert.alert('Approved', returnedData?.MSG);
+                console.log("this is response from backend", returnedData);
                 ToastAndroid(returnedData?.MSG, 3000)
-                setDisableBtn(true);
+                // setDisableBtn(true);
             })
             .catch(error => {
                 Alert.alert('Error', error);
@@ -113,18 +115,23 @@ const Details = (props) => {
     };
 
     const jobOpeningAction = async (opr) => {
-        console.warn("opr flag", opr);
-        var formData = new FormData();
-        formData.append('data', JSON.stringify({ operFlag: opr, jobId: jobId }),);
 
+        let jobInfodata = { oper: opr, jobId: jobId };
+        jobInfodata = JSON.stringify(jobInfodata)
+        console.log(jobInfodata)
         try {
             let res = await fetch("https://econnectsatya.com:7033/api/createNewJob", {
                 method: "POST",
-                body: formData
-
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: jobInfodata
             })
+
             res = await res.json();
             res = res?.Result;
+            console.log("this is response from backend", res)
 
             ToastAndroid.show(res[0].MSG, 3000)
 
@@ -194,9 +201,7 @@ const Details = (props) => {
 
     // Updating the HTML data for Salary Allocation
     const updateHTML = () => {
-        // console.warn("this is data " + data);
         data ? updating() : null
-
         return (
             data && HTMLdata ?
                 (
@@ -229,7 +234,7 @@ const Details = (props) => {
     }
 
     // function call for updating the HTML for Salary Allocation
-    let modifiedTemplate = updateHTML()
+    modifiedTemplate = updateHTML()
 
     // Fetching data for new job request
     const getJobRequestData = async () => {
@@ -240,9 +245,10 @@ const Details = (props) => {
             body: formData
         })
         res = await res?.json()
-        res = await res?.Result[0]
+        res = await res?.Table[0]
+        console.log(res)
         setJobRequestData(res)
-        console.warn("job request", res);
+        // console.log("job request", res);
     }
 
     // Fetching data for new job opening
@@ -257,11 +263,12 @@ const Details = (props) => {
 
     // Displaying data for new job opening
     const JobOpening = () => {
+
         return (
             <>
 
                 <ScrollView style={{ backgroundColor: COLORS.white, padding: 10, flex: 1 }}>
-
+                    <Loader loaderVisible={loaderVisible} />
                     {/* Top Icon */}
                     <View style={styles.topIcon}>
 
@@ -276,11 +283,11 @@ const Details = (props) => {
 
                     {/* Location & Job type */}
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobOpeningData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobOpeningData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobOpeningData?.DEPARTMENT_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobOpeningData?.DEPARTMENT_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                        <Text style={{ paddingHorizontal: 2,textAlignVertical:'center', fontSize: 16 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobOpeningData?.JOB_STATUS}</Text>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobOpeningData?.JOB_STATUS}</Text>
 
                     </View>
 
@@ -343,7 +350,7 @@ const Details = (props) => {
                         <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Job Remarks</Text>
                         <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobOpeningData?.JOB_DESC}</Text>
                     </View>
-
+                    {jobOpeningData && setLoaderVisible(false)}
                 </ScrollView>
 
             </>
@@ -357,7 +364,7 @@ const Details = (props) => {
         let JD = jobRequestData?.UPLOAD_JD_DOC
         return (jobRequestData != null ? (
             <ScrollView style={{ backgroundColor: COLORS.white, padding: 10, flex: 1 }}>
-
+                <Loader loaderVisible={loaderVisible} />
                 {/* Top Icons */}
                 <View style={styles.topIcon}>
 
@@ -431,7 +438,7 @@ const Details = (props) => {
                         <Text >{jobRequestData?.UPLOAD_JD_DOC} </Text>
                     </TouchableOpacity>
                 </View>
-
+                {jobRequestData && setLoaderVisible(false)}
             </ScrollView>
         ) : null)
 
@@ -446,9 +453,13 @@ const Details = (props) => {
                     approveType = SalaryAction;
                     rejectType = SalaryAction;
                     return (
-                        <ScrollView>
-                            <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
-                        </ScrollView>
+                        <>
+                            <ScrollView>
+                                <Loader loaderVisible={loaderVisible} />
+                                <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
+                            </ScrollView>
+                            {modifiedTemplate && setLoaderVisible(false)}
+                        </>
                     )
                 }
 
