@@ -1,22 +1,46 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import COLORS from '../../constants/theme'
-import Timeline from 'react-native-simple-timeline';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { View, Text, TouchableOpacity, ScrollView, Linking, ToastAndroid, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Linking, ToastAndroid, Image, BackHandler, Alert } from 'react-native'
 import { FONTS, SIZES } from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
-import { company_icon, company_logo_2, expernallinkImage } from '../../assets';
+import { company_logo_2, expernallinkImage } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import { IMAGES } from '../../assets';
-
-
+import ReverseGeocoding from '../../functions/ReverseGeocoding';
 
 const CandidateDashboard = (props) => {
     const current_Status = useSelector(state => state.candidateAuth.candidateStatus)
     const Job_Title = useSelector(state => state.candidateAuth.candidateRole)
+
+    useEffect(() => {
+        
+        // for handling back button in android
+        const backAction = () => {
+            Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
+                {
+                    text: 'No',
+                    onPress: () => null,
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => BackHandler.exitApp(),
+                },
+            ]);
+            return true;
+        };
+
+        const backPressHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        );
+
+        return () => {
+            backPressHandler.remove();
+        };
+    }, []);
 
 
     const loadInBrowser = () => {
@@ -36,17 +60,17 @@ const CandidateDashboard = (props) => {
                 </View>
             </View>
             {/* Status view */}
-            <View style={{ marginHorizontal: 12,  }}>
+            <View style={{ marginHorizontal: 12, }}>
                 <View style={{ backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                     <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                     <Text style={{ color: COLORS.black, fontSize: 15, marginHorizontal: 15, marginTop: -5 }}>Job Status Pending at <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'center', }}> {current_Status}</Text></Text>
-                    <TouchableOpacity style={{width:'40%',marginTop:-15,marginHorizontal:15}} onPress={() => props.navigation.navigate("Status_view_page")}>
+                    <TouchableOpacity style={{ width: '40%', marginTop: -15, marginHorizontal: 15 }} onPress={() => props.navigation.navigate("Status_view_page")}>
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
-                            <Text style={{color:COLORS.white,...FONTS.h4,textAlign:'center'}}>Track job Status</Text>
+                            <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Track job Status</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>

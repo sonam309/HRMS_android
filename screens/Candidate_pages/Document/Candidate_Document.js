@@ -43,48 +43,51 @@ const Candidate_Document = (props) => {
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
 
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
+        let res = await fetch("http://192.168.1.169:7038/api/hrms/assesmentSave", {
             method: "POST",
             body: formData
         })
 
         res = await res.json()
+        setDocInfo(res.Table1[0]);
 
         let docFiles = res.Table;
         { docFiles.length > 0 && setOperFlag("E") }
         // console.warn("docfiles", docFiles);
         console.log(docFiles)
 
-        docFiles.map((item) => {
-            let type = Number(item?.DOC_TYPE)
 
-            let newFile = item?.FILE_ATTACHMENT
+
+        docFiles.map((item) => {
+            let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
+
 
             console.warn(newFile, "this is newfile", type)
 
             switch (type) {
                 case 129:
-                    setAadharCard(prevState => [...prevState, { name: newFile }])
+                    setAadharCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
                     break;
                 case 130:
-                    setPanCard(prevState => [...prevState, { name: newFile }])
+                    setPanCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
                     break;
                 case 131:
-                    setSalarySlip(prevState => [...prevState, { name: newFile }])
+                    setSalarySlip(prevState => [...prevState, { name: newFile, txnId: TXNID }])
                     break;
                 default:
                     setOtherFiles(prevState => [
                         ...prevState.slice(0, type - 132),
                         {
-                            name: newFile
+                            name: newFile,
+                            txnId: TXNID
                         },
                         ...prevState.slice(type - 131)
                     ])
                     break;
             }
+            setLoaderVisible(false)
         })
 
-        setDocInfo(res.Table1[0]);
     }
 
 
@@ -97,7 +100,6 @@ const Candidate_Document = (props) => {
         if (P === 22) {
             setDocument(returnedData)
         }
-        setLoaderVisible(false)
     }
 
 
@@ -139,6 +141,7 @@ const Candidate_Document = (props) => {
                         }`,
                     type: doc[0].type,
                     uri: doc[0].uri,
+                    txnId: ''
                 },
             ]);
 
@@ -182,7 +185,7 @@ const Candidate_Document = (props) => {
             ])
 
         } catch (error) {
-
+            ToastAndroid.show("Error Selecting File. Please try again.", 4000)
         }
     }
 
@@ -198,26 +201,50 @@ const Candidate_Document = (props) => {
     }
 
     const FileAttachment = () => {
+
         let names = '';
+
         for (let index = 0; index < aadharCard.length; index++) {
-            const element = aadharCard[index];
-            aadharCard[index].uri && (names += document[0].PARAM_ID + '~' + element.name + ",")
+            console.warn("aadhar card", aadharCard[index].uri);
+
+            if (aadharCard[index].uri) {
+                const element = aadharCard[index];
+                (names += document[0].PARAM_ID + '~' + element.name + ",")
+            }
+
         }
 
         for (let index = 0; index < panCard.length; index++) {
-            const element = panCard[index];
-            panCard[index].uri && (names += document[1].PARAM_ID + '~' + element.name + ",")
+
+            console.warn("pan card", panCard[index].uri);
+
+            if (panCard[index].uri) {
+                const element = panCard[index];
+                (names += document[1].PARAM_ID + '~' + element.name + ",")
+            }
         }
 
         for (let index = 0; index < salarySlip.length; index++) {
-            const element = salarySlip[index];
-            salarySlip[index].uri && (names += document[2].PARAM_ID + '~' + element.name + ",")
+
+            console.warn("ss", salarySlip[index].uri);
+
+            if (salarySlip[index].uri) {
+                const element = salarySlip[index];
+                (names += document[2].PARAM_ID + '~' + element.name + ",")
+            }
         }
 
         for (let index = 0; index < otherFiles.length; index++) {
-            const element = otherFiles[index];
-            otherFiles[index]?.uri && element && (names += document[index + 3].PARAM_ID + '~' + element.name + ",")
+
+            console.warn("oF", otherFiles[index]?.uri);
+
+            if (otherFiles[index]?.uri) {
+                const element = otherFiles[index];
+                element && (names += document[index + 3].PARAM_ID + '~' + element.name + ",")
+            }
         }
+
+
 
         if (names[names.length - 1] === ',') {
             names = names.slice(0, names.length - 1)
@@ -226,28 +253,39 @@ const Candidate_Document = (props) => {
     }
 
     const getFileName = () => {
+
         let names = '';
+
         for (let index = 0; index < aadharCard.length; index++) {
-            const element = aadharCard[index];
-            aadharCard[index].uri && (names += element.name + ",")
+            if (aadharCard[index]?.uri) {
+                const element = aadharCard[index];
+                (names += element.name + ",")
+            }
         }
 
         for (let index = 0; index < panCard.length; index++) {
-            const element = panCard[index];
-            panCard[index].uri && (names += element.name + ",")
+            if (panCard[index]?.uri) {
+                const element = panCard[index];
+                (names += element.name + ",")
+            }
         }
 
         for (let index = 0; index < salarySlip.length; index++) {
-            const element = salarySlip[index];
-            salarySlip[index].uri && (names += element.name + ",")
+            if (salarySlip[index]?.uri) {
+                const element = salarySlip[index];
+                (names += element.name + ",")
+            }
         }
 
         for (let index = 0; index < otherFiles.length; index++) {
-            const element = otherFiles[index];
-            {
-               otherFiles[index].uri && element &&
-                    (names += element.name + ",")
+            if (otherFiles[index]?.uri) {
+                const element = otherFiles[index];
+                {
+                    element &&
+                        (names += element.name + ",")
+                }
             }
+
         }
 
         if (names[names.length - 1] === ',') {
@@ -261,28 +299,37 @@ const Candidate_Document = (props) => {
         console.warn(fileName);
 
         for (let index = 0; index < aadharCard.length; index++) {
-            let element = {};
-            element.uri = aadharCard[index].uri, element.type = aadharCard[index].type, element.name = fileName
-            aadharCard[index].uri && formData.append('fileUpload', element)
+            if (aadharCard[index].uri) {
+                let element = {};
+                element.uri = aadharCard[index].uri, element.type = aadharCard[index].type, element.name = fileName
+                formData.append('fileUpload', element)
+            }
         }
 
         for (let index = 0; index < panCard.length; index++) {
-            let element = {}
-            element.uri = panCard[index].uri, element.type = panCard[index].type, element.name = fileName
-            panCard[index].uri && formData.append('fileUpload', element)
+            if (panCard[index].uri) {
+                let element = {}
+                element.uri = panCard[index].uri, element.type = panCard[index].type, element.name = fileName
+                formData.append('fileUpload', element)
+            }
         }
 
         for (let index = 0; index < salarySlip.length; index++) {
-            let element = {}
-            element.uri = salarySlip[index].uri, element.type = salarySlip[index].type, element.name = fileName
-            salarySlip[index].uri && formData.append('fileUpload', element)
+            if (salarySlip[index].uri) {
+                let element = {}
+                element.uri = salarySlip[index].uri, element.type = salarySlip[index].type, element.name = fileName
+                formData.append('fileUpload', element)
+            }
         }
 
         for (let index = 0; index < otherFiles.length; index++) {
-            let element = {}
-            otherFiles[index] && (
-                element.uri = otherFiles[index].uri, element.type = otherFiles[index].type, element.name = fileName,
-                formData.append('fileUpload', element))
+            if (otherFiles[index]?.uri) {
+                let element = {}
+                otherFiles[index] && (
+                    element.uri = otherFiles[index].uri, element.type = otherFiles[index].type, element.name = fileName,
+                    formData.append('fileUpload', element))
+
+            }
         }
     }
 
@@ -332,6 +379,29 @@ const Candidate_Document = (props) => {
 
     }
 
+    const DeleteDoc = async (TXNID) => {
+
+        let candidateData = { txnId: TXNID, operFlag: "D" }
+        console.warn(candidateData);
+
+        let newFormData = new FormData()
+
+        newFormData.append('data', JSON.stringify(candidateData))
+
+        let res = await fetch("http://192.168.1.169:7038/api/hrms/assesmentSave", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            body: newFormData
+        })
+
+        res = await res.json()
+
+        console.log("deleting doc", res)
+        ToastAndroid.show(res.MSG, 3000)
+    }
+
     // for displaying aadhar, pan and salary slip in front end
     const DocumentUploader = (file, setFile, number, type, Mandatory) => {
 
@@ -349,25 +419,26 @@ const Candidate_Document = (props) => {
                 </View>
 
                 {/* showing all the uploaded files */}
-                {file.length > 0 &&
-                    file.map((item, index) => (
-                        <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-                            key={index}>
+                {file?.map((item, index) => (
 
-                            <Text>{item?.name}</Text>
+                    <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+                        key={index}>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
+                        <Text>{item?.name}</Text>
 
-                                {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
-                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => onRemovePress(index, setFile, file)} >
-                                    <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
-                                </TouchableOpacity>
+                            {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
 
-                            </View>
+                            <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
+                                <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
+                            </TouchableOpacity>
 
                         </View>
-                    ))
+
+                    </View>
+
+                ))
                 }
 
             </TouchableOpacity>
@@ -563,12 +634,10 @@ const Candidate_Document = (props) => {
                     )
                 }
 
-                <TouchableOpacity onPress={() => saveDocs()} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                {(candidateStatusId === "123" || candidateStatusId === "166") && <TouchableOpacity onPress={() => saveDocs()} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: 'white' }}>Submit Documents</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
 
-                {/* {console.warn(aadharCard)} */}
-                {/* {console.warn("pan", panCard)} */}
 
             </View >
 
