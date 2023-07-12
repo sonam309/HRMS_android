@@ -19,6 +19,10 @@ const Candidate_details = (props) => {
   const [error, setError] = useState(false);
   const [feedback, setFeedback] = useState()
 
+  console.log("candidateId",candidateId);
+  console.log("interviewId",interviewId);
+  console.log("interviewType",interviewType);
+
   const validateForm = () => {
     if (
       obtainedSpeakScoreValue === '' ||
@@ -37,6 +41,8 @@ const Candidate_details = (props) => {
 
   const onSelectPress = (operFlag) => {
     if (validateForm()) {
+
+      console.log("requestfeedback", candidateId);
       axios
         .post(`https://econnectsatya.com:7033/api/hrms/interViewDeatils`, {
           candidateId: candidateId,
@@ -50,7 +56,7 @@ const Candidate_details = (props) => {
         })
         .then(response => {
           const returnedData = response?.data?.Result;
-          console.log(returnedData);
+          console.log("feedback ",returnedData);
           setIsVisible(false);
           ToastAndroid.show(returnedData[0].MSG, 3000);
         })
