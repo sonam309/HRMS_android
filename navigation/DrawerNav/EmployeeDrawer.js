@@ -34,17 +34,17 @@ const EmployeeDrawer = (props) => {
 
         return (
             <DrawerContentScrollView {...props} >
-                <View style={{ backgroundColor:COLORS.disableOrange }}>
+                <View style={{ backgroundColor:'#FDEBD0' }}>
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor:'#F0B27A', color: 'white' }} onPress={() => logUserOut(dispatch)}>
-                            <Icons name='logout' size={25} style={{ color: 'white', padding: 8 }} />
+                        <TouchableOpacity style={{ backgroundColor:'#FDEBD0', color: 'white' }} onPress={() => logUserOut(dispatch)}>
+                            <Icons name='logout' size={25} style={{ color: COLORS.darkGray2, padding: 8 }} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={{ flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', margin: 0 }}>
                         <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
-                        <Text style={{ fontSize: 16, color: 'white' }}>{userData.userDept}</Text>
+                        <Text style={{ fontSize: 16,...FONTS.h3, color: COLORS.orange1, marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
+                        <Text style={{ fontSize: 16, color: COLORS.orange1,...FONTS.h4 }}>{userData.userDept}</Text>
                     </View>
 
                 </View>
@@ -61,13 +61,13 @@ const EmployeeDrawer = (props) => {
         const header = props.header, icon = props.icon, navigator = props.navigator
         return (
             <TouchableOpacity key={header} style={{ backgroundColor: 'white', elevation:5,width: '45%', height: 90, alignItems: 'center', marginVertical: 8, borderRadius: 8, justifyContent: 'center', paddingVertical: 4 }} onPress={() => { navigator(`${header}`) }}>
-                <Icons name={icon} color={COLORS.orange1} size={40} style={{ marginVertical: 4 }} />
-                <Text style={{ color: COLORS.orange1, textAlign: 'center',fontSize:13}}>{header}</Text>
+                <Icons name={icon} color={COLORS.green} size={40} style={{ marginVertical: 4 }} />
+                <Text style={{ color: COLORS.darkGray2, textAlign: 'center',fontSize:13}}>{header}</Text>
             </TouchableOpacity>
         )
     }
     return (
-        <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: '#E7E9F9' } }} drawerContent={() => <CustomDrawer {...props} />}>
+        <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: COLORS.white } }} drawerContent={() => <CustomDrawer {...props} />}>
 
             <Drawer.Screen name="DashBoard" component={DashBoard} options={{ headerShown: false }} />
             <Drawer.Screen name="Attendance" component={Attendance} />

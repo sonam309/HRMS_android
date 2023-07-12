@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -6,13 +6,15 @@ import axios from "axios";
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { new_mpin } from '../../assets';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import COLORS from '../../constants/theme';
 
 const ForgetPassword = (props) => {
 
   let page = null
 
-  const { type } = props.route.params;
-  const userId = useSelector(state => state.auth.userId)
+  const { type, userId } = props.route.params;
+  // const (userId) = useSelector(state => state.auth.userId)
 
   const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef();
   const cet1 = useRef(); cet2 = useRef(); cet3 = useRef(); cet4 = useRef();
@@ -26,6 +28,7 @@ const ForgetPassword = (props) => {
   const [f6, setF6] = useState('');
   const [f7, setF7] = useState('');
   const [f8, setF8] = useState('');
+  const [oper, setOper] = useState('');
 
   const [showNewPassword, setShowNewPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
@@ -47,7 +50,8 @@ const ForgetPassword = (props) => {
   const getType = async () => {
     page = await AsyncStorage.getItem("type")
     {
-      page ? (page === 'employee' ? setURL('https://econnectsatya.com:7033/api/User/login') : setURL('https://econnectsatya.com:7033/api/User/candidateLogin')) : null
+      page ? (page === 'employee' ? [setURL('https://econnectsatya.com:7033/api/User/login'), setOper('R')] : [setURL('https://econnectsatya.com:7033/api/User/candidateLogin'), setOper('F')]) : null
+      // page ? (page === 'employee' ? [setURL('http://192.168.1.169:7038//api/User/login'), setOper('R')] : [setURL('http://192.168.1.169:7038//api/User/candidateLogin'), setOper('F')]) : null
     }
   }
 
@@ -90,20 +94,22 @@ const ForgetPassword = (props) => {
 
   // Change PAssword in function
   const ChangePasswordApi = () => {
+
+    console.log("forgetpass", userId)
     const userData = {
       loginId: userId,
       password: newPassword,
       oldPassword: '',
-      oprFlag: 'R',
+      oprFlag: oper,
     };
-    // console.warn(userData);
-    console.log("requestparam",userData);
-    console.log("Url",URL);
+    console.warn(userId);
+    console.log("requestparam", userData);
+    console.log("Url", URL);
     axios.post(URL, userData).then((response) => {
       const returnedData = response.data.Result;
       let result = returnedData.map(a => a.FLAG);
-      console.warn(result);
-      result[0] === "S" ? (props.navigation.navigate("Employee")) :
+
+      result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee") : props.navigation.navigate("Candidate")) :
         Alert.alert("Failure", "Error")
     })
   }
@@ -247,13 +253,13 @@ const ForgetPassword = (props) => {
 
               <TouchableOpacity
                 disabled={newPassword !== '' && confirmPassword !== '' ? false : true}
-                style={[styles.changePasswordBtn, styles.elevation, { backgroundColor: newPassword !== '' && confirmPassword !== '' ? '#220046' : "#9D9D9D" }]} onPress={() => { MatchPasswordValidation() }} >
+                style={[styles.changePasswordBtn, styles.elevation, { backgroundColor: newPassword !== '' && confirmPassword !== '' ? COLORS.green : "#9D9D9D" }]} onPress={() => { MatchPasswordValidation() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}> Change Password </Text>
               </TouchableOpacity>
 
               {/*   msg */}
               <View style={styles.Message}>
-                <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 15, textAlign: 'center' }}>
+                <Text style={{ color: COLORS.darkGray2, fontWeight: 400, fontSize: 15, textAlign: 'center' }}>
                   Once the password successfully changed, you will need to login again
                 </Text>
               </View>
@@ -296,7 +302,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   changePasswordBtn: {
-    marginHorizontal: 25,
+    marginHorizontal: 40,
     flexDirection: 'row',
     marginTop: 100,
     height: 45,
@@ -314,15 +320,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   Header: {
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#220046',
+    backgroundColor: COLORS.orange1,
   },
   HeaderText: {
-    fontSize: 20,
-    height: 38,
+    padding: 4,
     color: 'white',
-    fontWeight: '500'
+    fontWeight: '400',
+    fontSize: 20,
+    height: 38
   },
   Message: {
     backgroundColor: 'white',

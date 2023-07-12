@@ -26,11 +26,20 @@ const Esic_Bottomview = (props) => {
 
 
   useEffect(() => {
-    getDropdownData(4);
+    // getDropdownData(4);
     getData();
   }, []);
 
 
+//   const getDropdownData = async (P) => {
+//     let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+//     response = await response.json();
+//     const returnedData = response;
+
+//     if (P === 4) {
+//         setCountry(returnedData)
+//     } 
+// }
 
   const saveESICDetails = () => {
     // if (isFormValidated()) {

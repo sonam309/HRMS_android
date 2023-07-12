@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import LeaveBalanceList from '../../data/LeaveBalanceList';
 import LinearGradient from 'react-native-linear-gradient';
 import donut_chart from '../../assets/images/donut_chart.png'
+import COLORS from '../../constants/theme';
+import { FONTS } from '../../constants/font_size';
 
 const Attendance = (props) => {
 
@@ -13,7 +15,7 @@ const Attendance = (props) => {
     <ScrollView>
       <View>
         {/* calender for attendence */}
-        <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: 'white' }} headerStyle={{ backgroundColor: '#220046' }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }}
+        <Calendar style={{ marginBottom: 20, elevation: 4, backgroundColor: 'white' }} headerStyle={{ backgroundColor: COLORS.green }} theme={{ arrowColor: 'white', monthTextColor: 'white', textSectionTitleColor: 'white' }}
           markedDates={{
 
             newDate: { selected: true, marked: true, selectedColor: 'blue' },
@@ -113,23 +115,23 @@ const Attendance = (props) => {
   function DrawerIcons(props) {
     const title = props.header, icon = props.icon, count = props.count, color = props.color, id = props.id
     return (
-      <TouchableOpacity key={id} style={{ width: '48%', borderRadius: 20, marginVertical: 8, elevation: 6 }} onPress={() =>
+      <TouchableOpacity key={id} style={{ width: '48%', borderRadius: 20, marginVertical: 8, }} onPress={() =>
         Alert.alert("click" + id)} >
         <LinearGradient
-          colors={['#77037B', '#210062']}
+          colors={[COLORS.disableOrange1, COLORS.lightOrange]}
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 0 }}
           style={{ borderRadius: 30 }}
         >
 
-          <View style={{ height: 65, }} >
-            <Icon name={icon} color='white' size={30} style={{
+          <View style={{ height: 60, }} >
+            <Icon name={icon} color={COLORS.orange1} size={30} style={{
               marginLeft: 20,
               marginTop: 5
             }} />
             <View style={{ justifyContent: 'center', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: -30 }}>
-              <Text style={{ color: 'white', fontSize: 20, fontWeight: '400', textAlign: 'center' }}>{count}</Text>
-              <Text style={{ color: 'white', fontSize: 13, fontWeight: '400', textAlign: 'center', width: '100%', flexDirection: 'row' }}>{title}</Text>
+              <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>{count}</Text>
+              <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center', width: '100%', flexDirection: 'row' }}>{title}</Text>
 
 
 
