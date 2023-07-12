@@ -27,6 +27,7 @@ const New_hiring = (props) => {
                 body: formData
             })
             res = await res?.json();
+
             console.log(res)
             res = await res?.Table
             setJobOpening(res);
@@ -95,7 +96,9 @@ const New_hiring = (props) => {
                 </View>
                 {/* Job description */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, paddingHorizontal: 15 }}>
-                    <Text>{upload}</Text>
+                    <Text>{upload}
+                    {/* {console.log("sendData",Job_Desc)} */}
+                    </Text>
                     <TouchableOpacity onPress={() => navigation.navigate("Job_Description", { Job_Desc })}>
                         <Text style={{ color: COLORS.green, fontWeight: 500 }}>View JD {'>'}</Text>
                     </TouchableOpacity>
@@ -111,7 +114,7 @@ const New_hiring = (props) => {
 
             {/* Posting a new Job */}
             <TouchableOpacity style={styles.newJobOpeneingTxt} onPress={() => navigation.navigate('CreateNewJobOpening')}>
-                <Text style={{ color: COLORS.green, fontSize: 16, borderRadius: 12,marginTop:10, fontWeight: '500', borderColor: COLORS.green, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 }}>
+                <Text style={{ color: COLORS.green, fontSize: 16, borderRadius: 12, marginTop: 10, fontWeight: '500', borderColor: COLORS.green, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 }}>
                     <Icons name='book-plus-outline' color={COLORS.green} size={20} />
                     Post a New Job</Text>
             </TouchableOpacity>
