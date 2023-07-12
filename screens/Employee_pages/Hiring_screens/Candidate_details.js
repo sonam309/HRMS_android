@@ -7,6 +7,8 @@ import BottomUpModal from '../../../components/BottomUpModal'
 import Entypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios'
 import PieChart from 'react-native-pie-chart'
+import { FONTS } from '../../../constants/font_size'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 const Candidate_details = (props) => {
   const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail } = props.route.params
@@ -66,7 +68,7 @@ const Candidate_details = (props) => {
 
         {/* feedback header */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
-          <Text style={{ fontSize: 22, }}>Feedback Request</Text>
+          <Text style={{...FONTS.h5 , fontSize:20,color:COLORS.black}}>Feedback Request</Text>
           {/* Close Button */}
           <TouchableOpacity onPress={() => setIsVisible(false)}>
             <Entypo name="cross" size={34} color="black" />
@@ -76,12 +78,12 @@ const Candidate_details = (props) => {
 
         <View style={{ marginVertical: 12, }}>
 
-          <View style={{ alignItems: 'center' }}>
+          <View style={{  }}>
 
             {/* Error */}
             {error && <Text style={styles.errorText}> All fields are required! </Text>}
             {/* Heading */}
-            <Text style={{ fontSize: 18, color: COLORS.darkGray2, }}>Candidate Rating</Text>
+            <Text style={{ ...FONTS.h4,color:COLORS.green,fontSize:16 }}>Candidate Rating</Text>
 
           </View>
 
@@ -89,20 +91,20 @@ const Candidate_details = (props) => {
           <View style={{ paddingVertical: 12 }}>
 
             <View style={styles.headers}>
-              <Text style={{ color: COLORS.black }}>Your Rating</Text>
+              {/* <Text style={{ color: COLORS.black }}>Your Rating</Text> */}
             </View>
 
             {/* Headers */}
             <View style={[styles.markingArea, { paddingVertical: 12, borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
-              <Text>Category</Text>
-              <Text>Maximum Score</Text>
-              <Text>Obtained Score</Text>
+              <Text style={{...FONTS.h4,color:Colors.darkGray2}}>Category</Text>
+              <Text style={{...FONTS.h4,color:Colors.darkGray2}}>Maximum Score</Text>
+              <Text style={{...FONTS.h4,color:Colors.darkGray2}}>Obtained Score</Text>
             </View>
 
             {/* Technical Marking area */}
             <View style={styles.markingArea}>
 
-              <Text>Technical</Text>
+              <Text style={{...FONTS.h4,color:Colors.darkGray2}}>Technical</Text>
               <Text>5</Text>
 
               {/* Technical Marks */}
@@ -145,7 +147,7 @@ const Candidate_details = (props) => {
             {/* Speaking Marking Area */}
             <View style={[styles.markingArea, { borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
 
-              <Text>Speaking</Text>
+              <Text style={{...FONTS.h4,color:Colors.darkGray2}}>Speaking</Text>
               <Text>5</Text>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -188,7 +190,7 @@ const Candidate_details = (props) => {
 
             {/* Student Feedback */}
             <View style={{ marginVertical: 12 }}>
-              <Text style={{ color: COLORS.black }}>Remarks</Text>
+              <Text style={{ color: COLORS.black,...FONTS.h4,}}>Remarks</Text>
 
               <TextInput value={yourRemarks} onChangeText={text => setYourRemarks(text)} multiline placeholder="Your Feedback" style={{ marginVertical: 12, height: 70, paddingLeft: 24, borderWidth: 0.5, borderColor: COLORS.lightGray, borderRadius: 12, }} />
 
@@ -197,12 +199,12 @@ const Candidate_details = (props) => {
             {/* Submit Buttons */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
-              <TouchableOpacity onPress={() => {onSelectPress('A'), props.navigation.navigate('Interview_status')}} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.lightGreen }]}>
+              <TouchableOpacity onPress={() => {onSelectPress('A'), props.navigation.navigate('Interview_status')}} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableGreen, borderColor:COLORS.green,borderWidth:0.5 }]}>
                 <Text style={{ color: COLORS.green, fontSize: 18, fontWeight: 600 }}>Select</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => { onSelectPress('R'), props.navigation.navigate('Interview_status') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.lightRed }]}>
-                <Text style={{ color: COLORS.red, fontSize: 18, fontWeight: 600 }}>Reject</Text>
+              <TouchableOpacity onPress={() => { onSelectPress('R'), props.navigation.navigate('Interview_status') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableOrange1,borderColor:COLORS.orange1,borderWidth:0.5  }]}>
+                <Text style={{ color: COLORS.orange, fontSize: 18, fontWeight: 600 }}>Reject</Text>
               </TouchableOpacity>
             </View>
 
@@ -281,15 +283,15 @@ const Candidate_details = (props) => {
       <View style={styles.topIcon}>
 
         <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
-          <Icons name='phone-in-talk-outline' color={COLORS.white} size={40} />
+          <Icons name='phone-in-talk-outline' color={COLORS.white} size={30} />
         </View>
 
       </View>
 
-      <Text style={{ textAlign: 'center', fontSize: 20, marginVertical: 5 }}>Interview Schedule</Text>
+      <Text style={{ textAlign: 'center', ...FONTS.h4,fontSize:15, marginVertical: 5,marginTop:10 }}>Interview Schedule</Text>
 
       {/* Minor details for candidate */}
-      <View style={{ borderBottomWidth: 2, borderTopWidth: 2, borderColor: COLORS.skyBlue, paddingVertical: 10 }}>
+      <View style={{ borderBottomWidth: 1, borderTopWidth: 1,marginTop:10, borderColor: COLORS.lightGray, paddingVertical: 10 }}>
 
         {/* Image and name */}
         <View style={{ flexDirection: 'row' }}>
@@ -299,25 +301,25 @@ const Candidate_details = (props) => {
           </View>
 
           <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
-            <Text style={{ color: 'black' }}>{name}</Text>
-            <Text>{designation}</Text>
+            <Text style={{ color: COLORS.green,...FONTS.h5,fontSize:17 }}>{name}</Text>
+            <Text style={{...FONTS.h4}}>{designation}</Text>
           </View>
 
         </View>
 
 
         {/* Interview Timings */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 10 }}>
-          <Icons name='calendar-month-outline' color={COLORS.orange} size={30} />
-          <Text style={{ marginHorizontal: 10 }}>{date}</Text>
-          <Icons name='timetable' color={COLORS.orange} size={30} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8 ,marginHorizontal:15}}>
+          <Icons name='calendar-month-outline' color={COLORS.darkGray2} size={30} />
+          <Text style={{ marginHorizontal: 6,color:COLORS.darkGray2,...FONTS.h5}}>{date}</Text>
+          <Icons name='timetable' color={COLORS.darkGray2} size={25} />
           <Text style={{ marginHorizontal: 10 }}>{interviewStartTime} - {interviewEndTime}</Text>
         </View>
 
         {/* Candidate Resume */}
         <TouchableOpacity style={styles.resumeArea} onPress={() => props.navigation.navigate('Candidate_Resume', { resume })}>
-          <Icons name='file-document-outline' color={COLORS.orange} size={40} />
-          <Text>{resume}</Text>
+          <Icons name='file-document-outline' color={COLORS.orange} size={25} />
+          <Text style={{color:COLORS.darkGray2,marginHorizontal:8,...FONTS.h4}}>{resume}</Text>
         </TouchableOpacity>
       </View>
 
@@ -343,11 +345,11 @@ const Candidate_details = (props) => {
 const styles = StyleSheet.create({
   ButtonStyle: {
     textAlign: 'center',
-    backgroundColor: COLORS.voilet,
+    backgroundColor: COLORS.green,
     color: COLORS.white,
     padding: 10,
     marginHorizontal: 40,
-    marginTop: 15,
+    marginTop: 25,
     fontSize: 15,
     borderRadius: 20,
   },
@@ -371,6 +373,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     padding: 20,
     height: 100,
+    marginBottom:20,
+    marginTop:20,
     borderRadius: 20
   },
   topIcon: {
@@ -398,7 +402,9 @@ const styles = StyleSheet.create({
   feedBackBox: {
     width: '48%',
     borderRadius: 12,
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.disableGreen,
+    borderColor:COLORS.green,
+    borderWidth:0.5,
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 10,
@@ -407,19 +413,23 @@ const styles = StyleSheet.create({
   feedBackHeader: {
     fontWeight: 500,
     fontSize: 16,
+    color:COLORS.green,
+    marginBottom:10,
     paddingVertical: 5
   },
   score: {
     position: 'absolute',
     top: '60%',
-    fontSize: 20,
-    fontWeight: 600
+    ...FONTS.h3,
+    color:COLORS.orange1,
+    fontWeight: 500
   },
   scoreText: {
     position: 'absolute',
     top: '70%',
-    fontSize: 20,
-    fontWeight: 600
+   ...FONTS.h3,
+   color:COLORS.orange1,
+    fontWeight: 500
   }
 
 })

@@ -47,6 +47,7 @@ const Employee_Login = (props) => {
     // logging in function
     const submit = () => {
         setLoaderVisible(true)
+        console.log(userData);
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response?.data?.Result;
 
@@ -87,6 +88,7 @@ const Employee_Login = (props) => {
 
     const forgetPasswordApi = () => {
         let otp = RandomNumber("6")
+        console.log("emplogin", userId+"  "+otp);
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
             params: {
                 loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
@@ -94,17 +96,19 @@ const Employee_Login = (props) => {
         }).then((response) => {
 
             const returnedData = response.data.Result;
-            // console.warn(returnedData);
+            console.log(returnedData);
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp })) : Alert.alert("Failure", "Please enter correct credentials")
+            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp,userId })) : Alert.alert("Failure", "Please enter correct credentials")
         })
     }
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor={COLORS.gray} />
+           <StatusBar 
+            backgroundColor={COLORS.white} 
+            barStyle="dark-content"/>
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
@@ -129,8 +133,9 @@ const Employee_Login = (props) => {
 
                 {/* Quick Pin option */}
                 <View style={styles.loginOption}>
-                    <TouchableOpacity onPress={() => clickQuickPin()}>
+                    <TouchableOpacity >
 
+                    {/* onPress={() => clickQuickPin()} */}
                         <View style={{ alignItems: 'center' }} >
                             <Image source={Pinlock} style={{ width: 35, height: 35 }} />
                             <Text style={{  color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
@@ -147,11 +152,11 @@ const Employee_Login = (props) => {
 
                 {/* Punching Option */}
                 <View style={styles.punchArea}>
-                    <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton, styles.elevation, { backgroundColor: '#03A157' }]}>
-                        <Text style={styles.loginButtonText}>Punch In</Text>
+                    <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton,styles.elevation,  { backgroundColor:'#D5F5E3'}]}>
+                        <Text style={[styles.loginButtonText,{color:COLORS.darkGreen}]}>Punch In</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => getCurrentLocation("O")} style={[styles.punchButton, styles.elevation, { backgroundColor: 'red' }]}>
-                        <Text style={[styles.loginButtonText]}>Punch Out</Text>
+                    <TouchableOpacity onPress={() => getCurrentLocation("O")} style={[styles.punchButton, styles.elevation, { backgroundColor: '#FAE5D3' }]}>
+                        <Text style={[styles.loginButtonText,{color:COLORS.orange1}]}>Punch Out</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -242,8 +247,9 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 17,
-        fontWeight: 400,
-        marginHorizontal: 5
+        ...FONTS.h4,
+        marginHorizontal: 5,
+       
     },
     bottomElement: {
         position: 'absolute',

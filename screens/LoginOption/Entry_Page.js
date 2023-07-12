@@ -1,7 +1,9 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, StatusBar } from 'react-native'
 import React, { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entry_logo, company_logo } from '../../assets';
+import COLORS from '../../constants/theme';
+import { FONTS } from '../../constants/font_size';
 
 const Entry_page = (props) => {
     let page = null
@@ -24,6 +26,9 @@ const Entry_page = (props) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar 
+            backgroundColor={COLORS.white} 
+            barStyle="dark-content"/>
 
             {/* Company Logo */}
             <View style={{ flex: 2 }}>
@@ -36,10 +41,10 @@ const Entry_page = (props) => {
 
             {/* Options */}
             <View style={{ flex: 3, justifyContent: 'center' }}>
-                <TouchableOpacity onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButton, styles.elevation, { backgroundColor: '#1157bf' }]}>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.green }]}>
                     <Text style={[styles.loginButtonText]}>Employee</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButton, styles.elevation, { backgroundColor: 'red' }]}>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.orange1 }]}>
                     <Text style={[styles.loginButtonText]}>Candidate</Text>
                 </TouchableOpacity>
             </View>
@@ -74,7 +79,8 @@ const styles = StyleSheet.create({
         height: 50
     },
     loginButtonText: {
-        color: 'white'
+        color: 'white',
+        ...FONTS.h4,
     }
 })
 

@@ -357,7 +357,7 @@ const CreateNewJobOpening = (props) => {
 
             {/* bottom Buttons */}
             <View style={{ flexDirection: 'row', marginVertical: 20 }}>
-                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.voilet }]} onPress={() => ApplyJob()}>
+                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => ApplyJob()}>
                     <Text style={{ color: 'white' }}>Save Job Opening</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]}>

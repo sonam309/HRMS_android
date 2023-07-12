@@ -14,13 +14,26 @@ import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
 import { ColorSpace } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = (props) => {
+
+    let page = null
+
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState("333");
     const [password, setPassword] = useState("Test@123");
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
+    const [operFlag,setOperFlag]=useState('');
+
+  
+    const getType = async () => {
+        page = await AsyncStorage.getItem("type")
+        {
+          page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null
+        }
+      }
 
     const userData = { loginId: userId, password: password, oprFlag: 'L', oldPassword: "" };
 
@@ -29,24 +42,12 @@ const Login = (props) => {
         return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
     }
 
-    // forgetpassword
-    const forgetPasswordApi = () => {
-
-        let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
-            .then((response) => {
-                const returnedData = response.data.Result;
-                console.log(returnedData);
-                let result = returnedData.map(a => a.FLAG);
-                let msg = returnedData.map(b => b.MSG);
-              
-                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : console.log(msg)
-            })
-    }
+   
 
     // preventing going to entry page
     const navigation = useNavigation();
     useEffect(() => {
+        getType();
         const preventBack = navigation.addListener('beforeRemove', event => {
             event.preventDefault();
         })
@@ -56,6 +57,24 @@ const Login = (props) => {
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
+    }
+
+     // forgetpassword
+     const forgetPasswordApi = () => {
+
+        let otp = RandomNumber("6")
+        console.log("msg",otp+" $ "+userId+ operFlag);
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+            .then((response) => {
+                const returnedData = response.data.Result;
+                console.log(returnedData);
+                let result = returnedData.map(a => a.FLAG);
+                let contact = returnedData.map(b => b.MSG);
+               
+                console.log("login",userId);
+              
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : console.log(contact)
+            })
     }
 
     // logging in function
@@ -80,7 +99,9 @@ const Login = (props) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor={COLORS.gray} />
+           <StatusBar 
+            backgroundColor={COLORS.white} 
+            barStyle="dark-content"/>
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
@@ -105,7 +126,8 @@ const Login = (props) => {
 
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate("QuickPin", { userId })} style={{ alignItems: 'center' }}>
+                {/* onPress={() => props.navigation.navigate("QuickPin", { userId })}  */}
+                    <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 35, height: 35 }} />
                         <Text style={{ color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
                     </TouchableOpacity>

@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import candidateIcon from '../../../assets/images/candidateIcon.png'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { FONTS } from '../../../constants/font_size'
 
 
 const Interview_status = (props) => {
@@ -40,27 +41,27 @@ const Interview_status = (props) => {
         return (
             <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail })}>
 
-                <View style={{ borderRadius: 60, backgroundColor: COLORS.bg_tile_Colo, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15 }}>
+                <View style={{ borderRadius: 15, backgroundColor: COLORS.white, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15, borderWidth: 0.5, borderColor: COLORS.gray }}>
                     <View>
                         <Image source={candidateIcon} style={{ width: 50, height: 50, }} />
                     </View>
 
                     <View style={{ paddingHorizontal: 10 }}>
 
-                        <Text style={{ color: COLORS.black, fontSize: 16, fontWeight: '500' }}>{name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}</Text>
+                        <Text style={{ color: COLORS.green, ...FONTS.h3, }}>{name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}</Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
-                            <Text style={{ color: COLORS.darkerGrey, fontSize: 13, fontWeight: '500', marginHorizontal: 2 }}> {designation}
+                            <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 2 }}> {designation}
                             </Text>
                         </View>
-                        {date ? <Text style={{ color: COLORS.gray, fontSize: 12 }}>{date}</Text> : null}
+                        {date ? <Text style={{ color: COLORS.gray, ...FONTS.h5, marginTop: -5 }}>Scheduled:{date}</Text> : null}
 
                     </View>
 
-                    <View style={{ position: 'absolute', right: 9 }}>
-                        <Text style={{ backgroundColor: '#8467D7', borderRadius: 20, textAlign: 'center', alignSelf: 'center', padding: 8, color: COLORS.white, fontWeight: '500' }}>
+                    <View style={{ position: 'absolute', right: 8 }}>
+                        {interviewStartTime ? <Text style={{ backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5, borderRadius: 10, textAlign: 'center', alignSelf: 'center', padding: 5, color: COLORS.green, ...FONTS.h5 }}>
                             {interviewStartTime} - {interviewEndTime}
-                        </Text>
+                        </Text> : null}
                     </View>
 
                 </View>
@@ -78,11 +79,11 @@ const Interview_status = (props) => {
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginHorizontal: 10, }}>
                         <TouchableOpacity onPress={() => setStatus("P")}>
-                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'P' ? COLORS.white : COLORS.voilet), borderColor: (status === 'P' ? COLORS.white : COLORS.voilet), backgroundColor: (status === 'P' ? COLORS.voilet : COLORS.white) }]} >
+                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'P' ? COLORS.white : COLORS.orange), borderColor: (status === 'P' ? COLORS.white : COLORS.orange), backgroundColor: (status === 'P' ? COLORS.orange : COLORS.white) }]} >
                                 Schedule Interview </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setStatus("C")}>
-                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'C' ? COLORS.white : COLORS.voilet), borderColor: (status === 'C' ? COLORS.white : COLORS.voilet), backgroundColor: (status === 'C' ? COLORS.voilet : COLORS.white) }]}>
+                            <Text style={[styles.Elevation, styles.regilizationBtn, { color: (status === 'C' ? COLORS.white : COLORS.orange), borderColor: (status === 'C' ? COLORS.white : COLORS.orange), backgroundColor: (status === 'C' ? COLORS.orange : COLORS.white) }]}>
                                 Complete Interview </Text>
                         </TouchableOpacity>
                     </View>

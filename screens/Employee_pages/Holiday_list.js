@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useSelector } from 'react-redux';
+import COLORS from '../../constants/theme';
 
 const Holiday_list = () => {
   const userId = useSelector(state => state.auth.userId)
@@ -193,7 +194,7 @@ const Holiday_list = () => {
       <Calendar
         initialDate={year}
         style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff' }}
-        headerStyle={{ backgroundColor: '#220046' }}
+        headerStyle={{ backgroundColor: COLORS.green}}
         theme={{
           arrowColor: 'white',
           monthTextColor: 'white',

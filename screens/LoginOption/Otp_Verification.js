@@ -4,10 +4,11 @@ import axios from "axios";
 import BoldText from '../../utility/BoldText';
 import { mobile_otp } from '../../assets';
 import { useSelector } from 'react-redux';
+import COLORS from '../../constants/theme';
 
 const Otp_Verification = (props) => {
-    const { contact, otp, type } = props.route.params;
-    const userId = useSelector(state => state.auth.userId)
+    const { contact, otp, type ,userId} = props.route.params;
+    // const userId = useSelector(state => state.auth.userId)
 
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef(); et5 = useRef(); et6 = useRef();
 
@@ -56,8 +57,10 @@ const Otp_Verification = (props) => {
     //otp Validation
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
+        console.log("otpvry",userId);
+
         if (sendOtp == inputOtp) {
-            (props.navigation.navigate("ForgetPassword", { type }))
+            (props.navigation.navigate("ForgetPassword", { type,userId }))
         } else console.warn("Wrong OTP");
     }
 
@@ -73,20 +76,20 @@ const Otp_Verification = (props) => {
 
             {/* enter otp msg */}
             <View style={{ backgroundColor: 'white', height: 30, flexDirection: 'row', justifyContent: 'center', marginLeft: 10, marginRight: 10 }}>
-                <Text style={{ color: '#474E68', fontWeight: 300, fontSize: 12 }}>  Please enter 6 digit code has been send to </Text>
-                <Text style={{ color: '#000000', fontSize: 12, fontWeight: 600 }}>&nbsp;+91-{contact}</Text>
+                <Text style={{ color: COLORS.gray, fontWeight: 300, fontSize: 12 }}>  Please enter 6 digit code has been send to </Text>
+                <Text style={{ color: COLORS.black, fontSize: 12, fontWeight: 600 }}>&nbsp;+91-{contact}</Text>
             </View>
 
             {/* otp input boxes */}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
-                <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f1}
+                <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f1}
                     onChangeText={txt => {
                         setF1(txt);
                         if (txt.length >= 1) {
                             et2.current.focus();
                         }
                     }} />
-                <TextInput ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
+                <TextInput ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
                     setF2(txt)
                     if (txt.length >= 1) {
                         et3.current.focus();
@@ -95,7 +98,7 @@ const Otp_Verification = (props) => {
                         et1.current.focus();
                     }
                 }} />
-                <TextInput ref={et3} style={[style.inputView, { borderColor: f3.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
+                <TextInput ref={et3} style={[style.inputView, { borderColor: f3.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
                     setF3(txt)
                     if (txt.length >= 1) {
                         et4.current.focus();
@@ -103,7 +106,7 @@ const Otp_Verification = (props) => {
                         et2.current.focus();
                     }
                 }} />
-                <TextInput ref={et4} style={[style.inputView, { borderColor: f4.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
+                <TextInput ref={et4} style={[style.inputView, { borderColor: f4.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
                     setF4(txt)
                     if (txt.length >= 1) {
                         et5.current.focus();
@@ -112,7 +115,7 @@ const Otp_Verification = (props) => {
                         et3.current.focus();
                     }
                 }} />
-                <TextInput ref={et5} style={[style.inputView, { borderColor: f5.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
+                <TextInput ref={et5} style={[style.inputView, { borderColor: f5.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
                     setF5(txt)
                     if (txt.length >= 1) {
                         et6.current.focus();
@@ -120,7 +123,7 @@ const Otp_Verification = (props) => {
                         et4.current.focus();
                     }
                 }} />
-                <TextInput ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? '#F99417' : '#000' }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => {
+                <TextInput ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => {
                     setF6(txt)
                     if (txt.length >= 1) {
                     } else if (txt.length < 1) { et5.current.focus(); }
@@ -129,16 +132,16 @@ const Otp_Verification = (props) => {
 
             {/* resend otp text */}
             <View style={style.resendView}>
-                <Text style={{ fontSize: 15, fontWeight: '400', color: count == 0 ? '#03a157' : "#9D9D9D" }} onPress={() => {
+                <Text style={{ fontSize: 15, fontWeight: '500', color: count == 0 ? COLORS.green : COLORS.orange }} onPress={() => {
                     setCount(30); forgetPasswordApi()
                 }}>Resend</Text>
-                {count !== 0 && (<Text style={{ marginLeft: 5, fontSize: 15 }}> {count + ' seconds'} </Text>)}
+                {count !== 0 && (<Text style={{ marginLeft: 5, fontSize: 15 ,color:COLORS.darkGray2}}> {count + ' seconds'} </Text>)}
             </View>
 
             {/* verify otp button */}
 
             <TouchableOpacity disabled={f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? false : true} style={[style.otpVerifyBtn,
-            { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? '#220046' : "#9D9D9D" }]} onPress={() => { validateOtp() }} >
+            { backgroundColor: f1 !== '' && f2 !== '' && f3 !== '' && f4 !== '' && f5 !== '' && f6 !== '' ? COLORS.green : COLORS.gray }]} onPress={() => { validateOtp() }} >
                 <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontWeight: 500 }}>
                     Verify OTP
                 </Text>

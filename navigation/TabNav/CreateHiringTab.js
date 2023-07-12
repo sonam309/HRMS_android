@@ -7,6 +7,7 @@ import { DrawerActions } from '@react-navigation/native';
 import { Text, SafeAreaView, TouchableOpacity, StyleSheet, View, Pressable } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BottomUpModal from '../../components/BottomUpModal';
+import { FONTS } from '../../constants/font_size';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,47 +19,47 @@ const CreateHiringTab = (props) => {
         return (
             <View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
-                    <Text style={{ fontSize: 22 }}> Filters </Text>
+                <Text style={{ ...FONTS.h2,color:COLORS.darkGray2}}> Filters </Text>
                     <TouchableOpacity onPress={() => setIsVisible(false)}>
-                        <Icons name="close" size={34} color="black" />
+                        <Icons name="close" size={34} color={COLORS.orange1} />
                     </TouchableOpacity>
                 </View>
 
                 <View>
                     <View style={{ borderBottomWidth: 1, borderBottomColor: COLORS.gray }}>
-                        <Text style={{ fontSize: 16, color: COLORS.darkerGrey }}> Categories </Text>
+                        <Text style={{color: COLORS.orange1,...FONTS.h4,fontSize:16 }}> Categories </Text>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 12, flexWrap: 'wrap' }}>
 
-                            <Pressable onPress={() => setSelectedOption('Pending')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Pending' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Pending' ? 2 : 1.2, },]}>
+                            <Pressable onPress={() => setSelectedOption('Pending')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Pending' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Pending' ? 2 : 1.2, },]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'Pending' ? COLORS.darkerGrey : COLORS.darkGray2, fontWeight: selectedOption === 'Pending' ? '600' : '500', },]}> Pending </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('Cancelled')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Cancelled' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Cancelled' ? 2 : 1.2, },]}>
+                            <Pressable onPress={() => setSelectedOption('Cancelled')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Cancelled' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Cancelled' ? 2 : 1.2, },]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'Cancelled' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Cancelled' ? '600' : '500', },]}> Cancelled </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('Draft')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Draft' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Draft' ? 2 : 1.2, },
+                            <Pressable onPress={() => setSelectedOption('Draft')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Draft' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Draft' ? 2 : 1.2, },
                             ]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'Draft' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Draft' ? '600' : '500', },]}> Draft </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('Filled')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Filled' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Filled' ? 2 : 1.2, },
+                            <Pressable onPress={() => setSelectedOption('Filled')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Filled' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Filled' ? 2 : 1.2, },
                             ]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'Filled' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Filled' ? '600' : '500', },]}> Filled </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('On Hold')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'On Hold' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'On Hold' ? 2 : 1.2, },
+                            <Pressable onPress={() => setSelectedOption('On Hold')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'On Hold' ? COLORS.green : 'gray', borderWidth: selectedOption === 'On Hold' ? 2 : 1.2, },
                             ]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'On Hold' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'On Hold' ? '600' : '500', },]}> On Hold </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('Open')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Open' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Open' ? 2 : 1.2, },
+                            <Pressable onPress={() => setSelectedOption('Open')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Open' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Open' ? 2 : 1.2, },
                             ]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'On Hold' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Open' ? '600' : '500', },]}> Open </Text>
                             </Pressable>
 
-                            <Pressable onPress={() => setSelectedOption('Rejected')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Rejected' ? COLORS.voilet : 'gray', borderWidth: selectedOption === 'Rejected' ? 2 : 1.2, },
+                            <Pressable onPress={() => setSelectedOption('Rejected')} style={[styles.filterCatBtn, { borderColor: selectedOption === 'Rejected' ? COLORS.green : 'gray', borderWidth: selectedOption === 'Rejected' ? 2 : 1.2, },
                             ]}>
                                 <Text style={[styles.filterCatTxt, { color: selectedOption === 'On Hold' ? COLORS.darkGray : COLORS.darkGray2, fontWeight: selectedOption === 'Rejected' ? '600' : '500', },]}> Rejected </Text>
                             </Pressable>
@@ -69,10 +70,10 @@ const CreateHiringTab = (props) => {
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => setSelectedOption(null)} style={[styles.submitBtn, { backgroundColor: COLORS.transparentViolet }]}>
-                        <Text style={{ color: COLORS.voilet, fontSize: 16, }}> RESET </Text>
+                    <TouchableOpacity onPress={() => setSelectedOption(null)} style={[styles.submitBtn, { backgroundColor: COLORS.disableGreen }]}>
+                        <Text style={{ color: COLORS.green, fontSize: 16, }}> RESET </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setIsVisible(false)} style={[styles.Elevation, styles.submitBtn, { backgroundColor: COLORS.voilet }]}>
+                    <TouchableOpacity onPress={() => setIsVisible(false)} style={[styles.Elevation, styles.submitBtn, { backgroundColor: COLORS.orange }]}>
                         <Text style={{ color: COLORS.white, fontSize: 16, }}> APPLY </Text>
                     </TouchableOpacity>
                 </View>
