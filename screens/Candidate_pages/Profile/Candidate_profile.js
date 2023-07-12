@@ -69,7 +69,7 @@ const Candidate_profile = () => {
 
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
   const fetchPersonalData = async () => {
-    let PersonalData = { operFlag: "V", userId: userId }
+    let PersonalData = { operFlag: "V", candidateId:userId }
     var formData = new FormData();
     formData.append('data', JSON.stringify(PersonalData))
     let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
@@ -84,7 +84,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
-    let AddressData = { operFlag: "V", userId: userId }
+    let AddressData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
       method: "POST",
       headers: {
@@ -101,7 +101,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchFamilyData = async () => {
-    let FamilyData = { operFlag: "V", userId: userId }
+    let FamilyData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
       method: "POST",
       headers: {
@@ -118,7 +118,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchEmploymentData = async () => {
-    let employmentData = { operFlag: "V", userId: userId }
+    let employmentData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
       method: "POST",
       headers: {
@@ -135,7 +135,7 @@ const Candidate_profile = () => {
 
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
-    let skillsData = { operFlag: "V", userId: userId }
+    let skillsData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
       method: "POST",
       headers: {
@@ -151,7 +151,7 @@ const Candidate_profile = () => {
   }
 
   const fetchMedicalData = async () => {
-    let medicalData = { operFlag: "V", userId: userId }
+    let medicalData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
       method: "POST",
       headers: {
@@ -167,7 +167,7 @@ const Candidate_profile = () => {
   }
 
   const fetchLanguageData = async () => {
-    let languageData = { operFlag: "V", userId: userId }
+    let languageData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
       method: "POST",
       headers: {
@@ -183,7 +183,7 @@ const Candidate_profile = () => {
   }
 
   const fetchQualificationData = async () => {
-    let qualficationData = { operFlag: "V", userId: userId }
+    let qualficationData = { operFlag: "V", candidateId: userId }
     let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateQualification", {
       method: "POST",
       headers: {

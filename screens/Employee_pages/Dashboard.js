@@ -13,6 +13,7 @@ import { DrawerActions } from '@react-navigation/native';
 import Loader from '../../components/Loader';
 import COLORS from '../../constants/theme';
 import { useSelector } from "react-redux";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -22,6 +23,7 @@ const Home = props => {
   let Name = logInUserData.userName
   const [punchButtonColor, setPunchButtonColor] = useState(COLORS.green);
   const [inOut, setInOut] = useState('In');
+  const [address, setAddress] = useState(null);
   const [punchInToken, setPunchInToken] = useState('I');
   const [punchInTime, setPunchInTime] = useState('--:--');
   const [punchOutTime, setPunchOutTime] = useState('--:--');
@@ -39,7 +41,10 @@ const Home = props => {
   var markedDates = {};
 
   const getCurrentLocation = async (val) => {
+    let loginPlace = await AsyncStorage.getItem("Address")
+    setAddress(loginPlace)
     Geolocation({ val });
+    // console.warn("punch in address", address)
   };
 
   const loadingData = async (val) => {
@@ -161,17 +166,20 @@ const Home = props => {
       <ScrollView>
 
         {/* header */}
-        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation:7, shadowColor:COLORS.green }}>
 
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
           </TouchableOpacity>
 
           <View>
-            <Text style={{ fontWeight: 500 }}>Welcome</Text>
-            <Text style={{ color: COLORS.orange, fontSize: 16 }}>
+            <Text style={{ fontWeight: 500, fontSize:11 }}>Welcome</Text>
+            <Text style={{ color: COLORS.orange, fontSize: 15 }}>
               {Name?.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
             </Text>
+            {address && <Text style={{fontSize:11, color:COLORS.black, fontWeight:400}}>
+              {address?.length < 15 ? `${address}` : `${address?.substring(0, 40)}...`}{' '}
+            </Text>}
           </View>
 
           <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
@@ -183,7 +191,7 @@ const Home = props => {
         {/* Main Content-Calendar */}
         <Calendar
           initialDate={year}
-          style={{ marginBottom: 20, elevation: 4, backgroundColor: '#fff', height: 400, justifyContent: 'center', }}
+          style={{ marginBottom: 20,elevation:-4, backgroundColor: '#fff', height: 400, justifyContent: 'center', }}
           theme={{ arrowColor: 'black', monthTextColor: 'black', textSectionTitleColor: 'black', }}
           markedDates={markedDate}
           onMonthChange={month => {
