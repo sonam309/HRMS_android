@@ -86,7 +86,7 @@ const ForgetPassword = (props) => {
       // console.warn("hit api");
       // ChangePasswordApi()
       // reset flag=R, create mpin flag=M
-      props.navigation.navigate("Employee")
+      props.navigation.navigate("Employee_Login")
     } else {
       console.warn("Quick Pin and Confirm Quick Pin should be same")
     }
@@ -109,7 +109,7 @@ const ForgetPassword = (props) => {
       const returnedData = response.data.Result;
       let result = returnedData.map(a => a.FLAG);
 
-      result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee") : props.navigation.navigate("Candidate")) :
+      result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate")) :
         Alert.alert("Failure", "Error")
     })
   }

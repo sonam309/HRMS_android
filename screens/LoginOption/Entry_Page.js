@@ -4,8 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entry_logo, company_logo } from '../../assets';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
+import { useSelector } from "react-redux";
 
 const Entry_page = (props) => {
+    const { userId, userName } = useSelector(state => state.auth)
+
+    console.warn("Id",userId)
+    console.warn("name",userName)
+
     let page = null
 
     const setEmployee = async () => {
@@ -17,7 +23,7 @@ const Entry_page = (props) => {
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
         {
-            page ? (page === 'employee' ? props.navigation.navigate("Employee") : props.navigation.navigate("Candidate")) : null
+            page ? (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate")) : null
         }
     }
     useEffect(() => {
@@ -41,7 +47,7 @@ const Entry_page = (props) => {
 
             {/* Options */}
             <View style={{ flex: 3, justifyContent: 'center' }}>
-                <TouchableOpacity onPress={() => { props.navigation.navigate("Employee"), setEmployee() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.green }]}>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("Employee_Login"), setEmployee() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.green }]}>
                     <Text style={[styles.loginButtonText]}>Employee</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.orange1 }]}>

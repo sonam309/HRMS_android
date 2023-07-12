@@ -18,24 +18,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let currentDate = new Date().toDateString().split(' ');
-  const logInUserData = useSelector(state => state.auth)
+  const { userId, userName } = useSelector(state => state.auth)
 
-  let Name = logInUserData.userName
-  const [punchButtonColor, setPunchButtonColor] = useState(COLORS.green);
-  const [inOut, setInOut] = useState('In');
   const [address, setAddress] = useState(null);
-  const [punchInToken, setPunchInToken] = useState('I');
   const [punchInTime, setPunchInTime] = useState('--:--');
   const [punchOutTime, setPunchOutTime] = useState('--:--');
   const [duration, setDuration] = useState('');
-  let userId = logInUserData.userId, inTime = '', outTime = '', timeSpent = '', presentDays = 0, absentDays = 0, count = 0
+  let inTime = '', outTime = '', timeSpent = '', presentDays = 0, absentDays = 0, count = 0
 
   // Calendar
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
   const [loaderVisible, setLoaderVisible] = useState(true);
-  const [year, setYear] = useState(new Date());
+
   const [present, setPresent] = useState(0);
   const [absent, setAbsent] = useState(0);
   var markedDates = {};
@@ -49,7 +45,10 @@ const Home = props => {
 
   const loadingData = async (val) => {
     // fetching data
-    let data = await fetch(
+
+    let punchData = { operFlag: val, userId: userId }
+
+    data = await fetch(
       'https://econnectsatya.com:7033/api/Admin/punchinOut',
       {
         method: 'POST',
@@ -57,31 +56,32 @@ const Home = props => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          operFlag: val,
-          userId: userId,
-        }),
+        body: JSON.stringify(punchData),
       },
-    );
+    ),
 
-    // data to json form
-    data = await data.json()
-    data = data.Result;
-    console.warn(data);
-    data.map(a => a.IN) != "" ? (inTime = data.map(a => a.IN.trim())) : inTime = "00:00"
-    data.map(b => b.DUR) != "" ? (timeSpent = data.map(b => b.DUR.trim())) : timeSpent = "--:--";
-    data.map(b => b.OUT) != "" ? (outTime = data.map(c => c.OUT.trim())) : outTime = "00:00";
-    setPunchInTime(inTime);
-    setPunchOutTime(outTime);
-    setDuration(timeSpent)
-    inTime != "" ? (setPunchButtonColor('red'), setInOut('Out'), setPunchInToken('O')) : (setPunchButtonColor(COLORS.green), setInOut('In'), setPunchInToken('I'))
-    setLoaderVisible(false)
+      // data to json form
+      data = await data.json(),
+      data = data.Result[0],
+      console.log("data", data),
+
+      data.IN != "" ? inTime = data.IN.trim() : inTime = "00:00",
+      data.DUR != "" ? timeSpent = data.DUR.trim() : timeSpent = "--:--",
+      data.OUT != "" ? outTime = data.OUT.trim() : outTime = "00:00",
+
+      setPunchInTime(inTime),
+      setPunchOutTime(outTime),
+      setDuration(timeSpent),
+      setLoaderVisible(false)
   }
 
   useEffect(() => {
-    loadingData('O');
-    getAttendance();
-    // for handling back button in android
+    userId && getAttendance();
+    userId && loadingData("O");
+  }, [userId]);
+
+  useEffect(() => {
+
     const backAction = () => {
       Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
         {
@@ -104,7 +104,7 @@ const Home = props => {
     return () => {
       backPressHandler.remove();
     };
-  }, []);
+  }, [])
 
   useEffect(() => {
     count = 0;
@@ -114,47 +114,45 @@ const Home = props => {
   }, [selectedMonth]);
 
   const getAttendance = () => {
-    axios
-      .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
-        userId: logInUserData.userId,
-        monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
-      })
-      .then(response => {
-        const returnedData = response?.data?.Result;
-        // Create the final object
-        // console.warn("Returned data is "+returnedData);
-        returnedData.map(obj => {
-          // Extract the date from the DATED field
-          const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
-            'YYYY-MM-DD',
-          );
-          // Determine markedDotColor based on ATTENDANCE_FLAG
-          let markedDotColor = '';
-          if (obj.ATTENDANCE_FLAG === 'A') {
-            markedDotColor = 'red';
-          } else if (obj.ATTENDANCE_FLAG === 'P') {
-            markedDotColor = '#33AA54';
-          } else if (obj.ATTENDANCE_FLAG === 'S') {
-            markedDotColor = 'orange';
-          } else if (obj.ATTENDANCE_FLAG === 'H') {
-            markedDotColor = 'grey';
-          } else {
-            markedDotColor = '#fff';
-          }
-          // Add the date as a key to the final object
-          markedDates[date] = { marked: true, dotColor: markedDotColor };
-          if (count < 1) {
-            markedDates[date].dotColor === 'red' ? (absentDays += 1) : null;
-            markedDates[date].dotColor === ('orange' || '#33AA54')
-              ? (presentDays += 1)
-              : null;
-          }
-        });
-        setMarkedDate(markedDates);
-        count = 1;
-        setPresent(presentDays);
-        setAbsent(absentDays);
+    axios.post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
+      userId: userId,
+      monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
+    }).then(response => {
+      const returnedData = response?.data?.Result;
+
+      // Create the final object
+      returnedData.map(obj => {
+
+        // Extract the date from the DATED field
+        const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
+          'YYYY-MM-DD',
+        );
+        
+        // Determine markedDotColor based on ATTENDANCE_FLAG
+        let markedDotColor = '';
+        if (obj.ATTENDANCE_FLAG === 'A') {
+          markedDotColor = 'red';
+        } else if (obj.ATTENDANCE_FLAG === 'P') {
+          markedDotColor = '#33AA54';
+        } else if (obj.ATTENDANCE_FLAG === 'S') {
+          markedDotColor = 'orange';
+        } else if (obj.ATTENDANCE_FLAG === 'H') {
+          markedDotColor = 'grey';
+        } else {
+          markedDotColor = '#fff';
+        }
+        // Add the date as a key to the final object
+        markedDates[date] = { marked: true, dotColor: markedDotColor };
+        if (count < 1) {
+          markedDates[date].dotColor === 'red' && (absentDays += 1);
+          markedDates[date].dotColor === ('orange' || '#33AA54') && (presentDays += 1);
+        }
       });
+      setMarkedDate(markedDates);
+      count = 1;
+      setPresent(presentDays);
+      setAbsent(absentDays);
+    });
   };
 
 
@@ -166,18 +164,18 @@ const Home = props => {
       <ScrollView>
 
         {/* header */}
-        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation:7, shadowColor:COLORS.green }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor: COLORS.green }}>
 
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
           </TouchableOpacity>
 
           <View>
-            <Text style={{ fontWeight: 500, fontSize:11 }}>Welcome</Text>
+            <Text style={{ fontWeight: 500, fontSize: 11 }}>Welcome</Text>
             <Text style={{ color: COLORS.orange, fontSize: 15 }}>
-              {Name?.length < 15 ? `${Name}` : `${Name?.substring(0, 15)}...`}{' '}
+              {userName?.length < 15 ? `${userName}` : `${userName?.substring(0, 15)}...`}{' '}
             </Text>
-            {address && <Text style={{fontSize:11, color:COLORS.black, fontWeight:400}}>
+            {address && <Text style={{ fontSize: 11, color: COLORS.black, fontWeight: 400 }}>
               {address?.length < 15 ? `${address}` : `${address?.substring(0, 40)}...`}{' '}
             </Text>}
           </View>
@@ -190,8 +188,8 @@ const Home = props => {
 
         {/* Main Content-Calendar */}
         <Calendar
-          initialDate={year}
-          style={{ marginBottom: 20,elevation:-4, backgroundColor: '#fff', height: 400, justifyContent: 'center', }}
+          initialDate=''
+          style={{ marginBottom: 20, elevation: -4, backgroundColor: '#fff', height: 400, justifyContent: 'center', }}
           theme={{ arrowColor: 'black', monthTextColor: 'black', textSectionTitleColor: 'black', }}
           markedDates={markedDate}
           onMonthChange={month => {
