@@ -49,7 +49,7 @@ const BankBottomView = ({ filledDetails, onPress }) => {
 
 
   const DisplayPreviousDetails = () => {
-    console.warn(filledDetails);
+    // console.warn(filledDetails);
     filledDetails && (
       (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
@@ -94,7 +94,7 @@ const BankBottomView = ({ filledDetails, onPress }) => {
     for (let index = 0; index < Object.keys(selectedDoc).length; index++) {
       if (index !== 0) name += ","
       const element = selectedDoc[index];
-      console.warn(element);
+      // console.warn(element);
       name += element.name;
     }
 
@@ -108,15 +108,22 @@ const BankBottomView = ({ filledDetails, onPress }) => {
 
         let bankData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, accountNo: accountNo, operation: selectedOperationValue, accountHolderName: accountHolder, ifscCode: IFSCCode, bankName: selectedBankValue, branchName: branchName, accountType: selectedAccountTypeValue, fileAttachment: fileName }
 
+        console.log("bankdetails",bankData);
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData))
         formData.append('fileUpload', selectedDoc)
+<<<<<<< HEAD
         console.log(formData._parts)
+=======
+        console.log(formData);
+>>>>>>> 212b567dc7292d6ebad1b0e8cd3eecf54007938f
 
         let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
           method: "POST",
           body: formData
         })
+
+        console.log("response", res);
         res = await res.json();
         res = await res?.Result[0]?.MSG
         ToastAndroid.show(res, 3000);

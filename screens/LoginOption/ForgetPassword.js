@@ -8,6 +8,7 @@ import { new_mpin } from '../../assets';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from '../../constants/theme';
+import Loader from '../../components/Loader';
 
 const ForgetPassword = (props) => {
 
@@ -36,6 +37,8 @@ const ForgetPassword = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [mpin, setmpin] = useState('');
   const [URL, setURL] = useState('');
+  const [loaderVisible, setLoaderVisible] = useState(false);
+
 
   // displaying password
   const changeVisibilitynew = () => {
@@ -94,7 +97,7 @@ const ForgetPassword = (props) => {
 
   // Change PAssword in function
   const ChangePasswordApi = () => {
-
+    setLoaderVisible(true);
     console.log("forgetpass", userId)
     const userData = {
       loginId: userId,
@@ -102,11 +105,12 @@ const ForgetPassword = (props) => {
       oldPassword: '',
       oprFlag: oper,
     };
-    console.warn(userId);
+    // console.warn(userId);
     console.log("requestparam", userData);
     console.log("Url", URL);
     axios.post(URL, userData).then((response) => {
       const returnedData = response.data.Result;
+      setLoaderVisible(false);
       let result = returnedData.map(a => a.FLAG);
 
       result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate")) :
@@ -121,7 +125,7 @@ const ForgetPassword = (props) => {
   return (
 
     <View style={styles.container}>
-
+      <Loader loaderVisible={loaderVisible} />
       <View style={styles.Header}>
         <Text style={styles.HeaderText}> {type === "N" ? ("New Quick Pin") : (type === "F" ? "Forgot Quick Pin" : "Forgot Password")} </Text>
       </View>

@@ -33,7 +33,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
             let policyData = {
                 txnId: txnID, operFlag: "D", userId: userId
             }
-            console.warn(policyData);
+            // console.warn(policyData);
 
             let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
                 method: "POST",
@@ -91,7 +91,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                 let medicalData = {
                     txnId: txnId, operFlag: operFlag, candidateId: userId, userId: userId, medicalPolicyName: policyName, medicalPolicynumber: policyNumber, medicalMembershipNumber: membershipNumber, medicalPolicyCategory: policyCategory, policyExpiry: selectedExpiryDate
                 }
-                console.warn(medicalData);
+                // console.warn(medicalData);
 
                 let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
                     method: "POST",

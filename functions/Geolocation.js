@@ -31,7 +31,7 @@ const Geolocation = async ({ val }) => {
         timeout: 30000,
     })
         .then(location => {
-            console.log(location);
+            // console.log(location);
             dist = getDistInKm(location.latitude, location.longitude, 28.54395, 77.33066);
             ReverseGeocoding(location.latitude, location.longitude)
             dist < 0.3 ? Punch({ val }) : (Alert.alert(`Punch ${action} from your office`))

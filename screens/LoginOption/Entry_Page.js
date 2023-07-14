@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 const Entry_page = (props) => {
     const { userId, userName } = useSelector(state => state.auth)
 
-
     let page = null
 
     const setEmployee = async () => {

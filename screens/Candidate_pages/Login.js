@@ -13,7 +13,6 @@ import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
-import { ColorSpace } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = (props) => {
@@ -21,19 +20,19 @@ const Login = (props) => {
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState("333");
-    const [password, setPassword] = useState("Test@123");
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState();
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
-    const [operFlag,setOperFlag]=useState('');
+    const [operFlag, setOperFlag] = useState('');
 
-  
+
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
         {
-          page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null
+            page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null
         }
-      }
+    }
 
     const userData = { loginId: userId, password: password, oprFlag: 'L', oldPassword: "" };
 
@@ -42,7 +41,7 @@ const Login = (props) => {
         return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
     }
 
-   
+
 
     // preventing going to entry page
     const navigation = useNavigation();
@@ -59,20 +58,23 @@ const Login = (props) => {
         setShowVisibility(!showVisibility)
     }
 
-     // forgetpassword
-     const forgetPasswordApi = () => {
-
+    // forgetpassword
+    const forgetPasswordApi = () => {
+        setLoaderVisible(true);
         let otp = RandomNumber("6")
-        console.log("msg",otp+" $ "+userId+ operFlag);
+        console.log("msg", otp + " $ " + userId + operFlag);
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
+                setLoaderVisible(false);
+
                 console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
-               
-                console.log("login",userId);
-              
+
+
+                console.log("login", userId);
+
                 result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : console.log(contact)
             })
     }
@@ -92,20 +94,20 @@ const Login = (props) => {
 
             console.log(returnedData);
             setLoaderVisible(false)
-            result === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole,candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
+            result === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole, candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
 
         })
     }
 
     return (
         <View style={styles.container}>
-           <StatusBar 
-            backgroundColor={COLORS.white} 
-            barStyle="dark-content"/>
+            <StatusBar
+                backgroundColor={COLORS.white}
+                barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
-            <View style={{ flex: 1,  paddingHorizontal: 20 }}>
+            <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
@@ -126,10 +128,10 @@ const Login = (props) => {
 
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
-                {/* onPress={() => props.navigation.navigate("QuickPin", { userId })}  */}
+                    {/* onPress={() => props.navigation.navigate("QuickPin", { userId })}  */}
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 35, height: 35 }} />
-                        <Text style={{ color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
+                        <Text style={{ color: COLORS.darkGray2, ...FONTS.h4 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -141,7 +143,7 @@ const Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => forgetPasswordApi()}>Forgot Password?</Text>
+                    <Text style={styles.forgotPassword} onPress={() => {userId!==''?forgetPasswordApi():Alert.alert("Please enter User Id")}}>Forgot Password?</Text>
                 </TouchableOpacity>
 
             </View>
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     header: {
         marginVertical: 8,
         fontWeight: 'bold',
-        fontSize:16,
+        fontSize: 16,
         color: COLORS.green,
     },
     elevation: {
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
         fontSize: 20,
-       ...FONTS.h3,
+        ...FONTS.h3,
         marginHorizontal: 15
     },
     bottomElement: {

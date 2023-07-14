@@ -226,9 +226,9 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
         // console.warn("Saving data");
         try {
             if (ValidateForm()) {
-                console.warn(operFlag);
+                // console.warn(operFlag);
                 let AddressData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, presentAddress: presentAddress, country: presentSelectedCountryValue, state: presentSelectedStateValue, city: presentCity, pincode: presentPinCode, district: presentDistrict, postOffice: presentPostOffice, subDivison: presentSubDivision, thana: presentThana, peramanentAddress: permanentAddress, permanentCountry: permanentSelectedCountryValue, permanentState: permanentSelectedStateValue, permanentcity: permanentCity, permanentPincode: permanentPinCode, permanentDistrict: permanentDistrict, permanentPostOffice: permanentPostOffice, permanentSubdivion: permanentSubDivision, permanentThana: permanentThana }
-                console.warn("address",AddressData);
+                // console.warn("address",AddressData);
 
 
                 let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveCandidateAddress", {

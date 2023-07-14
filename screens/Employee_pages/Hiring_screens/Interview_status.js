@@ -23,11 +23,13 @@ const Interview_status = (props) => {
             body: JSON.stringify({ operFlag: "V", userId: userId }),
         })
 
+
         res = await res.json()
         
         res = res.Result;
         // console.log("response", res)
         setInterViewDetail(res)
+
     };
 
     // useEffect(() => {

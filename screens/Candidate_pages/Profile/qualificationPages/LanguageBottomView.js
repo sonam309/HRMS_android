@@ -43,7 +43,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             let languageData = {
                 txnId: txnID, operFlag: "D", userId: userId
             }
-            console.warn(languageData);
+            // console.warn(languageData);
 
             let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
                 method: "POST",
@@ -67,7 +67,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
     // for updating language
     const UpdateLanguage = async (item) => {
         setOperFlag("E")
-        { console.warn("updating", item) }
+        // { console.warn("updating", item) }
         setTXNID(item.TXN_ID)
 
         setIsMothertongue(item.MOTHER_TONGUE)

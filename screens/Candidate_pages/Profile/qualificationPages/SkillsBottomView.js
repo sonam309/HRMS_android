@@ -146,7 +146,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
         let skillData = {
           txnId: txnId, operFlag: operFlag, candidateId: userId, userId: userId, skillsName: skill, level: selectedSkillLevelValue, totalExp: totalExperience
         }
-        console.warn(skillData);
+        // console.warn(skillData);
 
         let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
           method: "POST",

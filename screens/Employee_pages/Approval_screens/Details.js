@@ -260,11 +260,11 @@ const Details = (props) => {
     // Fetching data for new job opening
     const getJobOpeningData = async () => {
         let res = await fetch(`https://econnectsatya.com:7033/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
-        console.warn(jobId);
+        // console.warn(jobId);
         res = await res?.json();
         res = await res?.Table[0];
         setJobOpeningData(res);
-        console.warn(res);
+        // console.warn(res);
     }
 
     // Displaying data for new job opening

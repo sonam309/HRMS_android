@@ -54,13 +54,13 @@ const Emp_HistoryBottomView = (props) => {
   }
 
   const SaveEmploymentData = async () => {
-    console.warn("outisde");
+    // console.warn("outisde");
     try {
-      console.warn("inside");
+      // console.warn("inside");
       let employeeData = {
         txnId: TXNID, operFlag: operFlag, candidateId: userId, userId: userId, companyName: companyName, designation: designation, fDate: selcetedFromDate, tDate: selcetedToDate, role: role, lastDrawnSalary: lastSalary, reportingManager: manager, reasonForChange: reason, aboutCompany: aboutCompany, companyAddress: companyAddress, webLink: companyLink, currentlyWorking: currentlyWorking
       }
-      console.warn("saving/updating", employeeData);
+      // console.warn("saving/updating", employeeData);
 
       let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
         method: "POST",
@@ -85,8 +85,13 @@ const Emp_HistoryBottomView = (props) => {
       let employmentData = {
         txnId: txnId, operFlag: "D", userId: userId
       }
+<<<<<<< HEAD
       console.warn(employmentData);
       let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
+=======
+      // console.warn(employmentData);
+      let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+>>>>>>> 212b567dc7292d6ebad1b0e8cd3eecf54007938f
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -105,7 +110,7 @@ const Emp_HistoryBottomView = (props) => {
   }
 
   const UpdateEmployment = (item) => {
-    console.warn(item.TXN_ID);
+    // console.warn(item.TXN_ID);
 
     setOperFlag("E")
     setSelectedFromDate(item.FROM_DATE)
