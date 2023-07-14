@@ -8,6 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
@@ -21,7 +22,12 @@ const Details = (props) => {
     const userId = useSelector(state => state.auth.userId)
     let modifiedTemplate = null;
 
+    const [hirningLead, setHiringLead] = useState();
+    const [selectedhirningLead, setSelectedHiringLead] = useState();
+    const [selectedHiringLeadValue, setSelectedHiringLeadValue] = useState('');
+
     useEffect(() => {
+        getDropdownData('L');
         {
             switch (category) {
                 case "Salary Allocation":
@@ -36,6 +42,42 @@ const Details = (props) => {
             }
         }
     }, [])
+
+    // Title, States and Employment Data
+    const getDropdownData = async (P) => {
+        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        response = await response.json();
+        const returnedData = response;
+
+        if (P === 'L') {
+            setHiringLead(returnedData)
+        }
+    }
+
+    // getting state value
+    const checkHiringLeadValue = (value) => {
+        {
+            for (let index = 0; index < hirningLead.length; index++) {
+                const element = hirningLead[index];
+                if (element.PARAM_NAME === value) setSelectedHiringLeadValue(element.PARAM_ID);
+            }
+        }
+    }
+
+    const selectedDropDownText = (id) => {
+        if (id === "hiringLead") {
+            return jobRequestData.HIRING_LEAD_NAME ? jobRequestData.HIRING_LEAD_NAME : hirningLead?.map(a => a.PARAM_NAME)[0]
+        }
+    }
+
+    const selectDropDownValue = (id) => {
+        if (id === "hiringLead") {
+            return jobRequestData.HIRING_LEAD ? jobRequestData.HIRING_LEAD : hirningLead?.map(a => a.PARAM_ID)[0];
+        }
+    }
+
+    
+
 
     // Variables to be updated for salary allocation
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
@@ -98,7 +140,7 @@ const Details = (props) => {
     const jobRequestAction = async (opr) => {
         // console.warn("opr flag", opr);
         var formData = new FormData();
-        formData.append('data', JSON.stringify({ operFlag: opr, txnId: jobId }),);
+        formData.append('data', JSON.stringify({ operFlag: opr, txnId: jobId, jobLeadId: selectedHiringLeadValue }),);
 
         try {
             let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
@@ -246,13 +288,15 @@ const Details = (props) => {
     const getJobRequestData = async () => {
         let formData = new FormData();
         formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: userId }))
+        console.log("first", formData._parts)
         let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
             method: "POST",
             body: formData
         })
         res = await res?.json()
+        console.log("after",res)
         res = await res?.Table[0]
-        console.log(res)
+        // console.log("responsedataJobb req",res)
         setJobRequestData(res)
         // console.log("job request", res);
     }
@@ -422,8 +466,14 @@ const Details = (props) => {
                 {/* More details -> Posted by, Location, experience, Date Posted */}
                 <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
 
-                    <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
-                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.HIRING_LEAD_NAME}</Text>
+                    {/* <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.HIRING_LEAD_NAME}</Text> */}
+
+                    <View style={{ height: 75, }}>
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
+                        <SelectDropdown data={hirningLead?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedHiringLead(value), checkHiringLeadValue(value) }} defaultButtonText={selectedDropDownText("hiringLead")} defaultValueByIndex={selectDropDownValue("hiringLead")} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
+                    </View>
+
 
                     <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Minimum Experience </Text>
                     <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.MIN_EXP} years</Text>
@@ -553,6 +603,20 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 40,
         marginVertical: 5
+    },
+
+    inputHolder: {
+        borderWidth: 1,
+        borderColor: COLORS.gray,
+        flex: 1,
+        borderRadius: 10,
+        marginHorizontal: 0,
+        marginVertical: 5,
+        height: 50,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10
     },
 })
 export default Details

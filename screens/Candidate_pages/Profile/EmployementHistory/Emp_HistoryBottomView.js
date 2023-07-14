@@ -87,7 +87,7 @@ const Emp_HistoryBottomView = (props) => {
       }
       console.warn(employmentData);
       // console.warn(employmentData);
-      let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
         method: "POST",
         headers: {
           Accept: "application/json",

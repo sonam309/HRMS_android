@@ -15,7 +15,7 @@ const Approved = (props) => {
         axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                // console.log(returnedData);
+                console.log("approvals",returnedData);
                 setApprovedData(returnedData);
             });
     };

@@ -16,12 +16,11 @@ import { FONTS } from '../../constants/font_size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = (props) => {
-
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState();
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -84,7 +83,6 @@ const Login = (props) => {
         setLoaderVisible(true)
         axios.post('https://econnectsatya.com:7033/api/User/candidateLogin', userData).then((response) => {
             const returnedData = response.data.Result[0];
-            let result = returnedData.FLAG;
             let candidateName = returnedData.CANDIDATE_NAME
             let candidateStatus = returnedData.CANDIDATE_STATUS
             let candidateRole = returnedData.JOB_TITLE
@@ -92,9 +90,9 @@ const Login = (props) => {
             let candidateRoleId = returnedData.ROLE_ID
             let candidateStatusId = returnedData.STATUS_ID
 
-            console.log(returnedData);
+            console.log("response",returnedData);
             setLoaderVisible(false)
-            result === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole, candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
+            returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole, candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
 
         })
     }

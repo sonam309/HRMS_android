@@ -113,7 +113,7 @@ const ForgetPassword = (props) => {
       setLoaderVisible(false);
       let result = returnedData.map(a => a.FLAG);
 
-      result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate")) :
+      result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login")) :
         Alert.alert("Failure", "Error")
     })
   }

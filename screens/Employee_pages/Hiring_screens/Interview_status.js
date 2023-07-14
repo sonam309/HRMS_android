@@ -29,7 +29,6 @@ const Interview_status = (props) => {
         res = res.Result;
         // console.log("response", res)
         setInterViewDetail(res)
-
     };
 
     // useEffect(() => {
