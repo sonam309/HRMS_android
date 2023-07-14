@@ -112,11 +112,8 @@ const BankBottomView = ({ filledDetails, onPress }) => {
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData))
         formData.append('fileUpload', selectedDoc)
-<<<<<<< HEAD
+
         console.log(formData._parts)
-=======
-        console.log(formData);
->>>>>>> 212b567dc7292d6ebad1b0e8cd3eecf54007938f
 
         let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
           method: "POST",

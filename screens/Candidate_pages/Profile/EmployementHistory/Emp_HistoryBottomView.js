@@ -85,13 +85,9 @@ const Emp_HistoryBottomView = (props) => {
       let employmentData = {
         txnId: txnId, operFlag: "D", userId: userId
       }
-<<<<<<< HEAD
       console.warn(employmentData);
-      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
-=======
       // console.warn(employmentData);
       let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
->>>>>>> 212b567dc7292d6ebad1b0e8cd3eecf54007938f
         method: "POST",
         headers: {
           Accept: "application/json",
