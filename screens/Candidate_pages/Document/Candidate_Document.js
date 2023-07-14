@@ -63,7 +63,7 @@ const Candidate_Document = (props) => {
             let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
 
 
-            console.warn(newFile, "this is newfile", type)
+            // console.warn(newFile, "this is newfile", type)
 
             switch (type) {
                 case 129:
@@ -206,7 +206,7 @@ const Candidate_Document = (props) => {
         let names = '';
 
         for (let index = 0; index < aadharCard.length; index++) {
-            console.warn("aadhar card", aadharCard[index].uri);
+            // console.warn("aadhar card", aadharCard[index].uri);
 
             if (aadharCard[index].uri) {
                 const element = aadharCard[index];
@@ -217,7 +217,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < panCard.length; index++) {
 
-            console.warn("pan card", panCard[index].uri);
+            // console.warn("pan card", panCard[index].uri);
 
             if (panCard[index].uri) {
                 const element = panCard[index];
@@ -227,7 +227,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < salarySlip.length; index++) {
 
-            console.warn("ss", salarySlip[index].uri);
+            // console.warn("ss", salarySlip[index].uri);
 
             if (salarySlip[index].uri) {
                 const element = salarySlip[index];
@@ -237,7 +237,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < otherFiles.length; index++) {
 
-            console.warn("oF", otherFiles[index]?.uri);
+            // console.warn("oF", otherFiles[index]?.uri);
 
             if (otherFiles[index]?.uri) {
                 const element = otherFiles[index];
@@ -297,7 +297,7 @@ const Candidate_Document = (props) => {
 
     const FileAdding = () => {
         let fileName = getFileName();
-        console.warn(fileName);
+        // console.warn(fileName);
 
         for (let index = 0; index < aadharCard.length; index++) {
             if (aadharCard[index].uri) {
@@ -383,7 +383,7 @@ const Candidate_Document = (props) => {
     const DeleteDoc = async (TXNID) => {
 
         let candidateData = { txnId: TXNID, operFlag: "D" }
-        console.warn(candidateData);
+        // console.warn(candidateData);
 
         let newFormData = new FormData()
 

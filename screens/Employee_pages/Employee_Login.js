@@ -19,8 +19,8 @@ import { FONTS } from '../../constants/font_size';
 const Employee_Login = (props) => {
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState("10011");
-    const [password, setPassword] = useState("Kapil@123");
+    const [userId, setUserId] = useState('10011');
+    const [password, setPassword] = useState('Kapil@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -87,6 +87,7 @@ const Employee_Login = (props) => {
     }
 
     const forgetPasswordApi = () => {
+        setLoaderVisible(true);
         let otp = RandomNumber("6")
         console.log("emplogin", userId+"  "+otp);
         axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
@@ -96,6 +97,7 @@ const Employee_Login = (props) => {
         }).then((response) => {
 
             const returnedData = response.data.Result;
+            setLoaderVisible(false);
             console.log(returnedData);
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
@@ -162,7 +164,7 @@ const Employee_Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => forgetPasswordApi()}>Forgot Password?</Text>
+                    <Text style={styles.forgotPassword} onPress={() => (userId!==''?forgetPasswordApi():Alert.alert("Please enter User id"))}>Forgot Password?</Text>
                 </TouchableOpacity>
             </View>
 

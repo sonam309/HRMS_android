@@ -26,13 +26,13 @@ const QuickPin = (props) => {
             oprFlag: 'L',
         };
 
-        console.warn(userData);
+        // console.warn(userData);
 
         // https://econnectsatya.com:7033/api/User/login
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
-            console.warn(result);
+            // console.warn(result);
             result[0] === "S" ? (props.navigation.navigate("Employee_page",
                 { full_name, userId })) :
                 Alert.alert("Failure", "Please enter correct credentials")

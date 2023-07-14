@@ -71,6 +71,7 @@ const Candidate_profile = () => {
   const fetchPersonalData = async () => {
     let PersonalData = { operFlag: "V", candidateId:userId }
     var formData = new FormData();
+    console.log(PersonalData)
     formData.append('data', JSON.stringify(PersonalData))
     let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
       method: "POST",
@@ -78,7 +79,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.warn("candidate profile", res);
+    console.log("candidate profile", res);
     setFilledDetails(res);
   }
 
@@ -95,7 +96,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.warn(res);
+    // console.warn(res);
     setFilledDetails(res);
   }
 
@@ -112,7 +113,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("family data", res);
+    // console.warn("family data", res);
     setMembers(res);
   }
 
@@ -129,7 +130,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("employment data", res);
+    // console.warn("employment data", res);
     setEmployement(res);
   }
 
@@ -146,7 +147,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("employment data", res);
+    // console.warn("employment data", res);
     setSkills(res);
   }
 
@@ -162,7 +163,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("medical data", res);
+    // console.warn("medical data", res);
     setMedicalPolicy(res);
   }
 
@@ -178,7 +179,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("language data", res);
+    // console.warn("language data", res);
     setLanguages(res);
   }
 
@@ -194,7 +195,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.warn("qualfication Data", res);
+    // console.warn("qualfication Data", res);
     setQualification(res);
   }
 

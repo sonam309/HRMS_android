@@ -36,6 +36,10 @@ const Home = props => {
   const [absent, setAbsent] = useState(0);
   var markedDates = {};
 
+
+
+
+  
   const getCurrentLocation = async (val) => {
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
@@ -81,31 +85,31 @@ const Home = props => {
     userId && loadingData("O");
   }, [userId]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const backAction = () => {
-      Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
-        {
-          text: 'No',
-          onPress: () => null,
-        },
-        {
-          text: 'Yes',
-          onPress: () => BackHandler.exitApp(),
-        },
-      ]);
-      return true;
-    };
+  //   const backAction = () => {
+  //     Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
+  //       {
+  //         text: 'No',
+  //         onPress: () => null,
+  //       },
+  //       {
+  //         text: 'Yes',
+  //         onPress: () => BackHandler.exitApp(),
+  //       },
+  //     ]);
+  //     return true;
+  //   };
 
-    const backPressHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
+  //   const backPressHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
 
-    return () => {
-      backPressHandler.remove();
-    };
-  }, [])
+  //   return () => {
+  //     backPressHandler.remove();
+  //   };
+  // }, [])
 
   useEffect(() => {
     count = 0;

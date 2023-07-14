@@ -12,14 +12,10 @@ const App = () => {
 
   async function getNewFCMToken() {
     let fcmToken = await AsyncStorage.getItem('FCMToken');
-    // console.warn("old one", fcmToken)
-
     if (!fcmToken) {
-
       try {
         fcmToken = await messaging().getToken();
         if (fcmToken) {
-          // console.warn("new one", fcmToken)
           AsyncStorage.setItem('FCMToken', fcmToken);
         }
       } catch (error) {
@@ -50,7 +46,6 @@ const App = () => {
       console.log(JSON.stringify(remoteMessage));
     });
 
-    // return {unsubscribe, otherOne};
   }, []);
 
   return (

@@ -17,7 +17,7 @@ const Offer_Letter = () => {
   }, [])
 
   const requestFilePermission = async () => {
-    console.warn("Inside permisiion funct");
+    // console.warn("Inside permisiion funct");
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -93,7 +93,7 @@ const Offer_Letter = () => {
   return (
 
     <>
-      <View style={{ flexDirection: 'row',  paddingVertical: 20, alignItems: 'center' ,marginTop:5,marginBottom:20}}>
+      <View style={{ flexDirection: 'row', paddingVertical: 20, alignItems: 'center', marginTop: 5, marginBottom: 20 }}>
 
         {offerLetter &&
           <Icons name='file-download' onPress={() => requestFilePermission()} color={COLORS.black} size={30} style={{ position: 'absolute', right: 20 }} />}

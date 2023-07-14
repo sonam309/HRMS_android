@@ -119,7 +119,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
     let info = ''
 
     for (let index = 0; index < nomineeMember.length; index++) {
-      console.warn(nomineeMember[index])
+      // console.warn(nomineeMember[index])
 
       const element = nomineeMember[index]
       info += selectedNominationTypeValue + "," + element.guardianName + "," + element.share + "~"
@@ -165,7 +165,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
     }
   }
 
-  console.warn(nomineeMember)
+  // console.warn(nomineeMember)
 
   const onChangeValue = (e) => {
     setNewNominee({ ...newNominee, [e.target.name]: e.target.value })

@@ -78,7 +78,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
             let qualificationData = {
                 txnId: txnID, operFlag: "D", userId: userId
             }
-            console.warn(qualificationData);
+            // console.warn(qualificationData);
 
             let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateQualification", {
                 method: "POST",

@@ -42,7 +42,7 @@ const CreateMpin = (props) => {
         }).then((response) => {
 
             const returnedData = response.data.Result;
-            console.warn(returnedData);
+            // console.warn(returnedData);
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
