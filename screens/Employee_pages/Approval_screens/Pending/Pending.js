@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../../../../components/Loader'
 
 const Pending = (props) => {
     const { navigation, flag, notificationCat } = props;
     const [pendingData, setPendingData] = useState([])
+    const [loaderVisible, setLoaderVisible] = useState(true);
     let action = "P";
     let openingCategory, backColor;
     const userId = useSelector(state => state.auth.userId)
@@ -17,12 +20,20 @@ const Pending = (props) => {
                 const returnedData = response?.data?.Result;
                 // console.log(returnedData);
                 setPendingData(returnedData);
+                setLoaderVisible(false)
             });
     };
 
     useEffect(() => {
         getData();
+        console.log("Hello from pending")
     }, [notificationCat])
+
+    useFocusEffect(
+        useCallback(() => {
+            (getData())
+        }, [notificationCat])
+    )
 
     function ListItems(props) {
         const date = props.applyDate, mail_body = props.mail, approver = props.pending_by, candidate_ID = props.id, category = props.cat, jobId = props.jobId
@@ -43,7 +54,7 @@ const Pending = (props) => {
         }
 
         return (
-            <TouchableOpacity key={candidate_ID} style={[styles.ListIcons, styles.Elevation]} onPress={() => navigation.navigate("Details", { candidate_ID, category, date, mail_body, approver, action, jobId })}>
+            <TouchableOpacity key={candidate_ID} style={[styles.ListIcons, styles.Elevation]} onPress={() => { navigation.navigate("Details", { candidate_ID, category, date, mail_body, approver, action, jobId }) }}>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 14, fontWeight: '500', color: COLORS.black }}>Applied date {'-'} <Text style={{ fontSize: 14, fontWeight: '400', color: COLORS.voilet }}> {date}</Text> </Text>
@@ -60,6 +71,7 @@ const Pending = (props) => {
     const Hiring = () => {
         return (
             <>
+                <Loader loaderVisible={loaderVisible} />
                 {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
             </>
 

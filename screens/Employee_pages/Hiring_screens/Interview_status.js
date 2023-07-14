@@ -23,7 +23,7 @@ const Interview_status = (props) => {
             .then(response => {
                 const returnedData = response?.data?.Result;
                 setInterViewDetail(returnedData)
-                console.log(returnedData)
+                // console.log(returnedData)
             }).catch((err) => {
                 console.warn(err);
                 ToastAndroid.show(err, 3000)
@@ -93,7 +93,7 @@ const Interview_status = (props) => {
                 {/* ListView  */}
                 <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
                     <ScrollView >
-                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={props.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
+                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={props.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
                     </ScrollView>
                 </View>
 

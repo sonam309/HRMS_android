@@ -40,6 +40,7 @@ const Home = props => {
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
     Geolocation({ val });
+    loadingData(val)
     // console.warn("punch in address", address)
   };
 
@@ -65,12 +66,12 @@ const Home = props => {
       data = data.Result[0],
       console.log("data", data),
 
-      data.IN != "" ? inTime = data.IN.trim() : inTime = "00:00",
-      data.DUR != "" ? timeSpent = data.DUR.trim() : timeSpent = "--:--",
-      data.OUT != "" ? outTime = data.OUT.trim() : outTime = "00:00",
+      data?.IN ? inTime = data?.IN?.trim() : inTime = "--:--",
+      data?.DUR !== "" ? timeSpent = data?.DUR?.trim() : timeSpent = "--:--",
+      data?.OUT ? outTime = data?.OUT?.trim() : outTime = "--:--",
 
       setPunchInTime(inTime),
-      setPunchOutTime(outTime),
+      (val === "O" && setPunchOutTime(outTime)),
       setDuration(timeSpent),
       setLoaderVisible(false)
   }
@@ -127,7 +128,7 @@ const Home = props => {
         const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
           'YYYY-MM-DD',
         );
-        
+
         // Determine markedDotColor based on ATTENDANCE_FLAG
         let markedDotColor = '';
         if (obj.ATTENDANCE_FLAG === 'A') {

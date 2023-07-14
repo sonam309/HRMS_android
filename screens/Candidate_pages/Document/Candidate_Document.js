@@ -49,12 +49,13 @@ const Candidate_Document = (props) => {
         })
 
         res = await res.json()
+        console.log("res",res)
         setDocInfo(res.Table1[0]);
 
         let docFiles = res.Table;
         { docFiles.length > 0 && setOperFlag("E") }
         // console.warn("docfiles", docFiles);
-        console.log(docFiles)
+        // console.log(docFiles)
 
 
 
@@ -473,7 +474,7 @@ const Candidate_Document = (props) => {
 
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
 
-                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => onRemoveOtherFiles(index, setFile, file)} >
+                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => {onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId)}} >
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                 </TouchableOpacity>
 

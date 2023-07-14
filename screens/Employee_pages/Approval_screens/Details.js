@@ -83,13 +83,15 @@ const Details = (props) => {
     const SalaryAction = (oprFlag) => {
         axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: oprFlag })
             .then(response => {
+                console.log("salary", SalaryDetails)
                 const returnedData = response?.data;
                 console.log("this is response from backend", returnedData);
                 ToastAndroid(returnedData?.MSG, 3000)
-                // setDisableBtn(true);
+                setDisableBtn(true);
             })
             .catch(error => {
-                Alert.alert('Error', error);
+                // Alert.alert('Error', error);
+                console.log("error", error)
             });
     };
 
@@ -105,9 +107,13 @@ const Details = (props) => {
 
             })
             res = await res.json();
-            res = res?.Result;
-            // console.warn(res);
-            ToastAndroid.show(res[0].MSG, 3000)
+            console.log("before", res);
+
+            ToastAndroid.show(res.MSG, 3000)
+
+            if (res.FLAG === "S") {
+                props.navigation.goBack()
+            }
 
         } catch (error) {
             console.log(error)
@@ -165,8 +171,8 @@ const Details = (props) => {
     const updating = () => {
         // console.warn(data);
         fullName = data.Table1[0]?.FULL_NAME
-        JobTitle = data?.Table[0]?.DESIGNATION,
-            contactPersonMob = data.Table1[0]?.CONTACT_PERSON
+        JobTitle = data?.Table[0]?.DESIGNATION
+        contactPersonMob = data.Table1[0]?.CONTACT_PERSON
         contactPersonName = data.Table1[0]?.FULL_NAME
         candidateDep = data?.Table[0]?.DEPARTMENT_NAME
         baseSalary = data.Table[0]?.BASIC_SAL
@@ -374,6 +380,8 @@ const Details = (props) => {
 
                 </View>
 
+                {jobRequestData && setLoaderVisible(false)}
+
                 {/* Position */}
                 <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
 
@@ -438,7 +446,6 @@ const Details = (props) => {
                         <Text >{jobRequestData?.UPLOAD_JD_DOC} </Text>
                     </TouchableOpacity>
                 </View>
-                {jobRequestData && setLoaderVisible(false)}
             </ScrollView>
         ) : null)
 
@@ -457,8 +464,8 @@ const Details = (props) => {
                             <ScrollView>
                                 <Loader loaderVisible={loaderVisible} />
                                 <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
+                                {modifiedTemplate && setLoaderVisible(false)}
                             </ScrollView>
-                            {modifiedTemplate && setLoaderVisible(false)}
                         </>
                     )
                 }

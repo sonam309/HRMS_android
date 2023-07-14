@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../components/Loader'
 import { COLORS } from '../../../constants/theme'
 import { useSelector } from 'react-redux'
+import { useFocusEffect } from '@react-navigation/native';
 
 const New_hiring = (props) => {
     const { navigation, selectedOption } = props
@@ -13,9 +14,16 @@ const New_hiring = (props) => {
     let counting = 0;
     const userId = useSelector(state => state.auth.userId)
 
-    useEffect(() => {
-        getJobOpening();
-    }, [])
+    // useEffect(() => {
+    //     getJobOpening();
+    // }, [])
+
+    useFocusEffect(
+        useCallback(() => {
+            setLoaderVisible(true)
+            getJobOpening()
+        }, [])
+    );
 
     // all job opening data
     const getJobOpening = async () => {
@@ -28,7 +36,7 @@ const New_hiring = (props) => {
             })
             res = await res?.json();
 
-            console.log(res)
+            // console.log(res)
             res = await res?.Table
             setJobOpening(res);
             setLoaderVisible(false)

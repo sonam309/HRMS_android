@@ -9,7 +9,7 @@ import axios from "axios";
 import { useSelector } from 'react-redux'
 
 const CreateNewJobOpening = (props) => {
-    const {navigation} = props
+    const { navigation } = props
 
     // for getting and setting data from API  
     const [titleOption, setTitleOption] = useState();
@@ -69,7 +69,7 @@ const CreateNewJobOpening = (props) => {
 
             })
             .catch(error => {
-                console.log("error while approver info",error)
+                console.log("error while approver info", error)
             });
 
     }
@@ -148,7 +148,6 @@ const CreateNewJobOpening = (props) => {
             openPosition === '' ||
             compensation === '' ||
             experience === '' ||
-            Object.keys(selectedDoc).length === 0 ||
             userId === '' ||
             userDeptId === '' ||
             approverId === '' ||
@@ -202,8 +201,8 @@ const CreateNewJobOpening = (props) => {
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(jobOpeningdata))
 
-                formData.append('fileUpload', selectedDoc)
-                console.log("form info",formData._parts)
+                selectedDoc.length > 0 && formData.append('fileUpload', selectedDoc)
+                console.log("form info", formData._parts)
 
 
                 // Posting new job opening 
@@ -214,10 +213,10 @@ const CreateNewJobOpening = (props) => {
                 })
                 res = await res.json();
                 console.log("job applied", res)
-                // console.log((res.Result[0].MSG))
                 ToastAndroid.show(res.Result[0].MSG, 3000);
-
-                // props.navigation.navigate("Otp_Verification", { contact, otp, userName }))
+                if (res.Result[0].FLAG === "S") {
+                    props.navigation.navigate("Hiring_page")
+                }
 
                 // API used for sending message
                 const notif = await fetch("https://fcm.googleapis.com/fcm/send", {
@@ -273,7 +272,7 @@ const CreateNewJobOpening = (props) => {
             <View style={styles.newJobOpeneingTxt}>
                 <Icon name='book-plus-outline' color={COLORS.green} size={24} style={{ alignItems: 'center', padding: 2 }} />
                 <Text style={{ color: COLORS.green, fontSize: 14, fontWeight: '500', textAlignVertical: 'center', padding: 5 }}>
-                    New Job Opening</Text>
+                    New Job Opening Request</Text>
             </View>
 
             {/* Posting Title dropdown */}
@@ -360,7 +359,7 @@ const CreateNewJobOpening = (props) => {
                 <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => ApplyJob()}>
                     <Text style={{ color: 'white' }}>Save Job Opening</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]}>
+                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]} onPress={() => props.navigation.navigate("Hiring_page")}>
                     <Text style={{ color: 'white' }}> Cancel </Text>
                 </TouchableOpacity>
             </View>
@@ -376,7 +375,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'center'
     },
     regilizationBtn: {
         paddingHorizontal: 8,
