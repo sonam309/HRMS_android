@@ -86,7 +86,7 @@ const Details = (props) => {
                 console.log("salary", SalaryDetails)
                 const returnedData = response?.data;
                 console.log("this is response from backend", returnedData);
-                ToastAndroid(returnedData?.MSG, 3000)
+                ToastAndroid.show(returnedData?.MSG, 3000)
                 setDisableBtn(true);
             })
             .catch(error => {

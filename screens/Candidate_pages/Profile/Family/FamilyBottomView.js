@@ -65,7 +65,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
             }
             // console.warn(familyData);
 
-            let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -239,7 +239,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
                 }
                 console.warn("familydata", familyData);
 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
                     method: "POST",
                     headers: {
                         Accept: "application/json",

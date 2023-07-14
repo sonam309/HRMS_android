@@ -5,14 +5,21 @@ import Loader from '../../../components/Loader'
 import { COLORS } from '../../../constants/theme'
 import { useSelector } from 'react-redux'
 import { useFocusEffect } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 const New_hiring = (props) => {
-    const { navigation, selectedOption } = props
+    const { navigation, selectedOption, setFilterVisible } = props
     const [jobOpening, setJobOpening] = useState()
     const [loaderVisible, setLoaderVisible] = useState(true);
     let bannerColor;
     let counting = 0;
     const userId = useSelector(state => state.auth.userId)
+    const route = useRoute();
+
+    console.log("route",route.name)
+
+    if(route.name === "New_hiring"){setFilterVisible(true), console.log("object")} 
+    
 
     // useEffect(() => {
     //     getJobOpening();
@@ -36,7 +43,7 @@ const New_hiring = (props) => {
             })
             res = await res?.json();
 
-            // console.log(res)
+            // console.log("job info", res)
             res = await res?.Table
             setJobOpening(res);
             setLoaderVisible(false)
@@ -105,11 +112,13 @@ const New_hiring = (props) => {
                 {/* Job description */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5, paddingHorizontal: 15 }}>
                     <Text>{upload}
-                    {/* {console.log("sendData",Job_Desc)} */}
+                        {/* {console.log("sendData",Job_Desc)} */}
                     </Text>
+
                     <TouchableOpacity onPress={() => navigation.navigate("Job_Description", { Job_Desc })}>
                         <Text style={{ color: COLORS.green, fontWeight: 500 }}>View JD {'>'}</Text>
                     </TouchableOpacity>
+
                 </View>
 
             </View>

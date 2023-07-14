@@ -111,9 +111,9 @@ const BankBottomView = ({ filledDetails, onPress }) => {
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData))
         formData.append('fileUpload', selectedDoc)
-        // console.log(formData._parts)
+        console.log(formData._parts)
 
-        let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
+        let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
           method: "POST",
           body: formData
         })
@@ -165,7 +165,7 @@ const BankBottomView = ({ filledDetails, onPress }) => {
   };
 
   // selecting bank doc from phone
-  const selectDoc = async () => {
+  const selectDoc1 = async () => {
 
     try {
       const doc = await DocumentPicker.pick({
@@ -184,6 +184,33 @@ const BankBottomView = ({ filledDetails, onPress }) => {
         ToastAndroid.show("Please select a file to upload", 3000)
       }
       else ToastAndroid.show(error)
+    }
+  };
+
+  const selectDoc = async () => {
+    try {
+      const doc = await DocumentPicker.pick({
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.doc,
+          DocumentPicker.types.docx,
+          DocumentPicker.types.images,
+        ],
+      });
+      console.log(doc);
+
+      setSelectedDoc(current => [
+        ...current,
+        {
+          name: `bankDoc_${userId}_${getFormattedTimestamp()}.${doc[0].type.split('/')[1]
+            }`,
+          type: doc[0].type,
+          uri: doc[0].uri
+        },
+      ]);
+
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -13,16 +13,17 @@ import { Colors } from 'react-native/Libraries/NewAppScreen'
 const Candidate_details = (props) => {
   const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail } = props.route.params
   const [isVisible, setIsVisible] = useState(false)
-  const [obtainedTechScoreValue, setObtainedTechScoreValue] = useState('');
-  const [obtainedSpeakScoreValue, setObtainedSpeakScoreValue] = useState('');
-  const [yourRemarks, setYourRemarks] = useState('');
+  const [obtainedTechScoreValue, setObtainedTechScoreValue] = useState("");
+  const [obtainedSpeakScoreValue, setObtainedSpeakScoreValue] = useState("");
+  const [yourRemarks, setYourRemarks] = useState("");
   const [error, setError] = useState(false);
-  const [feedback, setFeedback] = useState('')
+  const [feedback, setFeedback] = useState("")
 
   console.log("candidateId", candidateId);
   console.log("interviewId", interviewId);
   console.log("interviewType", interviewType);
   console.log("interviewMail", interviewMail);
+  console.log("resume", resume);
   let theInterviewType = "";
   let theInterviewId = "";
 
@@ -49,12 +50,13 @@ const Candidate_details = (props) => {
     }
   };
 
-  const onSelectPress = (operFlag) => {
+  const onSelectPress = async (operFlag) => {
     if (validateForm()) {
 
-      // console.log("requestfeedback", candidateId);
-      axios
-        .post(`https://econnectsatya.com:7033/api/hrms/interViewDeatils`, {
+      let res = await fetch("https://econnectsatya.com:7033/api/hrms/interViewDeatils", {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
           candidateId: candidateId,
           feedbackStatus: 'S',
           intervierwerId: interviewMail,
@@ -62,21 +64,19 @@ const Candidate_details = (props) => {
           interviewType: theInterviewType,
           operFlag: operFlag,
           param: `Technical~5~${obtainedTechScoreValue}$Speaking~5~${obtainedSpeakScoreValue}`,
-          remark: yourRemarks,
-        })
-        .then(response => {
-          response = response.json();
-          console.log("object", response)
-        }).then(response => {
-          // const returnedData = response?.config.data;
-          console.log("feedback ", response);
-          setIsVisible(false);
-          // ToastAndroid.show(returnedData[0].MSG, 3000);
-        })
-        .catch(error => {
-          console.log(error);
-          // ToastAndroid.show(error.response.data.Message, 3000);
-        })
+          remark: yourRemarks
+        }),
+      })
+
+      res = await res.json()
+      res = res.Result[0]
+      ToastAndroid.show(res.MSG, 3000)
+      if(res.FLAG === "S"){
+        props.navigation.navigate("Interview_status")
+      }
+      console.log("response", res)
+
+
     }
   };
 
@@ -218,11 +218,11 @@ const Candidate_details = (props) => {
             {/* Submit Buttons */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
-              <TouchableOpacity onPress={() => { onSelectPress('A'), props.navigation.navigate('Interview_status') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5 }]}>
+              <TouchableOpacity onPress={() => { onSelectPress('A') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5 }]}>
                 <Text style={{ color: COLORS.green, fontSize: 18, fontWeight: 600 }}>Select</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => { onSelectPress('R'), props.navigation.navigate('Interview_status') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableOrange1, borderColor: COLORS.orange1, borderWidth: 0.5 }]}>
+              <TouchableOpacity onPress={() => { onSelectPress('R') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableOrange1, borderColor: COLORS.orange1, borderWidth: 0.5 }]}>
                 <Text style={{ color: COLORS.orange, fontSize: 18, fontWeight: 600 }}>Reject</Text>
               </TouchableOpacity>
             </View>
@@ -235,21 +235,18 @@ const Candidate_details = (props) => {
 
 
   // For showing Feedback in case of Completed Interview
-  const getFeedback = () => {
-    axios
-      .post(`https://econnectsatya.com:7033/api/hrms/interViewDeatils`, {
-        candidateId: candidateId,
-        operFlag: 'V',
-      })
-      .then(async response => {
-        // const returnedData = response?.data?.Result;
-        console.log(response);
-        // setFeedback(returnedData[0]);
-        // console.warn(returnedData[0]);
-      })
-      .catch(error => {
-        console.log("error", error.response);
-      });
+  const getFeedback = async () => {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/interViewDeatils", {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ operFlag: "V", candidateId: candidateId }),
+    })
+
+    res = await res.json()
+    res = res.Result[0]
+    setFeedback(res)
+    console.log("response", res)
+
   };
 
   useEffect(() => {

@@ -72,7 +72,7 @@ const Candidate_profile = () => {
     let PersonalData = { operFlag: "V", candidateId:userId }
     var formData = new FormData();
     formData.append('data', JSON.stringify(PersonalData))
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
       method: "POST",
       body: formData
     })
@@ -85,7 +85,7 @@ const Candidate_profile = () => {
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
     let AddressData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/saveCandidateAddress", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveCandidateAddress", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -102,7 +102,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchFamilyData = async () => {
     let FamilyData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -119,7 +119,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchEmploymentData = async () => {
     let employmentData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -136,7 +136,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
     let skillsData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -152,7 +152,7 @@ const Candidate_profile = () => {
 
   const fetchMedicalData = async () => {
     let medicalData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -168,7 +168,7 @@ const Candidate_profile = () => {
 
   const fetchLanguageData = async () => {
     let languageData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -184,7 +184,7 @@ const Candidate_profile = () => {
 
   const fetchQualificationData = async () => {
     let qualficationData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateQualification", {
+    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateQualification", {
       method: "POST",
       headers: {
         Accept: "application/json",

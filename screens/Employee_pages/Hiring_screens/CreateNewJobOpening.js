@@ -7,29 +7,32 @@ import DocumentPicker from 'react-native-document-picker'
 import CustomTextInput from '../../../components/CustomTextInput'
 import axios from "axios";
 import { useSelector } from 'react-redux'
+import Loader from '../../../components/Loader'
 
 const CreateNewJobOpening = (props) => {
-    const { navigation } = props
 
     // for getting and setting data from API  
     const [titleOption, setTitleOption] = useState();
     const [states, setStates] = useState()
     const [employementData, setEmployementData] = useState()
+    const [loaderVisible, setLoaderVisible] = useState(false);
 
     // for setting and posting Data to API
     const [selectedTitle, setSelectedTitle] = useState();
     const [selectedTitleValue, setSelectedTitleValue] = useState('');
     const [selectedState, setSelectedState] = useState();
+    
     const [selectedStateValue, setSelectedStateValue] = useState('');
     const [selectedEmployment, setSelectedEmployment] = useState('');
     const [selectedEmploymentValue, setSelectedEmploymentValue] = useState('');
+
     const [cityValue, setCityValue] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [openPosition, setOpenPosition] = useState('');
     const [compensation, setCompensation] = useState('');
     const [experience, setExperience] = useState('');
     const [jobDescription, setJobDescription] = useState('');
-    const [selectedDoc, setSelectedDoc] = useState({});
+    const [selectedDoc, setSelectedDoc] = useState([]);
 
 
     // for getting user and approver details 
@@ -186,7 +189,7 @@ const CreateNewJobOpening = (props) => {
     // sending formdata to backend
     const ApplyJob = async () => {
         if (validateForm()) {
-
+            setLoaderVisible(true)
             // sending notif to Kamal sir 
             let notifData = {
                 "registration_ids": ["ctSkLjX1RG6tYuIOps4yl6:APA91bGyKsjY1uYEo7QssRkrY-Txq_3ILcSju41m6yOOhLiYZdTaFT3Dz8M3avSvR1RllH7hb9Out0Mdss6aNOxZlXyRqKVtGPYh-EPrInR8lZeL8HCdp-mLqkf0aLSF1xH8p8em-q7l"],
@@ -201,12 +204,13 @@ const CreateNewJobOpening = (props) => {
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(jobOpeningdata))
 
-                selectedDoc.length > 0 && formData.append('fileUpload', selectedDoc)
+                Object.keys(selectedDoc).length > 0 && formData.append('fileUpload', selectedDoc)
                 console.log("form info", formData._parts)
+                console.log("docs", Object.keys(selectedDoc).length)
 
 
                 // Posting new job opening 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
                     method: "POST",
                     body: formData
 
@@ -227,7 +231,7 @@ const CreateNewJobOpening = (props) => {
                     },
                     body: JSON.stringify(notifData)
                 })
-
+                setLoaderVisible(false)
             } catch (error) {
                 console.log(error?.response)
             }
@@ -267,6 +271,7 @@ const CreateNewJobOpening = (props) => {
 
     return (
         <ScrollView style={{ backgroundColor: 'white' }}>
+            <Loader loaderVisible={loaderVisible} />
 
             {/* header text */}
             <View style={styles.newJobOpeneingTxt}>

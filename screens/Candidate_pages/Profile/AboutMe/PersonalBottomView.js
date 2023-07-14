@@ -185,7 +185,7 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
 
             if (ValidateForm()) {
 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/savePersonalDetails", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
                     method: "POST",
                     body: formData
                 })

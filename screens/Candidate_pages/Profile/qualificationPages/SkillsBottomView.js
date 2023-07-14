@@ -55,7 +55,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
       // console.warn(skillData);
 
-      let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
+      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -148,7 +148,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
         }
         console.warn(skillData);
 
-        let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateSkills", {
+        let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
           method: "POST",
           headers: {
             Accept: "application/json",

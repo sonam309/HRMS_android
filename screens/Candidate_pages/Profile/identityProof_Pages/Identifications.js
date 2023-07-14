@@ -147,7 +147,7 @@ const Identifications = (props) => {
       };
       console.log("request", body);
       axios
-        .post(`http://192.168.1.169:7038/api/hrms/indentityProof`, body)
+        .post(`https://econnectsatya.com:7033/api/hrms/indentityProof`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
@@ -164,7 +164,7 @@ const Identifications = (props) => {
 
   const getData = () => {
     axios
-      .post(`http://192.168.1.169:7038/api/hrms/indentityProof`, {
+      .post(`https://econnectsatya.com:7033/api/hrms/indentityProof`, {
         candidateId: 333,
         userId: 333,
         operFlag: 'V',

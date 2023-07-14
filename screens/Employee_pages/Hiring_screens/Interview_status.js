@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ToastAndroid } from 'react-native'
 import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import candidateIcon from '../../../assets/images/candidateIcon.png'
-import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { FONTS } from '../../../constants/font_size'
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const Interview_status = (props) => {
@@ -15,24 +15,30 @@ const Interview_status = (props) => {
     const userId = useSelector(state => state.auth.userId)
 
     // fetching interviewer's list data
-    const fetchInterviewData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/User/InterviewList`, {
-            userId: userId,
-            operFlag: 'V',
+    const fetchInterviewData = async () => {
+
+        let res = await fetch("https://econnectsatya.com:7033/api/User/InterviewList", {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ operFlag: "V", userId: userId }),
         })
-            .then(response => {
-                const returnedData = response?.data?.Result;
-                setInterViewDetail(returnedData)
-                // console.log(returnedData)
-            }).catch((err) => {
-                console.warn(err);
-                ToastAndroid.show(err, 3000)
-            });
+
+        res = await res.json()
+        
+        res = res.Result;
+        // console.log("response", res)
+        setInterViewDetail(res)
     };
 
-    useEffect(() => {
-        fetchInterviewData();
-    }, [status])
+    // useEffect(() => {
+    //     fetchInterviewData();
+    // }, [status])
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchInterviewData()
+        }, [status])
+    );
     // candidate icons 
     function CandidateList(props) {
 

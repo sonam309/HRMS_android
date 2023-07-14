@@ -14,15 +14,16 @@ const Tab = createMaterialTopTabNavigator();
 const CreateHiringTab = (props) => {
     const { navigation } = props
     const [isVisible, setIsVisible] = useState(false)
+    const [filterVisible, setFilterVisible] = useState(true)
     const [selectedOption, setSelectedOption] = useState(null);
     const renderFilterModal = () => {
         return (
             <View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
                 <Text style={{ ...FONTS.h2,color:COLORS.darkGray2}}> Filters </Text>
-                    <TouchableOpacity onPress={() => setIsVisible(false)}>
+                    {filterVisible} && (<TouchableOpacity onPress={() => setIsVisible(false)}>
                         <Icons name="close" size={34} color={COLORS.orange1} />
-                    </TouchableOpacity>
+                    </TouchableOpacity>)
                 </View>
 
                 <View>
@@ -105,7 +106,7 @@ const CreateHiringTab = (props) => {
                 }}
                 >
 
-                <Tab.Screen name="New_hiring" options={{ title: 'Jobs Posted' }} children={() => <New_hiring selectedOption={selectedOption} navigation={props.navigation} />} />
+                <Tab.Screen name="New_hiring" options={{ title: 'Jobs Posted' }} children={() => <New_hiring setFilterVisible={setFilterVisible} selectedOption={selectedOption} navigation={props.navigation} />} />
                 <Tab.Screen name="Interview_status" options={{ title: 'Interview Details' }} children={() => <Interview_status selectedOption={null} navigation={props.navigation} />} />
 
             </Tab.Navigator>
