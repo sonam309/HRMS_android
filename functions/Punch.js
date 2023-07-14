@@ -17,7 +17,7 @@ const Punch = ({ val }) => {
             fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
                 method: "POST",
                 headers: { Accept: "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({ operFlag: val, userId: '10011' }),
+                body: JSON.stringify({ operFlag: val, userId: userId }),
             })
                 .then((response) => response.json())
                 .then((responseData) => {

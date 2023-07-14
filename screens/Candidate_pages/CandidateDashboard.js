@@ -51,7 +51,7 @@ const CandidateDashboard = (props) => {
 
 
     const loadInBrowser = () => {
-        Linking.openURL('https://satyamicrocapital.com/').catch(err => ToastAndroid("Couldn't load page" + err, 4000));
+        Linking.openURL('https://satyamicrocapital.com/').catch(err => ToastAndroid.show("Couldn't load page" + err, 4000));
     };
     return (
         <ScrollView>

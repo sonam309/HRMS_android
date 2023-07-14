@@ -493,7 +493,7 @@ const Candidate_Document = (props) => {
         return (
             <View style={{ flexDirection: 'row', paddingVertical: SIZES.base, paddingHorizontal: SIZES.radius, borderColor: COLORS.transparentGray, backgroundColor: COLORS.white, elevation: 10, shadowColor: COLORS.orange1, shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.1, shadowRadius: 7, alignItems: 'center' }}>
 
-                <Ionicons name="arrow-back" size={28} color={COLORS.black} style={{ position: 'absolute', left: 5 }} onPress={() => props.navigation.goBack()} />
+                <Ionicons name="arrow-back" size={28} color={COLORS.black} style={{ position: 'absolute', left: 5, paddingHorizontal:5 }} onPress={() => props.navigation.goBack()} />
 
                 <Text style={{ ...FONTS.h3, textAlign: 'center', color: COLORS.black, flex: 1 }}> Document </Text>
 
@@ -585,7 +585,7 @@ const Candidate_Document = (props) => {
                     <Text style={{ ...FONTS.h4, color: COLORS.darkGray2, }}>Actions</Text>
                 </View>
 
-                {document && (candidateStatusId === "121") && (<ScrollView>
+                {document && (candidateStatusId === "123" || candidateStatusId === "121" || candidateStatusId === "124" || candidateStatusId === "122") && (<ScrollView>
 
 
                     {/* For uploading aadhar card docs */}
@@ -601,7 +601,7 @@ const Candidate_Document = (props) => {
                 </ScrollView>)
                 }
 
-                {document && (candidateStatusId === "123") &&
+                {document && (candidateStatusId >= "166" ) &&
                     (
                         <ScrollView>
                             {DocumentUploader(aadharCard, setAadharCard, 2, document[0], "imp")}
@@ -635,7 +635,7 @@ const Candidate_Document = (props) => {
                     )
                 }
 
-                {(candidateStatusId === "123" || candidateStatusId === "166") && <TouchableOpacity onPress={() => saveDocs()} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                {(candidateStatusId === "121" || candidateStatusId > "166") && <TouchableOpacity onPress={() => saveDocs()} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: 'white' }}>Submit Documents</Text>
                 </TouchableOpacity>}
 

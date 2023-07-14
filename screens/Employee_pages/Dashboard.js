@@ -41,10 +41,12 @@ const Home = props => {
 
   
   const getCurrentLocation = async (val) => {
+    setLoaderVisible(true)
+    Geolocation({ val });
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
-    Geolocation({ val });
     loadingData(val)
+    setLoaderVisible(false)
     // console.warn("punch in address", address)
   };
 
@@ -169,7 +171,7 @@ const Home = props => {
       <ScrollView>
 
         {/* header */}
-        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor: COLORS.green }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor:COLORS.green }}>
 
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
@@ -194,7 +196,7 @@ const Home = props => {
         {/* Main Content-Calendar */}
         <Calendar
           initialDate=''
-          style={{ marginBottom: 20, elevation: -4, backgroundColor: '#fff', height: 400, justifyContent: 'center', }}
+          style={{ marginBottom: 20, backgroundColor: '#fff',  justifyContent: 'center', marginTop: 10 }}
           theme={{ arrowColor: 'black', monthTextColor: 'black', textSectionTitleColor: 'black', }}
           markedDates={markedDate}
           onMonthChange={month => {

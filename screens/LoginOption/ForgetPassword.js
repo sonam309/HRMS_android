@@ -54,7 +54,7 @@ const ForgetPassword = (props) => {
     page = await AsyncStorage.getItem("type")
     {
       page ? (page === 'employee' ? [setURL('https://econnectsatya.com:7033/api/User/login'), setOper('R')] : [setURL('https://econnectsatya.com:7033/api/User/candidateLogin'), setOper('F')]) : null
-      // page ? (page === 'employee' ? [setURL('http://192.168.1.169:7038//api/User/login'), setOper('R')] : [setURL('http://192.168.1.169:7038//api/User/candidateLogin'), setOper('F')]) : null
+      // page ? (page === 'employee' ? [setURL('https://econnectsatya.com:7033//api/User/login'), setOper('R')] : [setURL('https://econnectsatya.com:7033//api/User/candidateLogin'), setOper('F')]) : null
     }
   }
 
