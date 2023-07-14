@@ -206,7 +206,7 @@ const CreateNewJobOpening = (props) => {
 
 
                 // Posting new job opening 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/jobOpeningRequest", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
                     method: "POST",
                     body: formData
 

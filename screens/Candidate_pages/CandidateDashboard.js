@@ -7,16 +7,23 @@ import { FONTS, SIZES } from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
 import { company_logo_2, expernallinkImage } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import ReverseGeocoding from '../../functions/ReverseGeocoding';
+import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 
 const CandidateDashboard = (props) => {
+    const dispatch = useDispatch();
     const current_Status = useSelector(state => state.candidateAuth.candidateStatus)
     const Job_Title = useSelector(state => state.candidateAuth.candidateRole)
 
+    const { candidateId, candidateName } = useSelector(state => state.candidateAuth)
+
     useEffect(() => {
-        
+
+        console.log(candidateName);
+
+
         // for handling back button in android
         const backAction = () => {
             Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
@@ -49,14 +56,22 @@ const CandidateDashboard = (props) => {
     return (
         <ScrollView>
             {/* header view */}
-            <View style={{ backgroundColor: COLORS.white, paddingHorizontal: 12, paddingBottom: 8, shadowColor: COLORS.orange1, elevation: 5 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
-                    <Text style={{ ...FONTS.h1, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text>
-                    <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', marginTop: 10, marginRight: 10 }}>
-                        <FontAwesomeIcon name="user-circle-o" size={28} color={COLORS.black} />
-                        <Text style={{ ...FONTS.h3, color: COLORS.black, }}>Ashutosh Kumar</Text>
+            <View style={{ backgroundColor: COLORS.white, paddingHorizontal: 12, paddingBottom: 8, shadowColor: COLORS.orange1,
+                elevation: 5 }}>
+
+                <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text>
+                <View style={{flexDirection:'row',width:'100%',alignItems:'center'}}>
+                    <View style={{ flexDirection: 'row', width: '45%', paddingHorizontal: 4, alignItems: 'center', flex: 1 }}>
+
+                        <FontAwesomeIcon name="user-circle-o" size={25} color={COLORS.black} />
+                        <Text style={{ ...FONTS.h3, color: COLORS.black, marginLeft: 8 }}>{candidateName}</Text>
 
                     </View>
+
+                    <TouchableOpacity style={{ justifyContent: 'flex-end', }} onPress={() => { props.navigation.navigate("Candidate_Login"), dispatch(candidateAuthActions.logOut()) }}>
+                        <Icons name='logout' size={30} style={{ color: COLORS.black, padding: 8 }} />
+                    </TouchableOpacity>
+
                 </View>
             </View>
             {/* Status view */}
@@ -109,7 +124,7 @@ const CandidateDashboard = (props) => {
             <View style={{ marginHorizontal: SIZES.radius, }}>
                 <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
                 <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
-                    style={{  marginTop: 10,marginBottom:10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
+                    style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
                         <Image source={expernallinkImage}
                             style={{ height: 20, width: 20, }} />

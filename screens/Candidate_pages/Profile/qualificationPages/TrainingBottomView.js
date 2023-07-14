@@ -83,7 +83,7 @@ const TrainingBottomView = (props) => {
 
     console.log("request", body);
     axios
-      .post(`http://192.168.1.169:7038/api/hrms/candidateTrainInfo`, body)
+      .post(`https://econnectsatya.com:7033/api/hrms/candidateTrainInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
@@ -100,7 +100,7 @@ const TrainingBottomView = (props) => {
 
   const getData = () => {
     axios
-        .post(`http://192.168.1.169:7038/api/hrms/candidateTrainInfo`, {
+        .post(`https://econnectsatya.com:7033/api/hrms/candidateTrainInfo`, {
             candidateId: 333,
             userId: 333,
             operFlag: 'V',

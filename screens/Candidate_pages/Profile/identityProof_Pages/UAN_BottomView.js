@@ -67,7 +67,7 @@ const UAN_BottomView = (props) => {
 
   const getData = () => {
     axios
-      .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, {
+      .post(`https://econnectsatya.com:7033/api/hrms/saveCandidateUanInfo`, {
         candidateId: 333,
         userId: 333,
         operFlag: 'V',
@@ -123,7 +123,7 @@ const UAN_BottomView = (props) => {
 
       console.log("request", body);
       axios
-        .post(`http://192.168.1.169:7038/api/hrms/saveCandidateUanInfo`, body)
+        .post(`https://econnectsatya.com:7033/api/hrms/saveCandidateUanInfo`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);

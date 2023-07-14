@@ -18,7 +18,7 @@ const EntryStackNav = () => {
         <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Home' options={{ orientation: 'portrait' }} component={Entry_page} />
             <Stack.Screen name='Employee_Login' options={{ orientation: 'portrait' }} component={Employee_Login} />
-            <Stack.Screen name='Candidate' options={{ orientation: 'portrait' }} component={Login} />
+            <Stack.Screen name='Candidate_Login' options={{ orientation: 'portrait' }} component={Login} />
             <Stack.Screen name='Employee_page' options={{ orientation: 'portrait' }} component={Employee_page} />
             <Stack.Screen name='Otp_Verification' options={{ orientation: 'portrait' }} component={Otp_Verification} />
             <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait' }} component={ForgetPassword} />

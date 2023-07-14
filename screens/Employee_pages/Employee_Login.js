@@ -19,8 +19,8 @@ import { FONTS } from '../../constants/font_size';
 const Employee_Login = (props) => {
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('10011');
-    const [password, setPassword] = useState('Kapil@123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 

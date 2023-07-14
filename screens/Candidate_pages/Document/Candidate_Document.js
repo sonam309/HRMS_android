@@ -43,7 +43,7 @@ const Candidate_Document = (props) => {
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
 
-        let res = await fetch("http://192.168.1.169:7038/api/hrms/assesmentSave", {
+        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
             method: "POST",
             body: formData
         })
@@ -356,7 +356,7 @@ const Candidate_Document = (props) => {
 
                 console.log(formData._parts)
 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/assesmentSave", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -389,7 +389,7 @@ const Candidate_Document = (props) => {
 
         newFormData.append('data', JSON.stringify(candidateData))
 
-        let res = await fetch("http://192.168.1.169:7038/api/hrms/assesmentSave", {
+        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
             method: "POST",
             headers: {
                 'Content-Type': 'multipart/form-data'

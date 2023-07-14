@@ -45,7 +45,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             }
             // console.warn(languageData);
 
-            let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -89,7 +89,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             }
 
             console.log("request", languageData);
-            let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateLanguage", {
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",

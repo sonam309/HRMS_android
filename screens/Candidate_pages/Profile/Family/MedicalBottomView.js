@@ -35,7 +35,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
             }
             // console.warn(policyData);
 
-            let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
+            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -93,7 +93,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                 }
                 // console.warn(medicalData);
 
-                let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateMedicalPolicy", {
+                let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
                     method: "POST",
                     headers: {
                         Accept: "application/json",

@@ -62,7 +62,7 @@ const Emp_HistoryBottomView = (props) => {
       }
       // console.warn("saving/updating", employeeData);
 
-      let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -86,7 +86,7 @@ const Emp_HistoryBottomView = (props) => {
         txnId: txnId, operFlag: "D", userId: userId
       }
       // console.warn(employmentData);
-      let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
+      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
         method: "POST",
         headers: {
           Accept: "application/json",

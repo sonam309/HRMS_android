@@ -15,7 +15,7 @@ const Rejected = (props) => {
         axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'R', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                // console.log(returnedData);
+                console.log("Reject",returnedData);
                 setRejectedData(returnedData);
             });
     };

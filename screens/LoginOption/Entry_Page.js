@@ -20,7 +20,7 @@ const Entry_page = (props) => {
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
         {
-            page ? (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate")) : null
+            page ? (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login")) : null
         }
     }
     useEffect(() => {
@@ -47,7 +47,7 @@ const Entry_page = (props) => {
                 <TouchableOpacity onPress={() => { props.navigation.navigate("Employee_Login"), setEmployee() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.green }]}>
                     <Text style={[styles.loginButtonText]}>Employee</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { props.navigation.navigate("Candidate"), setCandidate() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.orange1 }]}>
+                <TouchableOpacity onPress={() => { props.navigation.navigate("Candidate_Login"), setCandidate() }} style={[styles.loginButton, styles.elevation, { backgroundColor: COLORS.orange1 }]}>
                     <Text style={[styles.loginButtonText]}>Candidate</Text>
                 </TouchableOpacity>
             </View>
