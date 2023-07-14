@@ -107,10 +107,11 @@ const CreateHiringTab = (props) => {
                     tabBarIndicatorStyle: { backgroundColor: COLORS.green, height: 3 }, // styling of selected indicator
                     // tabBarIndicatorContainerStyle: { backgroundColor: COLORS.voilet, opacity: 0.8 },
                     // tabBarAndroidRipple: { borderless: false }, // ripple effect on pressing the button
-                }}>
-                <Tab.Screen name="New_hiring" children={() => <New_hiring selectedOption={selectedOption} navigation={props.navigation} />}/>
-                <Tab.Screen name="Interview_status"
-                    children={() => <Interview_status selectedOption={null} navigation={props.navigation} />}/>
+                }}
+                >
+
+                <Tab.Screen name="New_hiring" options={{ title: 'Jobs Posted' }} children={() => <New_hiring selectedOption={selectedOption} navigation={props.navigation} />} />
+                <Tab.Screen name="Interview_status" options={{ title: 'Interview Details' }} children={() => <Interview_status selectedOption={null} navigation={props.navigation} />} />
 
             </Tab.Navigator>
             {isVisible && (

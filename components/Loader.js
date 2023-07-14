@@ -6,7 +6,7 @@ const Loader = (props) => {
     return (
         <View>
             {loaderVisible ? <View style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: 'black' }}>
-                <Modal transparent={true} animationType='slide' visible={loaderVisible}>
+                <Modal transparent={true} visible={loaderVisible}>
                     <View style={styles.wrapper}>
                             <ActivityIndicator color='#fc5203' size={70} style={{zIndex:1}} />
                     </View>
