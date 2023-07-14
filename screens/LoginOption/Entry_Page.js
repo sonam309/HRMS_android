@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 const Entry_page = (props) => {
     const { userId, userName } = useSelector(state => state.auth)
 
-    console.warn("Id",userId)
-    console.warn("name",userName)
+    // console.warn("Id",userId)
+    // console.warn("name",userName)
 
     let page = null
 

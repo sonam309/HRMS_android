@@ -54,13 +54,13 @@ const Emp_HistoryBottomView = (props) => {
   }
 
   const SaveEmploymentData = async () => {
-    console.warn("outisde");
+    // console.warn("outisde");
     try {
-      console.warn("inside");
+      // console.warn("inside");
       let employeeData = {
         txnId: TXNID, operFlag: operFlag, candidateId: userId, userId: userId, companyName: companyName, designation: designation, fDate: selcetedFromDate, tDate: selcetedToDate, role: role, lastDrawnSalary: lastSalary, reportingManager: manager, reasonForChange: reason, aboutCompany: aboutCompany, companyAddress: companyAddress, webLink: companyLink, currentlyWorking: currentlyWorking
       }
-      console.warn("saving/updating", employeeData);
+      // console.warn("saving/updating", employeeData);
 
       let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
         method: "POST",
@@ -85,7 +85,7 @@ const Emp_HistoryBottomView = (props) => {
       let employmentData = {
         txnId: txnId, operFlag: "D", userId: userId
       }
-      console.warn(employmentData);
+      // console.warn(employmentData);
       let res = await fetch("http://192.168.1.169:7038/api/hrms/candidateEmployementInfo", {
         method: "POST",
         headers: {
@@ -105,7 +105,7 @@ const Emp_HistoryBottomView = (props) => {
   }
 
   const UpdateEmployment = (item) => {
-    console.warn(item.TXN_ID);
+    // console.warn(item.TXN_ID);
 
     setOperFlag("E")
     setSelectedFromDate(item.FROM_DATE)

@@ -5,9 +5,11 @@ import BoldText from '../../utility/BoldText';
 import { mobile_otp } from '../../assets';
 import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../components/Loader';
 
 const Otp_Verification = (props) => {
-    const { contact, otp, type ,userId} = props.route.params;
+    const { contact, otp, type, userId } = props.route.params;
     // const userId = useSelector(state => state.auth.userId)
 
     const et1 = useRef(); et2 = useRef(); et3 = useRef(); et4 = useRef(); et5 = useRef(); et6 = useRef();
@@ -18,11 +20,27 @@ const Otp_Verification = (props) => {
     const [f4, setF4] = useState('');
     const [f5, setF5] = useState('');
     const [f6, setF6] = useState('');
+    const [loaderVisible, setLoaderVisible] = useState(false);
 
     const [sendOtp, setsendOtp] = useState(otp);
     const [count, setCount] = useState(30);
+    const [operFlag, setOperFlag] = useState('');
+
+
+
+
+    const getType = async () => {
+        page = await AsyncStorage.getItem("type")
+        {
+            page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null
+        }
+    }
+
+
+    
 
     useEffect(() => {
+        getType();
         const interval = setInterval(() => {
             if (count == 0) {
                 clearInterval(interval)
@@ -40,13 +58,16 @@ const Otp_Verification = (props) => {
 
     //forgetPassword api Call
     const forgetPasswordApi = () => {
+        setLoaderVisible(true);
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+        console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
+        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
-
+                setLoaderVisible(false);
+                console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
-                let contact = returnedData.map(b => b.MSG.trim());
+                let contact = returnedData.map(b => b.MSG);
                 setsendOtp(otp);
 
                 if (result[0] == "S") { Alert.alert("Success"); }
@@ -57,16 +78,22 @@ const Otp_Verification = (props) => {
     //otp Validation
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
-        console.log("otpvry",userId);
+        console.log("otpvry", userId);
 
+        setLoaderVisible(true);
         if (sendOtp == inputOtp) {
-            (props.navigation.navigate("ForgetPassword", { type,userId }))
-        } else console.warn("Wrong OTP");
+            (props.navigation.navigate("ForgetPassword", { type, userId }))
+            setLoaderVisible(false);
+        } else {
+            setLoaderVisible(false);
+            console.warn("Wrong OTP");
+        }
     }
 
     return (
 
         <View style={{ backgroundColor: 'white', flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+            <Loader loaderVisible={loaderVisible} />
 
             {/* Top Image */}
             <Image source={mobile_otp} style={{ width: 150, height: 150, alignSelf: 'center' }} />
@@ -135,7 +162,7 @@ const Otp_Verification = (props) => {
                 <Text style={{ fontSize: 15, fontWeight: '500', color: count == 0 ? COLORS.green : COLORS.orange }} onPress={() => {
                     setCount(30); forgetPasswordApi()
                 }}>Resend</Text>
-                {count !== 0 && (<Text style={{ marginLeft: 5, fontSize: 15 ,color:COLORS.darkGray2}}> {count + ' seconds'} </Text>)}
+                {count !== 0 && (<Text style={{ marginLeft: 5, fontSize: 15, color: COLORS.darkGray2 }}> {count + ' seconds'} </Text>)}
             </View>
 
             {/* verify otp button */}

@@ -99,7 +99,7 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
     const DisplayPreviousDetails = () => {
         // console.warn("Inside details", filledDetails);
         filledDetails && (
-            console.warn(filledDetails.FLAG),
+            // console.warn(filledDetails.FLAG),
             (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("P")),
             setSalutation(filledDetails?.SALUTATION),
             setFirstName(filledDetails?.FIRST_NAME),

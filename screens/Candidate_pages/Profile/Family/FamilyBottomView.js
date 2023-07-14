@@ -237,7 +237,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
                 let familyData = {
                     txnId: txnID, operFlag: operFlag, candidateId: userId, userId: userId, familyMember: selectedFamilyMemberValue, memberFirstName: firstName, memberMiddleName: middleName, memberLastName: lastName, gender: selectedGenderValue, dateOfBirth: selectedBirthDate, contactNo: contact, address: address, bloodGroup: selectedBloodGroupValue,
                 }
-                console.warn("familydata", familyData);
+                // console.warn("familydata", familyData);
 
                 let res = await fetch("http://192.168.1.169:7038/api/hrms/saveFamilyInfo", {
                     method: "POST",

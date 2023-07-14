@@ -25,7 +25,7 @@ const Interview_status = (props) => {
                 setInterViewDetail(returnedData)
                 console.log(returnedData)
             }).catch((err) => {
-                console.warn(err);
+                // console.warn(err);
                 ToastAndroid.show(err, 3000)
             });
     };
