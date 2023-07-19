@@ -269,20 +269,20 @@ const Candidate_profile = () => {
 
         {/* Content of About Me dropdown -> personal, Contact and Bank details */}
         {personalView && (
-          <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={500}>
+          <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={650}>
             <PersonalBottomView filledDetails={filledDetails} onPress={() => setPersonalView(false)} />
           </BottomUpModal>
         )}
 
         {contactView && (
-          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={420}>
+          <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={450}>
             <ContactBottomView filledDetails={filledDetails} onPress={() => setContactView(false)} />
           </BottomUpModal>
         )}
 
 
         {bankView && (
-          <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={500}>
+          <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={650}>
             <BankBottomView filledDetails={filledDetails} onPress={() => setBankView(false)} />
           </BottomUpModal>
         )}

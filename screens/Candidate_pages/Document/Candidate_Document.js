@@ -49,7 +49,8 @@ const Candidate_Document = (props) => {
         })
 
         res = await res.json()
-        console.log("res",res)
+        console.log("res", res)
+        setLoaderVisible(false)
         setDocInfo(res.Table1[0]);
 
         let docFiles = res.Table;
@@ -86,7 +87,7 @@ const Candidate_Document = (props) => {
                     ])
                     break;
             }
-            setLoaderVisible(false)
+
         })
 
     }
@@ -365,10 +366,11 @@ const Candidate_Document = (props) => {
                 })
 
                 res = await res.json();
-
+                console.log("SaveImages",res);
+                setLoaderVisible(false)
                 ToastAndroid.show(res.MSG, 3000);
 
-                setLoaderVisible(false)
+
 
             } else {
                 ToastAndroid.show("Upload Mandatory Documents", 3000)
@@ -411,7 +413,7 @@ const Candidate_Document = (props) => {
 
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                    <Text>{type.PARAM_NAME} {Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text>
+                    <Text>{type?type:type.PARAM_NAME} {Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text>
 
                     {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile)}>
                         <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
@@ -474,7 +476,7 @@ const Candidate_Document = (props) => {
 
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
 
-                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => {onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId)}} >
+                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                 </TouchableOpacity>
 
@@ -492,9 +494,10 @@ const Candidate_Document = (props) => {
     const renderHeader = () => {
         return (
             <View style={{ flexDirection: 'row', paddingVertical: SIZES.base, paddingHorizontal: SIZES.radius, borderColor: COLORS.transparentGray, backgroundColor: COLORS.white, elevation: 10, shadowColor: COLORS.orange1, shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.1, shadowRadius: 7, alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={28} color={COLORS.black} style={{ position: 'absolute', left: 5, paddingHorizontal: 5 }} />
 
-                <Ionicons name="arrow-back" size={28} color={COLORS.black} style={{ position: 'absolute', left: 5, paddingHorizontal:5 }} onPress={() => props.navigation.goBack()} />
-
+                </TouchableOpacity>
                 <Text style={{ ...FONTS.h3, textAlign: 'center', color: COLORS.black, flex: 1 }}> Document </Text>
 
             </View>
@@ -585,7 +588,7 @@ const Candidate_Document = (props) => {
                     <Text style={{ ...FONTS.h4, color: COLORS.darkGray2, }}>Actions</Text>
                 </View>
 
-                {document && (candidateStatusId === "123" || candidateStatusId === "121" || candidateStatusId === "124" || candidateStatusId === "122") && (<ScrollView>
+                {document && (candidateStatusId === "123" || candidateStatusId === "121" || candidateStatusId === "124" || candidateStatusId === "122"||candidateStatusId==="118") && (<ScrollView>
 
 
                     {/* For uploading aadhar card docs */}
@@ -601,7 +604,7 @@ const Candidate_Document = (props) => {
                 </ScrollView>)
                 }
 
-                {document && (candidateStatusId >= "166" ) &&
+                {document && (candidateStatusId >= "165") &&
                     (
                         <ScrollView>
                             {DocumentUploader(aadharCard, setAadharCard, 2, document[0], "imp")}

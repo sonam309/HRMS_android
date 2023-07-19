@@ -25,7 +25,7 @@ const Interview_status = (props) => {
 
 
         res = await res.json()
-        
+
         res = res.Result;
         // console.log("response", res)
         setInterViewDetail(res)
@@ -56,10 +56,17 @@ const Interview_status = (props) => {
                     <View style={{ paddingHorizontal: 10 }}>
 
                         <Text style={{ color: COLORS.green, ...FONTS.h3, }}>{name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
-                            <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 2 }}> {designation}
-                            </Text>
+                        <View style={{ flexDirection: 'row',}}>
+                            <View style={{ flexDirection: 'row', }}>
+                                {/* <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} /> */}
+                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, }}>ID:</Text>
+                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, }}> {candidateId}</Text>
+
+                            </View>
+                            <View style={{ flexDirection: 'row',marginLeft:20 }}>
+                                <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
+                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 2 }}> {designation}</Text>
+                            </View>
                         </View>
                         {date ? <Text style={{ color: COLORS.gray, ...FONTS.h5, marginTop: -5 }}>Scheduled:{date}</Text> : null}
 

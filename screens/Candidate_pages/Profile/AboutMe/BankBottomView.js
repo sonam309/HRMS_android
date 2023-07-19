@@ -49,7 +49,7 @@ const BankBottomView = ({ filledDetails, onPress }) => {
 
 
   const DisplayPreviousDetails = () => {
-    // console.warn(filledDetails);
+    console.warn("BankDetails",filledDetails);
     filledDetails && (
       (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),

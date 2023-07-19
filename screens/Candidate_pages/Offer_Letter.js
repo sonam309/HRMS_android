@@ -54,6 +54,7 @@ const Offer_Letter = () => {
         path: fileDir + "/download_" + ".pdf"
       }
     })
+      // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
       .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
         //some headers ..
       })

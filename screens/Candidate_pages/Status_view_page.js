@@ -87,7 +87,7 @@ const Status_view_page = () => {
           <View style={{ flexDirection: 'row', flex: 1, }}>
             <Icons name={status_ID === "123" ? "text-box-check" : (status_ID > "123" ? "text-box-check" : "text-box")} size={30} color={status_ID === "123" ? COLORS.green :
               (status_ID < "123" ? COLORS.gray : COLORS.lightOrange)} />
-            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "123" ? COLORS.green : (status_ID < "123" ? CCOLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "123" ? 'bold' : 'normal' }}>Salary Allocation </Text>
+            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "123" ? COLORS.green : (status_ID < "123" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "123" ? 'bold' : 'normal' }}>Salary Allocation </Text>
           </View>
 
           {/* dot view */}
