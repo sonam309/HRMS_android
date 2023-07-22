@@ -25,6 +25,8 @@ import Esic_Bottomview from './identityProof_Pages/Esic_Bottomview';
 import UAN_BottomView from './identityProof_Pages/UAN_BottomView';
 import { useSelector } from 'react-redux';
 import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
+import axios from 'axios';
+import { API } from '../../../utility/services';
 
 
 
@@ -66,10 +68,12 @@ const Candidate_profile = () => {
   const [medicalView, setMedicalView] = useState(false)
   const [filledDetails, setFilledDetails] = useState();
   const [employHistoryView, setEmployeHistoryView] = useState(false);
+  const [filledCandidateInfo, setFilledCandidateInfo] = useState();
+
 
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
   const fetchPersonalData = async () => {
-    let PersonalData = { operFlag: "V", candidateId:userId }
+    let PersonalData = { operFlag: "V", candidateId: userId }
     var formData = new FormData();
     console.log(PersonalData)
     formData.append('data', JSON.stringify(PersonalData))
@@ -79,7 +83,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.log("candidate profile", res);
+    console.log("personalData", res);
     setFilledDetails(res);
   }
 
@@ -133,6 +137,37 @@ const Candidate_profile = () => {
     // console.warn("employment data", res);
     setEmployement(res);
   }
+
+  // fetch candidate info (autofill)
+
+  const fetchCandidateInfo = async () => {
+    let candidateInfo = { candiateId: userId, userId: userId, oper: "V" }
+
+    var formData = new FormData();
+    formData.append("data", JSON.stringify(candidateInfo))
+    let res = await fetch(`${API}/api/addCandidate`, {
+      method: "POST",
+      // headers: {
+      //   Accept: "application/json",
+      //   "Content-Type": "application/json"
+      // },
+      body: formData
+    })
+    // axios.post(, formData).then((response) => {
+
+      // const returnData = res.data.Result
+      res = await res.json()
+      // candInfo = await candInfo?.Result
+      console.log("candidate Info",res);
+      setFilledCandidateInfo(res);
+      
+
+    // }).catch((error) => {
+    // console.log(error)
+    // })
+
+  }
+
 
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
@@ -198,6 +233,10 @@ const Candidate_profile = () => {
     // console.warn("qualfication Data", res);
     setQualification(res);
   }
+  useEffect(() => {
+    fetchCandidateInfo();
+  }, [])
+  
 
   useEffect(() => {
     aboutMeView && fetchPersonalData()
@@ -266,24 +305,24 @@ const Candidate_profile = () => {
             </TouchableOpacity>
           </View>
         )}
-
+{/* <Text>{JSON.stringify("harih om",filledCandidateInfo)}</Text> */}
         {/* Content of About Me dropdown -> personal, Contact and Bank details */}
         {personalView && (
           <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={650}>
-            <PersonalBottomView filledDetails={filledDetails} onPress={() => setPersonalView(false)} />
+            <PersonalBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setPersonalView(false)} />
           </BottomUpModal>
         )}
 
         {contactView && (
           <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={450}>
-            <ContactBottomView filledDetails={filledDetails} onPress={() => setContactView(false)} />
+            <ContactBottomView  candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setContactView(false)} />
           </BottomUpModal>
         )}
 
 
         {bankView && (
           <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }} visibleHeight={650}>
-            <BankBottomView filledDetails={filledDetails} onPress={() => setBankView(false)} />
+            <BankBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setBankView(false)} />
           </BottomUpModal>
         )}
 

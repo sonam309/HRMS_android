@@ -50,16 +50,16 @@ const Employee_Login = (props) => {
         console.log(userData);
         axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
             const returnedData = response?.data?.Result;
-
+            setLoaderVisible(false)
             let result = returnedData.map(a => a.FLAG);
             let userId = returnedData.map(a => a.USER_ID)[0]
             let userName = returnedData.map(b => b.FIRST_NAME)[0]
             let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
             let userDept = returnedData.map(d => d.DEPT_NAME)[0]
 
-            console.log(returnedData);
+            // console.log(returnedData);
 
-            setLoaderVisible(false)
+           
 
             result[0] === "S" ? ((props.navigation.navigate("Employee_page")),dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
             

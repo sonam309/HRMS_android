@@ -70,7 +70,7 @@ const Home = props => {
       // data to json form
       data = await data.json(),
       data = data.Result[0],
-      console.log("data", data),
+      // console.log("data", data),
 
       data?.IN ? inTime = data?.IN?.trim() : inTime = "--:--",
       data?.DUR !== "" ? timeSpent = data?.DUR?.trim() : timeSpent = "--:--",

@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar, ToastAndroid } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -14,13 +14,14 @@ import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API } from '../../utility/services';
 
 const Login = (props) => {
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('');
+    const [userId, setUserId] = useState('402');
+    const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -81,7 +82,7 @@ const Login = (props) => {
     // logging in function
     const submit = () => {
         setLoaderVisible(true)
-        axios.post('https://econnectsatya.com:7033/api/User/candidateLogin', userData).then((response) => {
+        axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
             const returnedData = response.data.Result[0];
             let candidateName = returnedData.CANDIDATE_NAME
             let candidateStatus = returnedData.CANDIDATE_STATUS
@@ -89,11 +90,30 @@ const Login = (props) => {
             let candidatePhone = returnedData.PHONE
             let candidateRoleId = returnedData.ROLE_ID
             let candidateStatusId = returnedData.STATUS_ID
-
-            console.log("response",returnedData);
+            let offerAcceptFlag = returnedData.OFER_ACPT_FLAG
+            let daysToJoin = returnedData.DAY_TO_JOIN
+            let candidateOfferLetter = returnedData.OFFER_LETTER
+            
+            console.log("response", returnedData);
             setLoaderVisible(false)
-            returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({ candidateId: userId, candidateName, candidateRole, candidateStatus, candidatePhone, candidateRoleId, candidateStatusId }))) : Alert.alert("Failure", "Please enter correct credentials")
+            returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
+                candidateId: userId,
+                candidateName,
+                candidateRole,
+                candidateStatus,
+                candidatePhone,
+                candidateRoleId,
+                candidateStatusId,
+                offerAcceptFlag,
+                daysToJoin,
+                candidateOfferLetter,
+               
+            }))) : Alert.alert("Failure", "Please enter correct credentials")
 
+        }).catch((error) => {
+            console.log(error)
+            ToastAndroid.show(error, 3000)
+            setLoaderVisible(false)
         })
     }
 
@@ -141,7 +161,7 @@ const Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => {userId!==''?forgetPasswordApi():Alert.alert("Please enter User Id")}}>Forgot Password?</Text>
+                    <Text style={styles.forgotPassword} onPress={() => { userId !== '' ? forgetPasswordApi() : Alert.alert("Please enter User Id") }}>Forgot Password? </Text>
                 </TouchableOpacity>
 
             </View>

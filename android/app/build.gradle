@@ -110,13 +110,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file('Hrms_release.keystore')
+            storePassword 'Hrms@123'
+            keyAlias 'hrms_release_alias'
+            keyPassword 'Hrms@123'
+        }
+    }
 
     splits {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include (*reactNativeArchitectures())
+            include(*reactNativeArchitectures())
         }
     }
     signingConfigs {
@@ -126,15 +134,18 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -167,7 +178,7 @@ dependencies {
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
@@ -178,6 +189,6 @@ dependencies {
     }
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); 
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 applyNativeModulesAppBuildGradle(project)

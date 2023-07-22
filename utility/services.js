@@ -1,0 +1,1 @@
+exports.API = `https://econnectsatya.com:7033/`

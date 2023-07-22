@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS } from '../../../../constants/font_size'
 
-const BankBottomView = ({ filledDetails, onPress }) => {
+const BankBottomView = ({ filledDetails, onPress,candidateInfo }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
   // bank details for user

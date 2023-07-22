@@ -9,7 +9,7 @@ import Loader from '../../../../components/Loader'
 import { FONTS } from '../../../../constants/font_size'
 
 
-const PersonalBottomView = ({ filledDetails, onPress }) => {
+const PersonalBottomView = ({ filledDetails, onPress,candidateInfo }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [marital, setMarital] = useState();
@@ -28,6 +28,7 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
     const [selectedGender, setSelectedGender] = useState();
     const [selectedGenderValue, setSelectedGenderValue] = useState();
 
+  
 
     const getDropdownData = async (P) => {
         let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
@@ -46,7 +47,12 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
         getDropdownData(30);
         getDropdownData(31);
         getDropdownData(32);
+        // setDataFromCandidateInfo();
+        
     }, [])
+
+
+    
 
     const [refAddressHeight, setRefAddressHeight] = useState(40)
     const [refAddressHeight1, setRefAddressHeight1] = useState(40)
@@ -74,26 +80,21 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
     const [preferredLocation, setPreferredLocation] = useState('');
     const [currentLocation, setCurrentLocation] = useState('');
     const [resumeSource, setResumeSource] = useState('');
-
     const [refEmail, setRefEmail] = useState('');
     const [refEmail1, setRefEmail1] = useState('');
-
     const [refName, setRefName] = useState('');
     const [refName1, setRefName1] = useState('');
-
     const [refOccupation, setRefOccupation] = useState('');
     const [refOccupation1, setRefOccupation1] = useState('');
-
     const [refAddress, setRefAddress] = useState('');
     const [refAddress1, setRefAddress1] = useState('');
-
     const [refContact, setRefContact] = useState('');
     const [refContact1, setRefContact1] = useState('');
-
     const [TXNID, setTXNID] = useState('');
-
     const [loaderVisible, setLoaderVisible] = useState(true);
     const [operFlag, setOperFlag] = useState("P");
+
+    const [caFName, setCaFName] = useState('');
 
     // fetching previously filled Data
     const DisplayPreviousDetails = () => {
@@ -143,6 +144,8 @@ const PersonalBottomView = ({ filledDetails, onPress }) => {
 
         )
     }
+
+   
 
     const actualDateSelector = (date) => {
         setActualOpen(false)
