@@ -6,6 +6,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DatePicker from 'react-native-date-picker'
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux'
+import { API } from '../../../../utility/services';
 
 const Emp_HistoryBottomView = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -62,7 +63,7 @@ const Emp_HistoryBottomView = (props) => {
       }
       // console.warn("saving/updating", employeeData);
 
-      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
+      let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -87,7 +88,7 @@ const Emp_HistoryBottomView = (props) => {
       }
       console.warn(employmentData);
       // console.warn(employmentData);
-      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
+      let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
         method: "POST",
         headers: {
           Accept: "application/json",

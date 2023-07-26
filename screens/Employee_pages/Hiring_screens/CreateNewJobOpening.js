@@ -8,6 +8,7 @@ import CustomTextInput from '../../../components/CustomTextInput'
 import axios from "axios";
 import { useSelector } from 'react-redux'
 import Loader from '../../../components/Loader'
+import { API } from '../../../utility/services'
 
 const CreateNewJobOpening = (props) => {
 
@@ -21,7 +22,7 @@ const CreateNewJobOpening = (props) => {
     const [selectedTitle, setSelectedTitle] = useState();
     const [selectedTitleValue, setSelectedTitleValue] = useState('');
     const [selectedState, setSelectedState] = useState();
-    
+
     const [selectedStateValue, setSelectedStateValue] = useState('');
     const [selectedEmployment, setSelectedEmployment] = useState('');
     const [selectedEmploymentValue, setSelectedEmploymentValue] = useState('');
@@ -54,9 +55,9 @@ const CreateNewJobOpening = (props) => {
     }, []);
 
     const getdepId = async () => {
-
+        setLoaderVisible(true);
         axios
-            .post(`https://econnectsatya.com:7033/api/hrms/saveApprovel`, {
+            .post(`${API}/api/hrms/saveApprovel`, {
                 userId: userId,
                 operFlag: 'V',
                 departmentId: userDeptId,
@@ -64,6 +65,7 @@ const CreateNewJobOpening = (props) => {
             })
             .then(response => {
                 const returnedData = response?.data?.Result;
+                setLoaderVisible(false);
                 console.log('approver data', returnedData);
                 //   setApproverData(returnedData[0]);
                 setApproverId(returnedData[0].EMPLOYEE_ID)
@@ -72,6 +74,7 @@ const CreateNewJobOpening = (props) => {
 
             })
             .catch(error => {
+                setLoaderVisible(false);
                 console.log("error while approver info", error)
             });
 
@@ -79,7 +82,7 @@ const CreateNewJobOpening = (props) => {
 
     // Title, States and Employment Data
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
         if (P === 'j') { setTitleOption(returnedData) }
@@ -210,7 +213,7 @@ const CreateNewJobOpening = (props) => {
 
 
                 // Posting new job opening 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+                let res = await fetch(`${API}/api/hrms/jobOpeningRequest`, {
                     method: "POST",
                     body: formData
 
@@ -233,6 +236,7 @@ const CreateNewJobOpening = (props) => {
                 })
                 setLoaderVisible(false)
             } catch (error) {
+                setLoaderVisible(false)
                 console.log(error?.response)
             }
         }
@@ -241,9 +245,11 @@ const CreateNewJobOpening = (props) => {
     // getting title value
     const checkTitleValue = (value) => {
         {
+            // console.log("value",value);
             for (let index = 0; index < titleOption.length; index++) {
                 const element = titleOption[index];
                 if (element.PARAM_NAME === value) setSelectedTitleValue(element.PARAM_ID);
+                // console.log("selectedValue",element.PARAM_NAME, selectedTitleValue);
             }
         }
     }
@@ -284,7 +290,7 @@ const CreateNewJobOpening = (props) => {
             <View style={{ margin: 7 }}>
                 {/* {console.warn(titleName)} */}
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{ color: COLORS.red }}>* </Text></Text>
-                <SelectDropdown data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value) }} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                <SelectDropdown data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value),console.log("Sonam",selectedTitleValue,selectedTitle,value) }} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
             </View>
 
             {/* number of position */}
@@ -308,7 +314,7 @@ const CreateNewJobOpening = (props) => {
             {/* Job Type */}
             <View style={{ margin: 7 }}>
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select Employment Type  <Text style={{ color: COLORS.red }}>* </Text> </Text>
-                <SelectDropdown data={employementData?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedEmployment(value), checkEmploymentValue(value) }} defaultButtonText={employementData?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                <SelectDropdown data={employementData?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedEmployment(value), checkEmploymentValue(value) }} defaultButtonText={employementData?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
             </View>
 
 
@@ -316,7 +322,7 @@ const CreateNewJobOpening = (props) => {
             <View style={{ margin: 7 }}>
                 {/* {console.warn(statesName)} */}
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State <Text style={{ color: COLORS.red }}>* </Text> </Text>
-                <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.darkGray2 }} />
             </View>
 
 

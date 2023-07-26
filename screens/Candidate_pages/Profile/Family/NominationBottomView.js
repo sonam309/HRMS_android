@@ -5,6 +5,7 @@ import COLORS from '../../../../constants/theme'
 import { FONTS } from '../../../../constants/font_size'
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector } from 'react-redux'
+import { API } from '../../../../utility/services'
 
 const NominationBottomView = ({ nominations, onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -22,7 +23,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
   // Nominations Dropdown Data
   const getDropdownData = async (P) => {
-    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
     response = await response.json();
     const returnedData = response;
     if (P === 41) { setNominationTypeDropDown(returnedData) }
@@ -147,7 +148,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
         let nomineeData = { txnId: '', candidateId: userId, userId: userId, operFlag: "A", param: '' };
         nomineeData.param = NomineeInfo();
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateNomination", {
+        let res = await fetch(`${API}/api/hrms/candidateNomination`, {
           method: "POST",
           headers: {
             Accept: "application/json",

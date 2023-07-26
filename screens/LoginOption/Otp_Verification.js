@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../components/Loader';
+import { API } from '../../utility/services';
 
 const Otp_Verification = (props) => {
     const { contact, otp, type, userId } = props.route.params;
@@ -61,7 +62,7 @@ const Otp_Verification = (props) => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
         console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+        axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);

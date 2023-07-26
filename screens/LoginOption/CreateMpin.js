@@ -8,6 +8,7 @@ import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { create_mpin } from '../../assets';
 import COLORS from '../../constants/theme';
+import { API } from '../../utility/services';
 
 const CreateMpin = (props) => {
 
@@ -34,7 +35,7 @@ const CreateMpin = (props) => {
     const getOTPMethod = () => {
 
         let otp = RandomNumber("6")
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
+        axios.get(`${API}/api/GetMobileNo`, {
             params: {
                 loginId: userName, operFlag: "E", message: otp +
                     " Is the OTP for your mobile verfication on Satya One."

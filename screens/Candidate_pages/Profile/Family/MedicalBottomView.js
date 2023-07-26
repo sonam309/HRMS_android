@@ -5,6 +5,7 @@ import COLORS from '../../../../constants/theme'
 import DatePicker from 'react-native-date-picker'
 import { FONTS } from '../../../../constants/font_size'
 import { useSelector } from 'react-redux'
+import { API } from '../../../../utility/services'
 
 
 const MedicalBottomView = ({ medicalPolicy, onPress }) => {
@@ -35,7 +36,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
             }
             // console.warn(policyData);
 
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
+            let res = await fetch(`${API}/api/hrms/candidateMedicalPolicy`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -93,7 +94,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                 }
                 // console.warn(medicalData);
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
+                let res = await fetch(`${API}/api/hrms/candidateMedicalPolicy`, {
                     method: "POST",
                     headers: {
                         Accept: "application/json",

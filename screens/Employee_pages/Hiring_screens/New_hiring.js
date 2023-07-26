@@ -16,10 +16,10 @@ const New_hiring = (props) => {
     const userId = useSelector(state => state.auth.userId)
     const route = useRoute();
 
-    console.log("route",route.name)
+    console.log("route", route.name)
 
-    if(route.name === "New_hiring"){setFilterVisible(true), console.log("object")} 
-    
+    if (route.name === "New_hiring") { setFilterVisible(true), console.log("object") }
+
 
     // useEffect(() => {
     //     getJobOpening();
@@ -37,13 +37,13 @@ const New_hiring = (props) => {
         try {
             var formData = new FormData();
             formData.append('data', JSON.stringify({ "operFlag": "V", "userId": userId }))
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+            let res = await fetch(`${API}/api/hrms/jobOpeningRequest`, {
                 method: "POST",
                 body: formData
             })
             res = await res?.json();
 
-            // console.log("job info", res)
+            console.log("job info", res)
             res = await res?.Table
             setJobOpening(res);
             setLoaderVisible(false)
@@ -85,9 +85,7 @@ const New_hiring = (props) => {
         }
         return (
             <View style={[{ margin: 10, paddingLeft: 10, paddingVertical: 5, borderColor: COLORS.gray, borderWidth: 1, borderRadius: 12, backgroundColor: 'white', overflow: 'hidden' }, styles.Elevation]}>
-
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5 }}>
-
                     <View style={[{ justifyContent: 'center', backgroundColor: 'white', alignItems: 'center', width: 40, height: 40, borderRadius: 20, marginHorizontal: 5 }, styles.Elevation]}>
                         <Text style={{ backgroundColor: COLORS.green, width: 36, height: 36, borderRadius: 18, textAlignVertical: 'center', textAlign: 'center' }}>{counting}</Text>
                     </View>
@@ -95,11 +93,9 @@ const New_hiring = (props) => {
 
                     {/* major details -> Location,compensation */}
                     <View style={{ justifyContent: 'space-between' }}>
-
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 14, fontWeight: 500 }}>{title}</Text>
                         </View>
-
                         <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
                             <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
                             <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 16 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
@@ -114,13 +110,10 @@ const New_hiring = (props) => {
                     <Text>{upload}
                         {/* {console.log("sendData",Job_Desc)} */}
                     </Text>
-
                     <TouchableOpacity onPress={() => navigation.navigate("Job_Description", { Job_Desc })}>
                         <Text style={{ color: COLORS.green, fontWeight: 500 }}>View JD {'>'}</Text>
                     </TouchableOpacity>
-
                 </View>
-
             </View>
         )
     }

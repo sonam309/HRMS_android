@@ -8,10 +8,11 @@ import DocumentPicker from 'react-native-document-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
+import { API } from '../../../utility/services';
 
 const Candidate_Document = (props) => {
     // Candidate ID & Status
-    const { candidateId, candidateStatusId } = useSelector(state => state.candidateAuth)
+    const { candidateId, candidateStatusId,candidateName,candidateRole ,hiringLeadMail} = useSelector(state => state.candidateAuth)
 
     // Form data for file
     let formData = new FormData();
@@ -45,7 +46,7 @@ const Candidate_Document = (props) => {
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
         setLoaderVisible(true)
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
+        let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
             body: formData
         })
@@ -100,7 +101,7 @@ const Candidate_Document = (props) => {
 
     // Document Data & all files
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
 
@@ -346,17 +347,31 @@ const Candidate_Document = (props) => {
     }
 
     // for saving documents to backend 
-    const saveDocs = async () => {
+    const saveDocs = async (flag) => {
         try {
             if (ValidateForm()) {
 
                 setLoaderVisible(true);
 
-                let candidateData = { txnId: "", userId: candidateId, candidateId: candidateId, documentType: "", documentName: "", description: "", status: "S", operFlag: "A", attachment: "" }
+                let candidateData = {
+                    txnId: "",
+                    userId: candidateId,
+                    candidateId: candidateId,
+                    documentType: "",
+                    documentName: "",
+                    description: "",
+                    status: "S",
+                    operFlag: flag,
+                    attachment: "",
+                    candidateName:candidateName+"-"+candidateId,
+                    jobTitle:candidateRole,
+                    approvelMail:hiringLeadMail,
+
+                }
 
                 candidateData.attachment = FileAttachment();
 
-                console.log("candidateData", candidateData);
+                console.log("candidateDatarwuq", candidateData);
 
                 formData.append('data', JSON.stringify(candidateData))
 
@@ -364,7 +379,7 @@ const Candidate_Document = (props) => {
 
                 console.log(formData._parts)
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
+                let res = await fetch(`${API}/api/hrms/assesmentSave`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -385,6 +400,7 @@ const Candidate_Document = (props) => {
             }
         }
         catch (error) {
+            loaderVisible(false);
             ToastAndroid.show(error, 3000)
         }
 
@@ -399,7 +415,7 @@ const Candidate_Document = (props) => {
 
         newFormData.append('data', JSON.stringify(candidateData))
 
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
+        let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -442,7 +458,7 @@ const Candidate_Document = (props) => {
                         key={index}>
 
                         <Text>{item?.name}</Text>
-
+                        {console.log("deleteDoc", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS, index)}
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
                             {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
@@ -450,6 +466,7 @@ const Candidate_Document = (props) => {
                             {/* {docVerify.filter((doc) => doc.TXN_ID===item.txnId) &&  } */}
                             {docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
                                 <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
+
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                 </TouchableOpacity>}
 
@@ -492,9 +509,17 @@ const Candidate_Document = (props) => {
 
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
 
-                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
+
+                                {/* {docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
+                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
+                                
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
-                                </TouchableOpacity>
+                                </TouchableOpacity>} */}
+
+                                {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
+                                    <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
+                                        <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
+                                    </TouchableOpacity>}
 
                             </View>
 
@@ -680,7 +705,7 @@ const Candidate_Document = (props) => {
 
                 {
                     // (docCount === "3" || docCount === "25") &&
-                    <TouchableOpacity onPress={() => saveDocs()} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => docCount === "25" ? saveDocs("P") : saveDocs("A")} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
                         <Text style={{ color: 'white' }}>Submit Documents</Text>
                     </TouchableOpacity>}
 

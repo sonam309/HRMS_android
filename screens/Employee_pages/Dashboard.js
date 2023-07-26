@@ -14,6 +14,7 @@ import Loader from '../../components/Loader';
 import COLORS from '../../constants/theme';
 import { useSelector } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API } from '../../utility/services';
 
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -56,7 +57,7 @@ const Home = props => {
     let punchData = { operFlag: val, userId: userId }
 
     data = await fetch(
-      'https://econnectsatya.com:7033/api/Admin/punchinOut',
+      `${API}/api/Admin/punchinOut`,
       {
         method: 'POST',
         headers: {
@@ -121,7 +122,7 @@ const Home = props => {
   }, [selectedMonth]);
 
   const getAttendance = () => {
-    axios.post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
+    axios.post(`${API}/api/Admin/Attendance`, {
       userId: userId,
       monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
     }).then(response => {

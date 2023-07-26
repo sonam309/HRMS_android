@@ -9,6 +9,7 @@ import COLORS from '../../constants/theme';
 import { SIZES, FONTS } from '../../constants/font_size';
 import axios from 'axios';
 import WebView from 'react-native-webview';
+import { API } from '../../utility/services';
 
 const Offer_Letter = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -63,7 +64,7 @@ const Offer_Letter = (props) => {
       }
     })
       // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
-      .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
+      .fetch('GET', `${API}/OfferLetter/${offerLetter}`, {
         //some headers ..
       })
       .then((res) => {
@@ -80,7 +81,7 @@ const Offer_Letter = (props) => {
       candidateId: userId, operFlag: "V"
     }
 
-    let totalData = await fetch('https://econnectsatya.com:7033/api/hrms/OfferAceptance', {
+    let totalData = await fetch(`${API}/api/hrms/OfferAceptance`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -92,7 +93,7 @@ const Offer_Letter = (props) => {
     totalData = await totalData.json()
     totalData = totalData.Result[0]
     console.log("totaldata", totalData);
-    setOfferLetterUrl("https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
+    setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
       ToastAndroid.show("No Offer letter is Present", 3000)
@@ -122,7 +123,7 @@ const Offer_Letter = (props) => {
     console.log("345678765432", data);
 
     axios
-      .post('https://econnectsatya.com:7033/api/hrms/OfferAceptance', data)
+      .post(`${API}/api/hrms/OfferAceptance`, data)
       .then(res => {
         console.log('hjsdfvhjs', res?.data?.Result);
 
@@ -159,7 +160,7 @@ const Offer_Letter = (props) => {
 
       </View>
       {offerLetter && offerLetter != "" ? (
-        <Pdf trustAllCerts={false} source={{ uri: `https://econnectsatya.com:7033/OfferLetter/${offerLetter}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(error) => {
+        <Pdf trustAllCerts={false} source={{ uri: `${API}/OfferLetter/${offerLetter}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(error) => {
           setError(true)
         }} onPressLink={(link) => Linking.openURL(link)} />
       ):"" }

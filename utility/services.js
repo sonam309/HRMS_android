@@ -1,1 +1,1 @@
-exports.API = `https://econnectsatya.com:7033/`
+exports.API = `https://econnectsatya.com:7033`

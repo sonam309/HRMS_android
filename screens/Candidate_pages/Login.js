@@ -20,7 +20,7 @@ const Login = (props) => {
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('402');
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const Login = (props) => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
         console.log("msg", otp + " $ " + userId + operFlag);
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
+        axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
@@ -82,6 +82,7 @@ const Login = (props) => {
     // logging in function
     const submit = () => {
         setLoaderVisible(true)
+        console.log(`${API}/api/User/candidateLogin`)
         axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
             const returnedData = response.data.Result[0];
             let candidateName = returnedData.CANDIDATE_NAME
@@ -93,8 +94,12 @@ const Login = (props) => {
             let offerAcceptFlag = returnedData.OFER_ACPT_FLAG
             let daysToJoin = returnedData.DAY_TO_JOIN
             let candidateOfferLetter = returnedData.OFFER_LETTER
+            let growingDays=returnedData.GROWING_DAY
+            let totalDay=returnedData.TOTAL_DAY
+            let hiringLeadMail= returnedData.HIRING_LEAD_EMAIL
             
-            console.log("response", returnedData);
+            
+            console.log("response", returnedData,hiringLeadMail);
             setLoaderVisible(false)
             returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                 candidateId: userId,
@@ -107,6 +112,9 @@ const Login = (props) => {
                 offerAcceptFlag,
                 daysToJoin,
                 candidateOfferLetter,
+                growingDays,
+                totalDay,
+                hiringLeadMail,
                
             }))) : Alert.alert("Failure", "Please enter correct credentials")
 

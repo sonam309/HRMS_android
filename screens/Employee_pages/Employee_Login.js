@@ -14,22 +14,19 @@ import { useDispatch } from 'react-redux'
 import { authActions } from '../../redux/authSlice';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
-
+import { API } from '../../utility/services';
+import { err } from 'react-native-svg/lib/typescript/xml';
 
 const Employee_Login = (props) => {
-
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 
-    const userData = { loginId: userId, password: password, oprFlag: 'L' };
-
     const getCurrentLocation = async (val) => {
         Geolocation({ val });
     }
-
     // preventing going to entry page
     const navigation = useNavigation();
     useEffect(() => {
@@ -38,47 +35,40 @@ const Employee_Login = (props) => {
         })
         return preventBack
     }, [navigation])
-
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
     }
-
     // logging in function
     const submit = () => {
-        setLoaderVisible(true)
-        console.log(userData);
-        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
-            const returnedData = response?.data?.Result;
-            setLoaderVisible(false)
-            let result = returnedData.map(a => a.FLAG);
-            let userId = returnedData.map(a => a.USER_ID)[0]
-            let userName = returnedData.map(b => b.FIRST_NAME)[0]
-            let userDeptId = returnedData.map(c => c.DEPT_ID)[0]
-            let userDept = returnedData.map(d => d.DEPT_NAME)[0]
+        try {
+            const userData = { loginId: userId, password: password, oprFlag: 'L' };
+            setLoaderVisible(true)
+            console.log(userData);
+            axios.post(`${API}/api/User/login`, userData).then((response) => {
+                const returnedData = response?.data?.Result[0];
+                // console.log("resposne", returnedData,response?.data?.Result);
 
-            // console.log(returnedData);
-
-           
-
-            result[0] === "S" ? ((props.navigation.navigate("Employee_page")),dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
-            
-        })
+                let result = response?.data?.Result.map(a => a.FLAG);
+                let userId = returnedData.USER_ID
+                let userName = returnedData.FIRST_NAME
+                let userDeptId = returnedData.DEPT_ID
+                let userDept = returnedData.DEPT_NAME
+                // console.log("returnedData", result,userId,userName,userDeptId,userDept);
+                setLoaderVisible(false)
+                result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+            })
+        } catch (error) {
+            setLoaderVisible(false);
+        }
     }
 
-
     const clickQuickPin = () => {
-
         if (userId != '') {
-
             props.navigation.navigate("QuickPin")
-
         } else {
-
             Alert.alert("Please enter User Name")
-
         }
-
     }
 
     //Random Number
@@ -87,30 +77,35 @@ const Employee_Login = (props) => {
     }
 
     const forgetPasswordApi = () => {
-        setLoaderVisible(true);
-        let otp = RandomNumber("6")
-        console.log("emplogin", userId+"  "+otp);
-        axios.get('https://econnectsatya.com:7033/api/GetMobileNo', {
-            params: {
-                loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
-            }
-        }).then((response) => {
+        try {
+            setLoaderVisible(true);
+            let otp = RandomNumber("6")
+            // console.log("emplogin", userId + "  " + otp);
+            axios.get(`${API}/api/GetMobileNo`, {
+                params: {
+                    loginId: userId, operFlag: "E", message: otp + " Is the OTP for your mobile verfication on Satya One."
+                }
+            }).then((response) => {
+                const returnedData = response.data.Result;
+                setLoaderVisible(false);
+                console.log(returnedData);
+                let result = returnedData.map(a => a.FLAG);
+                let contact = returnedData.map(b => b.MSG.trim());
 
-            const returnedData = response.data.Result;
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Alert.alert("Failure", "Please enter correct credentials")
+            })
+        } catch (error) { 
+
+            Alert.alert(error);
             setLoaderVisible(false);
-            console.log(returnedData);
-            let result = returnedData.map(a => a.FLAG);
-            let contact = returnedData.map(b => b.MSG.trim());
-
-            result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp,userId })) : Alert.alert("Failure", "Please enter correct credentials")
-        })
+        }
     }
 
     return (
         <View style={styles.container}>
-           <StatusBar 
-            backgroundColor={COLORS.white} 
-            barStyle="dark-content"/>
+            <StatusBar
+                backgroundColor={COLORS.white}
+                barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
@@ -123,13 +118,13 @@ const Employee_Login = (props) => {
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}>
                     <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword:password })))} />
+                    <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
                 </View>
 
                 {/* Password */}
                 <View style={[styles.textInputBox]}>
                     <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => (setPassword(security), dispatch(authActions.logIn({ userPassword: security, userId:userId })))} />
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => (setPassword(security), dispatch(authActions.logIn({ userPassword: security, userId: userId })))} />
                     <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
                 </View>
 
@@ -137,10 +132,10 @@ const Employee_Login = (props) => {
                 <View style={styles.loginOption}>
                     <TouchableOpacity >
 
-                    {/* onPress={() => clickQuickPin()} */}
+                        {/* onPress={() => clickQuickPin()} */}
                         <View style={{ alignItems: 'center' }} >
                             <Image source={Pinlock} style={{ width: 35, height: 35 }} />
-                            <Text style={{  color: COLORS.darkGray2,...FONTS.h4 }}>Quick Pin</Text>
+                            <Text style={{ color: COLORS.darkGray2, ...FONTS.h4 }}>Quick Pin</Text>
                         </View>
 
                     </TouchableOpacity>
@@ -154,17 +149,17 @@ const Employee_Login = (props) => {
 
                 {/* Punching Option */}
                 <View style={styles.punchArea}>
-                    <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton,styles.elevation,  { backgroundColor:'#D5F5E3'}]}>
-                        <Text style={[styles.loginButtonText,{color:COLORS.darkGreen}]}>Punch In</Text>
+                    <TouchableOpacity onPress={() => getCurrentLocation("I")} style={[styles.punchButton, styles.elevation, { backgroundColor: '#D5F5E3' }]}>
+                        <Text style={[styles.loginButtonText, { color: COLORS.darkGreen }]}>Punch In</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => getCurrentLocation("O")} style={[styles.punchButton, styles.elevation, { backgroundColor: '#FAE5D3' }]}>
-                        <Text style={[styles.loginButtonText,{color:COLORS.orange1}]}>Punch Out</Text>
+                        <Text style={[styles.loginButtonText, { color: COLORS.orange1 }]}>Punch Out</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => (userId!==''?forgetPasswordApi():Alert.alert("Please enter User id"))}>Forgot Password?</Text>
+                    <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Alert.alert("Please enter User id"))}>Forgot Password?</Text>
                 </TouchableOpacity>
             </View>
 
@@ -187,7 +182,7 @@ const styles = StyleSheet.create({
     header: {
         marginVertical: 8,
         fontWeight: 'bold',
-        fontSize:16,
+        fontSize: 16,
         color: COLORS.green,
     },
     elevation: {
@@ -251,7 +246,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         ...FONTS.h4,
         marginHorizontal: 5,
-       
+
     },
     bottomElement: {
         position: 'absolute',

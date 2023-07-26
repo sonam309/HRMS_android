@@ -9,6 +9,7 @@ import axios from 'axios'
 import PieChart from 'react-native-pie-chart'
 import { FONTS } from '../../../constants/font_size'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { API } from '../../../utility/services'
 
 const Candidate_details = (props) => {
   const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail } = props.route.params
@@ -53,7 +54,7 @@ const Candidate_details = (props) => {
   const onSelectPress = async (operFlag) => {
     if (validateForm()) {
 
-      let res = await fetch("https://econnectsatya.com:7033/api/hrms/interViewDeatils", {
+      let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -236,7 +237,7 @@ const Candidate_details = (props) => {
 
   // For showing Feedback in case of Completed Interview
   const getFeedback = async () => {
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/interViewDeatils", {
+    let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
       method: "POST",
       headers: { Accept: "application/json", "Content-Type": "application/json" },
       body: JSON.stringify({ operFlag: "V", candidateId: candidateId }),

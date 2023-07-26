@@ -5,6 +5,7 @@ import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector } from 'react-redux';
+import { API } from '../../../../utility/services';
 
 const SkillsBottomView = ({ skills, onPress }) => {
 
@@ -29,7 +30,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
   // getiing Skill dropdown data 
   const getDropdownData = async (P) => {
-    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
     response = await response.json();
     const returnedData = response;
     // console.warn(returnedData);
@@ -55,7 +56,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
       // console.warn(skillData);
 
-      let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
+      let res = await fetch(`${API}/api/hrms/candidateSkills`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -148,7 +149,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
         }
         // console.warn(skillData);
 
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
+        let res = await fetch(`${API}/api/hrms/candidateSkills`, {
           method: "POST",
           headers: {
             Accept: "application/json",

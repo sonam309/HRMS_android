@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import { security_pin_icon } from '../../assets';
 import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
+import { API } from '../../utility/services';
 
 const QuickPin = (props) => {
 
@@ -29,7 +30,7 @@ const QuickPin = (props) => {
         // console.warn(userData);
 
         // https://econnectsatya.com:7033/api/User/login
-        axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+        axios.post(`${API}/api/User/login`, userData).then((response) => {
             const returnedData = response.data.Result;
             let result = returnedData.map(a => a.FLAG);
             // console.warn(result);

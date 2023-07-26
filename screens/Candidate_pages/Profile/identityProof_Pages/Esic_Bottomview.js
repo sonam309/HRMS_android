@@ -6,6 +6,7 @@ import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
+import { API } from '../../../../utility/services';
 
 
 
@@ -63,7 +64,7 @@ const Esic_Bottomview = (props) => {
 
     console.log("request", body);
     axios
-      .post(`https://econnectsatya.com:7033/api/hrms/saveCandidateUanInfo`, body)
+      .post(`${API}/api/hrms/saveCandidateUanInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
@@ -80,7 +81,7 @@ const Esic_Bottomview = (props) => {
 
   const getData = () => {
     axios
-      .post(`https://econnectsatya.com:7033/api/hrms/saveCandidateUanInfo`, {
+      .post(`${API}/api/hrms/saveCandidateUanInfo`, {
         candidateId: 333,
         userId: 333,
         operFlag: 'W',

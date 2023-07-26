@@ -6,6 +6,7 @@ import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
+import { API } from '../../../../utility/services';
 
 const TrainingBottomView = (props) => {
 
@@ -83,7 +84,7 @@ const TrainingBottomView = (props) => {
 
     console.log("request", body);
     axios
-      .post(`https://econnectsatya.com:7033/api/hrms/candidateTrainInfo`, body)
+      .post(`${API}/api/hrms/candidateTrainInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
@@ -100,7 +101,7 @@ const TrainingBottomView = (props) => {
 
   const getData = () => {
     axios
-        .post(`https://econnectsatya.com:7033/api/hrms/candidateTrainInfo`, {
+        .post(`${API}/api/hrms/candidateTrainInfo`, {
             candidateId: 333,
             userId: 333,
             operFlag: 'V',
@@ -182,7 +183,7 @@ const TrainingBottomView = (props) => {
 
   // Title, States and Employment Data
   const getDropdownData = async (P) => {
-    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
     response = await response.json();
     const returnedData = response;
 

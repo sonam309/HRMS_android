@@ -1,6 +1,7 @@
 import { Alert } from 'react-native'
 import axios from "axios";
 import store from '../redux/store';
+import { API } from '../utility/services';
 
 const Punch = ({ val }) => {
     const state = store.getState();
@@ -10,11 +11,11 @@ const Punch = ({ val }) => {
     const userData = { loginId: userId, password: userPassword, oprFlag: 'L' };
 
     let action = (val === 'I' ? "In" : "Out")
-    axios.post('https://econnectsatya.com:7033/api/User/login', userData).then((response) => {
+    axios.post(`${API}/api/User/login`, userData).then((response) => {
         const returnedData = response.data.Result;
         let result = returnedData.map(a => a.FLAG);
         result[0] === "S" ? (
-            fetch("https://econnectsatya.com:7033/api/Admin/punchinOut", {
+            fetch(`${API}/api/Admin/punchinOut`, {
                 method: "POST",
                 headers: { Accept: "application/json", "Content-Type": "application/json" },
                 body: JSON.stringify({ operFlag: val, userId: userId }),

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { API } from '../../../../utility/services'
 
 const Approved = (props) => {
     const { navigation, flag, notificationCat } = props;
@@ -12,7 +13,7 @@ const Approved = (props) => {
     const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
-        axios.post(`https://econnectsatya.com:7033/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
+        axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 console.log("approvals",returnedData);

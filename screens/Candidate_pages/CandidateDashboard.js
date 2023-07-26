@@ -15,6 +15,7 @@ import Loader from '../../components/Loader';
 import { useRoute } from '@react-navigation/native';
 import Offer_Letter from './Offer_Letter';
 import PieChart from 'react-native-pie-chart';
+import { API } from '../../utility/services';
 
 const CandidateDashboard = (props) => {
     const dispatch = useDispatch();
@@ -22,8 +23,8 @@ const CandidateDashboard = (props) => {
     const current_Status = useSelector(state => state.candidateAuth.candidateStatus)
     const Job_Title = useSelector(state => state.candidateAuth.candidateRole)
     const [loaderVisible, setLoaderVisible] = useState(false);
-    const { candidateId, candidateName, candidateStatusId, offerAcceptFlag, daysToJoin, candidateOfferLetter, 
-       } = useSelector(state => state.candidateAuth)
+    const { candidateId, candidateName, candidateStatusId, offerAcceptFlag, daysToJoin, candidateOfferLetter, growingDays, totalDay
+    } = useSelector(state => state.candidateAuth)
     const candidateAuth = useSelector(state => state.candidateAuth)
     const [docCount, setDocCount] = useState();
 
@@ -34,27 +35,22 @@ const CandidateDashboard = (props) => {
         formData.append('data', JSON.stringify(PersonalData))
 
         setLoaderVisible(true)
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/assesmentSave", {
+        let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
             body: formData
         })
 
         res = await res.json()
         setLoaderVisible(false);
-        console.log("CheckDocCount", res)
+        console.log("CheckDocCount", res.PO_DOC_REQ)
         setDocCount(res.PO_DOC_REQ);
 
-        { res.PO_DOC_REQ !== "0" ? props.navigation.navigate("Candidate_Document") : Alert.alert("Document need to be submit after offer letter acceptance") }
+        { res.PO_DOC_REQ !== "0" ||res.PO_DOC_REQ!==""? props.navigation.navigate("Candidate_Document") : Alert.alert("Document need to be submit after offer letter acceptance") }
 
     }
 
 
     useEffect(() => {
-
-        console.log(candidateName);
-
-        // console.log("dayss data", totalDays, growingDays, daysToJoin);
-
 
         // for handling back button in android
         const backAction = () => {
@@ -91,7 +87,7 @@ const CandidateDashboard = (props) => {
     };
     return (
         <View>
-            {/* {console.log("dayssSonam", growingDays + ", " + totalDays + ", " + daysToJoin)} */}
+            {console.log("dayssSonam", growingDays, totalDay, daysToJoin)}
             <View style={{
                 backgroundColor: COLORS.white, paddingHorizontal: 12, paddingBottom: 8, shadowColor: COLORS.orange1,
                 elevation: 5
@@ -121,45 +117,21 @@ const CandidateDashboard = (props) => {
                     <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
-                            {/* <View>
+                            <View>
                                 <PieChart
-                                    widthAndHeight={100} series={[daysToJoin && daysToJoin, totalDays && totalDays - daysToJoin && daysToJoin]} sliceColor={[COLORS.green, 'white']} coverRadius={0.80} />
-                                <View style={{
-                                    position: "absolute",
-                                    height: 80,
-                                    width: 80,
-                                    borderRadius: 45,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    alignSelf: "center",
-                                    top: 10,
-                                    padding: 8,
-
-                                }}>
-                                    <Text style={{
-                                        ...FONTS.h2,
-                                        color: COLORS.black,
-                                        alignSelf: "center",
-                                        fontWeight: "bold"
-                                    }}>{daysToJoin && daysToJoin}</Text>
-                                    <Text style={{
-                                        ...FONTS.body5,
-                                        color: COLORS.orange1,
-                                        alignSelf: "center",
-                                        fontWeight: "700"
-                                    }}>Days to</Text>
-                                    <Text style={{
-                                        ...FONTS.body5,
-                                        color: COLORS.orange1,
-                                        alignSelf: "center",
-                                        fontWeight: "700",
-                                        lineHeight: 12
+                                    widthAndHeight={100} series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} sliceColor={[COLORS.green, 'white']} coverRadius={0.80} />
+                                <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 8, }}>
+                                    <Text style={{...FONTS.h2,color: COLORS.black,alignSelf: "center", fontWeight: "bold"}}>{daysToJoin === null ? "1" : daysToJoin}</Text>
+                                    <Text style={{...FONTS.body5,color: COLORS.orange1,alignSelf: "center",fontWeight: "700"  }}
+                                    >Days to</Text>
+                                    <Text style={{...FONTS.body5, color: COLORS.orange1, alignSelf: "center",fontWeight: "700",lineHeight:12
                                     }}>Join</Text>
                                 </View>
-                            </View> */}
+                            </View>
                             <View>
-                                <Text style={{ color: COLORS.black, fontSize: 15, marginHorizontal: 15, flexWrap: "wrap" }}>Job Status Pending at </Text>
-                                <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'center', lineHeight: 22 }}> {current_Status}</Text>
+                                <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
+
+                                <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
                                 <TouchableOpacity style={{
                                     marginTop: 12
                                 }} onPress={() => props.navigation.navigate("Status_view_page")}>
@@ -203,7 +175,7 @@ const CandidateDashboard = (props) => {
                         </TouchableOpacity>
                         {/* document view */}
 
-                        <TouchableOpacity onPress={() => getDocData()} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
+                        <TouchableOpacity onPress={() => {getDocData()}} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
 
                             <Icons name="file-document-outline" size={44} color={COLORS.green} />
                             <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents </Text>

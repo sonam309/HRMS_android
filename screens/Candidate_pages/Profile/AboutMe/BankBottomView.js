@@ -6,6 +6,7 @@ import COLORS from '../../../../constants/theme'
 import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS } from '../../../../constants/font_size'
+import { API } from '../../../../utility/services'
 
 const BankBottomView = ({ filledDetails, onPress,candidateInfo }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -37,7 +38,7 @@ const BankBottomView = ({ filledDetails, onPress,candidateInfo }) => {
   const [operFlag, setOperFlag] = useState("B");
 
   const getDropdownData = async (P) => {
-    let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
     response = await response.json();
     const returnedData = response;
 
@@ -113,7 +114,7 @@ const BankBottomView = ({ filledDetails, onPress,candidateInfo }) => {
         formData.append('data', JSON.stringify(bankData))
         formData.append('fileUpload', selectedDoc)
         console.log(formData._parts)
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
+        let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
           method: "POST",
           body: formData
         })

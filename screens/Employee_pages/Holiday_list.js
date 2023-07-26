@@ -6,6 +6,7 @@ import moment from 'moment';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
+import { API } from '../../utility/services';
 
 const Holiday_list = () => {
   const userId = useSelector(state => state.auth.userId)
@@ -51,7 +52,7 @@ const Holiday_list = () => {
   const getHolidayList = selectedYear => {
     axios
       .get(
-        `https://econnectsatya.com:7033/api/Admin/getHoliday?year=${selectedYear}`,
+        `${API}/api/Admin/getHoliday?year=${selectedYear}`,
       )
       .then(response => {
         const returnedData = response?.data?.Result;
@@ -67,7 +68,7 @@ const Holiday_list = () => {
 
   const getAttendance = () => {
     axios
-      .post(`https://econnectsatya.com:7033/api/Admin/Attendance`, {
+      .post(`${API}/api/Admin/Attendance`, {
         userId: userId,
         monthYear: 'May2023',
       })

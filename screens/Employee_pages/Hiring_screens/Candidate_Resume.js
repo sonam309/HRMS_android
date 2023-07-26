@@ -3,6 +3,7 @@ import Pdf from 'react-native-pdf';
 import { useState } from 'react';
 import Loader from '../../../components/Loader';
 import COLORS from '../../../constants/theme';
+import { API } from '../../../utility/services';
 
 const Candidate_Resume = (props) => {
     const { resume } = props.route.params;
@@ -13,7 +14,7 @@ const Candidate_Resume = (props) => {
         // fetching Resume from backend 
         <>
             {error && <Text style={{ paddingHorizontal: 15, color: COLORS.red, fontSize: 18, height: '100%', textAlignVertical: 'center', textAlign: 'center', fontWeight: 500 }}>There is error in opening file. Either the file is missing or it is corrupted.</Text>}
-            <Pdf trustAllCerts={false} source={{ uri: `https://econnectsatya.com:7033/Resume/${resume}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(err) => { setError(err) }} onPressLink={(link) => Linking.openURL(link)} />
+            <Pdf trustAllCerts={false} source={{ uri: `${API}/Resume/${resume}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(err) => { setError(err) }} onPressLink={(link) => Linking.openURL(link)} />
         </>
     )
 }

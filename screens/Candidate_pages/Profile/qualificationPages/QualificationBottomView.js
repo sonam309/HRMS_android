@@ -6,6 +6,7 @@ import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
+import { API } from '../../../../utility/services';
 
 const QualificationBottomView = ({ qualification, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -55,7 +56,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
 
     // Title, States and Employment Data
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
 
@@ -80,7 +81,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
             }
             // console.warn(qualificationData);
 
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateQualification", {
+            let res = await fetch(`${API}/api/hrms/candidateQualification`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -145,7 +146,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
             }
 
             console.log("request", qualificationData);
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateQualification", {
+            let res = await fetch(`${API}/api/hrms/candidateQualification`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",

@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-test-renderer";
 
 const candidateAuthSlice = createSlice({
     name: "candidateAuth",
-    initialState: { candidateId: null, candidateName: null, candidateStatusId: null, candidateStatus: null, candidatePhone: null, candidateRole: null, candidateRoleId: null, offerAcceptFlag: null, daysToJoin: null, candidateOfferLetter: null },
+    initialState: { candidateId: null, candidateName: null, candidateStatusId: null, candidateStatus: null, candidatePhone: null, candidateRole: null, candidateRoleId: null, offerAcceptFlag: null, daysToJoin: null, candidateOfferLetter: null, growingDays: null, totalDay: null,hiringLeadMail:null },
     reducers: {
         logIn(state, actions) {
             state.candidateId = actions.payload?.candidateId
@@ -15,9 +16,11 @@ const candidateAuthSlice = createSlice({
             state.offerAcceptFlag = actions.payload?.offerAcceptFlag
             state.daysToJoin = actions.payload?.daysToJoin
             state.candidateOfferLetter = actions.payload?.candidateOfferLetter
-            
+            state.growingDays = actions.payload?.growingDays
+            state.totalDay = actions.payload?.totalDay
+            state.hiringLeadMail=actions.payload?.hiringLeadMail
 
-            console.log("authcandidate", state.totalDays, state.growingDays, state.daysToJoin)
+
         },
         logOut(state) {
             state.candidateStatusId = null,
@@ -29,7 +32,10 @@ const candidateAuthSlice = createSlice({
                 state.candidateId = null,
                 state.offerAcceptFlag = null,
                 state.daysToJoin = null,
-                state.candidateOfferLetter = null
+                state.candidateOfferLetter = null,
+                state.growingDays = null,
+                state.totalDay = null,
+                state.hiringLeadMail=null
         }
     }
 })

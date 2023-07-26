@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from '../../constants/theme';
 import Loader from '../../components/Loader';
+import { API } from '../../utility/services';
 
 const ForgetPassword = (props) => {
 
@@ -53,7 +54,7 @@ const ForgetPassword = (props) => {
   const getType = async () => {
     page = await AsyncStorage.getItem("type")
     {
-      page ? (page === 'employee' ? [setURL('https://econnectsatya.com:7033/api/User/login'), setOper('R')] : [setURL('https://econnectsatya.com:7033/api/User/candidateLogin'), setOper('F')]) : null
+      page ? (page === 'employee' ? [setURL(`${API}/api/User/login`), setOper('R')] : [setURL(`${API}/api/User/candidateLogin`), setOper('F')]) : null
       // page ? (page === 'employee' ? [setURL('https://econnectsatya.com:7033//api/User/login'), setOper('R')] : [setURL('https://econnectsatya.com:7033//api/User/candidateLogin'), setOper('F')]) : null
     }
   }

@@ -7,6 +7,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker'
 import axios from 'axios';
+import { API } from '../../../../utility/services';
 
 const Identifications = (props) => {
 
@@ -147,7 +148,7 @@ const Identifications = (props) => {
       };
       console.log("request", body);
       axios
-        .post(`https://econnectsatya.com:7033/api/hrms/indentityProof`, body)
+        .post(`${API}/api/hrms/indentityProof`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
@@ -164,7 +165,7 @@ const Identifications = (props) => {
 
   const getData = () => {
     axios
-      .post(`https://econnectsatya.com:7033/api/hrms/indentityProof`, {
+      .post(`${API}/api/hrms/indentityProof`, {
         candidateId: 333,
         userId: 333,
         operFlag: 'V',

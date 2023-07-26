@@ -6,6 +6,7 @@ import candidateIcon from '../../../assets/images/candidateIcon.png'
 import { useSelector } from 'react-redux'
 import { FONTS } from '../../../constants/font_size'
 import { useFocusEffect } from '@react-navigation/native';
+import { API } from '../../../utility/services'
 
 
 const Interview_status = (props) => {
@@ -17,7 +18,7 @@ const Interview_status = (props) => {
     // fetching interviewer's list data
     const fetchInterviewData = async () => {
 
-        let res = await fetch("https://econnectsatya.com:7033/api/User/InterviewList", {
+        let res = await fetch(`${API}/api/User/InterviewList`, {
             method: "POST",
             headers: { Accept: "application/json", "Content-Type": "application/json" },
             body: JSON.stringify({ operFlag: "V", userId: userId }),

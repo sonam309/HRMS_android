@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, TextInput } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, TextInput, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { user_profile } from '../../../assets'
@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 import axios from 'axios';
 import { API } from '../../../utility/services';
+import GuarantorBottomView from './Guarantor/GuarantorBottomView';
 
 
 
@@ -56,6 +57,8 @@ const Candidate_profile = () => {
   const [languagesView, setLanguagesView] = useState(false);
   const [esicView, setEsicView] = useState(false);
   const [uanView, setUanView] = useState(false);
+  const [esignView, setEsignView] = useState(false);
+  const[guarantorView,setGuarantorView]=useState(false);
 
   // to hide and show bottomUp modal
   const [personalView, setPersonalView] = useState(false)
@@ -77,7 +80,7 @@ const Candidate_profile = () => {
     var formData = new FormData();
     console.log(PersonalData)
     formData.append('data', JSON.stringify(PersonalData))
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
+    let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
       method: "POST",
       body: formData
     })
@@ -90,7 +93,7 @@ const Candidate_profile = () => {
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
     let AddressData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveCandidateAddress", {
+    let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -107,7 +110,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchFamilyData = async () => {
     let FamilyData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
+    let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -124,7 +127,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchEmploymentData = async () => {
     let employmentData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateEmployementInfo", {
+    let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -155,12 +158,12 @@ const Candidate_profile = () => {
     })
     // axios.post(, formData).then((response) => {
 
-      // const returnData = res.data.Result
-      res = await res.json()
-      // candInfo = await candInfo?.Result
-      console.log("candidate Info",res);
-      setFilledCandidateInfo(res);
-      
+    // const returnData = res.data.Result
+    res = await res.json()
+    // candInfo = await candInfo?.Result
+    console.log("candidate Info", res);
+    setFilledCandidateInfo(res);
+
 
     // }).catch((error) => {
     // console.log(error)
@@ -172,7 +175,7 @@ const Candidate_profile = () => {
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
     let skillsData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateSkills", {
+    let res = await fetch(`${API}/api/hrms/candidateSkills`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -188,7 +191,7 @@ const Candidate_profile = () => {
 
   const fetchMedicalData = async () => {
     let medicalData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateMedicalPolicy", {
+    let res = await fetch(`${API}/api/hrms/candidateMedicalPolicy`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -204,7 +207,7 @@ const Candidate_profile = () => {
 
   const fetchLanguageData = async () => {
     let languageData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
+    let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -220,7 +223,7 @@ const Candidate_profile = () => {
 
   const fetchQualificationData = async () => {
     let qualficationData = { operFlag: "V", candidateId: userId }
-    let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateQualification", {
+    let res = await fetch(`${API}/api/hrms/candidateQualification`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -236,7 +239,7 @@ const Candidate_profile = () => {
   useEffect(() => {
     fetchCandidateInfo();
   }, [])
-  
+
 
   useEffect(() => {
     aboutMeView && fetchPersonalData()
@@ -303,9 +306,10 @@ const Candidate_profile = () => {
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Bank Details</Text>
 
             </TouchableOpacity>
+
           </View>
         )}
-{/* <Text>{JSON.stringify("harih om",filledCandidateInfo)}</Text> */}
+        {/* <Text>{JSON.stringify("harih om",filledCandidateInfo)}</Text> */}
         {/* Content of About Me dropdown -> personal, Contact and Bank details */}
         {personalView && (
           <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} visibleHeight={650}>
@@ -315,7 +319,7 @@ const Candidate_profile = () => {
 
         {contactView && (
           <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} visibleHeight={450}>
-            <ContactBottomView  candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setContactView(false)} />
+            <ContactBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setContactView(false)} />
           </BottomUpModal>
         )}
 
@@ -519,6 +523,29 @@ const Candidate_profile = () => {
             </BottomUpModal>
           )
         }
+
+        <TouchableOpacity onPress={() => setEsignView(!esignView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
+          <Icons name='account-check' size={20} color={COLORS.orange} />
+          <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Guarantor Details</Text>
+          <FontAwesome style={{ position: 'absolute', right: 5 }} name={esignView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
+        </TouchableOpacity>
+        {
+          esignView && (
+            <View style={{ padding: SIZES.radius, paddingLeft: SIZES.padding }}>
+              <TouchableOpacity style={{ marginVertical: 6, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setGuarantorView(!guarantorView)}>
+              <Icons name='account-check' color={COLORS.green} size={18} />
+                <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}> Guarantor </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+           {
+          guarantorView && (
+            <BottomUpModal isVisible={guarantorView} onClose={() => { setGuarantorView(false);}} visibleHeight={500}>
+              {<GuarantorBottomView onPress={() => setGuarantorView(false)} />}
+            </BottomUpModal>
+          )
+        }
+
       </View>
     </ScrollView >
   )

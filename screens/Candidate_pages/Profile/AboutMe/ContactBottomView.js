@@ -69,7 +69,7 @@ const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
                 formData.append('data', JSON.stringify(contactData))
                 console.log(formData._parts)
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
+                let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
                     method: "POST",
                     body: formData
                 })

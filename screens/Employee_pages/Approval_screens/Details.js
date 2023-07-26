@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import SelectDropdown from 'react-native-select-dropdown';
+import { API } from '../../../utility/services';
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
@@ -45,7 +46,7 @@ const Details = (props) => {
 
     // Title, States and Employment Data
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
 
@@ -123,7 +124,7 @@ const Details = (props) => {
 
     // for Approving salary pending approvals
     const SalaryAction = (oprFlag) => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', { ...SalaryDetails, operFlag: oprFlag })
+        axios.post(`${API}/api/hrms/saveSaleryAllocation`, { ...SalaryDetails, operFlag: oprFlag })
             .then(response => {
                 console.log("salary", SalaryDetails)
                 const returnedData = response?.data;
@@ -143,7 +144,7 @@ const Details = (props) => {
         formData.append('data', JSON.stringify({ operFlag: opr, txnId: jobId, jobLeadId: selectedHiringLeadValue }),);
 
         try {
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+            let res = await fetch(`${API}/api/hrms/jobOpeningRequest`, {
                 method: "POST",
                 body: formData
 
@@ -168,7 +169,7 @@ const Details = (props) => {
         jobInfodata = JSON.stringify(jobInfodata)
         console.log(jobInfodata)
         try {
-            let res = await fetch("https://econnectsatya.com:7033/api/createNewJob", {
+            let res = await fetch(`${API}/api/createNewJob`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -191,7 +192,7 @@ const Details = (props) => {
 
     // Fetching salary allocation template
     const getSalaryHTMLData = async () => {
-        let totalData = await fetch('https://econnectsatya.com:7033/api/Admin/getHiringTemplate?tempId=7')
+        let totalData = await fetch(`${API}/api/Admin/getHiringTemplate?tempId=7`)
         totalData = await totalData.json()
         totalData = totalData.Result[0]?.MAIL_BODY
         setHTMLdata(totalData)
@@ -199,7 +200,7 @@ const Details = (props) => {
 
     // Fetching salary allocation data
     const getSalaryData = () => {
-        axios.post('https://econnectsatya.com:7033/api/hrms/saveSaleryAllocation', {
+        axios.post(`${API}/api/hrms/saveSaleryAllocation`, {
             operFlag: "V",
             candidateId: candidate_ID
         })
@@ -289,7 +290,7 @@ const Details = (props) => {
         let formData = new FormData();
         formData.append('data', JSON.stringify({ operFlag: "V", txnId: jobId, userId: userId }))
         console.log("first", formData._parts)
-        let res = await fetch("https://econnectsatya.com:7033/api/hrms/jobOpeningRequest", {
+        let res = await fetch(`${API}/api/hrms/jobOpeningRequest`, {
             method: "POST",
             body: formData
         })
@@ -303,7 +304,7 @@ const Details = (props) => {
 
     // Fetching data for new job opening
     const getJobOpeningData = async () => {
-        let res = await fetch(`https://econnectsatya.com:7033/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
+        let res = await fetch(`${API}/api/getJobs?jobStatus=0&jobId=${jobId}&leadId&userId`)
         // console.warn(jobId);
         res = await res?.json();
         res = await res?.Table[0];

@@ -7,6 +7,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../../components/Loader'
 import { FONTS } from '../../../../constants/font_size'
+import { API } from '../../../../utility/services'
 
 
 const PersonalBottomView = ({ filledDetails, onPress,candidateInfo }) => {
@@ -28,10 +29,8 @@ const PersonalBottomView = ({ filledDetails, onPress,candidateInfo }) => {
     const [selectedGender, setSelectedGender] = useState();
     const [selectedGenderValue, setSelectedGenderValue] = useState();
 
-  
-
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
         // console.warn(returnedData);
@@ -188,7 +187,7 @@ const PersonalBottomView = ({ filledDetails, onPress,candidateInfo }) => {
 
             if (ValidateForm()) {
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/savePersonalDetails", {
+                let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
                     method: "POST",
                     body: formData
                 })

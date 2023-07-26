@@ -6,6 +6,7 @@ import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
+import { API } from '../../../../utility/services';
 
 const LanguageBottomView = ({ languages, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -30,7 +31,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
 
 
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
         if (P === 29) { setLanguage(returnedData) }
@@ -45,7 +46,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             }
             // console.warn(languageData);
 
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
+            let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -89,7 +90,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             }
 
             console.log("request", languageData);
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/candidateLanguage", {
+            let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",

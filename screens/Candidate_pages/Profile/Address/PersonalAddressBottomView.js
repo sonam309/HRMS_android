@@ -6,6 +6,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { FONTS } from '../../../../constants/font_size'
 import { useSelector } from 'react-redux'
 import Loader from '../../../../components/Loader'
+import { API } from '../../../../utility/services'
 
 const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -20,7 +21,7 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
 
     // Country and States data 
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
         // console.warn(returnedData);
@@ -231,7 +232,7 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
                 // console.warn("address",AddressData);
 
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveCandidateAddress", {
+                let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
                     method: "POST",
                     headers: {
                         Accept: "application/json",

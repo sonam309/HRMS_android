@@ -6,6 +6,7 @@ import { FONTS } from '../../../../constants/font_size'
 import SelectDropdown from 'react-native-select-dropdown'
 import DatePicker from 'react-native-date-picker'
 import { useSelector } from 'react-redux'
+import { API } from '../../../../utility/services'
 
 const FamilyBottomView = ({ members, setMembers, onPress }) => {
     const [showMembers, setShowMembers] = useState(true)
@@ -48,7 +49,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
 
     // family member, blood group & Gender data 
     const getDropdownData = async (P) => {
-        let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+        let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
         // console.warn(returnedData);
@@ -65,7 +66,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
             }
             // console.warn(familyData);
 
-            let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
+            let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -239,7 +240,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
                 }
                 // console.warn("familydata", familyData);
 
-                let res = await fetch("https://econnectsatya.com:7033/api/hrms/saveFamilyInfo", {
+                let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
                     method: "POST",
                     headers: {
                         Accept: "application/json",
