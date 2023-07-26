@@ -121,7 +121,7 @@ const CandidateDashboard = (props) => {
                     <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
-                            <View>
+                            {/* <View>
                                 <PieChart
                                     widthAndHeight={100} series={[daysToJoin && daysToJoin, totalDays && totalDays - daysToJoin && daysToJoin]} sliceColor={[COLORS.green, 'white']} coverRadius={0.80} />
                                 <View style={{
@@ -156,7 +156,7 @@ const CandidateDashboard = (props) => {
                                         lineHeight: 12
                                     }}>Join</Text>
                                 </View>
-                            </View>
+                            </View> */}
                             <View>
                                 <Text style={{ color: COLORS.black, fontSize: 15, marginHorizontal: 15, flexWrap: "wrap" }}>Job Status Pending at </Text>
                                 <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'center', lineHeight: 22 }}> {current_Status}</Text>
