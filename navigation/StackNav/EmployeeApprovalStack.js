@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Approval_actions from '../../screens/Employee_pages/Approval_screens/Approval_actions';
 import EmployeeActionsTab from '../TabNav/EmployeeActionsTab';
-import Details from '../../screens/Employee_pages/Approval_screens/Details';
+import Details from '../../screens/Employee_pages/Approval_screens/Details/Details';
 import Description_Job from '../../screens/Employee_pages/Approval_screens/Description_Job';
 
 const Stack = createNativeStackNavigator();
