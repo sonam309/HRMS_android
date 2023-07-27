@@ -161,6 +161,7 @@ const CreateNewJobOpening = (props) => {
             selectedEmploymentValue === '' ||
             cityValue === '' ||
             postalCode === ''
+
         ) {
             ToastAndroid.show('All fields are required', 3000);
             return false;
@@ -290,7 +291,7 @@ const CreateNewJobOpening = (props) => {
             <View style={{ margin: 7 }}>
                 {/* {console.warn(titleName)} */}
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{ color: COLORS.red }}>* </Text></Text>
-                <SelectDropdown data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value),console.log("Sonam",selectedTitleValue,selectedTitle,value) }} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
+                <SelectDropdown search data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value), console.log("Sonam", selectedTitleValue, selectedTitle, value) }} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
             </View>
 
             {/* number of position */}
@@ -322,7 +323,7 @@ const CreateNewJobOpening = (props) => {
             <View style={{ margin: 7 }}>
                 {/* {console.warn(statesName)} */}
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Select State <Text style={{ color: COLORS.red }}>* </Text> </Text>
-                <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.darkGray2 }} />
+                <SelectDropdown search data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, styles.elevation, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={states?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.darkGray2 }} />
             </View>
 
 
@@ -367,8 +368,8 @@ const CreateNewJobOpening = (props) => {
 
             {/* bottom Buttons */}
             <View style={{ flexDirection: 'row', marginVertical: 20 }}>
-                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => ApplyJob()}>
-                    <Text style={{ color: 'white' }}>Save Job Opening</Text>
+                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => { Object.keys(selectedDoc).length > 0 ? ApplyJob() : Alert.alert("Job description is Mandatory") }}>
+                    <Text style={{ color: 'white' }}>Save Job Opening{console.log("first", Object.keys(selectedDoc).length)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]} onPress={() => props.navigation.navigate("Hiring_page")}>
                     <Text style={{ color: 'white' }}> Cancel </Text>

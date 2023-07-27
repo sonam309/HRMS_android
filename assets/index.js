@@ -10,6 +10,8 @@ import user_profile from './images/user.png'
 import candidateIcon from './images/candidateIcon.png'
 import company_icon from './images/company_icon.png'
 import expernallinkImage from './images/externalLink.png'
+import loginBanner from './images/loginBanner.png'
+import tag from './images/tag.png'
 
 
-export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon, expernallinkImage}
+export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon, expernallinkImage,loginBanner,tag}

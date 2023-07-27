@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar, ToastAndroid } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar, ToastAndroid, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -12,9 +12,13 @@ import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import COLORS from '../../constants/theme';
-import { FONTS } from '../../constants/font_size';
+import { FONTS, SIZES } from '../../constants/font_size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API } from '../../utility/services';
+import { loginBanner } from '../../assets';
+import CustomInput from '../../components/CustomInput';
+import TextButton from '../../components/TextButton';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 const Login = (props) => {
     let page = null
@@ -25,7 +29,6 @@ const Login = (props) => {
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
-
 
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
@@ -94,12 +97,12 @@ const Login = (props) => {
             let offerAcceptFlag = returnedData.OFER_ACPT_FLAG
             let daysToJoin = returnedData.DAY_TO_JOIN
             let candidateOfferLetter = returnedData.OFFER_LETTER
-            let growingDays=returnedData.GROWING_DAY
-            let totalDay=returnedData.TOTAL_DAY
-            let hiringLeadMail= returnedData.HIRING_LEAD_EMAIL
-            
-            
-            console.log("response", returnedData,hiringLeadMail);
+            let growingDays = returnedData.GROWING_DAY
+            let totalDay = returnedData.TOTAL_DAY
+            let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
+
+
+            console.log("response", returnedData, hiringLeadMail);
             setLoaderVisible(false)
             returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                 candidateId: userId,
@@ -115,7 +118,7 @@ const Login = (props) => {
                 growingDays,
                 totalDay,
                 hiringLeadMail,
-               
+
             }))) : Alert.alert("Failure", "Please enter correct credentials")
 
         }).catch((error) => {
@@ -131,25 +134,37 @@ const Login = (props) => {
                 backgroundColor={COLORS.white}
                 barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
+            {/* top right coner view design */}
+            <View
+                style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} />
 
             {/* Company Logo */}
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
             </View>
 
+            {/* candidate Login titlte */}
             <View style={{ justifyContent: 'center', flex: 2, borderRadius: 20, marginTop: -40, backgroundColor: 'white', paddingHorizontal: 20 }}>
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
-                    <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomTextInput placeholder='User Id' value={userId} onChangeText={(name) => setUserId(name)} />
+                    {/* <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} /> */}
+                    {/* <CustomInput placeholder='User Id' value={userId} onChangeText={(name) => setUserId(name)} /> */}
+                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={name => setUserId(name)}
+                        required />
+
                 </View>
 
                 {/* Password */}
                 <View style={styles.textInputBox}>
-                    <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} />
-                    <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} />
+                    {/* <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
+                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} /> */}
+
+                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput
+                        icon={<Pressable onPress={changeVisibility}><AntDesign name="eye" size={22} />
+                        </Pressable>}
+                    />
+                    {/* <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} /> */}
                 </View>
 
                 {/* Quick Pin Option */}
@@ -162,10 +177,14 @@ const Login = (props) => {
                 </View>
 
                 {/* Log In Button */}
-                <TouchableOpacity style={[styles.loginButton, styles.elevation]} onPress={() => submit()}>
+                {/* <TouchableOpacity style={[styles.loginButton, styles.elevation]} onPress={() => submit()}>
                     <AntDesign name='poweroff' color='white' size={20} />
                     <Text style={styles.loginButtonText}>Log In</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+
+                <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.base, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
+                    buttonContainerStyle={{ width: responsiveWidth(90), height: 50, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}
+                    onPress={() => submit()} />
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
@@ -175,9 +194,11 @@ const Login = (props) => {
             </View>
 
             {/* Bottom element */}
-            <View style={{ flex: 0.5, marginBottom: 5 }}>
-                <Text style={styles.bottomElement}>Version: <Text style={{ color: 'orange', fontWeight: '900' }}>2.2</Text></Text>
+            <View style={{ flex: 0.5, marginBottom: 5, }}>
+                <Text style={styles.bottomElement}>Version: <Text style={{ color: COLORS.white, fontWeight: '900' }}>2.2</Text></Text>
             </View>
+
+            <Image source={loginBanner} style={{ width: '100%', height: '20%', bottom: -40, position: 'absolute', zIndex: -1000 }} />
 
         </View>
     )
@@ -190,9 +211,12 @@ const styles = StyleSheet.create({
     },
     header: {
         marginVertical: 8,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+
+        color: COLORS.black,
+        ...FONTS.h4,
         fontSize: 16,
-        color: COLORS.green,
+        fontFamily: 'Ubuntu-Bold',
     },
     elevation: {
         shadowColor: '#000',
@@ -212,14 +236,14 @@ const styles = StyleSheet.create({
         marginVertical: 12
     },
     textInputBox: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 6,
-        backgroundColor: 'white',
-        borderRadius: 8
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // marginVertical: 6,
+        // backgroundColor: 'white',
+        // borderRadius: 8
     },
     forgotPassword: {
-        color: 'orange',
+        color: COLORS.orange1,
         fontSize: 14,
         ...FONTS.h4,
         textAlign: 'center',
@@ -248,7 +272,7 @@ const styles = StyleSheet.create({
         width: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
-        color: COLORS.darkGray2,
+        color: COLORS.white,
         fontSize: 14,
     }
 })

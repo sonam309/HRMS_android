@@ -10,21 +10,29 @@ import PieChart from 'react-native-pie-chart'
 import { FONTS } from '../../../constants/font_size'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { API } from '../../../utility/services'
+import { useRoute } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const Candidate_details = (props) => {
   const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail } = props.route.params
+  const dispatch = useDispatch();
+    const route = useRoute();
   const [isVisible, setIsVisible] = useState(false)
   const [obtainedTechScoreValue, setObtainedTechScoreValue] = useState("");
   const [obtainedSpeakScoreValue, setObtainedSpeakScoreValue] = useState("");
   const [yourRemarks, setYourRemarks] = useState("");
   const [error, setError] = useState(false);
   const [feedback, setFeedback] = useState("")
+  const {userId}=useSelector(state=>state.auth);
+  
 
   console.log("candidateId", candidateId);
   console.log("interviewId", interviewId);
   console.log("interviewType", interviewType);
   console.log("interviewMail", interviewMail);
   console.log("resume", resume);
+  console.log("UserID",userId);
   let theInterviewType = "";
   let theInterviewId = "";
 
@@ -54,7 +62,8 @@ const Candidate_details = (props) => {
   const onSelectPress = async (operFlag) => {
     if (validateForm()) {
 
-      let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
+      // let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
+      let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,10 +73,13 @@ const Candidate_details = (props) => {
           interviewId: theInterviewId,
           interviewType: theInterviewType,
           operFlag: operFlag,
+          interviewEmpCode:userId,
           param: `Technical~5~${obtainedTechScoreValue}$Speaking~5~${obtainedSpeakScoreValue}`,
           remark: yourRemarks
         }),
+        
       })
+      console.log("dfghj",theInterviewType);
 
       res = await res.json()
       res = res.Result[0]

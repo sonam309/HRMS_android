@@ -14,6 +14,7 @@ const Interview_status = (props) => {
     const [interViewDetail, setInterViewDetail] = useState();
     const [status, setStatus] = useState('P')
     const userId = useSelector(state => state.auth.userId)
+    const[interviewType,setInterviewType]=useState('');
 
     // fetching interviewer's list data
     const fetchInterviewData = async () => {
@@ -23,13 +24,12 @@ const Interview_status = (props) => {
             headers: { Accept: "application/json", "Content-Type": "application/json" },
             body: JSON.stringify({ operFlag: "V", userId: userId }),
         })
-
-
         res = await res.json()
-
         res = res.Result;
-        // console.log("response", res)
+        console.log("responseIStatus", res)
         setInterViewDetail(res)
+        // setInterviewType(res.INTERVIEW_TYPE);
+        // {console.log("InterviewTypesss",res.INTERVIEW_TYPE)}
     };
 
     // useEffect(() => {
@@ -44,10 +44,13 @@ const Interview_status = (props) => {
     // candidate icons 
     function CandidateList(props) {
 
-        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id, interviewType = props.interviewType, interviewMail = props.mail
+        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id,  interviewMail = props.mail,interviewType = props.interviewType
+
+       
 
         return (
             <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail })}>
+                {console.log("TYpe",interviewType)}
 
                 <View style={{ borderRadius: 15, backgroundColor: COLORS.white, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15, borderWidth: 0.5, borderColor: COLORS.gray }}>
                     <View>
@@ -64,9 +67,9 @@ const Interview_status = (props) => {
                                 <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, }}> {candidateId}</Text>
 
                             </View>
-                            <View style={{ flexDirection: 'row',marginLeft:20 }}>
+                            <View style={{ flexDirection: 'row',marginLeft:10 }}>
                                 <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
-                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 2 }}> {designation}</Text>
+                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 1 }}> {designation.slice(0,16)}</Text>
                             </View>
                         </View>
                         {date ? <Text style={{ color: COLORS.gray, ...FONTS.h5, marginTop: -5 }}>Scheduled:{date}</Text> : null}
@@ -108,7 +111,7 @@ const Interview_status = (props) => {
                 {/* ListView  */}
                 <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
                     <ScrollView >
-                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={props.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
+                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={item.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
                     </ScrollView>
                 </View>
 

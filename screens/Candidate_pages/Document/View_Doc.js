@@ -13,7 +13,6 @@ const View_Doc = (props) => {
     const [error, setError] = useState(null)
 
     console.log("extention", file);
-
     return (
         // <WebView source={{ uri: `https://econnectsatya.com:7033/AssesmentDoc/${file}` }} style={{ flex: 1 }} />
 
@@ -23,9 +22,6 @@ const View_Doc = (props) => {
                 <Pdf trustAllCerts={false} source={{ uri: `${API}/AssesmentDoc/${file}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(err) => { setError(err) }} onPressLink={(link) => Linking.openURL(link)} /> :
                 <WebView source={{ uri: `${API}/AssesmentDoc/${file}` }} style={{ flex: 1 }} />
             }
-
-
-
         </>
 
     )
