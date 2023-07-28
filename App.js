@@ -7,6 +7,8 @@ import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import Toast from 'react-native-toast-message';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const App = () => {
 
@@ -50,9 +52,12 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <SafeAreaView style={{flex:1}}>
       <NavigationContainer>
         <EntryStackNav />
       </NavigationContainer>
+      <Toast position="top" bottomOffset={20} />
+      </SafeAreaView>
     </Provider>
   );
 }

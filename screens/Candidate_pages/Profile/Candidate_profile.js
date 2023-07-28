@@ -479,14 +479,14 @@ const Candidate_profile = () => {
         )}
         {
           identifications && (
-            <BottomUpModal isVisible={identifications} onClose={() => { setIdentifications(false); }} visibleHeight={500}>
-              {<Identifications onPress={() => setIdentifications(false)} />}
+            <BottomUpModal isVisible={identifications} onClose={() => { setIdentifications(false); }}>
+              {<Identifications  isVisible={identifications} onPress={() => setIdentifications(false)} />}
             </BottomUpModal>
           )
         }
         {
           esicView && (
-            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }} visibleHeight={500}>
+            <BottomUpModal isVisible={esicView} onClose={() => { setEsicView(false); }}>
               {<Esic_Bottomview onPress={() => setEsicView(false)} />}
             </BottomUpModal>
           )
@@ -494,7 +494,7 @@ const Candidate_profile = () => {
         }
         {
           uanView && (
-            <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }} visibleHeight={650}>
+            <BottomUpModal isVisible={uanView} onClose={() => { setUanView(false); }}>
               {<UAN_BottomView onPress={() => setUanView(false)} />}
             </BottomUpModal>
           )

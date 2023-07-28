@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, ToastAndroid, editable } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, editable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -8,11 +8,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker'
 import axios from 'axios';
 import { API } from '../../../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const Identifications = (props) => {
 
   useEffect(() => {
-    getData();
+    setTimeout(() => {
+      getData()
+    }, 1000);
+
   }, []);
 
   const [edit, setEdit] = useState({});
@@ -153,8 +157,11 @@ const Identifications = (props) => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
           const msg = returnedData[0].MSG
-          ToastAndroid.show(msg, 5000);
-          {props.onPress}
+          Toast.show({
+            type: 'success',
+            text1: msg,
+          });
+          { props.onPress }
 
         })
         .catch(err => {
@@ -175,8 +182,7 @@ const Identifications = (props) => {
         console.log("getData", returnedData);
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
-        ToastAndroid.show(msg, 5000);
-        
+
         setPassportNumber(preFilledData?.PASSPORT_NO);
         setSelectedIssuedDate(preFilledData?.PASSPORT_DATE_OF_ISSUE);
         setSelectedExpiryDate(preFilledData?.PASSPORT_DATE_OF_EXPIRY);
@@ -201,18 +207,30 @@ const Identifications = (props) => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+
+    <View style={{flex:1}}>
+
+      <View style={{  flexDirection: 'row', marginBottom: 10 }}>
+        <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>Identifications</Text>
+        <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
+          <TouchableOpacity onPress={props.onPress}>
+            <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+
+      <ScrollView  showsVerticalScrollIndicator={false} style={{height:'100%'}}>
       <View>
         {/* close button */}
-        <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+        {/* <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
           <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>Identifications</Text>
           <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
             <TouchableOpacity onPress={props.onPress}>
               <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
             </TouchableOpacity>
           </View>
-        </View>
-
+        </View> */}
         {/* passportView */}
         <View style={{ borderRadius: 10, borderColor: COLORS.lightGray, borderWidth: 1, padding: 10, elevation: 4, backgroundColor: COLORS.white }}>
           <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Passport Details</Text>
@@ -367,8 +385,17 @@ const Identifications = (props) => {
         </TouchableOpacity>
 
       </View>
-      <View style={{ marginBottom: 300 }} />
+      <View style={{ marginBottom: 270 }} />
     </ScrollView>
+
+
+
+
+
+    </View>
+
+
+    
   )
 }
 

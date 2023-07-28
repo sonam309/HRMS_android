@@ -47,7 +47,8 @@ const BottomUpModal = ({ isVisible, onClose, children, visibleHeight }) => {
 
   const modalY = modalAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [visibleScreenHeight, visibleScreenHeight - visibleHeight],
+    // outputRange: [visibleScreenHeight, visibleScreenHeight - visibleHeight],
+    outputRange: ["100%", "30%"],
   });
 
   return (

@@ -7,7 +7,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import { API } from '../../../../utility/services';
-
+import Toast from 'react-native-toast-message';
 
 
 const Esic_Bottomview = (props) => {
@@ -28,8 +28,12 @@ const Esic_Bottomview = (props) => {
 
   useEffect(() => {
     // getDropdownData(4);
-    getData();
+    setTimeout(() => {
+      getData()
+    }, 1000);
   }, []);
+
+
 
 
 //   const getDropdownData = async (P) => {
@@ -69,7 +73,11 @@ const Esic_Bottomview = (props) => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
         const msg = returnedData[0].MSG
-        ToastAndroid.show(msg, 5000);
+        // ToastAndroid.show(msg, 5000);
+        Toast.show({
+          type: 'success',
+          text1: msg,
+        });
         { props.onPress }
 
       })
@@ -91,7 +99,7 @@ const Esic_Bottomview = (props) => {
         console.log("getData", returnedData);
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
-        ToastAndroid.show(msg, 5000);
+        // ToastAndroid.show(msg, 5000);
 
         setCity(ESICDetails?.CITY);
         setSubCode(ESICDetails?.SUB_CODE);
