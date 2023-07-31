@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, editable } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, editable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'

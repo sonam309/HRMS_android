@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { FONTS, SIZES } from '../../../constants/font_size'
@@ -9,10 +9,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import { API } from '../../../utility/services';
+import Toast  from 'react-native-toast-message';
 
 const Candidate_Document = (props) => {
     // Candidate ID & Status
-    const { candidateId, candidateStatusId,candidateName,candidateRole ,hiringLeadMail} = useSelector(state => state.candidateAuth)
+    const { candidateId, candidateStatusId, candidateName, candidateRole, hiringLeadMail } = useSelector(state => state.candidateAuth)
 
     // Form data for file
     let formData = new FormData();
@@ -42,9 +43,10 @@ const Candidate_Document = (props) => {
 
     // getting doc info
     const getDocData = async () => {
-        let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId }
+        let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId ,src:"M"}
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
+        console.log("docuploaddata",formData, JSON.stringify(PersonalData))
         setLoaderVisible(true)
         let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
@@ -64,11 +66,8 @@ const Candidate_Document = (props) => {
         // console.log(docFiles)
 
 
-
-
         docFiles.map((item) => {
             let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
-
 
             // console.warn(newFile, "this is newfile", type)
 
@@ -193,7 +192,11 @@ const Candidate_Document = (props) => {
             ])
 
         } catch (error) {
-            ToastAndroid.show("Error Selecting File. Please try again.", 4000)
+            Toast.show({
+                type:'error',
+                text1:'Error Selecting File. Please try again.'
+            })
+            
         }
     }
 
@@ -363,9 +366,10 @@ const Candidate_Document = (props) => {
                     status: "S",
                     operFlag: flag,
                     attachment: "",
-                    candidateName:candidateName+"-"+candidateId,
-                    jobTitle:candidateRole,
-                    approvelMail:hiringLeadMail,
+                    candidateName: candidateName + "-" + candidateId,
+                    jobTitle: candidateRole,
+                    approvelMail: hiringLeadMail,
+                    src:"M",
 
                 }
 
@@ -390,25 +394,35 @@ const Candidate_Document = (props) => {
                 res = await res.json();
                 console.log("SaveImages", res);
                 setLoaderVisible(false)
-                ToastAndroid.show(res.MSG, 3000);
+                Toast.show({
+                    type:'success',
+                    text1:res.MSG
+                })
                 props.navigation.goBack();
 
 
 
             } else {
-                ToastAndroid.show("Upload Mandatory Documents", 3000)
+                Toast.show({
+                    type:'error',
+                    text1:'Upload Mandatory Documents'
+                })
             }
         }
         catch (error) {
             loaderVisible(false);
-            ToastAndroid.show(error, 3000)
+         
+            Toast.show({
+                type:'error',
+                text1:error
+            })
         }
 
     }
 
     const DeleteDoc = async (TXNID) => {
 
-        let candidateData = { txnId: TXNID, operFlag: "D" }
+        let candidateData = { txnId: TXNID, operFlag: "D" ,src:"M"}
         // console.warn(candidateData);
 
         let newFormData = new FormData()
@@ -426,7 +440,10 @@ const Candidate_Document = (props) => {
         res = await res.json()
 
         console.log("deleting doc", res)
-        ToastAndroid.show(res.MSG, 3000)
+        Toast.show({
+            type:'Success',
+            text1:res.MSG
+        })
     }
 
     // for displaying aadhar, pan and salary slip in front end

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ToastAndroid, Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -7,6 +7,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const QualificationBottomView = ({ qualification, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -91,11 +92,19 @@ const QualificationBottomView = ({ qualification, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            ToastAndroid.show(res, 3000);
+
+            Toast.show({
+                type: 'success',
+                text1: res
+            })
 
         }
         catch (error) {
-            ToastAndroid.show(error, 3000)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
 
     }
@@ -157,9 +166,17 @@ const QualificationBottomView = ({ qualification, onPress }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            ToastAndroid.show(res, 3000);
+
+            Toast.show({
+                type: 'success',
+                text1: res
+            })
         } catch (error) {
-            ToastAndroid.show(error, 3000)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
 
     };
@@ -285,9 +302,8 @@ const QualificationBottomView = ({ qualification, onPress }) => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-            {/* <View> */}
-            <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+        <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                 <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Qualifications</Text>
                 <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={onPress}>
@@ -295,103 +311,107 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Qualifications dropdown */}
+                {!showForm && qualification[0]?.QUALIFICATIONS_NAME && qualification.length > 0 ? <QualificationDetails /> :
+                    <View>
+                        <View style={{ height: 75, }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
+                            <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={selectedDropDownText("qualification")} defaultValueByIndex={selectDropDownValue("qualification")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        </View>
 
-            {/* Qualifications dropdown */}
-            {!showForm && qualification[0]?.QUALIFICATIONS_NAME && qualification.length > 0 ? <QualificationDetails /> :
-                <View>
-                    <View style={{ height: 75, }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
-                        <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={selectedDropDownText("qualification")} defaultValueByIndex={selectDropDownValue("qualification")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-                    </View>
+                        {/* Stream dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
+                            <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={selectedDropDownText("Stream")} defaultValueByIndex={selectDropDownValue("Stream")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        </View>
 
-                    {/* Stream dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
-                        <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={selectedDropDownText("Stream")} defaultValueByIndex={selectDropDownValue("Stream")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-                    </View>
+                        {/* Specialization */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Specialization</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization} />
+                        </View>
 
-                    {/* Specialization */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Specialization</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization} />
-                    </View>
+                        {/* Grades */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Percentage(CGPA)</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} />
+                        </View>
 
-                    {/* Grades */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Percentage(CGPA)</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} />
-                    </View>
+                        {/* Institute dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Institute</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Institute Name' onChangeText={setInstitute} value={institute} />
+                        </View>
 
-                    {/* Institute dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Institute</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Institute Name' onChangeText={setInstitute} value={institute} />
-                    </View>
+                        {/* University dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>University</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setUniversity} value={University} />
+                        </View>
 
-                    {/* University dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>University</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setUniversity} value={University} />
-                    </View>
+                        {/* From year */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} />
+                        </View>
 
-                    {/* From year */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} />
-                    </View>
+                        {/* Passing year */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} />
+                        </View>
 
-                    {/* Passing year */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} />
-                    </View>
+                        {/* Qualifications mode dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
+                            <SelectDropdown data={qualificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={selectedDropDownText("QualificationMode")} defaultValueByIndex={selectDropDownValue("QualificationMode")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        </View>
 
-                    {/* Qualifications mode dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
-                        <SelectDropdown data={qualificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={selectedDropDownText("QualificationMode")} defaultValueByIndex={selectDropDownValue("QualificationMode")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-                    </View>
+                        {/* City dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' onChangeText={setCity} value={city} />
+                        </View>
 
-                    {/* City dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' onChangeText={setCity} value={city} />
-                    </View>
+                        {/* State dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
+                            <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={selectedDropDownText("state")} defaultValueByIndex={selectDropDownValue("state")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        </View>
 
-                    {/* State dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
-                        <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={selectedDropDownText("state")} defaultValueByIndex={selectDropDownValue("state")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-                    </View>
-
-                    {/* Country dropdown */}
-                    <View style={{ height: 75, marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
-                        <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={selectedDropDownText("country")} defaultValueByIndex={selectDropDownValue("country")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-                    </View>
+                        {/* Country dropdown */}
+                        <View style={{ height: 75, marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
+                            <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={selectedDropDownText("country")} defaultValueByIndex={selectDropDownValue("country")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        </View>
 
 
-                    {/* hieghest Qualification check  */}
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-                        <TouchableOpacity onPress={() => setIsHighestQualification(isHighestQualification == "true"?"false":"true")}
-                            style={{ alignItems: "center", width: "90%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }} >
-                            <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Is Highest Qualification</Text>
-                            {isHighestQualification === "true" ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
-                            {/* </View> */}
+                        {/* hieghest Qualification check  */}
+                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
+                            <TouchableOpacity onPress={() => setIsHighestQualification(isHighestQualification == "true" ? "false" : "true")}
+                                style={{ alignItems: "center", width: "90%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }} >
+                                <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Is Highest Qualification</Text>
+                                {isHighestQualification === "true" ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
+                                {/* </View> */}
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* save button */}
+                        <TouchableOpacity onPress={() => Toast.show({
+                            type: 'success',
+                            text1: "Data Save Successfully"
+                        })}>
+                            <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 10, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveQualificationDetails()}> Save </Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
+                }
+                <View style={{ marginBottom: 270 }}></View>
+            </ScrollView>
+        </View>
 
-                    {/* save button */}
-                    <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
-                        <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveQualificationDetails()}> Save </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                </View>
-            }
-            {/* </View> */}
-            <View style={{ marginBottom: 350 }}></View>
-        </ScrollView>
     )
 }
 

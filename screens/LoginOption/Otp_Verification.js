@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, } from 'react-native'
 import axios from "axios";
 import BoldText from '../../utility/BoldText';
 import { mobile_otp } from '../../assets';
@@ -8,6 +8,7 @@ import COLORS from '../../constants/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../components/Loader';
 import { API } from '../../utility/services';
+import  Toast  from 'react-native-toast-message';
 
 const Otp_Verification = (props) => {
     const { contact, otp, type, userId } = props.route.params;
@@ -71,8 +72,19 @@ const Otp_Verification = (props) => {
                 let contact = returnedData.map(b => b.MSG);
                 setsendOtp(otp);
 
-                if (result[0] == "S") { Alert.alert("Success"); }
-                else { Alert.alert("fail") }
+                if (result[0] == "S") {
+                     
+                     Toast.show({
+                        type:'success',
+                        text1:'success'
+                     })
+                    }
+                else { 
+                    Toast.show({
+                        type:'error',
+                        text1:'error'
+                     })
+                }
             })
     }
 

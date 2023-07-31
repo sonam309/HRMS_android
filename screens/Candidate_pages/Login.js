@@ -1,12 +1,8 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar, ToastAndroid, Pressable } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image,  StatusBar, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { Pinlock, company_logo_2 } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
@@ -18,17 +14,24 @@ import { API } from '../../utility/services';
 import { loginBanner } from '../../assets';
 import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import Toast from 'react-native-toast-message';
 
 const Login = (props) => {
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('405');
+    const [userId, setUserId] = useState('416');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
+
+
+
+
+    // console.log("windowHeightWidth", windowHeight,windowWidth);
+
 
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
@@ -84,48 +87,70 @@ const Login = (props) => {
 
     // logging in function
     const submit = () => {
-        setLoaderVisible(true)
-        console.log(`${API}/api/User/candidateLogin`)
-        axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
-            const returnedData = response.data.Result[0];
-            let candidateName = returnedData.CANDIDATE_NAME
-            let candidateStatus = returnedData.CANDIDATE_STATUS
-            let candidateRole = returnedData.JOB_TITLE
-            let candidatePhone = returnedData.PHONE
-            let candidateRoleId = returnedData.ROLE_ID
-            let candidateStatusId = returnedData.STATUS_ID
-            let offerAcceptFlag = returnedData.OFER_ACPT_FLAG
-            let daysToJoin = returnedData.DAY_TO_JOIN
-            let candidateOfferLetter = returnedData.OFFER_LETTER
-            let growingDays = returnedData.GROWING_DAY
-            let totalDay = returnedData.TOTAL_DAY
-            let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
+        if (userId === "" || password === "") {
+
+            Toast.show(
+                {
+                    type: 'error',
+                    text1: "UserId and Password is Mandatory !"
+                }
+            )
+
+        } else {
 
 
-            console.log("response", returnedData, hiringLeadMail);
-            setLoaderVisible(false)
-            returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
-                candidateId: userId,
-                candidateName,
-                candidateRole,
-                candidateStatus,
-                candidatePhone,
-                candidateRoleId,
-                candidateStatusId,
-                offerAcceptFlag,
-                daysToJoin,
-                candidateOfferLetter,
-                growingDays,
-                totalDay,
-                hiringLeadMail,
+            setLoaderVisible(true)
+            console.log(`${API}/api/User/candidateLogin`)
+            axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
+                const returnedData = response.data.Result[0];
+                let candidateName = returnedData.CANDIDATE_NAME
+                let candidateStatus = returnedData.CANDIDATE_STATUS
+                let candidateRole = returnedData.JOB_TITLE
+                let candidatePhone = returnedData.PHONE
+                let candidateRoleId = returnedData.ROLE_ID
+                let candidateStatusId = returnedData.STATUS_ID
+                let offerAcceptFlag = returnedData.OFER_ACPT_FLAG
+                let daysToJoin = returnedData.DAY_TO_JOIN
+                let candidateOfferLetter = returnedData.OFFER_LETTER
+                let growingDays = returnedData.GROWING_DAY
+                let totalDay = returnedData.TOTAL_DAY
+                let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-            }))) : Alert.alert("Failure", "Please enter correct credentials")
 
-        }).catch((error) => {
-            console.log(error)
-            ToastAndroid.show(error, 3000)
-            setLoaderVisible(false)
-        })
+                console.log("response", returnedData, hiringLeadMail);
+                setLoaderVisible(false)
+                returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
+                    candidateId: userId,
+                    candidateName,
+                    candidateRole,
+                    candidateStatus,
+                    candidatePhone,
+                    candidateRoleId,
+                    candidateStatusId,
+                    offerAcceptFlag,
+                    daysToJoin,
+                    candidateOfferLetter,
+                    growingDays,
+                    totalDay,
+                    hiringLeadMail,
+
+                }))) : 
+                Toast.show({
+                    type: "error",
+                    text1:"Failure Please enter correct credentials"
+                })
+
+            }).catch((error) => {
+                console.log(error)
+                setLoaderVisible(false)
+
+                Toast.show({
+                    type:'error',
+                    text1:error
+                })
+               
+            })
+        }
     }
 
     return (
@@ -134,6 +159,9 @@ const Login = (props) => {
                 backgroundColor={COLORS.white}
                 barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
+
+
+
             {/* top right coner view design */}
             <View
                 style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} />
@@ -188,7 +216,10 @@ const Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => { userId !== '' ? forgetPasswordApi() : Alert.alert("Please enter User Id") }}>Forgot Password? </Text>
+                    <Text style={styles.forgotPassword} onPress={() => { userId !== '' ? forgetPasswordApi() :Toast.show({
+                        type:'error',
+                        text1:"Please enter User Id"
+                    })}}>Forgot Password? </Text>
                 </TouchableOpacity>
 
             </View>
@@ -198,8 +229,15 @@ const Login = (props) => {
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: COLORS.white, fontWeight: '900' }}>2.2</Text></Text>
             </View>
 
-            <Image source={loginBanner} style={{ width: '100%', height: '20%', bottom: -40, position: 'absolute', zIndex: -1000 }} />
-
+            <View style={{
+                height: responsiveHeight(14),
+                // backgroundColor: COLORS.red,
+                position: "absolute",
+                bottom: 0,
+                zIndex: -1000
+            }}>
+                <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
+            </View>
         </View>
     )
 }

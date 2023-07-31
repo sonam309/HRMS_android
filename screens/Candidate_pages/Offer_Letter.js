@@ -1,7 +1,7 @@
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Linking, ToastAndroid, PermissionsAndroid, SafeAreaView, View, TouchableOpacity, Text } from 'react-native';
+import { Linking, PermissionsAndroid, SafeAreaView, View, TouchableOpacity, Text } from 'react-native';
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -10,6 +10,7 @@ import { SIZES, FONTS } from '../../constants/font_size';
 import axios from 'axios';
 import WebView from 'react-native-webview';
 import { API } from '../../utility/services';
+import Toast  from 'react-native-toast-message';
 
 const Offer_Letter = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -41,7 +42,10 @@ const Offer_Letter = (props) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         downloadFile();
       } else {
-        ToastAndroid.show('Storage access denied', 5000);
+        Toast.show({
+          type:'error',
+          text1:'Storage access denied'
+        })
       }
     } catch (err) {
       console.warn(err);
@@ -70,7 +74,10 @@ const Offer_Letter = (props) => {
       .then((res) => {
         // the temp file path
         console.log('The file saved to ', res.path())
-        ToastAndroid.show("File saved Successfully to" + res.path(), 4000)
+        Toast.show({
+          type:'success',
+          text1:"File saved Successfully to" + res.path()
+        })
       })
   }
 
@@ -96,7 +103,10 @@ const Offer_Letter = (props) => {
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
-      ToastAndroid.show("No Offer letter is Present", 3000)
+      Toast.show({
+        type:'error',
+        text1:'No Offer letter is Present'
+      })
     }
     if (
       totalData?.FLAG == 'S' &&
@@ -128,13 +138,20 @@ const Offer_Letter = (props) => {
         console.log('hjsdfvhjs', res?.data?.Result);
 
         if (res?.data?.Result[0]?.FLAG == 'S') {
-          ToastAndroid.show(JSON.stringify(res?.data?.Result[0]?.MSG), 3000);
+          Toast.show({
+            type:'success',
+            text1:JSON.stringify(res?.data?.Result[0]?.MSG)
+          })
           props.navigation.goBack();
         }
       })
       .catch(error => {
         console.log(error);
-        ToastAndroid.show(JSON.stringify(error), 3000);
+        
+        Toast.show({
+          type:'error',
+          text1:JSON.stringify(error)
+        })
       });
   };
 
@@ -160,10 +177,21 @@ const Offer_Letter = (props) => {
 
       </View>
       {offerLetter && offerLetter != "" ? (
-        <Pdf trustAllCerts={false} source={{ uri: `${API}/OfferLetter/${offerLetter}` }} renderActivityIndicator={() => <Loader loaderVisible={loaderVisible} />} minScale={0.5} spacing={15} style={{ flex: 1, width: '100%' }} onLoadComplete={() => setLoaderVisible(false)} onError={(error) => {
+        <Pdf
+         trustAllCerts={false} 
+         source={{ uri: `${API}/OfferLetter/${offerLetter}`}} 
+         renderActivityIndicator={() => 
+         <Loader loaderVisible={loaderVisible} />}
+          minScale={0.5} 
+          spacing={15} 
+          style={{ flex: 1, width: '100%' }}
+          onLoadComplete={() => setLoaderVisible(false)}
+           onError={(error) => {
           setError(true)
         }} onPressLink={(link) => Linking.openURL(link)} />
-      ):"" }
+      )
+      :"" 
+      }
 
       {error && (<Text style={{ flex: 1, textAlign: "center", color: COLORS.red, ...FONTS.h2 }}>File or directory not found</Text>)}
 

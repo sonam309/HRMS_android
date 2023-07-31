@@ -4,6 +4,8 @@ import { security_pin_icon } from '../../assets';
 import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
+import Toast from 'react-native-toast-message';
+
 
 const QuickPin = (props) => {
 
@@ -36,7 +38,10 @@ const QuickPin = (props) => {
             // console.warn(result);
             result[0] === "S" ? (props.navigation.navigate("Employee_page",
                 { full_name, userId })) :
-                Alert.alert("Failure", "Please enter correct credentials")
+                Toast.show({
+                    type:'error',
+                    text1:"Please enter correct credentials"
+                })
         })
 
         props.navigation.navigate("Employee_page")

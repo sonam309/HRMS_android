@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid, Image } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../components/Loader'
 import { COLORS } from '../../../constants/theme'
@@ -9,6 +9,7 @@ import { useRoute } from '@react-navigation/native';
 import { API } from '../../../utility/services'
 import { tag } from '../../../assets'
 import { FONTS, SIZES } from '../../../constants/font_size'
+import Toast from 'react-native-toast-message';
 
 const New_hiring = (props) => {
     const { navigation, selectedOption, setFilterVisible } = props

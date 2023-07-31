@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ToastAndroid,Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -36,15 +36,15 @@ const Esic_Bottomview = (props) => {
 
 
 
-//   const getDropdownData = async (P) => {
-//     let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
-//     response = await response.json();
-//     const returnedData = response;
+  //   const getDropdownData = async (P) => {
+  //     let response = await fetch(`https://econnectsatya.com:7033/api/User/getParam?getClaim=${P}`)
+  //     response = await response.json();
+  //     const returnedData = response;
 
-//     if (P === 4) {
-//         setCountry(returnedData)
-//     } 
-// }
+  //     if (P === 4) {
+  //         setCountry(returnedData)
+  //     } 
+  // }
 
   const saveESICDetails = () => {
     // if (isFormValidated()) {
@@ -73,7 +73,7 @@ const Esic_Bottomview = (props) => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
         const msg = returnedData[0].MSG
-        // ToastAndroid.show(msg, 5000);
+
         Toast.show({
           type: 'success',
           text1: msg,
@@ -99,7 +99,7 @@ const Esic_Bottomview = (props) => {
         console.log("getData", returnedData);
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
-        // ToastAndroid.show(msg, 5000);
+
 
         setCity(ESICDetails?.CITY);
         setSubCode(ESICDetails?.SUB_CODE);
@@ -123,22 +123,22 @@ const Esic_Bottomview = (props) => {
 
 
 
-  
+
 
 
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View>
-        {/* close button */}
-        <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-          <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>ESIC Details</Text>
-          <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
-            <TouchableOpacity onPress={props.onPress}>
-              <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
-            </TouchableOpacity>
-          </View>
-        </View>
+
+    <View style={{ flex: 1 }}>
+      {/* close button */}
+      <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>ESIC Details</Text>
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
+          <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+        </TouchableOpacity>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+
         {/* City */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
@@ -220,7 +220,10 @@ const Esic_Bottomview = (props) => {
         </View>
 
         {/* save button */}
-        <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
+        <TouchableOpacity onPress={() => Toast.show({
+          type: 'success',
+          text1: "Data Save Successfully"
+        })}>
 
           <LinearGradient
             colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -237,9 +240,10 @@ const Esic_Bottomview = (props) => {
 
         </TouchableOpacity>
 
-      </View>
-      <View style={{ marginBottom: 300 }}></View>
-    </ScrollView>
+        <View style={{ marginBottom: 270 }}></View>
+      </ScrollView>
+    </View>
+
 
   )
 }

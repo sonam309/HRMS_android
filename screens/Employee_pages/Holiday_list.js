@@ -7,6 +7,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { useSelector } from 'react-redux';
 import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const Holiday_list = () => {
   const userId = useSelector(state => state.auth.userId)
@@ -156,7 +157,11 @@ const Holiday_list = () => {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+          
+            Toast.show({
+              type: 'error',
+              text1: "Modal has been closed."
+          })
             setModalVisible(!modalVisible);
           }}>
           <View style={styles.centeredView}>

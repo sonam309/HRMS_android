@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
@@ -6,6 +6,8 @@ import DatePicker from 'react-native-date-picker'
 import { FONTS } from '../../../../constants/font_size'
 import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
+import Toast from 'react-native-toast-message'
+import LinearGradient from 'react-native-linear-gradient'
 
 
 const MedicalBottomView = ({ medicalPolicy, onPress }) => {
@@ -46,11 +48,19 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            ToastAndroid.show(res, 3000);
+
+            Toast.show({
+                type: 'success',
+                text1: res
+            })
 
         }
         catch (error) {
-            ToastAndroid.show(error, 3000)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
 
     }
@@ -87,13 +97,10 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
         // console.warn("Saving data");
         try {
             if (ValidateForm()) {
-
-
                 let medicalData = {
                     txnId: txnId, operFlag: operFlag, candidateId: userId, userId: userId, medicalPolicyName: policyName, medicalPolicynumber: policyNumber, medicalMembershipNumber: membershipNumber, medicalPolicyCategory: policyCategory, policyExpiry: selectedExpiryDate
                 }
                 // console.warn(medicalData);
-
                 let res = await fetch(`${API}/api/hrms/candidateMedicalPolicy`, {
                     method: "POST",
                     headers: {
@@ -104,14 +111,25 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
-                ToastAndroid.show(res, 3000);
+
+                Toast.show({
+                    type: 'success',
+                    text1: res
+                })
             }
             else {
-                ToastAndroid.show("Fill all the Required Fields", 3000)
+
+                Toast.show({
+                    type: 'error',
+                    text1: "Fill all the Required Fields"
+                })
             }
         }
         catch (error) {
-            ToastAndroid.show(error, 3000)
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
     }
 
@@ -166,58 +184,66 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
     }
 
     return (
-        <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+        <View style={{ flex: 1 }}>
 
             {/* close button */}
-            <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Medical Policy</Text>
                 <TouchableOpacity onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
+            <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+                {
+                    // Display form or Fill form
+                    !showForm && medicalPolicy[0].MEDICAL_POLICY_NUMBER && medicalPolicy.length >= 0 ? <PolicyDetails /> : (
+                        <View>
 
-            {
-                // Display form or Fill form
-                !showForm && medicalPolicy[0].MEDICAL_POLICY_NUMBER && medicalPolicy.length >= 0 ? <PolicyDetails /> : (
-                    <View>
+                            {/* Policy Name */}
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3, marginTop: 10 }}>Medical Policy Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput value={policyName} onChangeText={(val) => setPolicyName(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                        {/* Policy Name */}
-                        <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput value={policyName} onChangeText={(val) => setPolicyName(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                            {/* Policy Number */}
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput value={policyNumber} onChangeText={(val) => setPolicyNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                        {/* Policy Number */}
-                        <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput value={policyNumber} onChangeText={(val) => setPolicyNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                            {/* Membership Number */}
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput value={membershipNumber} onChangeText={(val) => setMembershipNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                        {/* Membership Number */}
-                        <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput value={membershipNumber} onChangeText={(val) => setMembershipNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                            {/* Policy Category */}
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput value={policyCategory} onChangeText={(val) => setPolicyCategory(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
-                        {/* Policy Category */}
-                        <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput value={policyCategory} onChangeText={(val) => setPolicyCategory(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                            {/* Expiry Date */}
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
 
-                        {/* Expiry Date */}
-                        <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <View style={{ flexDirection: 'row', margin: 3 }}>
+                                <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />
+                                <DatePicker modal theme='light' open={calendarOpen} mode="date" date={expiryDate} onConfirm={(date) => SelectExpiryDate(date)} onCancel={() => { setCalendarOpen(false) }} />
+                                <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                                </TouchableOpacity>
+                            </View>
 
-                        <View style={{ flexDirection: 'row', margin: 3 }}>
-                            <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />
-                            <DatePicker modal theme='light' open={calendarOpen} mode="date" date={expiryDate} onConfirm={(date) => SelectExpiryDate(date)} onCancel={() => { setCalendarOpen(false) }} />
-                            <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                                <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                            {/* for saving the data */}
+                            <TouchableOpacity onPress={() => saveMedicalPolicyDetails()} >
+                                <LinearGradient
+                                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 2, y: 0 }}
+                                    style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Details</Text>
+
+                                </LinearGradient>
                             </TouchableOpacity>
                         </View>
+                    )
+                }
 
-                        {/* for saving the data */}
-                        <TouchableOpacity onPress={() => saveMedicalPolicyDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ color: 'white' }}>Save Member Details</Text>
-                        </TouchableOpacity>
-                    </View>
-                )
-            }
-
-            <View style={{ marginBottom: 320 }}></View>
-        </ScrollView>
+                {/* <View style={{ marginBottom: 150 }}></View> */}
+            </ScrollView>
+        </View>
     )
 }
 

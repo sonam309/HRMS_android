@@ -2,6 +2,7 @@ import { Alert } from 'react-native'
 import axios from "axios";
 import store from '../redux/store';
 import { API } from '../utility/services';
+import Toast from 'react-native-toast-message';
 
 const Punch = ({ val }) => {
     const state = store.getState();
@@ -22,9 +23,16 @@ const Punch = ({ val }) => {
             })
                 .then((response) => response.json())
                 .then((responseData) => {
-                    Alert.alert("Success", `Punched ${action} Successfully`)
+                    Toast.show({
+                        type: 'success',
+                        text1: `Punched ${action} Successfully`
+                    })
                 }))
-            : Alert.alert("Failure", "Please enter correct credentials")
+            :
+            Toast.show({
+                type: 'error',
+                text1: "Please enter correct credentials"
+            })
     })
 }
 

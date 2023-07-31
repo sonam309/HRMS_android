@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler, SafeAreaView } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet,  BackHandler, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';

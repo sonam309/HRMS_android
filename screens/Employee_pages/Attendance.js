@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Alert, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import Calendar from 'react-native-calendars/src/calendar';
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -115,8 +115,11 @@ const Attendance = (props) => {
   function DrawerIcons(props) {
     const title = props.header, icon = props.icon, count = props.count, color = props.color, id = props.id
     return (
-      <TouchableOpacity key={id} style={{ width: '48%', borderRadius: 20, marginVertical: 8, }} onPress={() =>
-        Alert.alert("click" + id)} >
+      <TouchableOpacity key={id} style={{ width: '48%', borderRadius: 20, marginVertical: 8, }} onPress={() =>Toast.show({
+        type:'success',
+        text1:"Data Save Successfully"
+      })}>
+       
         <LinearGradient
           colors={[COLORS.disableOrange1, COLORS.lightOrange]}
           start={{ x: 0, y: 1 }}

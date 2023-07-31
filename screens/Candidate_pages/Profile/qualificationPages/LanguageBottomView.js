@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ToastAndroid, Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -7,6 +7,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const LanguageBottomView = ({ languages, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -56,11 +57,19 @@ const LanguageBottomView = ({ languages, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            ToastAndroid.show(res, 3000);
+
+            Toast.show({
+                type: 'success',
+                text1: res
+            })
 
         }
         catch (error) {
-            ToastAndroid.show(error, 3000)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
 
     }
@@ -101,9 +110,17 @@ const LanguageBottomView = ({ languages, onPress }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            ToastAndroid.show(res, 3000);
+
+            Toast.show({
+                type: 'success',
+                text1: res
+            })
         } catch (error) {
-            ToastAndroid.show(error, 3000)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
 
 
@@ -229,7 +246,10 @@ const LanguageBottomView = ({ languages, onPress }) => {
                     </View>
 
                     {/* save button */}
-                    <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
+                    <TouchableOpacity onPress={() => Toast.show({
+                        type: 'success',
+                        text1: "Data Save Successfully"
+                    })}>
                         <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 30 }}>
                             <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveLanguageDetails()}> Save</Text>
                         </LinearGradient>

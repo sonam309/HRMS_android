@@ -1,12 +1,14 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../../components/Loader'
 import { FONTS } from '../../../../constants/font_size'
 import COLORS from '../../../../constants/theme'
+import Toast from 'react-native-toast-message';
+import LinearGradient from 'react-native-linear-gradient'
 
-const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
+const ContactBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [personalMail, setPersonalMail] = useState('');
@@ -32,7 +34,7 @@ const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
 
     useEffect(() => {
         // if(Object.keys(candidateInfo.Table[0]).length > 0){
-            DisplayPreviousDetails()
+        DisplayPreviousDetails()
         // }
         // console.log("bank details", filledDetails?.FLAG === "F");
         // if(filledDetails?.FLAG === "F" && candidateInfo.Table[0]  ){
@@ -42,14 +44,14 @@ const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
         //     // setPersonalMail(filledDetails?.PERSONAL_EMAIL_ID),
         //     setTXNID(candidateInfo?.Table[0]?.TXN_ID)
         // }
-        
+
     }, [])
 
 
 
     const DisplayPreviousDetails = () => {
         filledDetails && (
-             console.log("filledDetails",filledDetails),
+            console.log("filledDetails", filledDetails),
             (filledDetails.PHONE_NO ? setOperFlag("I") : setOperFlag("C")),
             setAlternateMail(filledDetails?.ALTERNATE_EMAIL_ID),
             setAlternatePhone(filledDetails?.ALTERNATE_PHONE_NO),
@@ -76,15 +78,25 @@ const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
                 res = await res.json();
                 console.log(res);
                 res = await res?.Result[0]?.MSG
-                ToastAndroid.show(res, 3000);
+                Toast.show({
+                    type: 'success',
+                    text1: res
+                })
                 onPress
             }
             else {
-                ToastAndroid.show("Fill all the Required Fields", 5000)
+
+                Toast.show({
+                    type: 'error',
+                    text1: "Fill all the Required Fields"
+                })
             }
 
         } catch (error) {
-            ToastAndroid.show(error, 3000)
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
     }
 
@@ -110,11 +122,21 @@ const ContactBottomView = ({ filledDetails, onPress,candidateInfo }) => {
             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Phone No.</Text>
             <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} />
 
-            <TouchableOpacity onPress={() => saveContactDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: 'white' }}>Save Contact Details</Text>
+
+            <TouchableOpacity onPress={() => saveContactDetails()} >
+
+                <LinearGradient
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 2, y: 0 }}
+                    style={{ borderRadius: 8, padding: 10, marginTop: 80 }} >
+                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Contact Details</Text>
+
+                </LinearGradient>
             </TouchableOpacity>
 
-            <View style={{ marginBottom: 320 }}></View>
+
+
         </ScrollView>
     )
 }

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import { FONTS, SIZES } from '../../../../constants/font_size';
@@ -6,6 +6,9 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
+import Toast from 'react-native-toast-message';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 const SkillsBottomView = ({ skills, onPress }) => {
 
@@ -67,12 +70,20 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
       res = await res.json();
       res = await res?.Result[0]?.MSG
-      ToastAndroid.show(res, 3000);
+
+      Toast.show({
+        type: 'success',
+        text1: res
+      })
       setShowSkills(true)
 
     }
     catch (error) {
-      ToastAndroid.show(error, 3000)
+
+      Toast.show({
+        type: 'error',
+        text1: error
+      })
     }
   }
 
@@ -112,7 +123,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
     return (
       <View style={{ padding: 4, marginVertical: 5 }}>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5, marginTop: 15 }}>
           <Text style={{ fontWeight: 700, color: 'black' }}>Skills: </Text>
           <TouchableOpacity onPress={() => setShowSkills(false)} style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text>ADD</Text>
@@ -159,14 +170,26 @@ const SkillsBottomView = ({ skills, onPress }) => {
         })
         res = await res.json();
         res = await res?.Result[0]?.MSG
-        ToastAndroid.show(res, 3000);
+
+        Toast.show({
+          type: 'success',
+          text1: res
+        })
       }
       else {
-        ToastAndroid.show("Fill all the Required Fields", 3000)
+
+        Toast.show({
+          type: 'error',
+          text1: "Fill all the Required Fields"
+        })
       }
     }
     catch (error) {
-      ToastAndroid.show(error, 3000)
+      Toast.show({
+        type: 'error',
+        text1: error
+      })
+
     }
   }
 
@@ -186,48 +209,60 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <View style={{ flex: 1 }}>
 
       {/* close header */}
-      <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skills</Text>
+      <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skill's</Text>
         <TouchableOpacity onPress={onPress}>
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {
+          showSkills && skills?.length > 1 ? <SkillDetails /> : (
+            <View>
+              {/* {SkillDetails} */}
+              {/* {console.log("first", skills?.length)} */}
 
-      {
-        showSkills && skills?.length >= 0 ? <SkillDetails /> : (
-          <View>
-            {/* {SkillDetails} */}
-            <View style={{ marginVertical: 5 }}>
-              <Text style={{ color: 'green', paddingHorizontal: 6 }}>Skill</Text>
-              <TextInput value={skill} onChangeText={(val) => setSkill(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+              <View style={{
+                marginVertical: 5, marginTop: 20
+              }}>
+                <Text style={{ color: 'green', paddingHorizontal: 6 }}>Skill</Text>
+                <TextInput value={skill} onChangeText={(val) => setSkill(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+              </View>
+
+              {/* Level dropDown */}
+              <View style={{ marginVertical: 5 }}>
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
+                <SelectDropdown data={skillLevelDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedSkillLevel(value), checkSkillValue(value) }} defaultButtonText={selectDropDownText("skill")} defaultValueByIndex={(selectDropDownValue("skill"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+              </View>
+
+              {/* Total experience */}
+              <View style={{ marginVertical: 5 }}>
+                <Text style={{ color: 'green', paddingHorizontal: 6 }}>Total Experience</Text>
+                <TextInput value={totalExperience} onChangeText={(val) => setTotalExperience(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+              </View>
+
+              {/* Saving Data */}
+              <TouchableOpacity onPress={() => saveSkillDetails()} >
+                <LinearGradient
+                  colors={[COLORS.orange1, COLORS.disableOrange1]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 2, y: 0 }}
+                  style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Skill Details</Text>
+
+                </LinearGradient>
+              </TouchableOpacity>
             </View>
+          )
+        }
 
-            {/* Level dropDown */}
-            <View style={{ marginVertical: 5 }}>
-              <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
-              <SelectDropdown data={skillLevelDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedSkillLevel(value), checkSkillValue(value) }} defaultButtonText={selectDropDownText("skill")} defaultValueByIndex={(selectDropDownValue("skill"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-            </View>
+        {/* <View style={{ marginBottom: 320 }}></View> */}
 
-            {/* Total experience */}
-            <View style={{ marginVertical: 5 }}>
-              <Text style={{ color: 'green', paddingHorizontal: 6 }}>Total Experience</Text>
-              <TextInput value={totalExperience} onChangeText={(val) => setTotalExperience(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-            </View>
-
-            {/* Saving Data */}
-            <TouchableOpacity onPress={() => saveSkillDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: 'white' }}>Save Skill Details</Text>
-            </TouchableOpacity>
-          </View>
-        )
-      }
-
-      <View style={{ marginBottom: 320 }}></View>
-
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 

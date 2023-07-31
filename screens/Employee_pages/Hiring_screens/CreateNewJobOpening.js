@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid, Alert, BackHandler } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, BackHandler } from 'react-native'
 import COLORS from '../../../constants/theme'
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -9,6 +9,7 @@ import axios from "axios";
 import { useSelector } from 'react-redux'
 import Loader from '../../../components/Loader'
 import { API } from '../../../utility/services'
+import Toast from 'react-native-toast-message';
 
 const CreateNewJobOpening = (props) => {
 
@@ -139,9 +140,18 @@ const CreateNewJobOpening = (props) => {
             });
         } catch (error) {
             if (DocumentPicker.isCancel(error)) {
-                ToastAndroid.show("Please select a file to upload", 3000)
+
+                Toast({
+                    type: 'error',
+                    text1: "Please select a file to upload"
+                })
             }
-            else ToastAndroid.show(error)
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: error
+                })
+            }
         }
     };
 
@@ -163,7 +173,11 @@ const CreateNewJobOpening = (props) => {
             postalCode === ''
 
         ) {
-            ToastAndroid.show('All fields are required', 3000);
+
+            Toast.show({
+                type: 'error',
+                text1: 'All fields are required'
+            })
             return false;
         } else {
             return true;
@@ -221,7 +235,11 @@ const CreateNewJobOpening = (props) => {
                 })
                 res = await res.json();
                 console.log("job applied", res)
-                ToastAndroid.show(res.Result[0].MSG, 3000);
+
+                Toast.show({
+                    type: 'success',
+                    text1: res.Result[0].MSG
+                })
                 if (res.Result[0].FLAG === "S") {
                     props.navigation.navigate("Hiring_page")
                 }
@@ -368,7 +386,12 @@ const CreateNewJobOpening = (props) => {
 
             {/* bottom Buttons */}
             <View style={{ flexDirection: 'row', marginVertical: 20 }}>
-                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => { Object.keys(selectedDoc).length > 0 ? ApplyJob() : Alert.alert("Job description is Mandatory") }}>
+                <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.green }]} onPress={() => {
+                    Object.keys(selectedDoc).length > 0 ? ApplyJob() : Toast.show({
+                        type: 'error',
+                        text1: "Job description is Mandatory"
+                    })
+                }}>
                     <Text style={{ color: 'white' }}>Save Job Opening{console.log("first", Object.keys(selectedDoc).length)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]} onPress={() => props.navigation.navigate("Hiring_page")}>

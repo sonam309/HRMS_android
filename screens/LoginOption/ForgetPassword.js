@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native'
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import COLORS from '../../constants/theme';
 import Loader from '../../components/Loader';
 import { API } from '../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const ForgetPassword = (props) => {
 
@@ -84,7 +85,6 @@ const ForgetPassword = (props) => {
     let mpin1 = f1 + f2 + f3 + f4;
     let mpin2 = f5 + f6 + f7 + f8;
     // setmpin(mpin1);
-    // Alert.alert(mpin);
     if (mpin1 == mpin2 && mpin1 != '1234') {
 
       // console.warn("hit api");
@@ -115,7 +115,10 @@ const ForgetPassword = (props) => {
       let result = returnedData.map(a => a.FLAG);
 
       result[0] === "S" ? (oper === "R" ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login")) :
-        Alert.alert("Failure", "Error")
+        Toast.show({
+          type: 'error',
+          text1: "error"
+        })
     })
   }
 

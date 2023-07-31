@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
@@ -6,6 +6,8 @@ import { FONTS } from '../../../../constants/font_size'
 import SelectDropdown from 'react-native-select-dropdown'
 import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
+import  Toast  from 'react-native-toast-message'
+import LinearGradient from 'react-native-linear-gradient'
 
 const NominationBottomView = ({ nominations, onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -79,43 +81,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
     // setNewNominee({ guardianName: '', share: '' })
   }
 
-  // const NominationForm = () => {
-  //   return (
-  //     <>
-  //       <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-
-  //       {nomineeMember?.map((item) => {
-  //         return (
-  //           <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
-
-  //             <View style={{ marginVertical: 5 }}>
-  //               <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text>
-  //               <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-  //             </View>
-
-  //             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Guardian Name:</Text>
-  //             <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={guardianName} onChange={(val) => { setGuardianName(val) }} />
-
-  //             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Share</Text>
-  //             <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={share} onChange={(val) => { setShare(val) }} />
-  //             {console.warn(nomineeMember)}
-
-  //           </View>
-  //         )
-  //       })}
-
-  //       {showAddMember && <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10 }} onPress={() => { AddMember(), setShowAddMember(false) }}>
-  //         <Text style={{ backgroundColor: COLORS.green, paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Add Member</Text>
-  //       </TouchableOpacity>}
-
-  //       {!showAddMember && <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10 }} onPress={() => { SaveMember(), setShowAddMember(true) }}>
-  //         <Text style={{ backgroundColor: COLORS.green, paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Save Member</Text>
-  //       </TouchableOpacity>}
-
-  //     </>
-  //   )
-  // }
-
   const NomineeInfo = () => {
     let info = ''
 
@@ -134,10 +99,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
     for (let index = 0; index < nomineeMember.length; index++) {
       totalShare += nomineeMember[index].share
     }
-
-    // if (totalShare != 100) {
-    //   return ToastAndroid.show("The Sum of all the shares should be 100", 3000)
-    // }
 
     return nomineeMember.length > 0
   }
@@ -159,7 +120,11 @@ const NominationBottomView = ({ nominations, onPress }) => {
         res = await res.json();
       }
       else {
-        ToastAndroid.show("Add nominees", 3000)
+
+        Toast.show({
+          type: 'error',
+          text1: "Please Add nominees"
+        })
       }
     } catch (error) {
 
@@ -174,77 +139,73 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
 
   return (
-    <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
 
-      {/* close button */}
-      <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+    <View style={{flex:1}}>
+        {/* close button */}
+        <View style={{ flexDirection: 'row',  width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
         <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Nominations</Text>
         <TouchableOpacity onPress={onPress}>
           <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
-
+    <ScrollView style={{ height: '100%'   }} showsVerticalScrollIndicator={false}>
       {showNominations && nominations?.length > 0 ? <NominationDetails /> : <>
         <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-
         {nomineeMember?.map((item) => {
           return (
             <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
-
               <View style={{ marginVertical: 5 }}>
                 <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text>
                 <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
               </View>
-
               <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Guardian Name:</Text>
               <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={item.guardianName} />
-
               <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Share:</Text>
               <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={item.share} />
-
             </View>
           )
         })}
-
-
         {showNomineeform && <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
-
           <View style={{ marginVertical: 5 }}>
             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text>
             <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
           </View>
-
           <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Guardian Name:</Text>
           <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={newNominee.guardianName} onChangeText={(val) => setNewNominee([newNominee.guardianName = val])} name="guardianName" />
-
           <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Sharing lmao:</Text>
           <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={newNominee.share} onChangeText={(val) => setNewNominee([newNominee.share = val])} name="share" />
-
         </View>}
-
         {showAddMember && <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10 }} onPress={() => { AddMember(), setShowAddMember(false) }}>
-          <Text style={{ backgroundColor: COLORS.green, paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Add Member</Text>
+          <Text style={{ backgroundColor: COLORS.green,marginTop:10 ,paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Add Member</Text>
         </TouchableOpacity>}
-
         {!showAddMember && <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 10 }} onPress={() => { SaveMember(), setShowAddMember(true) }}>
           <Text style={{ backgroundColor: COLORS.green, paddingHorizontal: 15, paddingVertical: 5, borderRadius: 20, color: COLORS.white }}>Save Member</Text>
         </TouchableOpacity>}
 
-        <TouchableOpacity disabled={!showAddMember} onPress={() => SaveDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: 'white' }}>Save Details</Text>
-        </TouchableOpacity>
+        <TouchableOpacity disabled={!showAddMember} onPress={() => SaveDetails()} >
+                    <LinearGradient
+                        colors={[COLORS.orange1, COLORS.disableOrange1]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 2, y: 0 }}
+                        style={{ borderRadius: 8, padding: 10, marginTop: 80 }} >
+                        <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Details</Text>
 
+                    </LinearGradient>
+                </TouchableOpacity>
       </>}
-
-      <View style={{ marginBottom: 320 }}></View>
-
+      {/* <View style={{ marginBottom: 320 }}></View> */}
     </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   inputHolder: {
-    borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12
+    borderWidth: 1,
+     height: 40,
+      borderColor: 'black',
+       borderRadius: 12,
+       marginTop:20
   },
 })
 

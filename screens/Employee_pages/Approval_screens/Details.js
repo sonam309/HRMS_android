@@ -1,4 +1,4 @@
-import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, Alert, StyleSheet, ToastAndroid } from 'react-native'
+import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import RenderHtml from 'react-native-render-html';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import SelectDropdown from 'react-native-select-dropdown';
 import { API } from '../../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
@@ -77,7 +78,7 @@ const Details = (props) => {
         }
     }
 
-    
+
 
 
     // Variables to be updated for salary allocation
@@ -129,7 +130,11 @@ const Details = (props) => {
                 console.log("salary", SalaryDetails)
                 const returnedData = response?.data;
                 console.log("this is response from backend", returnedData);
-                ToastAndroid.show(returnedData?.MSG, 3000)
+
+                Toast.show({
+                    type: 'success',
+                    text1: returnedData?.MSG
+                })
                 setDisableBtn(true);
             })
             .catch(error => {
@@ -152,7 +157,12 @@ const Details = (props) => {
             res = await res.json();
             console.log("before", res);
 
-            ToastAndroid.show(res.MSG, 3000)
+
+
+            Toast.show({
+                type: 'success',
+                text1: res?.MSG
+            })
 
             if (res.FLAG === "S") {
                 props.navigation.goBack()
@@ -182,7 +192,11 @@ const Details = (props) => {
             res = res?.Result;
             console.log("this is response from backend", res)
 
-            ToastAndroid.show(res[0].MSG, 3000)
+
+            Toast.show({
+                type: 'success',
+                text1: res[0].MSG
+            })
 
         } catch (error) {
             console.log(error)
@@ -295,7 +309,7 @@ const Details = (props) => {
             body: formData
         })
         res = await res?.json()
-        console.log("after",res)
+        console.log("after", res)
         res = await res?.Table[0]
         // console.log("responsedataJobb req",res)
         setJobRequestData(res)

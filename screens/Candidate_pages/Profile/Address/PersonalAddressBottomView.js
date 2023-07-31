@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
@@ -7,6 +7,9 @@ import { FONTS } from '../../../../constants/font_size'
 import { useSelector } from 'react-redux'
 import Loader from '../../../../components/Loader'
 import { API } from '../../../../utility/services'
+import Toast from 'react-native-toast-message'
+import LinearGradient from 'react-native-linear-gradient'
+
 
 const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -242,14 +245,24 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
-                ToastAndroid.show(res, 3000);
+                Toast.show({
+                    type: 'success',
+                    text1: res
+                })
+
             }
             else {
-                ToastAndroid.show("Fill all the Required Fields", 3000)
+                Toast.show({
+                    type: 'error',
+                    text1: "Fill all the Required Fields"
+                })
             }
         }
         catch (error) {
-            ToastAndroid.show(error, 3000)
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
         }
     }
 
@@ -308,93 +321,102 @@ const PersonalAddressBottomView = ({ filledDetails, onPress }) => {
     }
 
     return (
-        <ScrollView style={{ height: '100%' }}>
-            <Loader loaderVisible={loaderVisible} />
-
-            <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+        <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
                 <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
 
-            {/* Present */}
-            <Text style={FONTS.h2}>Present Address</Text>
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Address<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: presentAddressHeight }]} multiline={true} onContentSizeChange={event => { setPresentAddressHeight(event.nativeEvent.contentSize.height) }} value={presentAddress} onChangeText={(val) => setPresentAddress(val)} />
+            <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+                <Loader loaderVisible={loaderVisible} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Pin Code<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentPinCode} onChangeText={(val) => setPresentPinCode(val)} keyboardType='numeric' />
+                {/* Present */}
+                <Text style={FONTS.h2}>Present Address</Text>
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Address<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: presentAddressHeight }]} multiline={true} onContentSizeChange={event => { setPresentAddressHeight(event.nativeEvent.contentSize.height) }} value={presentAddress} onChangeText={(val) => setPresentAddress(val)} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>District</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentDistrict} onChangeText={(val) => setPresentDistrict(val)} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Pin Code<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentPinCode} onChangeText={(val) => setPresentPinCode(val)} keyboardType='numeric' />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentCity} onChangeText={(val) => setPresentCity(val)} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>District</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentDistrict} onChangeText={(val) => setPresentDistrict(val)} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-            <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedState(value), checkPresentState(value) }} defaultButtonText={selectDropDownText("presentstates")} defaultValueByIndex={(selectDropDownValue("presentstates"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentCity} onChangeText={(val) => setPresentCity(val)} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-            <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedCountry(value), checkPresentCountry(value) }} defaultButtonText={selectDropDownText("presentcountry")} defaultValueByIndex={(selectDropDownValue("presentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedState(value), checkPresentState(value) }} defaultButtonText={selectDropDownText("presentstates")} defaultValueByIndex={(selectDropDownValue("presentstates"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentPostOffice} onChangeText={(val) => setPresentPostOffice(val)} multiline={true} onContentSizeChange={event => { setPresentPostOfficeHeight(event.nativeEvent.contentSize.height) }} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedCountry(value), checkPresentCountry(value) }} defaultButtonText={selectDropDownText("presentcountry")} defaultValueByIndex={(selectDropDownValue("presentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Sub Division</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentSubDivision} onChangeText={(val) => setPresentSubDivision(val)} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentPostOffice} onChangeText={(val) => setPresentPostOffice(val)} multiline={true} onContentSizeChange={event => { setPresentPostOfficeHeight(event.nativeEvent.contentSize.height) }} />
 
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentThana} onChangeText={(val) => setPresentThana(val)} />
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Sub Division</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentSubDivision} onChangeText={(val) => setPresentSubDivision(val)} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentThana} onChangeText={(val) => setPresentThana(val)} />
 
 
-            <Text style={FONTS.h2}>Permanent Address</Text>
+                <Text style={FONTS.h2}>Permanent Address</Text>
 
-            {/* For saving same address */}
-            <View style={{ flexDirection: 'row', paddingHorizontal: 6 }}>
-                <Text style={{ paddingHorizontal: 5 }}>Is Permanent same as Present?</Text>
-                <TouchableOpacity onPress={() => { sameAddress ? saveDifferentDetails() : saveSameDetails() }}>
-                    {sameAddress ? <Icon name='checkbox-marked-outline' size={22} color={COLORS.orange} /> : <Icon name='checkbox-blank-outline' size={22} color={COLORS.orange} />}
+                {/* For saving same address */}
+                <View style={{ flexDirection: 'row', paddingHorizontal: 6 }}>
+                    <Text style={{ paddingHorizontal: 5 }}>Is Permanent same as Present?</Text>
+                    <TouchableOpacity onPress={() => { sameAddress ? saveDifferentDetails() : saveSameDetails() }}>
+                        {sameAddress ? <Icon name='checkbox-marked-outline' size={22} color={COLORS.orange} /> : <Icon name='checkbox-blank-outline' size={22} color={COLORS.orange} />}
+                    </TouchableOpacity>
+                </View>
+
+                {/* Permanent Address */}
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Permanent Address</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentAddress} onChangeText={(val) => setPermanentAddress(val)} multiline={true} onContentSizeChange={event => { setPermanentAddressHeight(event.nativeEvent.contentSize.height) }} editable={permanentAddressEdit} />
+
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Pin Code</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentPinCode} onChangeText={(val) => setPermanentPinCode(val)} editable={permanentPinCodeEdit} keyboardType='numeric' />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>District</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentDistrict} onChangeText={(val) => setPermanentDistrict(val)} editable={permanentDistrictEdit} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentCity} onChangeText={(val) => setPermanentCity(val)} editable={permanentCityEdit} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State</Text>
+                <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedState(value), checkPermanentState(value) }} defaultButtonText={selectDropDownText("permanentstate")} defaultValueByIndex={(selectDropDownValue("permanentstate"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentStateEdit} value={permanentSelectedState} index={permanentSelectedStateValue} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country</Text>
+                <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedCountry(value), checkPermanentCountry(value) }} defaultButtonText={selectDropDownText("permanentcountry")} defaultValueByIndex={(selectDropDownValue("permanentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentCountryEdit} value={permanentSelectedCountry} index={permanentSelectedCountryValue} />
+
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentPostOffice} onChangeText={(val) => setPermanentPostOffice(val)} multiline={true} onContentSizeChange={event => { setPermanentPostOfficeHeight(event.nativeEvent.contentSize.height) }} editable={permanentPostOfficeEdit} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Sub Division</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentSubDivision} onChangeText={(val) => setPermanentSubDivision(val)} editable={permanentSubDivisionEdit} />
+
+                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentThana} onChangeText={(val) => setPermanentThana(val)} editable={permanentThanaEdit} />
+
+
+                <TouchableOpacity onPress={() => saveAddressDetails()} >
+                    <LinearGradient
+                        colors={[COLORS.orange1, COLORS.disableOrange1]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 2, y: 0 }}
+                        style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                        <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Address Details</Text>
+
+                    </LinearGradient>
                 </TouchableOpacity>
-            </View>
+                <View style={{ paddingBottom: 270 }}></View>
 
-            {/* Permanent Address */}
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Permanent Address</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentAddress} onChangeText={(val) => setPermanentAddress(val)} multiline={true} onContentSizeChange={event => { setPermanentAddressHeight(event.nativeEvent.contentSize.height) }} editable={permanentAddressEdit} />
-
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Pin Code</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentPinCode} onChangeText={(val) => setPermanentPinCode(val)} editable={permanentPinCodeEdit} keyboardType='numeric' />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>District</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentDistrict} onChangeText={(val) => setPermanentDistrict(val)} editable={permanentDistrictEdit} />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentCity} onChangeText={(val) => setPermanentCity(val)} editable={permanentCityEdit} />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State</Text>
-            <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedState(value), checkPermanentState(value) }} defaultButtonText={selectDropDownText("permanentstate")} defaultValueByIndex={(selectDropDownValue("permanentstate"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentStateEdit} value={permanentSelectedState} index={permanentSelectedStateValue} />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country</Text>
-            <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedCountry(value), checkPermanentCountry(value) }} defaultButtonText={selectDropDownText("permanentcountry")} defaultValueByIndex={(selectDropDownValue("permanentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentCountryEdit} value={permanentSelectedCountry} index={permanentSelectedCountryValue} />
-
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentPostOffice} onChangeText={(val) => setPermanentPostOffice(val)} multiline={true} onContentSizeChange={event => { setPermanentPostOfficeHeight(event.nativeEvent.contentSize.height) }} editable={permanentPostOfficeEdit} />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Sub Division</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentSubDivision} onChangeText={(val) => setPermanentSubDivision(val)} editable={permanentSubDivisionEdit} />
-
-            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
-            <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentThana} onChangeText={(val) => setPermanentThana(val)} editable={permanentThanaEdit} />
-
-            <TouchableOpacity onPress={() => saveAddressDetails()} style={{ height: 40, backgroundColor: 'orange', margin: 7, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: 'white' }}>Save Address Details</Text>
-            </TouchableOpacity>
-
-            <View style={{ paddingBottom: 320 }}></View>
-
-        </ScrollView>
+            </ScrollView>
+        </View>
     )
 }
 

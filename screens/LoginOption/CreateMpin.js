@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from "axios";
@@ -9,6 +9,7 @@ import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { create_mpin } from '../../assets';
 import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const CreateMpin = (props) => {
 
@@ -47,10 +48,14 @@ const CreateMpin = (props) => {
             let result = returnedData.map(a => a.FLAG);
             let contact = returnedData.map(b => b.MSG.trim());
 
-            
+
 
             result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, type }))
-                : Alert.alert("Failure", "Please enter correct credentials")
+                : Toast.show({
+                    type: 'error',
+                    text1: "Please enter correct credentials"
+                })
+
 
         })
     }

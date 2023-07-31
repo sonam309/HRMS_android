@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ToastAndroid } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -12,6 +12,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { API } from '../../../utility/services'
 import { useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 
 const Candidate_details = (props) => {
@@ -83,7 +84,11 @@ const Candidate_details = (props) => {
 
       res = await res.json()
       res = res.Result[0]
-      ToastAndroid.show(res.MSG, 3000)
+      
+      Toast.show({
+        type:'success',
+        text1:res.MSG
+      })
       if(res.FLAG === "S"){
         props.navigation.navigate("Interview_status")
       }

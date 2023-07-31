@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image, Alert, StatusBar, Pressable } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, StatusBar, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from "axios";
@@ -14,7 +14,7 @@ import { API } from '../../utility/services';
 import { loginBanner } from '../../assets';
 import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -22,7 +22,7 @@ const Employee_Login = (props) => {
     const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
-    
+
 
     const getCurrentLocation = async (val) => {
         Geolocation({ val });
@@ -56,7 +56,10 @@ const Employee_Login = (props) => {
                 let userDept = returnedData.DEPT_NAME
                 // console.log("returnedData", result,userId,userName,userDeptId,userDept);
                 setLoaderVisible(false)
-                result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Alert.alert("Failure", "Please enter correct credentials")
+                result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Toast.show({
+                    type: 'error',
+                    text1: "Please enter correct credentials"
+                })
             })
         } catch (error) {
             setLoaderVisible(false);
@@ -67,7 +70,11 @@ const Employee_Login = (props) => {
         if (userId != '') {
             props.navigation.navigate("QuickPin")
         } else {
-            Alert.alert("Please enter User Name")
+
+            Toast.show({
+                type: 'error',
+                text1: "Please enter User Name"
+            })
         }
     }
 
@@ -92,11 +99,18 @@ const Employee_Login = (props) => {
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG.trim());
 
-                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Alert.alert("Failure", "Please enter correct credentials")
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
+                    type: 'error',
+                    text1: "Please enter correct credentials"
+                })
             })
         } catch (error) {
 
-            Alert.alert(error);
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
             setLoaderVisible(false);
         }
     }
@@ -124,7 +138,7 @@ const Employee_Login = (props) => {
                     {/* <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} />
                     <CustomTextInput placeholder='UserId' value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} /> */}
 
-                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))}/>
+                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
                 </View>
 
                 {/* Password */}
@@ -176,7 +190,10 @@ const Employee_Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Alert.alert("Please enter User id"))}>Forgot Password?</Text>
+                    <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Toast.show({
+                        type: 'error',
+                        text1: "Please enter User id"
+                    }))}>Forgot Password?</Text>
                 </TouchableOpacity>
             </View>
 
@@ -186,7 +203,17 @@ const Employee_Login = (props) => {
                 <Text style={styles.bottomElement}>Version: <Text style={{ color: COLORS.white, fontWeight: '900' }}>2.2</Text></Text>
             </View>
 
-            <Image source={loginBanner} style={{ width: '100%', height: '20%', bottom: -40, position: 'absolute', zIndex: -1000 }} />
+            {/* <Image source={loginBanner} style={{ width: '100%', height: '20%', bottom: -40, position: 'absolute', zIndex: -1000 }} /> */}
+
+            <View style={{
+                height: responsiveHeight(14),
+                // backgroundColor: COLORS.red,
+                position: "absolute",
+                bottom: 0,
+                zIndex: -1000
+            }}>
+                <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
+            </View>
         </View>
 
     )

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ToastAndroid,Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -7,6 +7,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import { API } from '../../../../utility/services';
+import Toast from 'react-native-toast-message';
 
 const TrainingBottomView = (props) => {
 
@@ -42,9 +43,9 @@ const TrainingBottomView = (props) => {
   const [fromYear, setFromYear] = useState();
   const [toYear, setToYear] = useState();
   const [passYear, setPassingYear] = useState();
-  const[fromMonth,setFromMonth]=useState();
-  const[toMonth,setToMonth]=useState();
-  const[expiryDate,setExpiryDate]=useState();
+  const [fromMonth, setFromMonth] = useState();
+  const [toMonth, setToMonth] = useState();
+  const [expiryDate, setExpiryDate] = useState();
 
 
   useEffect(() => {
@@ -65,21 +66,21 @@ const TrainingBottomView = (props) => {
       candidateId: 333,
       qualification: selectedQualificationsValue,
       stream: selectedStreamValue,
-      specilization:specilization,
-      university:University,
-      institute:institute,
-      qualificationMode:selectedQualiModeValue,
-      country:selectedCountryValue,
-      state:selectedStateValue,
-      city:city,
-      fromYear:fromYear,
-      fromMonth:fromMonth,
-      toYear:toYear,
-      toMonth:toMonth,
-      passYear:passYear,
-      expiryDate:expiryDate,
-      userId:333,
-      operFlag:operFlag,
+      specilization: specilization,
+      university: University,
+      institute: institute,
+      qualificationMode: selectedQualiModeValue,
+      country: selectedCountryValue,
+      state: selectedStateValue,
+      city: city,
+      fromYear: fromYear,
+      fromMonth: fromMonth,
+      toYear: toYear,
+      toMonth: toMonth,
+      passYear: passYear,
+      expiryDate: expiryDate,
+      userId: 333,
+      operFlag: operFlag,
     }
 
     console.log("request", body);
@@ -89,7 +90,11 @@ const TrainingBottomView = (props) => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
         const msg = returnedData[0].MSG
-        ToastAndroid.show(msg, 5000);
+
+        Toast.show({
+          type: 'success',
+          text1: msg
+        })
         { props.onPress }
 
       })
@@ -101,53 +106,58 @@ const TrainingBottomView = (props) => {
 
   const getData = () => {
     axios
-        .post(`${API}/api/hrms/candidateTrainInfo`, {
-            candidateId: 333,
-            userId: 333,
-            operFlag: 'V',
+      .post(`${API}/api/hrms/candidateTrainInfo`, {
+        candidateId: 333,
+        userId: 333,
+        operFlag: 'V',
+      })
+      .then(response => {
+        const returnedData = response?.data?.Result;
+        console.log("getData", returnedData);
+        const TrainingDetails = returnedData[0];
+        const msg = returnedData[0].MSG
+
+
+        Toast.show({
+          type: 'success',
+          text1: msg
         })
-        .then(response => {
-            const returnedData = response?.data?.Result;
-            console.log("getData", returnedData);
-            const TrainingDetails = returnedData[0];
-            const msg = returnedData[0].MSG
-            ToastAndroid.show(msg, 5000);
 
 
-            (TrainingDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
-            setSpecilization(TrainingDetails?.SPECIALIZATION);
-            setUniversity(TrainingDetails?.UNIVERSITY);
-            setInstitute(TrainingDetails?.INSTITUTE);
-            setCity(TrainingDetails?.CITY);
-            setFromYear(TrainingDetails?.FROM_YEAR);
-            setToYear(TrainingDetails?.TO_YEAR);
-            setPassingYear(TrainingDetails?.PASS_YEAR);
-            // setFromMonth(TrainingDetails?.)
-            
+          (TrainingDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
+        setSpecilization(TrainingDetails?.SPECIALIZATION);
+        setUniversity(TrainingDetails?.UNIVERSITY);
+        setInstitute(TrainingDetails?.INSTITUTE);
+        setCity(TrainingDetails?.CITY);
+        setFromYear(TrainingDetails?.FROM_YEAR);
+        setToYear(TrainingDetails?.TO_YEAR);
+        setPassingYear(TrainingDetails?.PASS_YEAR);
+        // setFromMonth(TrainingDetails?.)
 
-            setSelectQualifications(TrainingDetails?.QUALIFICATIONS_NAME);
-            setSelectedQualificationsValue(TrainingDetails?.QUALIFICATIONS_ID);
 
-            setSelectedStream(TrainingDetails?.STREAM);
-            setSelectedStreamValue(TrainingDetails?.STREAM_ID);
+        setSelectQualifications(TrainingDetails?.QUALIFICATIONS_NAME);
+        setSelectedQualificationsValue(TrainingDetails?.QUALIFICATIONS_ID);
 
-            setSelectedQualiMode(TrainingDetails?.QUALIFICATION_MODE);
-            setSelectedQualiModeValue(TrainingDetails?.QUALIFICATION_MODE_ID);
+        setSelectedStream(TrainingDetails?.STREAM);
+        setSelectedStreamValue(TrainingDetails?.STREAM_ID);
 
-            setselectCountry(TrainingDetails?.COUNTRY);
-            setSelecetCountryValue(TrainingDetails?.COUNTRY_ID);
+        setSelectedQualiMode(TrainingDetails?.QUALIFICATION_MODE);
+        setSelectedQualiModeValue(TrainingDetails?.QUALIFICATION_MODE_ID);
 
-            setSelectedState(TrainingDetails?.STATE_NAME);
-            setSelectedStateValue(TrainingDetails?.STATE_ID);
-            setTxnID(TrainingDetails?.TXN_ID);
+        setselectCountry(TrainingDetails?.COUNTRY);
+        setSelecetCountryValue(TrainingDetails?.COUNTRY_ID);
 
-            setEdit(returnedData[0]);
-            console.log("editdata", edit);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-};
+        setSelectedState(TrainingDetails?.STATE_NAME);
+        setSelectedStateValue(TrainingDetails?.STATE_ID);
+        setTxnID(TrainingDetails?.TXN_ID);
+
+        setEdit(returnedData[0]);
+        console.log("editdata", edit);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
 
   const selectedDropDownText = (id) => {
@@ -212,12 +222,12 @@ const TrainingBottomView = (props) => {
 
   const checkStreamValue = (value) => {
     {
-        for (let index = 0; index < stream.length; index++) {
-            const element = stream[index];
-            if (element.PARAM_NAME === value) setSelectedStreamValue(element.PARAM_ID);
-        }
+      for (let index = 0; index < stream.length; index++) {
+        const element = stream[index];
+        if (element.PARAM_NAME === value) setSelectedStreamValue(element.PARAM_ID);
+      }
     }
-}
+  }
   const checkStateValue = (value) => {
     {
       for (let index = 0; index < states.length; index++) {
@@ -280,7 +290,7 @@ const TrainingBottomView = (props) => {
         {/* Specialization dropdown */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Specialization</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization}/>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization} />
         </View>
         {/* University dropdown */}
         <View style={{ height: 75, marginTop: 10 }}>
@@ -319,23 +329,23 @@ const TrainingBottomView = (props) => {
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
           <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy'
-          onChangeText={setFromYear} value={fromYear} />
+            onChangeText={setFromYear} value={fromYear} />
         </View>
 
         {/* From MOnth*/}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Month</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='mm' 
-          onChangeText={setFromMonth} value={fromMonth}/>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='mm'
+            onChangeText={setFromMonth} value={fromMonth} />
         </View>
 
         {/* to year */}
         <View style={{ height: 75, marginTop: 10 }}>
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>To Year</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' 
-          onChangeText={setToYear} value={toYear}/>
+          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy'
+            onChangeText={setToYear} value={toYear} />
         </View>
 
         {/* to Month */}
@@ -343,26 +353,29 @@ const TrainingBottomView = (props) => {
 
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>To Month</Text>
           <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='mm'
-          onChangeText={setToMonth} value={toMonth} />
+            onChangeText={setToMonth} value={toMonth} />
         </View>
 
         {/* Passing year */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
           <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy'
-          onChangeText={setPassingYear} value={passYear} />
+            onChangeText={setPassingYear} value={passYear} />
         </View>
 
         {/* expiry date  */}
         <View style={{ height: 75, marginTop: 10 }}>
           <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Expiry Date</Text>
           <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy'
-          onChangeText={setExpiryDate} value={expiryDate} />
+            onChangeText={setExpiryDate} value={expiryDate} />
         </View>
 
         {/* save button */}
-        <TouchableOpacity onPress={() => Alert.alert("Data Save Successfully")}>
-          <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]}start={{ x: 0, y: 0 }}end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+        <TouchableOpacity onPress={() => Toast.show({
+          type: 'success',
+          text1: "Data Save Successfully"
+        })}>
+          <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
             <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveTranningDetails()}>
               Save
             </Text>
