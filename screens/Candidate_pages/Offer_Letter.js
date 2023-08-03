@@ -108,19 +108,20 @@ const Offer_Letter = (props) => {
         text1:'No Offer letter is Present'
       })
     }
-    if (
-      totalData?.FLAG == 'S' &&
-      totalData?.OFER_ACPT_FLAG == 'R'
-    ) {
+    if (totalData?.FLAG ==="S" &&( totalData?.OFER_ACPT_FLAG === "R"||totalData?.OFER_ACPT_FLAG==="A")) {
       setBtnVisibility(false);
-    } else if (
-      totalData?.FLAG == 'S' &&
-      totalData?.STATUS == 124
-    ) {
-      setBtnVisibility(true);
-    } else {
-      setBtnVisibility(false);
+    }else{
+      setBtnVisibility(true)
     }
+
+    
+    //  else if (totalData?.FLAG == 'S' && totalData?.STATUS == 124) {
+    //   setBtnVisibility(true);
+    // } 
+    // else {
+    //   setBtnVisibility(false);
+    //   {console.log("flagggg3",totalData?.OFER_ACPT_FLAG)}
+    // }
     setOfferLetter(totalData.OFFER_LETTER)
   }
 

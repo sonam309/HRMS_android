@@ -34,7 +34,11 @@ const Candidate_Document = (props) => {
 
 
     // Document information -> Pending, Uploading, Rejected, Verified
-    const [docInfo, setDocInfo] = useState();
+    const [pendingDocumentCount, setPendingDocumentCount] = useState();
+    const[documentCount,setDocumentCount]=useState();
+    const [verifiedDocCount, setVerifiedDocCount] = useState();
+    const[rejectDocCount,setRejectDocCount]=useState();
+
 
     useEffect(() => {
         getDocData();
@@ -56,13 +60,19 @@ const Candidate_Document = (props) => {
         res = await res.json()
         console.log("document data", res)
         setLoaderVisible(false)
-        setDocInfo(res.Table1[0]);
+        let pendingCount=(res?.Table1[0]?.Pending-res?.Table1[0]?.Uploaded);
+        setPendingDocumentCount(pendingCount);
+        setDocumentCount(res?.Table1[0]?.Pending);
+        setVerifiedDocCount(res?.Table1[0]?.Verified);
+        setRejectDocCount(res?.Table1[0]?.Rejected)
+
+        // console.log("pendingCount",pendingCount);
 
         let docFiles = res.Table;
         { docFiles.length > 0 && setOperFlag("E") }
         setDocCount(res.PO_DOC_REQ);
         setDocVerify(res.Table);
-        // console.warn("docfilesSonam", res.Table);
+        console.log("docfilesSonam", res.Table);
         // console.log(docFiles)
 
 
@@ -475,7 +485,7 @@ const Candidate_Document = (props) => {
                         key={index}>
 
                         <Text>{item?.name}</Text>
-                        {console.log("deleteDoc", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS, index)}
+                        {/* {console.log("deleteDoc", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS, index)} */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
                             {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
@@ -588,7 +598,7 @@ const Candidate_Document = (props) => {
                         <Icon name="file-document-multiple-outline" size={40} color={COLORS.orange1} backgroundColor={COLORS.disableOrange1} style={{ borderRadius: 6, padding: 4, marginLeft: 8 }} />
                         <View style={{ marginLeft: 10, }}>
                             <Text style={{ color: COLORS.black, ...FONTS.h5, fontSize: 14, }}>Documents</Text>
-                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{docInfo?.Pending} files</Text>
+                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{documentCount} files</Text>
                         </View>
                     </View>
 
@@ -596,8 +606,8 @@ const Candidate_Document = (props) => {
                     <View style={{ backgroundColor: COLORS.white, padding: 8, borderRadius: 8, elevation: 8, flexDirection: 'row', alignItems: 'center', width: '45%', height: 70 }}>
                         <Ionicons name="ios-cloud-upload-outline" size={40} color={COLORS.orange1} backgroundColor={COLORS.disableOrange1} style={{ borderRadius: 6, padding: 4, marginLeft: 8 }} />
                         <View style={{ marginLeft: 10, }}>
-                            <Text style={{ color: COLORS.black, ...FONTS.h5, fontSize: 14, }}>Uploaded</Text>
-                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{docInfo?.Uploaded} files</Text>
+                            <Text style={{ color: COLORS.black, ...FONTS.h5, fontSize: 14, }}>Pending</Text>
+                            <Text style={{ color: COLORS.red, ...FONTS.h4, marginTop: -8 }}>{pendingDocumentCount} files</Text>
                         </View>
                     </View>
 
@@ -610,7 +620,7 @@ const Candidate_Document = (props) => {
                         <Icon name="check-decagram-outline" size={40} color={COLORS.orange1} backgroundColor={COLORS.disableOrange1} style={{ borderRadius: 6, padding: 4, marginLeft: 8 }} />
                         <View style={{ marginLeft: 10, }}>
                             <Text style={{ color: COLORS.black, ...FONTS.h5, fontSize: 14, }}>Verified</Text>
-                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{docInfo?.Verified} files</Text>
+                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{verifiedDocCount} files</Text>
                         </View>
                     </View>
 
@@ -619,7 +629,7 @@ const Candidate_Document = (props) => {
                         <Ionicons name="close" size={40} color={COLORS.orange1} backgroundColor={COLORS.disableOrange1} style={{ borderRadius: 6, padding: 4, marginLeft: 8 }} />
                         <View style={{ marginLeft: 10, }}>
                             <Text style={{ color: COLORS.black, ...FONTS.h5, fontSize: 14, }}>Rejected</Text>
-                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{docInfo?.Rejected} files</Text>
+                            <Text style={{ color: COLORS.gray, ...FONTS.body5, marginTop: -8 }}>{rejectDocCount} files</Text>
                         </View>
                     </View>
 

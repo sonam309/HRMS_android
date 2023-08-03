@@ -15,6 +15,8 @@ import { loginBanner } from '../../assets';
 import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import Toast  from 'react-native-toast-message';
+
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
@@ -54,9 +56,10 @@ const Employee_Login = (props) => {
                 let userName = returnedData.FIRST_NAME
                 let userDeptId = returnedData.DEPT_ID
                 let userDept = returnedData.DEPT_NAME
-                // console.log("returnedData", result,userId,userName,userDeptId,userDept);
+                let userEmail=returnedData.EMAIL_ID
+                console.log("returnedData",returnedData);
                 setLoaderVisible(false)
-                result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userPassword: password }))) : Toast.show({
+                result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept,userEmail, userPassword: password }))) : Toast.show({
                     type: 'error',
                     text1: "Please enter correct credentials"
                 })
@@ -101,7 +104,7 @@ const Employee_Login = (props) => {
 
                 result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
                     type: 'error',
-                    text1: "Please enter correct credentials"
+                    text1: contact
                 })
             })
         } catch (error) {

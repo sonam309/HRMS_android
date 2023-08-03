@@ -15,7 +15,7 @@ const Approval_actions = ({ navigation }) => {
                     <MaterialCommunityIcons name='reorder-horizontal' color="black" size={25} />
                 </TouchableOpacity>
 
-                <Text style={{color:'black', fontSize:18}}>Pending Approval</Text>
+                <Text style={{color:'black', fontSize:18}}>Approval</Text>
                 
             </SafeAreaView>
 

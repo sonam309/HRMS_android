@@ -66,7 +66,8 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     const [lastName, setLastName] = useState('');
     const [fatherName, setFatherName] = useState('');
 
-    const [actualBirthDate, setActualBirthDate] = useState(new Date());
+    // const [actualBirthDate, setActualBirthDate] = useState(new Date());
+    const [actualBirthDate, setActualBirthDate] = useState('');
     const [selectedActualBirthDate, setSelectedActualBirthDate] = useState('');
     const [actualOpen, setActualOpen] = useState(false)
 
@@ -317,7 +318,7 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
                     </View>
                 </View>
 
-                <View style={{ margin: 3 }}>
+                {/* <View style={{ margin: 3 }}>
                     <Text style={{color: COLORS.black,...FONTS.h5}}> Actual Date of Birth  </Text>
                 </View>
 
@@ -327,10 +328,10 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
                     <TouchableOpacity onPress={() => setActualOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <Icon name='calendar-month' color={COLORS.orange} size={24} />
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <View style={{ margin: 3 }}>
-                    <Text style={{ color: COLORS.black,...FONTS.h5 }}> Record Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
+                    <Text style={{ color: COLORS.black,...FONTS.h5 }}>Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', margin: 3 }}>

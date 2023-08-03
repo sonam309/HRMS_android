@@ -12,9 +12,10 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import Loader from '../../components/Loader';
 import PieChart from 'react-native-pie-chart';
-import { API } from '../../utility/services';
+import { API, API2 } from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import CustomAlert from '../../components/CustomAlert/index';
+import axios from 'axios';
 
 
 const CandidateDashboard = (props) => {
@@ -26,45 +27,83 @@ const CandidateDashboard = (props) => {
     } = useSelector(state => state.candidateAuth)
 
     const [showAlert, setShowAlert] = useState(false);
-
     const [exitAlert, setExitAlert] = useState(false);
-
     const [profileAlert, setProfileAlert] = useState(false);
-
     const [offerLetterAlert, setOfferLetterAlert] = useState(false);
 
-    // useEffect(() => {
-    //     setShowAlert(true)
-    // }, [])
 
 
 
-    const getDocData = async () => {
-        try {
-            let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
-            let formData = new FormData();
-            formData.append('data', JSON.stringify(PersonalData))
-            setLoaderVisible(true)
-            let res = await fetch(`${API}/api/hrms/assesmentSave`, {
-                method: "POST",
-                body: formData
-            })
-            res = await res.json()
-            setLoaderVisible(false);
-            // console.log("CheckDocCount", res.PO_DOC_REQ)
 
-            {
-                res.PO_DOC_REQ != null && res.PO_DOC_REQ !== "0" && res.PO_DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
+
+    useEffect(() => {
+        // setShowAlert(true)
+        // getCandidateOfferDetails()
+
+
+    }, [])
+    const getCandidateOfferDetails = async (type) => {
+        const userData = { loginId: candidateId }
+
+        axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
+
+            const resultData = response.data;
+            console.log("candOfferDetails", resultData?.Result[0]);
+            // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
+
+            if (type === "offer") {
+                resultData?.Result[0]?.OFFER_LETTER !== null && resultData.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer_Letter") : setOfferLetterAlert(true)
+            }
+
+            if (type === "Document") {
+                resultData?.Result[0]?.DOC_REQ !== "0" && resultData.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
                     setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
             }
-        } catch (error) {
+            if (type === "profile") {
+                resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate_profile") : setProfileAlert(true)
+            }
+
+        }).catch((error) => {
+            console.log(error)
+            setLoaderVisible(false)
 
             Toast.show({
                 type: 'error',
                 text1: error
             })
-        }
+
+        })
+
+
     }
+
+
+    // const getDocData = async () => {
+    //     try {
+    //         let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
+    //         let formData = new FormData();
+    //         formData.append('data', JSON.stringify(PersonalData))
+    //         setLoaderVisible(true)
+    //         let res = await fetch(`${API}/api/hrms/assesmentSave`, {
+    //             method: "POST",
+    //             body: formData
+    //         })
+    //         res = await res.json()
+    //         setLoaderVisible(false);
+    //         // console.log("CheckDocCount", res.PO_DOC_REQ)
+
+    //         {
+    //             res.PO_DOC_REQ != null && res.PO_DOC_REQ !== "0" && res.PO_DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
+    //                 setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
+    //         }
+    //     } catch (error) {
+
+    //         Toast.show({
+    //             type: 'error',
+    //             text1: error
+    //         })
+    //     }
+    // }
 
     useEffect(() => {
         // for handling back button in android
@@ -126,9 +165,13 @@ const CandidateDashboard = (props) => {
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
                             <View>
-                                <PieChart
-                                    widthAndHeight={100} series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} sliceColor={[COLORS.green, 'white']} coverRadius={0.80} />
-                                <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 8, }}>
+                                {growingDays && <PieChart
+                                    widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                    {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))}
+                                </PieChart>}
+                                {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
+
+                                <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
                                     <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
                                     <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
                                     >Days to</Text>
@@ -160,7 +203,7 @@ const CandidateDashboard = (props) => {
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter  </Text>
-                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { candidateOfferLetter !== null ? props.navigation.navigate("Offer_Letter") : setOfferLetterAlert(true) }}>
+                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { getCandidateOfferDetails("offer") }}>
                         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
                             <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
                             <Text style={{ fontWeight: 500, fontSize: 14, color: COLORS.orange, marginRight: 30, textAlignVertical: 'center' }}>View Offer Letter{">"}</Text>
@@ -176,16 +219,16 @@ const CandidateDashboard = (props) => {
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginVertical: 6, elevation: 5 }}>
                         {/* profile view */}
                         <TouchableOpacity style={{ height: 160, width: "45%", borderColor: COLORS.orange, borderWidth: 0.5, backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}
-                            onPress={() => { offerAcceptFlag === "A" ? props.navigation.navigate("Candidate_profile") : setProfileAlert(true) }}>
+                            onPress={() => { getCandidateOfferDetails("profile") }}>
                             <FontAwesome5 name="user" size={44} color={COLORS.orange1} />
                             <Text style={{ color: COLORS.orange1, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Your profile     </Text>
                         </TouchableOpacity>
                         {/* document view */}
 
-                        <TouchableOpacity onPress={() => { getDocData() }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
+                        <TouchableOpacity onPress={() => { getCandidateOfferDetails("Document") }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
 
                             <Icons name="file-document-outline" size={44} color={COLORS.green} />
-                            <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents </Text>
+                            <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>
                         </TouchableOpacity>
                     </View>
                 </View>

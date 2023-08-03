@@ -11,6 +11,8 @@ import Loader from '../../../components/Loader';
 import SelectDropdown from 'react-native-select-dropdown';
 import { API } from '../../../utility/services';
 import Toast from 'react-native-toast-message';
+import { removeElement, isTag } from 'domutils';
+
 
 const Details = (props) => {
     const { width } = useWindowDimensions();
@@ -27,6 +29,43 @@ const Details = (props) => {
     const [hirningLead, setHiringLead] = useState();
     const [selectedhirningLead, setSelectedHiringLead] = useState();
     const [selectedHiringLeadValue, setSelectedHiringLeadValue] = useState('');
+//version 2.2 sonam 2.aug,2023
+
+    function onElement(element) {
+
+        // Remove the first two children of an ol tag.
+        if (element.tagName === 'tr') {
+            for (const child of element.children) {
+                if (child.tagName === 'td') {
+                    // console.log(
+                    //   'children',
+                    //   child.next.children[0].name === 'b' &&
+                    //     child.next.children[0].children[0].data === '0',
+                    // );
+
+                    if (
+                        child.next.children[0].name === 'b' &&
+                        child.next.children[0].children[0].data === '0'
+                    )
+                        // hasValue = true;
+                        removeElement(element);
+                    break;
+                }
+            }
+
+        }
+
+    }
+
+
+
+    const domVisitors = {
+
+        onElement: onElement,
+
+    };
+
+
 
     useEffect(() => {
         getDropdownData('L');
@@ -83,6 +122,10 @@ const Details = (props) => {
 
     // Variables to be updated for salary allocation
     let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
+    //V_2.2 sk
+    ,distanceAllowance,yearlyDistanceAllowance,fieldAllowance,YearlyFieldAllowance,inchargeAllowance,yearlyInchargeAllowance,performanceAllowance,yearlyPerformanceAllowance,protfolioQualityAllowance, yearlyPortfolioQualityAllowance,leaveTravelAllowance,
+    yearlyLTAllowance,otherReimbursement,yearlyOtherReimbursement, fuelReimbursement, yearFuelReimbursement,employeeESIC,yearlyEmployeeEsic,
+    FoodCoupon,yearlyFoodCoupon,gratuity,yearlyGratuity,nps,yearlyNps
 
     // Updating Salary details
     var SalaryDetails = {
@@ -99,7 +142,7 @@ const Details = (props) => {
         annualVariable: data?.Table[0]?.ANNUAL_VARIABLE,
         fixedCtc: data?.Table[0]?.FIXED_CTC,
         employerPf: employerPF,
-        employerEsic: data?.Table[0]?.EMPLOYER_ESIC,
+        // employerEsic: data?.Table[0]?.EMPLOYER_ESIC,
         professionTax: data?.Table[0]?.PROFESSION_TAX,
         annualType: '0',
         basicSalery: '0',
@@ -108,9 +151,19 @@ const Details = (props) => {
         conveyanceAllowance: '0',
         hra: '0',
         specialAllowance: '0',
-        fuelRembursment: '0',
+        fuelReimbursement: data?.Table[0]?.FUEL_REMBURSEMENT,//V_2.2 sk
         totalAmount: '0',
-        distanceAllowance: '0',
+        distanceAllowance: data?.Table[0]?.DISTANCE_ALLOWANCE,//V_2.2 sk
+        fieldAllowance: data?.Table[0]?.FIELD_ALLOWANCE,//V_2.2 sk
+        inchargeAllowance: data?.Table[0]?.INCHG_ALLOWANCE,//V_2.2 sk
+        performanceAllowance: data?.Table[0]?.PRFORM_ALLOWANCE,//V_2.2 sk
+        protfolioQualityAllowance: data?.Table[0]?.PORTFOL_ALLOWANCE,//V_2.2 sk
+        leaveTravelAllowance: data?.Table[0]?.LEV_TRVEL_ALLOWANCE,//V_2.2 sk
+        otherReimbursement: data?.Table[0]?.OTHR_REMBURS_ALLOWANCE,//V_2.2 sk
+        employeeESIC: data?.Table[0]?.EMPLOYER_ESIC_ALLOWNCE,//V_2.2 sk
+        FoodCoupon: data?.Table[0]?.FOOD_COUPON,//V_2.2 sk
+        gratuity: data?.Table[0]?.GRATUITY_AMT,//V_2.2 sk
+        nps: data?.Table[0]?.EMPLOYE_NPS,//V_2.2 sk
         driveAllowance: '0',
         esicPercentage: '0',
         foodAllowance: '0',
@@ -210,6 +263,7 @@ const Details = (props) => {
         totalData = await totalData.json()
         totalData = totalData.Result[0]?.MAIL_BODY
         setHTMLdata(totalData)
+        console.log("htmlForm", totalData);
     }
 
     // Fetching salary allocation data
@@ -221,6 +275,7 @@ const Details = (props) => {
             .then(response => {
                 const returnedData = response?.data;
                 setData(returnedData)
+                console.log("htmldata",returnedData);
             });
     }
 
@@ -243,6 +298,31 @@ const Details = (props) => {
         fuelAllowance = data.Table[0]?.FUEL_REMBURSEMENT
         grossAmount = data.Table[0]?.GROSS_AMOUNT
         employerPF = data.Table[0]?.EMPLOPYER_PF
+        distanceAllowance=data.Table[0]?.DISTANCE_ALLOWANCE//V_2.2 sk
+        fieldAllowance=data.Table[0]?.FIELD_ALLOWANCE//V_2.2 sk
+        inchargeAllowance=data.Table[0]?.INCHG_ALLOWANCE//V_2.2 sk
+        performanceAllowance=data.Table[0]?.PRFORM_ALLOWANCE//V_2.2 sk
+        protfolioQualityAllowance=data.Table[0]?.PORTFOL_ALLOWANCE//V_2.2 sk
+        leaveTravelAllowance=data.Table[0]?.LEV_TRVEL_ALLOWANCE//V_2.2 sk
+        otherReimbursement=data.Table[0]?.OTHR_REMBURS_ALLOWANCE//V_2.2 sk
+        fuelReimbursement=data.Table[0]?.FUEL_REMBURSEMENT//V_2.2 sk
+        employeeESIC=data.Table[0]?.EMPLOYER_ESIC_ALLOWNCE//V_2.2 sk
+        FoodCoupon=data.Table[0]?.FOOD_COUPON//V_2.2 sk
+        gratuity=data.Table[0]?.GRATUITY_AMT//V_2.2 sk
+        nps=data.Table[0]?.EMPLOYE_NPS//V_2.2 sk
+
+        yearlyNps=Number(nps)*12//V_2.2 sk
+        yearlyGratuity=Number(gratuity)*12//V_2.2 sk
+        yearlyFoodCoupon=Number(FoodCoupon)*12//V_2.2 sk
+        yearlyEmployeeEsic=Number(employeeESIC)*12//V_2.2 sk
+        yearFuelReimbursement=Number(fuelReimbursement)*12//V_2.2 sk
+        yearlyOtherReimbursement=Number(otherReimbursement)*12//V_2.2 sk
+        yearlyLTAllowance=Number(leaveTravelAllowance)*12//V_2.2 sk
+        yearlyPortfolioQualityAllowance=Number(protfolioQualityAllowance)*12//V_2.2 sk
+        yearlyPerformanceAllowance=Number(performanceAllowance)*12//V_2.2 sk
+        yearlyInchargeAllowance=Number(inchargeAllowance)*12//V_2.2 sk
+        yearlyDistanceAllowance=Number(distanceAllowance)*12//V_2.2 sk
+        YearlyFieldAllowance=Number(fieldAllowance)*12//V_2.2 sk
         yearbaseVariable = Number(baseSalary) * 12
         YearHRA = Number(HRA) * 12
         YearfoodAllowance = Number(foodAllowance) * 12
@@ -257,9 +337,14 @@ const Details = (props) => {
 
         // Monthly value
         MonthtotalSalValue = Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
+        //V_2.2 sk
+        +Number(distanceAllowance)+Number(fieldAllowance)+Number(inchargeAllowance)+Number(performanceAllowance)+Number(protfolioQualityAllowance)+Number(leaveTravelAllowance)+Number(otherReimbursement)+Number(fuelReimbursement)+Number(employeeESIC)+Number(FoodCoupon)+Number(gratuity)+Number(nps)
+        
 
         //Total Year Value
         YeartotalSalValue = Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
+        //V_2.2 sk
+        +Number(yearlyDistanceAllowance)+Number(YearlyFieldAllowance)+Number(yearlyInchargeAllowance)+Number(yearlyPerformanceAllowance)+Number(yearlyDistanceAllowance)+Number(yearlyPortfolioQualityAllowance)+Number(yearlyLTAllowance)+Number(yearlyOtherReimbursement)+Number(yearFuelReimbursement)+Number(yearlyEmployeeEsic)+Number(yearlyFoodCoupon)+Number(yearlyGratuity)+Number(yearlyNps)
     }
 
     // Updating the HTML data for Salary Allocation
@@ -293,7 +378,41 @@ const Details = (props) => {
                         .replaceAll('YearlyConveyanceVariable', YearconveyanceAllowance == "0" ? '0' : YearconveyanceAllowance)
                         .replaceAll('MonthBonusVariable', bonusPay == "0" ? '0' : bonusPay).replaceAll('YearlyBonusVariable', YearbonusPay == "0" ? '0' : YearbonusPay)
                         .replaceAll('MonthSpecialVariable', specialAllowance == "0" ? '0' : specialAllowance)
-                        .replaceAll('YearSpecialVariable', YearspecialAllowance == "0" ? '0' : YearspecialAllowance).replaceAll('MonthdvrVariable', dvrAllowance == "0" ? '0' : dvrAllowance).replaceAll('YeardvrVariable', YeardvrAllowance == "0" ? '0' : YeardvrAllowance).replaceAll('MonthFuelVariable', fuelAllowance == "0" ? '0' : fuelAllowance).replaceAll('YearFuelVariable', YearfuelAllowance == "0" ? '0' : YearfuelAllowance).replaceAll('MonthGrossVariable', grossAmount == "0" ? '0' : grossAmount).replaceAll('YearGrossVariable', YeargrossAmount == "0" ? '0' : YeargrossAmount).replaceAll('MonthemployerPF', employerPF == "0" ? '0' : employerPF).replaceAll('YearemployerPF', YearemployerPF == "0" ? '0' : YearemployerPF).replaceAll('MonthTotalCompVariable', MonthtotalSalValue == "0" ? '0' : MonthtotalSalValue).replaceAll('YearTotalCompVariable', YeartotalSalValue == "0" ? '0' : YeartotalSalValue)) : null)
+                        .replaceAll('YearSpecialVariable', YearspecialAllowance == "0" ? '0' : YearspecialAllowance)
+                        .replaceAll('MonthdvrVariable', dvrAllowance == "0" ? '0' : dvrAllowance)
+                        .replaceAll('YeardvrVariable', YeardvrAllowance == "0" ? '0' : YeardvrAllowance)
+                        .replaceAll('MonthFuelVariable', fuelAllowance == "0" ? '0' : fuelAllowance)
+                        .replaceAll('YearFuelVariable', YearfuelAllowance == "0" ? '0' : YearfuelAllowance)
+                        .replaceAll('MonthGrossVariable', grossAmount == "0" ? '0' : grossAmount)
+                        .replaceAll('YearGrossVariable', YeargrossAmount == "0" ? '0' : YeargrossAmount)
+                        .replaceAll('MonthemployerPF', employerPF == "0" ? '0' : employerPF)
+                        .replaceAll('YearemployerPF', YearemployerPF == "0" ? '0' : YearemployerPF)
+                        .replaceAll('MonthTotalCompVariable', MonthtotalSalValue == "0" ? '0' : MonthtotalSalValue)
+                        .replaceAll('MonthDistanceVariable',distanceAllowance=="0"?'0':distanceAllowance)//V_2.2 sk
+                        .replaceAll('MonthFieldVariable',fieldAllowance=="0"?'0':fieldAllowance)//V_2.2 sk
+                        .replaceAll('MonthInchgVariable',inchargeAllowance=="0"?'0':inchargeAllowance)//V_2.2 sk
+                        .replaceAll('YearlyDistanceVariable',yearlyDistanceAllowance=="0"?'0':yearlyDistanceAllowance)//V_2.2 sk
+                        .replaceAll('YearInchgVariable',yearlyInchargeAllowance=="0"?'0':yearlyInchargeAllowance)//V_2.2 sk
+                        .replaceAll('YearFieldVariable',YearlyFieldAllowance=="0"?'0':YearlyFieldAllowance)//V_2.2 sk
+                        .replaceAll('MonthPrformVariable',performanceAllowance=="0"?'0':performanceAllowance)//V_2.2 sk
+                        .replaceAll('YearPrformVariable',yearlyPerformanceAllowance=="0"?'0':yearlyPerformanceAllowance)//V_2.2 sk
+                        .replaceAll('MonthPortfolVariable',protfolioQualityAllowance=="0"?'0':protfolioQualityAllowance)//V_2.2 sk
+                        .replaceAll('YearPortfolVariable',yearlyPortfolioQualityAllowance=="0"?'0':yearlyPortfolioQualityAllowance)//V2.2 sk
+                        .replaceAll('MonthLeaveTrvlVariable',leaveTravelAllowance=="0"?'0':leaveTravelAllowance)//V_2.2 sk
+                        .replaceAll('YearLeaveTrvlVariable',yearlyLTAllowance=="0"?'0':yearlyLTAllowance)//V_2.2 sk
+                        .replaceAll('MonthOthrReimbrslVariable',otherReimbursement=="0"?'0':otherReimbursement)//V_2.2 sk
+                        .replaceAll('YearOthrReimbrslVariable',yearlyOtherReimbursement=="0"?'0':yearlyOtherReimbursement)//V_2.2 sk
+                        .replaceAll('MonthFuelRembrsVariable',fuelReimbursement=="0"?'0':fuelReimbursement)//V_2.2 sk
+                        .replaceAll('YearFuelRembrsVariable',yearFuelReimbursement=="0"?'0':yearFuelReimbursement)//V_2.2 sk
+                        .replaceAll('MonthEmployerEsicVariable',employeeESIC=="0"?'0':employeeESIC)//V_2.2 sk
+                        .replaceAll('YearEmployerEsicVariable',yearlyEmployeeEsic=="0"?'0':yearlyEmployeeEsic)//V_2.2 sk
+                        .replaceAll('MonthFoodCouponVariable',FoodCoupon=="0"?'0':FoodCoupon)//V_2.2 sk
+                        .replaceAll('YearFoodCouponVariable',yearlyFoodCoupon=="0"?'0':yearlyFoodCoupon)//V_2.2 sk
+                        .replaceAll('MonthGratuityVariable',gratuity=="0"?'0':gratuity)//V_2.2 sk
+                        .replaceAll('YearGratuityVariable',yearlyGratuity=="0"?'0':yearlyGratuity)//V_2.2 sk
+                        .replaceAll('MonthNPSVariable',nps=="0"?'0':nps)//V_2.2 sk
+                        .replaceAll('yearNPSVariable',yearlyNps=="0"?'0':yearlyNps)//V_2.2 sk
+                        .replaceAll('YearTotalCompVariable', YeartotalSalValue == "0" ? '0' : YeartotalSalValue)) : null)
     }
 
     // function call for updating the HTML for Salary Allocation
@@ -528,7 +647,7 @@ const Details = (props) => {
                         <>
                             <ScrollView>
                                 <Loader loaderVisible={loaderVisible} />
-                                <RenderHtml contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
+                               <RenderHtml domVisitors={domVisitors} contentWidth={width} source={{ html: `${modifiedTemplate}` }} />
                                 {modifiedTemplate && setLoaderVisible(false)}
                             </ScrollView>
                         </>

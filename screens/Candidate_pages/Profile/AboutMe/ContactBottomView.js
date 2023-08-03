@@ -7,6 +7,7 @@ import { FONTS } from '../../../../constants/font_size'
 import COLORS from '../../../../constants/theme'
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient'
+import { API } from '../../../../utility/services'
 
 const ContactBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -62,8 +63,9 @@ const ContactBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     }
 
     const saveContactDetails = async () => {
-        try {
-            if (ValidateForm()) {
+
+        if (ValidateForm()) {
+            try {
                 // console.warn(TXNID);
                 let contactData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, personalEmailId: personalMail, alternateEmailId: alternateMail, phoneNo: phone, alternatePhoneNo: alternatePhone }
 
@@ -72,32 +74,34 @@ const ContactBottomView = ({ filledDetails, onPress, candidateInfo }) => {
                 console.log(formData._parts)
 
                 let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
+
                     method: "POST",
                     body: formData
                 })
                 res = await res.json();
-                console.log(res);
+                // console.log(res?.Result[0]);
+                console.log("resmsg", res?.Result[0].MSG)
                 res = await res?.Result[0]?.MSG
                 Toast.show({
                     type: 'success',
                     text1: res
                 })
                 onPress
-            }
-            else {
-
+            } catch (error) {
                 Toast.show({
                     type: 'error',
-                    text1: "Fill all the Required Fields"
+                    text1: error
                 })
             }
+        } else {
 
-        } catch (error) {
             Toast.show({
                 type: 'error',
-                text1: error
+                text1: "Fill all the Required Fields"
             })
         }
+
+
     }
 
     return (

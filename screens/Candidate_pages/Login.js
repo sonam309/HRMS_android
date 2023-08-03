@@ -21,7 +21,7 @@ const Login = (props) => {
     let page = null
 
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('416');
+    const [userId, setUserId] = useState('420');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -81,7 +81,9 @@ const Login = (props) => {
 
                 console.log("login", userId);
 
-                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : console.log(contact)
+                result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
+                    type:'error',
+                    text1:contact})
             })
     }
 
@@ -163,8 +165,8 @@ const Login = (props) => {
 
 
             {/* top right coner view design */}
-            <View
-                style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} />
+            {/* <View
+                style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} /> */}
 
             {/* Company Logo */}
             <View style={{ flex: 1, paddingHorizontal: 20 }}>

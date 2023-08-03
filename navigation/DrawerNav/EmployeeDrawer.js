@@ -38,8 +38,8 @@ const EmployeeDrawer = (props) => {
 
                     <View style={{ flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', margin: 0 }}>
                         <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-                        <Text style={{ fontSize: 16, ...FONTS.h3, color: COLORS.orange1, marginVertical: 6, textAlign: 'center' }}>{userData.userName}</Text>
-                        <Text style={{ fontSize: 16, color: COLORS.orange1, ...FONTS.h4 }}>{userData.userDept}</Text>
+                        <Text style={{ fontSize: 16, ...FONTS.h3, color: COLORS.orange1, textAlign: 'center' }}>{userData.userName+" ("+userData.userId+")"}</Text>
+                        <Text style={{ fontSize: 16, color:COLORS.hyperlinkBlue, ...FONTS.h4 }}>{userData.userEmail}</Text>
                     </View>
 
                 </View>

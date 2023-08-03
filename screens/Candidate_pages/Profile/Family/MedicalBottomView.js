@@ -96,7 +96,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
     const saveMedicalPolicyDetails = async () => {
         // console.warn("Saving data");
         try {
-            if (ValidateForm()) {
+            // if (ValidateForm()) {
                 let medicalData = {
                     txnId: txnId, operFlag: operFlag, candidateId: userId, userId: userId, medicalPolicyName: policyName, medicalPolicynumber: policyNumber, medicalMembershipNumber: membershipNumber, medicalPolicyCategory: policyCategory, policyExpiry: selectedExpiryDate
                 }
@@ -116,14 +116,13 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                     type: 'success',
                     text1: res
                 })
-            }
-            else {
+            // }else {
 
                 Toast.show({
                     type: 'error',
                     text1: "Fill all the Required Fields"
                 })
-            }
+            // }
         }
         catch (error) {
             Toast.show({
@@ -200,23 +199,33 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                         <View>
 
                             {/* Policy Name */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3, marginTop: 10 }}>Medical Policy Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3, marginTop: 10 }}>Medical Policy Name
+                            {/* <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> */}
+                            </Text>
                             <TextInput value={policyName} onChangeText={(val) => setPolicyName(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
                             {/* Policy Number */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Number
+                            {/* <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> */}
+                            </Text>
                             <TextInput value={policyNumber} onChangeText={(val) => setPolicyNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
                             {/* Membership Number */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Membership Number
+                            {/* <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> */}
+                            </Text>
                             <TextInput value={membershipNumber} onChangeText={(val) => setMembershipNumber(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
                             {/* Policy Category */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Category
+                            {/* <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> */}
+                            </Text>
                             <TextInput value={policyCategory} onChangeText={(val) => setPolicyCategory(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
 
                             {/* Expiry Date */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Medical Policy Expiry
+                            {/* <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> */}
+                            </Text>
 
                             <View style={{ flexDirection: 'row', margin: 3 }}>
                                 <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />

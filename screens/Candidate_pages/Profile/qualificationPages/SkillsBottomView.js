@@ -70,7 +70,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
       res = await res.json();
       res = await res?.Result[0]?.MSG
-
+      // onPress
       Toast.show({
         type: 'success',
         text1: res
@@ -171,6 +171,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
         res = await res.json();
         res = await res?.Result[0]?.MSG
 
+
         Toast.show({
           type: 'success',
           text1: res
@@ -220,7 +221,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {
-          showSkills && skills?.length > 1 ? <SkillDetails /> : (
+          showSkills && skills?.length > 0 ? <SkillDetails /> : (
             <View>
               {/* {SkillDetails} */}
               {/* {console.log("first", skills?.length)} */}

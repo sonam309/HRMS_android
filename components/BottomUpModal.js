@@ -1,5 +1,6 @@
 import { View, Animated, TouchableWithoutFeedback, Modal, Dimensions, Keyboard } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
+import Toast  from "react-native-toast-message";
 
 const BottomUpModal = ({ isVisible, onClose, children, visibleHeight }) => {
   const [visibleScreenHeight, setVisibleScreenHeight] = useState(Dimensions.get('window').height);
@@ -59,6 +60,7 @@ const BottomUpModal = ({ isVisible, onClose, children, visibleHeight }) => {
           backgroundColor: "rgba(0, 0, 0, 0.7)",
         }}
       >
+        <Toast/>
         {/* Transparent background */}
         <TouchableWithoutFeedback onPress={() => setMatterSelectModal(false)}>
           <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }} />

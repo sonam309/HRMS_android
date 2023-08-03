@@ -115,7 +115,7 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData))
         formData.append('fileUpload', selectedDoc)
-        console.log(formData._parts)
+        //console.log(formData._parts)
         let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
           method: "POST",
           body: formData
@@ -125,7 +125,7 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
         res = await res.json();
         res = await res?.Result[0]?.MSG
 
-        Toast({
+        Toast.show({
           type: 'success',
           text1: res
         })
@@ -133,7 +133,7 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
 
       } else {
 
-        Toast({
+        Toast.show({
           type: 'error',
           text1: "Fill all the Marked Fields"
         })
@@ -141,7 +141,7 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
 
 
     } catch (error) {
-      Toast({
+      Toast.show({
         type: 'error',
         text1: error
       })

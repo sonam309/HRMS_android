@@ -25,6 +25,7 @@ export const COLORS = {
   lightYellow: '#fff494',
   transparentVoilet: 'rgba(34, 0, 70, 0.1)',
   purple:'#9376E0',
+  hyperlinkBlue:'#3366CC',
   lightOrange:'#F79540',
   leafGreen:'rgba(87, 153, 12, 1)',
   orange1: 'rgb(255,102,0)',

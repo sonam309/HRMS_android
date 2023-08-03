@@ -63,8 +63,8 @@ const Candidate_details = (props) => {
   const onSelectPress = async (operFlag) => {
     if (validateForm()) {
 
-      // let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
-      let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
+      let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
+      // let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({

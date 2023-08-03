@@ -10,6 +10,7 @@ import { API } from '../../../utility/services'
 import { tag } from '../../../assets'
 import { FONTS, SIZES } from '../../../constants/font_size'
 import Toast from 'react-native-toast-message';
+import { responsiveWidth } from 'react-native-responsive-dimensions'
 
 const New_hiring = (props) => {
     const { navigation, selectedOption, setFilterVisible } = props
@@ -58,7 +59,7 @@ const New_hiring = (props) => {
 
     // Item Icon for each data item from job opening array
     function ListData(props) {
-        const title = props.title, positions = props.opening, compensation = props.comp, location = props.location, upload = props.upload, experience = props.experience, Job_Desc = props.JD, job_status = props.status,HIRING_LEAD=props.hiringLeadId,HIRING_LEAD_NAME=props.hiringLeadName
+        const title = props.title, positions = props.opening, compensation = props.comp, location = props.location, upload = props.upload, experience = props.experience, Job_Desc = props.JD, job_status = props.status, HIRING_LEAD = props.hiringLeadId, HIRING_LEAD_NAME = props.hiringLeadName
         counting += 1;
 
         switch (job_status) {
@@ -138,22 +139,26 @@ const New_hiring = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ color: 'black', marginHorizontal: 5, fontSize: 14, fontWeight: 500 }}>{title}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='cash' color={COLORS.gray} size={16} />{compensation}</Text>
-                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='briefcase-variant-outline' color={COLORS.gray} size={16} />{experience} years of experience</Text>
+                        <View style={{ flexDirection: 'row',gap:10, alignItems: 'center', flexWrap: 'wrap', alignItems: 'center' ,width:responsiveWidth(80)}}>
+                            <Text style={{ color: 'black', fontSize: 14 }}>
+                                <Icons name='map-marker-outline' color={COLORS.gray} size={16} />{location}</Text>
+                            <Text style={{ color: 'black',  fontSize: 14 }}>
+                                <Icons name='account-outline' color={COLORS.gray} size={16} />{positions} Opening</Text>
+                            {compensation&& <Text style={{ color: 'black',  fontSize: 14 }}>
+                                <Icons name='cash' color={COLORS.gray} size={16} />{compensation}</Text>}
+                            <Text style={{ color: 'black', fontSize: 14 }}>
+                                <Icons name='briefcase-variant-outline' color={COLORS.gray} size={16} />{experience} years of experience</Text>
                         </View>
                         {/* hiring Lead */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{HIRING_LEAD!==null?HIRING_LEAD_NAME+"("+HIRING_LEAD+")":"-"}</Text>
+                            <Text style={{ color: 'black', marginHorizontal: 2, fontSize: 14 }}><Icons name='account-outline' color={COLORS.gray} size={16} />{HIRING_LEAD !== null ? HIRING_LEAD_NAME + "(" + HIRING_LEAD + ")" : "-"}</Text>
                         </View>
                     </View>
 
                 </View>
                 {/* Job description */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between',  paddingHorizontal: 10 }}>
-                    <Text style={{color:COLORS.darkGray2,...FONTS.h5}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10 }}>
+                    <Text style={{ color: COLORS.darkGray2, ...FONTS.h5 }}>
                         {upload}
                         {/* {console.log("sendData",Job_Desc)} */}
                     </Text>
@@ -183,7 +188,7 @@ const New_hiring = (props) => {
                             <ListData key={item.TXN_ID} status={item.JOB_STATUS} title={item.DESIGNATION_NAME} opening={item.NO_OF_POSITION} comp={item.COMPENSATION} location={item.STATE_NAME} upload={item.CREATED_DATE} experience={item.MIN_EXP} JD={item.UPLOAD_JD_DOC} hiringLeadId={item.HIRING_LEAD} />))
                             : <Text style={{ textAlign: 'center', paddingVertical: 10 }}>No Data Entry Found</Text>) :
                         (jobOpening ? jobOpening?.map((item) =>
-                            <ListData key={item.TXN_ID} status={item.JOB_STATUS} title={item.DESIGNATION_NAME} opening={item.NO_OF_POSITION} comp={item.COMPENSATION} location={item.STATE_NAME} upload={item.CREATED_DATE} experience={item.MIN_EXP} JD={item.UPLOAD_JD_DOC} hiringLeadId={item.HIRING_LEAD} hiringLeadName={item.HIRING_LEAD_NAME}/>)
+                            <ListData key={item.TXN_ID} status={item.JOB_STATUS} title={item.DESIGNATION_NAME} opening={item.NO_OF_POSITION} comp={item.COMPENSATION} location={item.STATE_NAME} upload={item.CREATED_DATE} experience={item.MIN_EXP} JD={item.UPLOAD_JD_DOC} hiringLeadId={item.HIRING_LEAD} hiringLeadName={item.HIRING_LEAD_NAME} />)
                             : <Text style={{ textAlign: 'center', paddingVertical: 10 }}>No Data Entry Found</Text>)
                     }
                 </View>
