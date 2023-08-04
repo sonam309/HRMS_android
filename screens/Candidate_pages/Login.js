@@ -1,9 +1,9 @@
-import { TouchableOpacity, StyleSheet, Text, View, Image,  StatusBar, Pressable } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text, View, Image, StatusBar, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import { Pinlock, company_logo_2 } from '../../assets';
+import { Pinlock, company_logo_2, loginIcon,company_logo } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
@@ -16,6 +16,7 @@ import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
+
 
 const Login = (props) => {
     let page = null
@@ -82,8 +83,9 @@ const Login = (props) => {
                 console.log("login", userId);
 
                 result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
-                    type:'error',
-                    text1:contact})
+                    type: 'error',
+                    text1: contact
+                })
             })
     }
 
@@ -136,21 +138,21 @@ const Login = (props) => {
                     totalDay,
                     hiringLeadMail,
 
-                }))) : 
-                Toast.show({
-                    type: "error",
-                    text1:"Failure Please enter correct credentials"
-                })
+                }))) :
+                    Toast.show({
+                        type: "error",
+                        text1: "Failure Please enter correct credentials"
+                    })
 
             }).catch((error) => {
                 console.log(error)
                 setLoaderVisible(false)
 
                 Toast.show({
-                    type:'error',
-                    text1:error
+                    type: 'error',
+                    text1: error
                 })
-               
+
             })
         }
     }
@@ -169,12 +171,27 @@ const Login = (props) => {
                 style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} /> */}
 
             {/* Company Logo */}
-            <View style={{ flex: 1, paddingHorizontal: 20 }}>
-                <Image source={company_logo_2} style={{ marginTop: 30, width: "100%", height: '100%' }} />
+            <View style={{ flex: 1,  alignItems: 'flex-start', }}>
+                <Image source={company_logo} style={{ width: "40%", height: '40%',}} />
+            </View>
+
+            <View style={{
+                width: responsiveWidth(100),
+                height: 100,
+                marginTop:-170,
+                backgroundColor: COLORS.red,
+                flex:1,
+                alignItems: "center",
+                justifyContent: "center"
+            }}>
+                <Image source={loginIcon} style={{
+                    height: '100%',
+                    width: '100%',
+                }} resizeMode='stretch' />
             </View>
 
             {/* candidate Login titlte */}
-            <View style={{ justifyContent: 'center', flex: 2, borderRadius: 20, marginTop: -40, backgroundColor: 'white', paddingHorizontal: 20 }}>
+            <View style={{ justifyContent: 'center', flex: 1.5, borderRadius: 20, backgroundColor: COLORS.white, paddingHorizontal: 25 }}>
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
@@ -190,7 +207,7 @@ const Login = (props) => {
                     {/* <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
                     <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} /> */}
 
-                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput
+                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput style={{ width: '100%' }}
                         icon={<Pressable onPress={changeVisibility}><AntDesign name="eye" size={22} />
                         </Pressable>}
                     />
@@ -201,8 +218,8 @@ const Login = (props) => {
                 <View style={styles.loginOption}>
                     {/* onPress={() => props.navigation.navigate("QuickPin", { userId })}  */}
                     <TouchableOpacity style={{ alignItems: 'center' }}>
-                        <Image source={Pinlock} style={{ width: 35, height: 35 }} />
-                        <Text style={{ color: COLORS.darkGray2, ...FONTS.h4 }}>Quick Pin</Text>
+                        <Image source={Pinlock} style={{ width: 30, height: 30 ,}} />
+                        <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -218,28 +235,44 @@ const Login = (props) => {
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => { userId !== '' ? forgetPasswordApi() :Toast.show({
-                        type:'error',
-                        text1:"Please enter User Id"
-                    })}}>Forgot Password? </Text>
+                    <Text style={styles.forgotPassword} onPress={() => {
+                        userId !== '' ? forgetPasswordApi() : Toast.show({
+                            type: 'error',
+                            text1: "Please enter User Id"
+                        })
+                    }}>Forgot Password? </Text>
                 </TouchableOpacity>
 
             </View>
+            
 
             {/* Bottom element */}
             <View style={{ flex: 0.5, marginBottom: 5, }}>
-                <Text style={styles.bottomElement}>Version: <Text style={{ color: COLORS.white, fontWeight: '900' }}>2.2</Text></Text>
+                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
             </View>
 
-            <View style={{
-                height: responsiveHeight(14),
+            {/* <View style={{
+                height: responsiveHeight(10),
+                // backgroundColor: COLORS.red,
+                position: "absolute",
+                top: 0,
+                zIndex: -1000,
+                transform:[{scaleY: -1}]
+            }}>
+                
+                <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
+            </View> */}
+
+            {/* <View style={{
+                height: responsiveHeight(10),
                 // backgroundColor: COLORS.red,
                 position: "absolute",
                 bottom: 0,
-                zIndex: -1000
+                zIndex: -1000,
             }}>
+                
                 <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
-            </View>
+            </View> */}
         </View>
     )
 }
@@ -250,12 +283,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     header: {
-        marginVertical: 8,
         // fontWeight: 'bold',
-
+        marginTop:60,
         color: COLORS.black,
-        ...FONTS.h4,
-        fontSize: 16,
+        ...FONTS.h3,
+        fontSize: 20,
         fontFamily: 'Ubuntu-Bold',
     },
     elevation: {
@@ -269,10 +301,9 @@ const styles = StyleSheet.create({
         elevation: 7
     },
     loginOption: {
-        marginHorizontal: 25,
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         marginVertical: 12
     },
     textInputBox: {
@@ -284,10 +315,10 @@ const styles = StyleSheet.create({
     },
     forgotPassword: {
         color: COLORS.orange1,
-        fontSize: 14,
         ...FONTS.h4,
+        fontSize: 14,
         textAlign: 'center',
-        marginVertical: 15
+       
     },
     loginButton: {
         marginHorizontal: 25,
@@ -310,10 +341,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        fontWeight: 'bold',
         textAlign: 'center',
-        color: COLORS.white,
-        fontSize: 14,
+        color: COLORS.gray,
+        ...FONTS.h5,
+        fontWeight: '400',
+
     }
 })
 

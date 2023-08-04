@@ -155,7 +155,7 @@ const Emp_HistoryBottomView = (props) => {
           <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.COMPANY_NAME} </Text>
 
           <Icons position='absolute' onPress={() => DeleteEmployment({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
-          <Icons position='absolute' onPress={() => UpdateEmployment(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} />
+          <Icons position='absolute' onPress={() => UpdateEmployment(item)} right={40} name='square-edit-outline' color={COLORS.green} size={20} />
         </View>
 
         <Text style={{ fontWeight: 600 }}>Designation:- <Text style={{ fontWeight: 400 }}>{item.DESIGNATION}</Text></Text>

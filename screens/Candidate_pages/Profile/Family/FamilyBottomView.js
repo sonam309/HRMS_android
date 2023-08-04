@@ -331,7 +331,7 @@ const FamilyBottomView = ({ members, setMembers, onPress }) => {
                             </View>
                             {/* for contact info */}
                             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Contact No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput onChangeText={(val) => setContact(val)} value={contact} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' />
+                            <TextInput onChangeText={(val) => setContact(val)} value={contact} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' maxLength={10}/>
                             {/* for address */}
                             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Address<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <TextInput onChangeText={(val) => setAddress(val)} value={address} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />

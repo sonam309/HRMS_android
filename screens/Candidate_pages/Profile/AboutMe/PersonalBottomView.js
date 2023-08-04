@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-native-date-picker'
 import COLORS from '../../../../constants/theme'
@@ -6,14 +6,17 @@ import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../../components/Loader'
-import { FONTS } from '../../../../constants/font_size'
+import { FONTS, SIZES } from '../../../../constants/font_size'
 import { API } from '../../../../utility/services'
 import LinearGradient from 'react-native-linear-gradient'
-import Toast  from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
+import DateButton from '../../../../components/DateButton'
 
 
-const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
+const PersonalBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
+    const [filledDetails, setFilledDetails] = useState();
+
 
     const [marital, setMarital] = useState();
     const [selectedMarital, setSelectedMarital] = useState();
@@ -42,18 +45,20 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
         else { setCaste(returnedData) }
     }
 
+
     useEffect(() => {
-        DisplayPreviousDetails();
+        // DisplayPreviousDetails();
+        fetchPersonalData();
         getDropdownData(18);
         getDropdownData(30);
         getDropdownData(31);
         getDropdownData(32);
-        // setDataFromCandidateInfo();
 
     }, [])
 
-
-
+    useEffect(() => {
+        DisplayPreviousDetails();
+    }, [filledDetails]);
 
     const [refAddressHeight, setRefAddressHeight] = useState(40)
     const [refAddressHeight1, setRefAddressHeight1] = useState(40)
@@ -75,10 +80,15 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     const [selectedRecordBirthDate, setSelectedRecordBirthDate] = useState('');
     const [recordOpen, setRecordOpen] = useState(false)
 
+    const [marriageDate, setMarriageDate] = useState();
+    // const [selectedmarrigeDate, setSelectedmarrigeDate] = useState('');
+    // const [marrigeOpen, setMarrigeOpen] = useState(false)
+
+
+
     const [countryBirth, setCountryBirth] = useState('');
     const [placeBirth, setPlaceBirth] = useState('');
     const [identityMarks, setIdentityMarks] = useState('');
-    const [marriageDate, setMarriageDate] = useState('');
     const [preferredLocation, setPreferredLocation] = useState('');
     const [currentLocation, setCurrentLocation] = useState('');
     const [resumeSource, setResumeSource] = useState('');
@@ -93,10 +103,40 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     const [refContact, setRefContact] = useState('');
     const [refContact1, setRefContact1] = useState('');
     const [TXNID, setTXNID] = useState('');
-    const [loaderVisible, setLoaderVisible] = useState(true);
+    const [loaderVisible, setLoaderVisible] = useState(false);
     const [operFlag, setOperFlag] = useState("P");
 
     const [caFName, setCaFName] = useState('');
+
+
+    // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
+    const fetchPersonalData = async () => {
+        try {
+            setLoaderVisible(true);
+            let PersonalData = { operFlag: 'V', candidateId: userId };
+            var formData = new FormData();
+            console.log(PersonalData);
+            formData.append('data', JSON.stringify(PersonalData));
+            let res = await fetch(
+                'https://econnectsatya.com:7033/api/hrms/savePersonalDetails',
+                {
+                    method: 'POST',
+                    body: formData,
+                },
+            );
+            res = await res.json();
+            res = await res?.Result[0];
+            console.log('candidate profile', res);
+            setLoaderVisible(false);
+            setFilledDetails(res);
+        } catch (error) {
+            setLoaderVisible(false);
+            Toast.show({
+                type: 'error',
+                text1: error,
+            });
+        }
+    };
 
     // fetching previously filled Data
     const DisplayPreviousDetails = () => {
@@ -147,15 +187,13 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
         )
     }
 
-
-
-    const actualDateSelector = (date) => {
-        setActualOpen(false)
+    const marrigeDateSelector = (date) => {
+        setMarrigeOpen(false)
         let newDate = date.toDateString().split(' ')
         newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3]
 
-        setSelectedActualBirthDate(newDate);
-        setActualBirthDate(date)
+        setSelectedmarrigeDate(newDate);
+        setMarriageDate(date)
     }
 
     const recordDateSelector = (date) => {
@@ -179,17 +217,15 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
     }
 
     const savePersonalDetails = async () => {
+        if (ValidateForm()) {
+            setLoaderVisible(true)
+            try {
+                // console.warn(operFlag);
+                let PersonalData = { txnId: TXNID, salutation: salutation, firstName: firstName, middleName: middleName, lastName: lastName, fatherName: fatherName, caste: selectedCasteValue, actualBirthDate: selectedActualBirthDate, recordBirthDate: selectedRecordBirthDate, birthCountry: countryBirth, birthPlace: placeBirth, identificationMarks: identityMarks, gender: selectedGenderValue, maritalStatus: selectedMaritalValue, marriageDate: marriageDate, bloodGroup: selectedBloodGroupValue, preferredLocation: preferredLocation, currentLocation: currentLocation, resumeSource: resumeSource, refEmailId: refEmail, refContactNo: refContact, refName: refName, refOccupation: refOccupation, refAddress: refAddress, refEmailId1: refEmail1, refContactNo1: refContact1, refName1: refName1, refOccupation1: refOccupation1, refAddress1: refAddress1, operFlag: operFlag, candidateId: userId, userId: userId }
 
-        try {
-            // console.warn(operFlag);
-            let PersonalData = { txnId: TXNID, salutation: salutation, firstName: firstName, middleName: middleName, lastName: lastName, fatherName: fatherName, caste: selectedCasteValue, actualBirthDate: selectedActualBirthDate, recordBirthDate: selectedRecordBirthDate, birthCountry: countryBirth, birthPlace: placeBirth, identificationMarks: identityMarks, gender: selectedGenderValue, maritalStatus: selectedMaritalValue, marriageDate: marriageDate, bloodGroup: selectedBloodGroupValue, preferredLocation: preferredLocation, currentLocation: currentLocation, resumeSource: resumeSource, refEmailId: refEmail, refContactNo: refContact, refName: refName, refOccupation: refOccupation, refAddress: refAddress, refEmailId1: refEmail1, refContactNo1: refContact1, refName1: refName1, refOccupation1: refOccupation1, refAddress1: refAddress1, operFlag: operFlag, candidateId: userId, userId: userId }
-
-            var formData = new FormData();
-            formData.append('data', JSON.stringify(PersonalData))
-            console.log(formData._parts)
-
-            if (ValidateForm()) {
-
+                var formData = new FormData();
+                formData.append('data', JSON.stringify(PersonalData))
+                console.log(formData._parts)
                 let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
                     method: "POST",
                     body: formData
@@ -197,23 +233,25 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
                 res = await res.json();
                 // console.warn(res);
                 res = await res?.Result[0]?.MSG
+                setLoaderVisible(false)
                 Toast.show({
-                    type:'success',
-                    text1:res
+                    type: 'success',
+                    text1: res
+                })
+
+            } catch (error) {
+                setLoaderVisible(false)
+                Toast.show({
+                    type: 'error',
+                    text1: error
                 })
             }
-            else {
-
-                Toast.show({
-                    type:'error',
-                    text1:"Fill all the Marked Fields"
-                })
-            }
-
-        } catch (error) {
+        }
+        else {
+            setLoaderVisible(false)
             Toast.show({
-                type:'error',
-                text1:error
+                type: 'error',
+                text1: "Fill all the Marked Fields"
             })
         }
 
@@ -273,191 +311,191 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
         return selectedMarital ? selectedMarital : marital?.map(a => a.PARAM_NAME)[0]
     }
 
-
     return (
         <View style={{ flex: 1 }} >
-
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
                 <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Personal</Text>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
-            <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
-                <Loader loaderVisible={loaderVisible} />
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Salutation</Text>
-                        <TextInput style={styles.inputHolder} value={salutation} onChangeText={(val) => setSalutation(val)} />
+            {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+                <ActivityIndicator color={COLORS.orange1} />
+                <Text style={{ ...FONTS.h3, fontWeight: '500', color: COLORS.orange1, marginTop: SIZES.base, }}>
+                    Loading your details
+                </Text>
+            </View>
+            ) :
+                <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+                    <Loader loaderVisible={loaderVisible} />
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Salutation</Text>
+                            <TextInput style={styles.inputHolder} value={salutation} onChangeText={(val) => setSalutation(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>First Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput style={styles.inputHolder} value={firstName} onChangeText={(val) => setFirstName(val)} editable={false} />
+                        </View>
                     </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>First Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput style={styles.inputHolder} value={firstName} onChangeText={(val) => setFirstName(val)} />
-                    </View>
-                </View>
 
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Middle Name</Text>
-                        <TextInput style={styles.inputHolder} value={middleName} onChangeText={(val) => setMiddleName(val)} />
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Middle Name</Text>
+                            <TextInput style={styles.inputHolder} value={middleName} onChangeText={(val) => setMiddleName(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Last Name</Text>
+                            <TextInput style={styles.inputHolder} value={lastName} onChangeText={(val) => setLastName(val)}editable={false} />
+                        </View>
                     </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5 }}>Last Name</Text>
-                        <TextInput style={styles.inputHolder} value={lastName} onChangeText={(val) => setLastName(val)} />
-                    </View>
-                </View>
 
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                        <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} />
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false}/>
+                        </View>
+                        <View style={{ width: '50%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Caste</Text>
+                            <SelectDropdown data={caste?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedCaste(value), checkSelectedCaste(value) }} defaultButtonText={selectDropDownText("caste")} defaultValueByIndex={(selectDropDownValue("caste"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                        </View>
                     </View>
-                    <View style={{ width: '50%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5 }}>Caste</Text>
-                        <SelectDropdown data={caste?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedCaste(value), checkSelectedCaste(value) }} defaultButtonText={selectDropDownText("caste")} defaultValueByIndex={(selectDropDownValue("caste"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                    <View style={{ margin: 3 }}>
+                        <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
                     </View>
-                </View>
 
-                {/* <View style={{ margin: 3 }}>
-                    <Text style={{color: COLORS.black,...FONTS.h5}}> Actual Date of Birth  </Text>
-                </View>
+                    <View style={{ flexDirection: 'row', margin: 3 }}>
+                        <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedRecordBirthDate} />
+                        <DatePicker modal open={recordOpen} mode="date" date={recordBirthDate} onConfirm={(date) => recordDateSelector(date)} onCancel={() => { setRecordOpen(false) }} />
+                        <TouchableOpacity disabled onPress={() => setRecordOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                            <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={{ flexDirection: 'row', margin: 3 }}>
-                    <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedActualBirthDate} />
-                    <DatePicker modal theme='light' open={actualOpen} mode="date" date={actualBirthDate} onConfirm={(date) => actualDateSelector(date)} onCancel={() => { setActualOpen(false) }} />
-                    <TouchableOpacity onPress={() => setActualOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Country of Birth</Text>
+                            <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Place of Birth</Text>
+                            <TextInput style={styles.inputHolder} value={placeBirth} onChangeText={(val) => setPlaceBirth(val)} />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Identification Marks</Text>
+                            <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Gender</Text>
+                            <SelectDropdown data={gender?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedGender(value), checkSelectedGender(value) }} defaultButtonText={selectDropDownText("gender")} defaultValueByIndex={(selectDropDownValue("gender"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '50%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Marital Status</Text>
+                            <SelectDropdown data={marital?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedMarital(value), checkSelectedMarital(value) }} defaultButtonText={selectDropDownText("marital")} defaultValueByIndex={(selectDropDownValue("marital"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                        </View>
+
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+
+                            <DateButton
+                                caption={'Date of Marriage'}
+                                date={marriageDate}
+                                setDate={setMarriageDate}
+                            // isShow={false}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '100%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Blood Group</Text>
+                            <SelectDropdown data={bloodGroup?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedBloodGroup(value), checkSelectedBloodGroup(value) }} defaultButtonText={selectDropDownText("bloodGroup")} defaultValueByIndex={(selectDropDownValue("bloodGroup"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                        </View>
+                    </View>
+
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: pLocationHeight }]} multiline={true} onContentSizeChange={event => { setPLocationHeight(event.nativeEvent.contentSize.height) }} value={preferredLocation} onChangeText={(val) => setPreferredLocation(val)} />
+
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Current Location</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: cLocationHeight }]} multiline={true} onContentSizeChange={event => { setCLocationHeight(event.nativeEvent.contentSize.height) }} value={currentLocation} onChangeText={(val) => setCurrentLocation(val)} />
+
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Resume Source</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={resumeSource} onChangeText={(val) => setResumeSource(val)} />
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Name</Text>
+                            <TextInput style={styles.inputHolder} value={refName} onChangeText={(val) => setRefName(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Occupation</Text>
+                            <TextInput style={styles.inputHolder} value={refOccupation} onChangeText={(val) => setRefOccupation(val)} />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Contact No.</Text>
+                            <TextInput style={styles.inputHolder} value={refContact} onChangeText={(val) => setRefContact(val)} keyboardType='numeric' maxLength={10} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID</Text>
+                            <TextInput style={styles.inputHolder} value={refEmail} onChangeText={(val) => setRefEmail(val)}
+                            keyboardType='email-address' maxLength={50}/>
+                        </View>
+
+                    </View>
+
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight(event.nativeEvent.contentSize.height) }} value={refAddress} onChangeText={(val) => setRefAddress(val)} />
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Name 1</Text>
+                            <TextInput style={styles.inputHolder} value={refName1} onChangeText={(val) => setRefName1(val)} />
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 2 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Occupation 1</Text>
+                            <TextInput style={styles.inputHolder} value={refOccupation1} onChangeText={(val) => setRefOccupation1(val)} />
+                        </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID 1</Text>
+                            <TextInput style={styles.inputHolder} value={refEmail1} onChangeText={(val) => setRefEmail1(val)} 
+                            keyboardType='email-address' maxLength={50}/>
+                        </View>
+                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Contact No.1</Text>
+                            <TextInput style={styles.inputHolder} value={refContact1} onChangeText={(val) => setRefContact1(val)} keyboardType='numeric' maxLength={10}/>
+                        </View>
+                    </View>
+
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 1</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight1 }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight1(event.nativeEvent.contentSize.height) }} value={refAddress1} onChangeText={(val) => setRefAddress1(val)} />
+
+                    <TouchableOpacity onPress={() => savePersonalDetails()} >
+                        <LinearGradient
+                            colors={[COLORS.orange1, COLORS.disableOrange1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 2, y: 0 }}
+                            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                                {filledDetails !== "" ? 'Update Personal Details' : 'Save Personal Details'}</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
-                </View> */}
-
-                <View style={{ margin: 3 }}>
-                    <Text style={{ color: COLORS.black,...FONTS.h5 }}>Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3 }}>
-                    <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedRecordBirthDate} />
-                    <DatePicker modal open={recordOpen} mode="date" date={recordBirthDate} onConfirm={(date) => recordDateSelector(date)} onCancel={() => { setRecordOpen(false) }} />
-                    <TouchableOpacity onPress={() => setRecordOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <Icon name='calendar-month' color={COLORS.orange} size={24} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5}}>Country of Birth</Text>
-                        <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Place of Birth</Text>
-                        <TextInput style={styles.inputHolder} value={placeBirth} onChangeText={(val) => setPlaceBirth(val)} />
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5}}>Identification Marks</Text>
-                        <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5}}>Gender</Text>
-                        <SelectDropdown data={gender?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedGender(value), checkSelectedGender(value) }} defaultButtonText={selectDropDownText("gender")} defaultValueByIndex={(selectDropDownValue("gender"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '50%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5}}>Marital Status</Text>
-                        <SelectDropdown data={marital?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedMarital(value), checkSelectedMarital(value) }} defaultButtonText={selectDropDownText("marital")} defaultValueByIndex={(selectDropDownValue("marital"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5 }}>Date of Marriage</Text>
-                        <TextInput style={styles.inputHolder} value={marriageDate} onChangeText={(val) => setMarriageDate(val)} />
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '100%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5 }}>Blood Group</Text>
-                        <SelectDropdown data={bloodGroup?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedBloodGroup(value), checkSelectedBloodGroup(value) }} defaultButtonText={selectDropDownText("bloodGroup")} defaultValueByIndex={(selectDropDownValue("bloodGroup"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-                    </View>
-                </View>
-
-                <Text style={{color: COLORS.black,...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
-                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: pLocationHeight }]} multiline={true} onContentSizeChange={event => { setPLocationHeight(event.nativeEvent.contentSize.height) }} value={preferredLocation} onChangeText={(val) => setPreferredLocation(val)} />
-
-                <Text style={{color: COLORS.black,...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Current Location</Text>
-                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: cLocationHeight }]} multiline={true} onContentSizeChange={event => { setCLocationHeight(event.nativeEvent.contentSize.height) }} value={currentLocation} onChangeText={(val) => setCurrentLocation(val)} />
-
-                <Text style={{color: COLORS.black,...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Resume Source</Text>
-                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={resumeSource} onChangeText={(val) => setResumeSource(val)} />
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Reference Name</Text>
-                        <TextInput style={styles.inputHolder} value={refName} onChangeText={(val) => setRefName(val)} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Reference Occupation</Text>
-                        <TextInput style={styles.inputHolder} value={refOccupation} onChangeText={(val) => setRefOccupation(val)} />
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{color: COLORS.black,...FONTS.h5 }}>Reference Contact No.</Text>
-                        <TextInput style={styles.inputHolder} value={refContact} onChangeText={(val) => setRefContact(val)} keyboardType='numeric' />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Ref Email ID</Text>
-                        <TextInput style={styles.inputHolder} value={refEmail} onChangeText={(val) => setRefEmail(val)} />
-                    </View>
-
-                </View>
-
-                <Text style={{ color: COLORS.black,...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address</Text>
-                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight(event.nativeEvent.contentSize.height) }} value={refAddress} onChangeText={(val) => setRefAddress(val)} />
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Reference Name 1</Text>
-                        <TextInput style={styles.inputHolder} value={refName1} onChangeText={(val) => setRefName1(val)} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 2 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Reference Occupation 1</Text>
-                        <TextInput style={styles.inputHolder} value={refOccupation1} onChangeText={(val) => setRefOccupation1(val)} />
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Ref Email ID 1</Text>
-                        <TextInput style={styles.inputHolder} value={refEmail1} onChangeText={(val) => setRefEmail1(val)} />
-                    </View>
-                    <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.black,...FONTS.h5 }}>Reference Contact No.1</Text>
-                        <TextInput style={styles.inputHolder} value={refContact1} onChangeText={(val) => setRefContact1(val)} keyboardType='numeric' />
-                    </View>
-                </View>
-
-                <Text style={{color: COLORS.black,...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 1</Text>
-                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight1 }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight1(event.nativeEvent.contentSize.height) }} value={refAddress1} onChangeText={(val) => setRefAddress1(val)} />
-
-                <TouchableOpacity onPress={() => savePersonalDetails()} >
-                    <LinearGradient
-                        colors={[COLORS.orange1, COLORS.disableOrange1]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 2, y: 0 }}
-                        style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                        <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Personal Details</Text>
-
-                    </LinearGradient>
-                </TouchableOpacity>
 
 
-                <View style={{ paddingBottom: 270 }}></View>
+                    <View style={{ paddingBottom: 270 }}></View>
 
-            </ScrollView>
+                </ScrollView>}
         </View>
     )
 }
@@ -465,7 +503,7 @@ const PersonalBottomView = ({ filledDetails, onPress, candidateInfo }) => {
 
 const styles = StyleSheet.create({
     inputHolder: {
-        borderWidth: 1, height: 40, borderColor: COLORS.lightGray, color: COLORS.gray, borderRadius: 12
+        borderWidth: 1, height: 40, borderColor: COLORS.lightGray, color: COLORS.darkGray, borderRadius: 12
     },
 })
 

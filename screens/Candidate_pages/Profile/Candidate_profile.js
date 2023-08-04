@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Pressable, TextInput } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { user_profile } from '../../../assets'
@@ -11,7 +11,6 @@ import BottomUpModal from '../../../components/BottomUpModal';
 import QualificationBottomView from './qualificationPages/QualificationBottomView';
 import { FONTS, SIZES } from '../../../constants/font_size';
 import SkillsBottomView from './qualificationPages/SkillsBottomView';
-import TrainingBottomView from './qualificationPages/TrainingBottomView';
 import LanguageBottomView from './qualificationPages/LanguageBottomView';
 import BankBottomView from './AboutMe/BankBottomView';
 import PersonalBottomView from './AboutMe/PersonalBottomView';
@@ -25,7 +24,6 @@ import Esic_Bottomview from './identityProof_Pages/Esic_Bottomview';
 import UAN_BottomView from './identityProof_Pages/UAN_BottomView';
 import { useSelector } from 'react-redux';
 import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
-import axios from 'axios';
 import { API } from '../../../utility/services';
 import GuarantorBottomView from './Guarantor/GuarantorBottomView';
 
@@ -72,23 +70,7 @@ const Candidate_profile = () => {
   const [filledDetails, setFilledDetails] = useState();
   const [employHistoryView, setEmployeHistoryView] = useState(false);
   const [filledCandidateInfo, setFilledCandidateInfo] = useState();
-
-
-  // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
-  const fetchPersonalData = async () => {
-    let PersonalData = { operFlag: "V", candidateId: userId }
-    var formData = new FormData();
-    console.log(PersonalData)
-    formData.append('data', JSON.stringify(PersonalData))
-    let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
-      method: "POST",
-      body: formData
-    })
-    res = await res.json()
-    res = await res?.Result[0]
-    console.log("personalData", res);
-    setFilledDetails(res);
-  }
+  
 
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
@@ -140,37 +122,6 @@ const Candidate_profile = () => {
     // console.warn("employment data", res);
     setEmployement(res);
   }
-
-  // fetch candidate info (autofill)
-
-  const fetchCandidateInfo = async () => {
-    let candidateInfo = { candiateId: userId, userId: userId, oper: "V" }
-
-    var formData = new FormData();
-    formData.append("data", JSON.stringify(candidateInfo))
-    let res = await fetch(`${API}/api/addCandidate`, {
-      method: "POST",
-      // headers: {
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json"
-      // },
-      body: formData
-    })
-    // axios.post(, formData).then((response) => {
-
-    // const returnData = res.data.Result
-    res = await res.json()
-    // candInfo = await candInfo?.Result
-    console.log("candidate Info", res);
-    setFilledCandidateInfo(res);
-
-
-    // }).catch((error) => {
-    // console.log(error)
-    // })
-
-  }
-
 
   // For fetching details of Family dropdown -> Personal
   const fetchSkillsData = async () => {
@@ -236,18 +187,10 @@ const Candidate_profile = () => {
     // console.warn("qualfication Data", res);
     setQualification(res);
   }
-  useEffect(() => {
-    fetchCandidateInfo();
-  }, [])
 
-
-  useEffect(() => {
-    aboutMeView && fetchPersonalData()
-  }, [aboutMeView, personalView, contactView, bankView])
-
-  useEffect(() => {
-    addressView && fetchAddressData()
-  }, [addressView, personalAddressView])
+  // useEffect(() => {
+  //   addressView && fetchAddressData()
+  // }, [addressView, personalAddressView])
 
   useEffect(() => {
     familyView && fetchFamilyData()
@@ -327,20 +270,20 @@ const Candidate_profile = () => {
           {/* Content of About Me dropdown -> personal, Contact and Bank details */}
           {personalView && (
             <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} >
-              <PersonalBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setPersonalView(false)} />
+              <PersonalBottomView  onPress={() => setPersonalView(false)} />
             </BottomUpModal>
           )}
 
           {contactView && (
             <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} >
-              <ContactBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setContactView(false)} />
+              <ContactBottomView  onPress={() => setContactView(false)} />
             </BottomUpModal>
           )}
 
 
           {bankView && (
             <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }}>
-              <BankBottomView candidateInfo={filledCandidateInfo} filledDetails={filledDetails} onPress={() => setBankView(false)} />
+              <BankBottomView  onPress={() => setBankView(false)} />
             </BottomUpModal>
           )}
 
@@ -373,7 +316,7 @@ const Candidate_profile = () => {
           {/* Content of Address dropdown -> Permanent, personal and emergency address */}
           {personalAddressView && (
             <BottomUpModal isVisible={personalAddressView} onClose={() => { setPersonalAddressView(false); }} >
-              <PersonalAddressBottomView filledDetails={filledDetails} onPress={() => setPersonalAddressView(false)} />
+              <PersonalAddressBottomView  onPress={() => setPersonalAddressView(false)} />
             </BottomUpModal>
           )}
 

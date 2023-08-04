@@ -1,17 +1,19 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity ,ActivityIndicator} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
 import COLORS from '../../../../constants/theme'
 import { useSelector } from 'react-redux'
 import SelectDropdown from 'react-native-select-dropdown'
-import { FONTS } from '../../../../constants/font_size'
+import { FONTS,SIZES } from '../../../../constants/font_size'
 import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient'
 
-const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
+const BankBottomView = ({ onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
+
+  const [filledDetails, setFilledDetails] = useState();
 
   // bank details for user
   const [accountHolder, setAccountHolder] = useState('')
@@ -34,6 +36,8 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
   const [operation, setOperation] = useState();
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [selectedOperationValue, setSelectedOperationValue] = useState();
+  const [loaderVisible, setLoaderVisible] = useState(false);
+
 
   // for displaying bank documents
   const [displayDocs, setDisplayDocs] = useState(false)
@@ -54,7 +58,7 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
   const DisplayPreviousDetails = () => {
     // console.warn("BankDetails", filledDetails);
     filledDetails && (
-      (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
+      // (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
       setAccountNo(filledDetails?.ACCOUNT_NO),
       setCAccountNo(filledDetails?.ACCOUNT_NO),
@@ -70,11 +74,16 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
   }
 
   useEffect(() => {
+    fetchPersonalData();
     getDropdownData(36);
     getDropdownData(27);
     getDropdownData(37);
-    DisplayPreviousDetails();
+
   }, [])
+
+  useEffect(() => {
+    DisplayPreviousDetails();
+  }, [filledDetails]);
 
   const ValidateForm = () => {
 
@@ -103,10 +112,38 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
 
     return name
   }
-
-  const saveBankDetails = async () => {
+  // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
+  const fetchPersonalData = async () => {
     try {
-      if (ValidateForm()) {
+      setLoaderVisible(true);
+      let PersonalData = { operFlag: 'V', candidateId: userId };
+      var formData = new FormData();
+      console.log(PersonalData);
+      formData.append('data', JSON.stringify(PersonalData));
+      let res = await fetch(`${API}/api/hrms/savePersonalDetails`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
+      res = await res.json();
+      res = await res?.Result[0];
+      console.log('candidate profile', res);
+      setLoaderVisible(false);
+      setFilledDetails(res);
+    } catch (error) {
+      setLoaderVisible(false);
+      Toast.show({
+        type: 'error',
+        text1: error,
+      });
+    }
+  };
+
+  const saveBankDetails = async (operFlag) => {
+    if (ValidateForm()) {
+
+      try {
         let fileName = filingHandleName();
 
         let bankData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, accountNo: accountNo, operation: selectedOperationValue, accountHolderName: accountHolder, ifscCode: IFSCCode, bankName: selectedBankValue, branchName: branchName, accountType: selectedAccountTypeValue, fileAttachment: fileName }
@@ -130,22 +167,20 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
           text1: res
         })
 
-
-      } else {
-
+      } catch (error) {
         Toast.show({
           type: 'error',
-          text1: "Fill all the Marked Fields"
+          text1: error
         })
       }
+    } else {
 
-
-    } catch (error) {
       Toast.show({
         type: 'error',
-        text1: error
+        text1: "Fill all the Marked Fields"
       })
     }
+
   }
 
   // for submitting file
@@ -297,100 +332,86 @@ const BankBottomView = ({ filledDetails, onPress, candidateInfo }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{  flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Bank Detials</Text>
         <TouchableOpacity onPress={onPress}>
           <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
-      <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
-        <Text style={styles.inputHeader}>Account Type</Text>
-        <SelectDropdown data={accountType?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedAccountType(value), checkSelectedAccountType(value) }} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} defaultButtonText={selectDropDownText("accountType")} defaultValueByIndex={selectDropDownValue("accountType")} />
-
-        <Text style={styles.inputHeader}>Bank Name</Text>
-        <SelectDropdown data={bank?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedBank(value), checkSelectedBank(value) }} defaultButtonText={selectDropDownText("bankName")} defaultValueByIndex={selectDropDownValue("bankName")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-
-        <Text style={styles.inputHeader}>Branch Name</Text>
-        <TextInput style={[styles.inputHolder, { height: branchHeight }]} multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} value={branchName} onChangeText={(val) => setBranchName(val)} />
-
-        <Text style={styles.inputHeader}>Account No.</Text>
-        <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder]} keyboardType='numeric' />
-
-        <Text style={styles.inputHeader}>Confirm Account No.</Text>
-        <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={styles.inputHolder} keyboardType='numeric' />
-        {checkAccountError && cAccountNo != accountNo && <Text style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>Account No. Fields don't match</Text>}
-
-        <Text style={styles.inputHeader}>Account holderName</Text>
-        <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
-
-
-        <Text style={styles.inputHeader}>Operation</Text>
-        <SelectDropdown data={operation?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedOperation(value), checkSelectedOperation(value) }} defaultButtonText={selectDropDownText("operation")} defaultValueByIndex={selectDropDownValue("operation")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
-
-
-        <Text style={styles.inputHeader}>IFSC Code</Text>
-        <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} />
-
-
-        {/* <View style={{ flexDirection: 'row' }}>
-          <Icon name={Object.keys(selectedDoc).length > 0 ? 'file' : 'cloud-upload-outline'} color={Object.keys(selectedDoc).length > 0 ? COLORS.orange : COLORS.green} size={40} style={{ padding: 2 }} />
-        </View>
-        <Text style={{ color: COLORS.black, fontWeight: '500' }}> {Object.keys(selectedDoc).length > 0 ? selectedDoc.name : 'Upload Bank Documents'} </Text> */}
-
-        <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
-
-          <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white' }}>{Object.keys(selectedDoc).length}</Text>
+      {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text
+          style={{
+            ...FONTS.h3,
+            fontWeight: '500',
+            color: COLORS.orange1,
+            marginTop: SIZES.base,
+          }}>
+          Loading your details
+        </Text>
+      </View>
+      ) :
+        <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+          <Text style={styles.inputHeader}>Account Type</Text>
+          <SelectDropdown data={accountType?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedAccountType(value), checkSelectedAccountType(value) }} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} defaultButtonText={selectDropDownText("accountType")} defaultValueByIndex={selectDropDownValue("accountType")} />
+          <Text style={styles.inputHeader}>Bank Name</Text>
+          <SelectDropdown data={bank?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedBank(value), checkSelectedBank(value) }} defaultButtonText={selectDropDownText("bankName")} defaultValueByIndex={selectDropDownValue("bankName")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+          <Text style={styles.inputHeader}>Branch Name</Text>
+          <TextInput style={[styles.inputHolder, { height: branchHeight }]} multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} value={branchName} onChangeText={(val) => setBranchName(val)} />
+          <Text style={styles.inputHeader}>Account No.</Text>
+          <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder]} keyboardType='numeric'
+          maxLength={20} />
+          <Text style={styles.inputHeader}>Confirm Account No.</Text>
+          <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={styles.inputHolder} keyboardType='numeric' maxLength={20} />
+          {checkAccountError && cAccountNo != accountNo && <Text style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>Account No. Fields don't match</Text>}
+          <Text style={styles.inputHeader}>Account holderName</Text>
+          <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
+          <Text style={styles.inputHeader}>Operation</Text>
+          <SelectDropdown data={operation?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%' }]} onSelect={(value) => { setSelectedOperation(value), checkSelectedOperation(value) }} defaultButtonText={selectDropDownText("operation")} defaultValueByIndex={selectDropDownValue("operation")} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+          <Text style={styles.inputHeader}>IFSC Code</Text>
+          <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={10}/>
+          <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
+            <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>{Object.keys(selectedDoc).length}</Text>
+            </View>
+            <Text style={{ paddingHorizontal: 4 }}>Upload Bank Documents</Text>
+            <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
+              <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => selectDoc()}>
+                <Icon name='plus' color={COLORS.orange} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => setDisplayDocs(!displayDocs)}>
+                <Icon name={displayDocs ? 'chevron-up' : 'chevron-down'} color={COLORS.orange} size={20} />
+              </TouchableOpacity>
+            </View>
           </View>
+          {displayDocs && <View style={{ margin: 7, paddingHorizontal: 7, paddingVertical: 4, backgroundColor: 'white', borderWidth: 0.5, borderColor: COLORS.orange1, borderRadius: 12 }}>
+            <Text style={[FONTS.h4, { color: COLORS.green }]}>Selected Documents</Text>
+            {Object.keys(selectedDoc).length > 0 ? (selectedDoc.map((doc) => <DisplayBankDocs doc={doc} />)) : <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>No Document Selected</Text>}
+          </View>}
 
-          <Text style={{ paddingHorizontal: 4 }}>Upload Bank Documents</Text>
-
-          <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-
-            <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => selectDoc()}>
-              <Icon name='plus' color={COLORS.orange} size={20} />
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => setDisplayDocs(!displayDocs)}>
-              <Icon name={displayDocs ? 'chevron-up' : 'chevron-down'} color={COLORS.orange} size={20} />
-            </TouchableOpacity>
-
-          </View>
-
-        </View>
-
-        {displayDocs && <View style={{ margin: 7, paddingHorizontal: 7, paddingVertical: 4, backgroundColor: 'white', borderWidth: 0.5, borderColor: COLORS.orange1, borderRadius: 12 }}>
-          <Text style={[FONTS.h4, { color: COLORS.green }]}>Selected Documents</Text>
-          {Object.keys(selectedDoc).length > 0 ? (selectedDoc.map((doc) => <DisplayBankDocs doc={doc} />)) : <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>No Document Selected</Text>}
-        </View>}
-
-
-
-        <TouchableOpacity onPress={() => saveBankDetails()} >
-
-          <LinearGradient
-            colors={[COLORS.orange1, COLORS.disableOrange1]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 2, y: 0 }}
-            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Bank Details</Text>
-
-          </LinearGradient>
-        </TouchableOpacity>
-
-
-        <View style={{ marginBottom: 270 }}></View>
-      </ScrollView>
+          <TouchableOpacity onPress={() => (filledDetails!==""?saveBankDetails("G"):saveBankDetails("B"))} >
+            <LinearGradient
+              colors={[COLORS.orange1, COLORS.disableOrange1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 2, y: 0 }}
+              style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+              <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                {filledDetails!==""?'Update Bank Details':'Save Bank Details'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          <View style={{ marginBottom: 270 }}></View>
+        </ScrollView>}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   inputHeader: {
-    color: 'green', paddingHorizontal: 6, paddingVertical: 3
+    color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3
   },
   inputHolder: {
-    borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12, marginVertical: 3, marginHorizontal: 7
+    borderWidth: 1, height: 40, borderColor: COLORS.black, borderRadius: 12, marginVertical: 3, marginHorizontal: 7
   },
 })
 
