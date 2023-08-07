@@ -34,27 +34,25 @@ const GuarantorBottomView = (props) => {
     const validation = () => {
 
 
-        console.log("first", firstGuarantorName, firstGrantorCareOfName, firstGrantorRelation, firstGrantorAadhaarNo, firstGrantorAddress, secondGrantorName, secondGrantorCareOfName, secondGrantorRelation, secondGrantorAadhaarNo, secondGrantorAddress,)
-        if (firstGuarantorName != null ||
-            firstGrantorCareOfName != null ||
-            firstGrantorRelation != null ||
-            firstGrantorAadhaarNo != null ||
-            firstGrantorAddress != null ||
-            secondGrantorName != null ||
-            secondGrantorCareOfName != null ||
-            secondGrantorRelation != null ||
-            secondGrantorAadhaarNo != null ||
-            secondGrantorAddress != null) {
-
-            saveGuarantorDetails("A")
-
-        } else {
-
-
+        // console.log("first", firstGuarantorName, firstGrantorCareOfName, firstGrantorRelation, firstGrantorAadhaarNo, firstGrantorAddress, secondGrantorName, secondGrantorCareOfName, secondGrantorRelation, secondGrantorAadhaarNo, secondGrantorAddress,)
+        if (firstGuarantorName == null ||
+            firstGrantorCareOfName == null ||
+            firstGrantorRelation == null ||
+            firstGrantorAadhaarNo == null ||
+            firstGrantorAddress == null ||
+            secondGrantorName == null ||
+            secondGrantorCareOfName == null ||
+            secondGrantorRelation == null ||
+            secondGrantorAadhaarNo == null ||
+            secondGrantorAddress == null) {
             Toast.show({
                 type: 'error',
                 text1: "Please fill mandatory details."
             })
+
+        } else {
+            saveGuarantorDetails("A")
+
         }
     }
 
@@ -84,10 +82,16 @@ const GuarantorBottomView = (props) => {
                 const result = response.data.Result;
                 setLoaderVisible(false);
 
+                if (flag === "A") {
+                    props.onPress();
 
-                //  props.onPress;
+                }
                 console.log("resultguarantor", result);
 
+                (result[0].MSG !== "" ? Toast.show({
+                    type: 'success',
+                    text1: result[0]?.MSG
+                }) : "")
 
                 setFirstGuarantorName(result[0]?.FIRST_GURANTR_NAME),
                     setFirstGrantorCareOfName(result[0]?.CAREOF_FIRST_GURANTR_NAME),
@@ -151,7 +155,7 @@ const GuarantorBottomView = (props) => {
                     {/* guarantor Aadhar */}
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setFirstGrantorAadhaarNo} value={firstGrantorAadhaarNo} />
+                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setFirstGrantorAadhaarNo} value={firstGrantorAadhaarNo} maxLength={12} />
                     </View>
                     {/* guarantor address */}
                     <View style={{ marginTop: 10, marginBottom: 15, }}>
@@ -180,7 +184,7 @@ const GuarantorBottomView = (props) => {
                     {/* guarantor Aadhar */}
                     <View style={{ marginTop: 10 }}>
                         <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setSecondGrantorAadhaarNo} value={secondGrantorAadhaarNo} />
+                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setSecondGrantorAadhaarNo} value={secondGrantorAadhaarNo} maxLength={12} />
                     </View>
                     {/* guarantor address */}
                     <View style={{ marginTop: 10, marginBottom: 15, }}>

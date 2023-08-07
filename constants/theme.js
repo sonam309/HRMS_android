@@ -20,6 +20,7 @@ export const COLORS = {
   darkGreen: "#27AE60",
   black: "black",
   darkerGrey: '#526D82',
+  lightestGreen:'#ECFFDC',
   transparentViolet: 'rgba(34,0,70,0.1)',
   bg_tile_Colo: '#F5EEF8',
   lightYellow: '#fff494',
@@ -39,6 +40,7 @@ export const COLORS = {
   darkGray2: 'rgba(105, 104, 104, 1)',
   lightGray: 'rgba(105, 104, 104, 0.3)',
   levender: 'rgba(198, 203, 239, 1)',
+
 
   transparent: 'transparent',
   transparentBlack1: 'rgba(0, 0, 0, 0.1)',

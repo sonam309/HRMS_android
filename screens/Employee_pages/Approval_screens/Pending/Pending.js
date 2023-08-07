@@ -27,7 +27,7 @@ const Pending = (props) => {
 
     useEffect(() => {
         getData();
-        console.log("Hello from pending")
+        // console.log("Hello from pending")
     }, [notificationCat])
 
     useFocusEffect(
@@ -81,9 +81,9 @@ const Pending = (props) => {
 
     return (
         <View>
-            {flag === "A" ? <Text>It is inside Attendance</Text> : null}
-            {flag === "C" ? <Text>It is inside Claim</Text> : null}
-            {flag === "E" ? <Text>It is inside EResign</Text> : null}
+            {flag === "A" ? <Text> Attendance</Text> : null}
+            {flag === "C" ? <Text> Claim</Text> : null}
+            {flag === "E" ? <Text> EResign</Text> : null}
             {flag === "H" ? <Hiring /> : null}
             {/* {console.warn("Inside pending " + notificationCat)} */}
         </View>

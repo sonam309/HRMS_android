@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
+import TextDropdown from '../../../../components/TextDropdown'
 
 const NominationBottomView = ({ nominations, onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -23,17 +24,27 @@ const NominationBottomView = ({ nominations, onPress }) => {
   const [showAddMember, setShowAddMember] = useState(true)
   const [nomineeMember, setNomineeMember] = useState([])
 
+  const [familyMemberDropDown, setFamilyMemberDropDown] = useState()
+  const [selectedFamilyMember, setSelectedFamilyMember] = useState()
+  const [selectedFamilyMemberValue, setSelectedFamilyMemberValue] = useState('')
+
   // Nominations Dropdown Data
   const getDropdownData = async (P) => {
     let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
     response = await response.json();
     const returnedData = response;
-    if (P === 41) { setNominationTypeDropDown(returnedData) }
+    if (P === 41) {
+      setNominationTypeDropDown(returnedData)
+    } else if (P === 38) {
+
+      setFamilyMemberDropDown(returnedData)
+    }
   }
 
 
   useEffect(() => {
     getDropdownData(41);
+    getDropdownData(38);
   }, [])
 
   const checkDropDownValue = (value) => {
@@ -85,7 +96,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
     let info = ''
 
     for (let index = 0; index < nomineeMember.length; index++) {
-      // console.warn(nomineeMember[index])
+      console.warn(nomineeMember[index])
 
       const element = nomineeMember[index]
       info += selectedNominationTypeValue + "," + element.guardianName + "," + element.share + "~"
@@ -108,7 +119,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
       if (ValidateForm()) {
 
         let nomineeData = { txnId: '', candidateId: userId, userId: userId, operFlag: "A", param: '' };
-        console.log("requestData",nomineeData)
+        console.log("requestData", nomineeData)
         nomineeData.param = NomineeInfo();
         let res = await fetch(`${API}/api/hrms/candidateNomination`, {
           method: "POST",
@@ -119,7 +130,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
           body: JSON.stringify(nomineeData)
         })
         res = await res.json();
-        console.log('saveNominiee details',res)
+        console.log('saveNominiee details', res)
       }
       else {
 
@@ -130,8 +141,8 @@ const NominationBottomView = ({ nominations, onPress }) => {
       }
     } catch (error) {
       Toast.show({
-        type:'error',
-        text1:error
+        type: 'error',
+        text1: error
       })
 
     }
@@ -156,7 +167,18 @@ const NominationBottomView = ({ nominations, onPress }) => {
       </View>
       <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
         {showNominations && nominations?.length > 0 ? <NominationDetails /> : <>
-          <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+
+          <TextDropdown
+            caption={''}
+            data={nominationTypeDropDown}
+            setData={setSelectedNominationType}
+            setIdvalue={setSelectedNominationTypeValue}
+            defaultButtonText={selectedNominationType}
+            captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+          />
+
+          {/* <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
           {nomineeMember?.map((item) => {
             return (
               <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
@@ -173,8 +195,19 @@ const NominationBottomView = ({ nominations, onPress }) => {
           })}
           {showNomineeform && <View style={{ borderWidth: 0.5, borderColor: COLORS.black, marginVertical: 4, padding: 5, borderRadius: 12 }}>
             <View style={{ marginVertical: 5 }}>
-              <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text>
-              <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+              <TextDropdown
+                caption={'Family Member'}
+                data={familyMemberDropDown}
+                setData={setSelectedFamilyMember}
+                setIdvalue={setSelectedFamilyMemberValue}
+                defaultButtonText={selectedFamilyMember}
+                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+              />
+
+              {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text>
+              <SelectDropdown data={nominationTypeDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedNominationType(value), checkDropDownValue(value) }} defaultButtonText={selectDropDownText("nomination")} defaultValueByIndex={(selectDropDownValue("nomination"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
+
             </View>
             <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Guardian Name:</Text>
             <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={newNominee.guardianName} onChangeText={(val) => setNewNominee([newNominee.guardianName = val])} name="guardianName" />
@@ -195,7 +228,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
               end={{ x: 2, y: 0 }}
               style={{ borderRadius: 8, padding: 10, marginTop: 30 }} >
               <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Details</Text>
-
             </LinearGradient>
           </TouchableOpacity>
         </>}

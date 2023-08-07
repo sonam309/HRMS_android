@@ -8,8 +8,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux'
 
 const TrainingBottomView = (props) => {
+
+  const userId = useSelector(state => state.candidateAuth.candidateId)
 
   const [selectedState, setSelectedState] = useState();
   const [selectedStateValue, setSelectedStateValue] = useState('');
@@ -63,7 +66,7 @@ const TrainingBottomView = (props) => {
 
     const body = {
       txnId: txnID,
-      candidateId: 333,
+      candidateId: userId,
       qualification: selectedQualificationsValue,
       stream: selectedStreamValue,
       specilization: specilization,
@@ -79,7 +82,7 @@ const TrainingBottomView = (props) => {
       toMonth: toMonth,
       passYear: passYear,
       expiryDate: expiryDate,
-      userId: 333,
+      userId: userId,
       operFlag: operFlag,
     }
 
@@ -107,8 +110,8 @@ const TrainingBottomView = (props) => {
   const getData = () => {
     axios
       .post(`${API}/api/hrms/candidateTrainInfo`, {
-        candidateId: 333,
-        userId: 333,
+        candidateId: userId,
+        userId: userId,
         operFlag: 'V',
       })
       .then(response => {

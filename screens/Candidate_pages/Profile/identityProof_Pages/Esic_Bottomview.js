@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
-import { FONTS } from '../../../../constants/font_size';
+import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -11,8 +11,13 @@ import { useSelector } from 'react-redux';
 
 
 
+
 const Esic_Bottomview = (props) => {
+  
   const userId = useSelector(state => state.candidateAuth.candidateId)
+
+  const [loaderVisible, setLoaderVisible] = useState(false);
+
   const [city, setCity] = useState();
   const [subcode, setSubCode] = useState();
   const [RegNumber, setRegNumber] = useState();
@@ -35,6 +40,7 @@ const Esic_Bottomview = (props) => {
 
 
   const saveESICDetails = operFlag => {
+    setLoaderVisible(true);
     const body = {
       txnId: '',
       candidateId: userId,
@@ -60,6 +66,7 @@ const Esic_Bottomview = (props) => {
         const returnedData = response?.data?.Result;
         console.log("result..", returnedData);
         const msg = returnedData[0].MSG
+        setLoaderVisible(false)
         Toast.show({
           type: 'success',
           text1: msg,
@@ -67,11 +74,13 @@ const Esic_Bottomview = (props) => {
         { props.onPress }
       })
       .catch(err => {
+        setLoaderVisible(false)
         console.log(err);
       });
   };
 
   const getData = () => {
+    setLoaderVisible(true)
     axios
       .post(`${API}/api/hrms/saveCandidateUanInfo`, {
         candidateId: userId,
@@ -82,9 +91,10 @@ const Esic_Bottomview = (props) => {
         const returnedData = response?.data?.Result;
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
-        // console.log("getDataSonammmm", ESICDetails);
+        setLoaderVisible(false)
+         console.log("getDataSonammmm", ESICDetails, Object.keys(ESICDetails).length );
 
-        if (Object.keys(ESICDetails).length > 0) {
+        if (Object.keys(ESICDetails).length > 2) {
           setIsEdit(true);
 
         }
@@ -104,10 +114,11 @@ const Esic_Bottomview = (props) => {
 
 
       }).catch(error => {
-        // Toast.show({
-        //   // type:'error',
-        //   // text1:error
-        // })
+        setLoaderVisible(false)
+        Toast.show({
+          type: 'error',
+          text1: error
+        })
       });
   };
 
@@ -121,105 +132,116 @@ const Esic_Bottomview = (props) => {
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {loaderVisible ? <View style={{
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "20%"
+      }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text style={{
+          ...FONTS.h4,
+          color: COLORS.orange1
+        }} >Loading you data..</Text>
+      </View> :
+        <ScrollView showsVerticalScrollIndicator={false}>
 
-        {/* City */}
-        <View style={{ height: 75, marginTop: 10 }}>
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City'
-            onChangeText={setCity} value={city} />
-        </View>
+          {/* City */}
+          <View style={{ height: 75, marginTop: 10 }}>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City'
+              onChangeText={setCity} value={city} />
+          </View>
 
-        {/* Sub code */}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* Sub code */}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Sub Code</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setSubCode} value={subcode} keyboardType='numeric' maxLength={10} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Sub Code</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setSubCode} value={subcode} keyboardType='numeric' maxLength={10} />
+          </View>
 
-        {/* Registration */}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* Registration */}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Registration No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setRegNumber} value={RegNumber} keyboardType='numeric' maxLength={17} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Registration No.</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setRegNumber} value={RegNumber} keyboardType='numeric' maxLength={17} />
+          </View>
 
-        {/* CSI no */}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* CSI no */}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>CSI No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setCsiNum} value={csiNum} keyboardType='numeric' maxLength={25} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>CSI No.</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setCsiNum} value={csiNum} keyboardType='numeric' maxLength={25} />
+          </View>
 
-        {/* residing with him or her */}
-        <View style={{ height: 75, marginTop: 10 }}>
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Residing with him or her</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setResidingWith} value={residingWith} maxLength={3} />
-        </View>
+          {/* residing with him or her */}
+          <View style={{ height: 75, marginTop: 10 }}>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Residing with him or her</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setResidingWith} value={residingWith} maxLength={3} />
+          </View>
 
-        {/* Whether residing with him  her */}
-        <View style={{ height: 75, marginTop: 10 }}>
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Whether residing with him her</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setWeatherResiding} value={weatherResiding} maxLength={3} />
-        </View>
+          {/* Whether residing with him  her */}
+          <View style={{ height: 75, marginTop: 10 }}>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Whether residing with him her</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setWeatherResiding} value={weatherResiding} maxLength={3} />
+          </View>
 
-        {/* If No State place*/}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* If No State place*/}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setNoStatePlace} value={noStatePlace} maxLength={3} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setNoStatePlace} value={noStatePlace} maxLength={3} />
+          </View>
 
-        {/* If No State place of Residence*/}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* If No State place of Residence*/}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            value={noStatePlaceResidence} onChangeText={setNoStatePlaceResidence} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              value={noStatePlaceResidence} onChangeText={setNoStatePlaceResidence} />
+          </View>
 
-        {/* Previous Employee code No.*/}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* Previous Employee code No.*/}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Employee code No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setPriEmpCode} value={priEmpCode} />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Employee code No.</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setPriEmpCode} value={priEmpCode} />
+          </View>
 
-        {/* Previous Insurance No.*/}
-        <View style={{ height: 75, marginTop: 10 }}>
+          {/* Previous Insurance No.*/}
+          <View style={{ height: 75, marginTop: 10 }}>
 
-          <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Insurance No.</Text>
-          <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-            onChangeText={setPriInsuranceNum} value={priInsuranceNum} keyboardType='numeric' />
-        </View>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Insurance No.</Text>
+            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setPriInsuranceNum} value={priInsuranceNum} keyboardType='numeric' />
+          </View>
 
-        {/* save button */}
-        <TouchableOpacity onPress={() => (isEdit ? saveESICDetails('G') : saveESICDetails('C'))}>
+          {/* save button */}
+          <TouchableOpacity onPress={() => (isEdit ? saveESICDetails('G') : saveESICDetails('C'))}>
 
-          <LinearGradient
-            colors={[COLORS.orange1, COLORS.disableOrange1]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 2, y: 0 }}
+            <LinearGradient
+              colors={[COLORS.orange1, COLORS.disableOrange1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 2, y: 0 }}
 
-            style={{ borderRadius: 8, padding: 8, marginTop: 20 }}
+              style={{ borderRadius: 8, padding: 8, marginTop: 20 }}
 
-          >
-            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-              {isEdit ? 'Update' : 'Save'}
-            </Text>
-          </LinearGradient>
+            >
+              <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                {isEdit ? 'Update' : 'Save'}
+              </Text>
+            </LinearGradient>
 
-        </TouchableOpacity>
+          </TouchableOpacity>
 
-        <View style={{ marginBottom: 270 }}></View>
-      </ScrollView>
+          <View style={{ marginBottom: 270 }}></View>
+        </ScrollView>}
     </View>
 
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import { Pinlock, company_logo_2, loginIcon,company_logo } from '../../assets';
+import { Pinlock, company_logo_2, loginIcon, company_logo } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
@@ -17,10 +17,8 @@ import TextButton from '../../components/TextButton';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
 
-
 const Login = (props) => {
     let page = null
-
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState('420');
     const [password, setPassword] = useState('Test@123');
@@ -28,27 +26,17 @@ const Login = (props) => {
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
 
-
-
-
-    // console.log("windowHeightWidth", windowHeight,windowWidth);
-
-
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
         {
             page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null
         }
     }
-
     const userData = { loginId: userId, password: password, oprFlag: 'L', oldPassword: "" };
-
     //Random Number
     const RandomNumber = (length) => {
         return Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
     }
-
-
 
     // preventing going to entry page
     const navigation = useNavigation();
@@ -74,14 +62,10 @@ const Login = (props) => {
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-
                 console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
-
-
                 console.log("login", userId);
-
                 result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
                     type: 'error',
                     text1: contact
@@ -92,16 +76,13 @@ const Login = (props) => {
     // logging in function
     const submit = () => {
         if (userId === "" || password === "") {
-
             Toast.show(
                 {
                     type: 'error',
                     text1: "UserId and Password is Mandatory !"
                 }
             )
-
         } else {
-
 
             setLoaderVisible(true)
             console.log(`${API}/api/User/candidateLogin`)
@@ -119,7 +100,6 @@ const Login = (props) => {
                 let growingDays = returnedData.GROWING_DAY
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
-
 
                 console.log("response", returnedData, hiringLeadMail);
                 setLoaderVisible(false)
@@ -147,12 +127,10 @@ const Login = (props) => {
             }).catch((error) => {
                 console.log(error)
                 setLoaderVisible(false)
-
                 Toast.show({
                     type: 'error',
                     text1: error
                 })
-
             })
         }
     }
@@ -164,23 +142,16 @@ const Login = (props) => {
                 barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
 
-
-
-            {/* top right coner view design */}
-            {/* <View
-                style={{ height: 300, width: 300, backgroundColor: COLORS.orange1, position: 'absolute', top: -200, right: -140, borderRadius: 250, transform: [{ scaleX: -1 }, { scaleY: -1 }], }} /> */}
-
             {/* Company Logo */}
-            <View style={{ flex: 1,  alignItems: 'flex-start', }}>
-                <Image source={company_logo} style={{ width: "40%", height: '40%',}} />
+            <View style={{ flex: 1, alignItems: 'flex-start', }}>
+                <Image source={company_logo} style={{ width: "40%", height: '40%', }} />
             </View>
 
             <View style={{
                 width: responsiveWidth(100),
                 height: 100,
-                marginTop:-170,
-                backgroundColor: COLORS.red,
-                flex:1,
+                marginTop: -170,
+                flex: 1,
                 alignItems: "center",
                 justifyContent: "center"
             }}>
@@ -195,39 +166,25 @@ const Login = (props) => {
                 <Text style={styles.header}>Candidate Login</Text>
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
-                    {/* <FontAwesome5 name='user-alt' color='orange' size={17} style={{ marginHorizontal: 10 }} /> */}
-                    {/* <CustomInput placeholder='User Id' value={userId} onChangeText={(name) => setUserId(name)} /> */}
-                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={name => setUserId(name)}
+                    <CustomInput placeholder={'Candidate Id'} caption={'Candidate ID'} value={userId} onChangeText={name => setUserId(name)}
                         required />
 
                 </View>
-
                 {/* Password */}
                 <View style={styles.textInputBox}>
-                    {/* <Feather name='lock' color='orange' size={17} style={{ marginHorizontal: 10 }} />
-                    <CustomPasswordInput placeholder='Password' secureTextEntry={showVisibility} value={password} onChangeText={(security) => setPassword(security)} /> */}
-
                     <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput style={{ width: '100%' }}
                         icon={<Pressable onPress={changeVisibility}><AntDesign name="eye" size={22} />
                         </Pressable>}
                     />
-                    {/* <AntDesign name='eye' onPress={changeVisibility} style={{ position: 'absolute', right: 9 }} size={22} /> */}
                 </View>
 
                 {/* Quick Pin Option */}
                 <View style={styles.loginOption}>
-                    {/* onPress={() => props.navigation.navigate("QuickPin", { userId })}  */}
                     <TouchableOpacity style={{ alignItems: 'center' }}>
-                        <Image source={Pinlock} style={{ width: 30, height: 30 ,}} />
+                        <Image source={Pinlock} style={{ width: 30, height: 30, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View>
-
-                {/* Log In Button */}
-                {/* <TouchableOpacity style={[styles.loginButton, styles.elevation]} onPress={() => submit()}>
-                    <AntDesign name='poweroff' color='white' size={20} />
-                    <Text style={styles.loginButtonText}>Log In</Text>
-                </TouchableOpacity> */}
 
                 <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.base, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
                     buttonContainerStyle={{ width: responsiveWidth(90), height: 50, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}
@@ -244,35 +201,11 @@ const Login = (props) => {
                 </TouchableOpacity>
 
             </View>
-            
 
             {/* Bottom element */}
             <View style={{ flex: 0.5, marginBottom: 5, }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
             </View>
-
-            {/* <View style={{
-                height: responsiveHeight(10),
-                // backgroundColor: COLORS.red,
-                position: "absolute",
-                top: 0,
-                zIndex: -1000,
-                transform:[{scaleY: -1}]
-            }}>
-                
-                <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
-            </View> */}
-
-            {/* <View style={{
-                height: responsiveHeight(10),
-                // backgroundColor: COLORS.red,
-                position: "absolute",
-                bottom: 0,
-                zIndex: -1000,
-            }}>
-                
-                <Image source={loginBanner} style={{ width: responsiveWidth(100), height: "100%", }} resizeMode='stretch' />
-            </View> */}
         </View>
     )
 }
@@ -283,8 +216,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     header: {
-        // fontWeight: 'bold',
-        marginTop:60,
+        marginTop: 60,
         color: COLORS.black,
         ...FONTS.h3,
         fontSize: 20,
@@ -307,18 +239,13 @@ const styles = StyleSheet.create({
         marginVertical: 12
     },
     textInputBox: {
-        // flexDirection: 'row',
-        // alignItems: 'center',
-        // marginVertical: 6,
-        // backgroundColor: 'white',
-        // borderRadius: 8
+       
     },
     forgotPassword: {
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
         textAlign: 'center',
-       
     },
     loginButton: {
         marginHorizontal: 25,

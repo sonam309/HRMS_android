@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
 
 
-const MedicalBottomView = ({ medicalPolicy, onPress }) => {
+const MedicalBottomView = ({ medicalPolicy, onPress,fetchMedicalData }) => {
     const [showForm, setShowForm] = useState(false)
 
     // for getting candidate Id from redux
@@ -48,7 +48,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-
+            fetchMedicalData(); 
             Toast.show({
                 type: 'success',
                 text1: res
@@ -116,12 +116,14 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                     type: 'success',
                     text1: res
                 })
+                setShowForm(false);
+                fetchMedicalData()
             // }else {
 
-                Toast.show({
-                    type: 'error',
-                    text1: "Fill all the Required Fields"
-                })
+                // Toast.show({
+                //     type: 'error',
+                //     text1: "Fill all the Required Fields"
+                // })
             // }
         }
         catch (error) {
@@ -149,7 +151,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 700, color: 'black' }}>Member Details: </Text>
-                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center' ,padding:5}}>
                         <Text>ADD</Text>
                         <Icon name='plus' size={16} />
                     </TouchableOpacity>
@@ -164,14 +166,26 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
     }
 
     // for displaying data in one policy
-    const DisplayPolicy = ({ item }) => {
+    const DisplayPolicy = ({ item, key }) => {
         return (
-            <View style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
+            <View key={key} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.MEDICAL_POLICY_NAME} </Text>
-                    <Icon position='absolute' onPress={() => DeletePolicy({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
-                    <Icon position='absolute' onPress={() => UpdatePolicy(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} />
+                    {/* <Icon position='absolute' onPress={() => DeletePolicy({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
+                    <Icon position='absolute' onPress={() => UpdatePolicy(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
+                    <TouchableOpacity style={{
+                        position:'absolute',
+                        right: 0,
+                        padding: 5
+                    }} onPress={() => DeletePolicy({ txnID: item.TXN_ID })}>
+                    <Icon name='trash-can-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        position:'absolute', right: 30, padding: 5,
+                    }}  onPress={() =>  UpdatePolicy(item)}>
+                    <Icon  name='square-edit-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
                 </View>
 
                 <Text style={{ fontWeight: 600 }}>Medical Policy Number:- <Text style={{ fontWeight: 400 }}>{item.MEDICAL_POLICY_NUMBER}</Text></Text>
@@ -228,7 +242,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress }) => {
                             </Text>
 
                             <View style={{ flexDirection: 'row', margin: 3 }}>
-                                <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />
+                                <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 ,color:COLORS.black}]} placeholder='dd/mm/yyyy' editable={false} value={selectedExpiryDate} />
                                 <DatePicker modal theme='light' open={calendarOpen} mode="date" date={expiryDate} onConfirm={(date) => SelectExpiryDate(date)} onCancel={() => { setCalendarOpen(false) }} />
                                 <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icon name='calendar-month' color={COLORS.orange} size={24} />

@@ -8,8 +8,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
+import TextDropdown from '../../../../components/TextDropdown';
 
-const LanguageBottomView = ({ languages, onPress }) => {
+const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
     const [showForm, setShowForm] = useState(false)
 
@@ -57,7 +58,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-
+            fetchLanguageData();
             Toast.show({
                 type: 'success',
                 text1: res
@@ -110,7 +111,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-
+            onPress()
             Toast.show({
                 type: 'success',
                 text1: res
@@ -157,7 +158,7 @@ const LanguageBottomView = ({ languages, onPress }) => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 700, color: 'black' }}>Language Details: </Text>
-                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
                         <Text>ADD</Text>
                         <Icons name='plus' size={16} />
                     </TouchableOpacity>
@@ -178,8 +179,22 @@ const LanguageBottomView = ({ languages, onPress }) => {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.LANGUAGE_NAME} </Text>
-                    <Icons position='absolute' onPress={() => DeleteLanguage({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
-                    <Icons position='absolute' onPress={() => UpdateLanguage(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} />
+                    {/* <Icons position='absolute' onPress={() => DeleteLanguage({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
+                    <Icons position='absolute' onPress={() => UpdateLanguage(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
+
+                    <TouchableOpacity style={{
+                        position: 'absolute',
+                        right: 0,
+                        padding: 5
+                    }} onPress={() => DeleteLanguage({ txnID: item.TXN_ID })}>
+                        <Icons name='trash-can-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        position: 'absolute', right: 30, padding: 5,
+                    }} onPress={() => UpdateLanguage(item)}>
+                        <Icons name='square-edit-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
+
                 </View>
                 <Text style={{ fontWeight: 600 }}>Can Read:- <Text style={{ fontWeight: 400 }}>{item.CAN_READ === "true" ? 'Yes' : 'No'}</Text></Text>
                 <Text style={{ fontWeight: 600 }}>Can Speak:- <Text style={{ fontWeight: 400 }}>{item.CAN_SPEAK === "true" ? 'Yes' : 'No'}</Text></Text>
@@ -204,15 +219,25 @@ const LanguageBottomView = ({ languages, onPress }) => {
                 <View >
 
                     {/* Language dropdown */}
-                    <View style={{ height: 75, }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body3 }}>Languages</Text>
-                        <SelectDropdown data={language?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedLanguage(value), checkLanguageValue(value) }} defaultButtonText={selectedDropDownText("Language")} defaultValueByIndex={selectDropDownValue("Language")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                    <View style={{ }}>
+
+                        <TextDropdown
+                            caption={'Languages'}
+                            data={language}
+                            setData={setSelectedLanguage}
+                            setIdvalue={setSelectedLanguageValue}
+                            defaultButtonText={selectedLanguage}
+                            captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                        />
+
+                        {/* <Text style={{ color: COLORS.green, ...FONTS.body3 }}>Languages</Text>
+                        <SelectDropdown data={language?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedLanguage(value), checkLanguageValue(value) }} defaultButtonText={selectedDropDownText("Language")} defaultValueByIndex={selectDropDownValue("Language")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                     </View>
 
                     {/* mother tongue checkbox */}
                     <View style={{ height: 55, flex: 1, flexDirection: 'row', alignItems: 'center', }}>
                         <TouchableOpacity onPress={() => setIsMothertongue(isMothertongue === "true" ? "false" : "true")}
-                            style={{ alignItems: "center", width: "42%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }}>
+                            style={{ alignItems: "center", width: "39%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }}>
                             {isMothertongue === "true" ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
                             <Text style={{ color: COLORS.green, ...FONTS.body4, textAlign: 'center' }}>Mother Tongue</Text>
                         </TouchableOpacity>

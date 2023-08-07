@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-native-date-picker'
 import COLORS from '../../../../constants/theme'
 import { useSelector } from 'react-redux'
-import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../../../components/Loader'
 import { FONTS, SIZES } from '../../../../constants/font_size'
@@ -11,12 +10,12 @@ import { API } from '../../../../utility/services'
 import LinearGradient from 'react-native-linear-gradient'
 import Toast from 'react-native-toast-message';
 import DateButton from '../../../../components/DateButton'
+import TextDropdown from '../../../../components/TextDropdown'
 
 
 const PersonalBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
     const [filledDetails, setFilledDetails] = useState();
-
 
     const [marital, setMarital] = useState();
     const [selectedMarital, setSelectedMarital] = useState();
@@ -81,10 +80,6 @@ const PersonalBottomView = ({ onPress }) => {
     const [recordOpen, setRecordOpen] = useState(false)
 
     const [marriageDate, setMarriageDate] = useState();
-    // const [selectedmarrigeDate, setSelectedmarrigeDate] = useState('');
-    // const [marrigeOpen, setMarrigeOpen] = useState(false)
-
-
 
     const [countryBirth, setCountryBirth] = useState('');
     const [placeBirth, setPlaceBirth] = useState('');
@@ -105,9 +100,6 @@ const PersonalBottomView = ({ onPress }) => {
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [operFlag, setOperFlag] = useState("P");
-
-    const [caFName, setCaFName] = useState('');
-
 
     // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
     const fetchPersonalData = async () => {
@@ -168,33 +160,19 @@ const PersonalBottomView = ({ onPress }) => {
             setRefOccupation(filledDetails?.REF_OCCUPATION),
             setRefOccupation1(filledDetails?.REF_OCCUPATION1),
             setResumeSource(filledDetails?.RESUME_SOURCE),
-
             setSelectedMarital(filledDetails?.MARITAL_STATUS),
             setSelectedMaritalValue(filledDetails?.MARITAL_STATUS_ID),
-
             setSelectedCasteValue(filledDetails?.CATEGORY_ID),
             setSelectedCaste(filledDetails?.CATEGORY_NAME),
-
             setSelectedBloodGroup(filledDetails?.BLOOD_GROUP),
             setSelectedBloodGroupValue(filledDetails?.BLOOD_GROUP_ID),
-
             setSelectedGender(filledDetails?.GENDER),
             setSelectedGenderValue(filledDetails?.GENDER_ID),
-
             setTXNID(filledDetails?.TXN_ID),
             setLoaderVisible(false)
-
         )
     }
 
-    const marrigeDateSelector = (date) => {
-        setMarrigeOpen(false)
-        let newDate = date.toDateString().split(' ')
-        newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3]
-
-        setSelectedmarrigeDate(newDate);
-        setMarriageDate(date)
-    }
 
     const recordDateSelector = (date) => {
         setRecordOpen(false)
@@ -256,61 +234,6 @@ const PersonalBottomView = ({ onPress }) => {
         }
 
     }
-
-    const checkSelectedBloodGroup = (value) => {
-        for (let index = 0; index < bloodGroup.length; index++) {
-            const element = bloodGroup[index];
-            if (element.PARAM_NAME === value) setSelectedBloodGroupValue(element.PARAM_ID);
-        }
-    }
-
-    const checkSelectedGender = (value) => {
-        for (let index = 0; index < gender.length; index++) {
-            const element = gender[index];
-            if (element.PARAM_NAME === value) setSelectedGenderValue(element.PARAM_ID);
-        }
-    }
-
-    const checkSelectedCaste = (value) => {
-        for (let index = 0; index < caste.length; index++) {
-            const element = caste[index];
-            if (element.PARAM_NAME === value) setSelectedCasteValue(element.PARAM_ID);
-        }
-    }
-
-    const checkSelectedMarital = (value) => {
-        for (let index = 0; index < marital.length; index++) {
-            const element = marital[index];
-            if (element.PARAM_NAME === value) setSelectedMaritalValue(element.PARAM_ID);
-        }
-    }
-
-    const selectDropDownValue = (id) => {
-        if (id === "caste") {
-            return selectedCasteValue ? selectedCasteValue : caste?.map(a => a.PARAM_ID)[0];
-        }
-        else if (id === "gender") {
-            return selectedGenderValue ? selectedGenderValue : gender?.map(a => a.PARAM_ID)[0];
-        }
-        else if (id === "bloodGroup") {
-            return selectedBloodGroupValue ? selectedBloodGroupValue : bloodGroup?.map(a => a.PARAM_ID)[0];
-        }
-        return selectedMaritalValue ? selectedMaritalValue : marital?.map(a => a.PARAM_ID)[0];
-    }
-
-    const selectDropDownText = (id) => {
-        if (id === "caste") {
-            return selectedCaste ? selectedCaste : caste?.map(a => a.PARAM_NAME)[0];
-        }
-        else if (id === "gender") {
-            return selectedGender ? selectedGender : gender?.map(a => a.PARAM_NAME)[0];
-        }
-        else if (id === "bloodGroup") {
-            return selectedBloodGroup ? selectedBloodGroup : bloodGroup?.map(a => a.PARAM_NAME)[0];
-        }
-        return selectedMarital ? selectedMarital : marital?.map(a => a.PARAM_NAME)[0]
-    }
-
     return (
         <View style={{ flex: 1 }} >
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
@@ -346,18 +269,26 @@ const PersonalBottomView = ({ onPress }) => {
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Last Name</Text>
-                            <TextInput style={styles.inputHolder} value={lastName} onChangeText={(val) => setLastName(val)}editable={false} />
+                            <TextInput style={styles.inputHolder} value={lastName} onChangeText={(val) => setLastName(val)} editable={false} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false}/>
+                            <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false} />
                         </View>
                         <View style={{ width: '50%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Caste</Text>
-                            <SelectDropdown data={caste?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedCaste(value), checkSelectedCaste(value) }} defaultButtonText={selectDropDownText("caste")} defaultValueByIndex={(selectDropDownValue("caste"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                            <TextDropdown
+                                caption={'Caste'}
+                                data={caste}
+                                setData={setSelectedCaste}
+                                setIdvalue={setSelectedCasteValue}
+                                defaultButtonText={selectedCaste}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
                         </View>
                     </View>
                     <View style={{ margin: 3 }}>
@@ -389,19 +320,33 @@ const PersonalBottomView = ({ onPress }) => {
                             <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Gender</Text>
-                            <SelectDropdown data={gender?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedGender(value), checkSelectedGender(value) }} defaultButtonText={selectDropDownText("gender")} defaultValueByIndex={(selectDropDownValue("gender"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                            <TextDropdown
+                                caption={'Gender'}
+                                data={gender}
+                                setData={setSelectedGender}
+                                setIdvalue={setSelectedGenderValue}
+                                defaultButtonText={selectedGender}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '50%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Marital Status</Text>
-                            <SelectDropdown data={marital?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedMarital(value), checkSelectedMarital(value) }} defaultButtonText={selectDropDownText("marital")} defaultValueByIndex={(selectDropDownValue("marital"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                            <TextDropdown
+                                caption={'Marital Status'}
+                                data={marital}
+                                setData={setSelectedMarital}
+                                setIdvalue={setSelectedMaritalValue}
+                                defaultButtonText={selectedMarital}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
                         </View>
 
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-
                             <DateButton
                                 caption={'Date of Marriage'}
                                 date={marriageDate}
@@ -413,8 +358,15 @@ const PersonalBottomView = ({ onPress }) => {
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '100%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Blood Group</Text>
-                            <SelectDropdown data={bloodGroup?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedBloodGroup(value), checkSelectedBloodGroup(value) }} defaultButtonText={selectDropDownText("bloodGroup")} defaultValueByIndex={(selectDropDownValue("bloodGroup"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                            <TextDropdown
+                                caption={'Blood Group'}
+                                data={bloodGroup}
+                                setData={setSelectedBloodGroup}
+                                setIdvalue={setSelectedBloodGroupValue}
+                                defaultButtonText={selectedBloodGroup}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
                         </View>
                     </View>
 
@@ -447,7 +399,7 @@ const PersonalBottomView = ({ onPress }) => {
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID</Text>
                             <TextInput style={styles.inputHolder} value={refEmail} onChangeText={(val) => setRefEmail(val)}
-                            keyboardType='email-address' maxLength={50}/>
+                                keyboardType='email-address' maxLength={50} />
                         </View>
 
                     </View>
@@ -469,12 +421,12 @@ const PersonalBottomView = ({ onPress }) => {
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID 1</Text>
-                            <TextInput style={styles.inputHolder} value={refEmail1} onChangeText={(val) => setRefEmail1(val)} 
-                            keyboardType='email-address' maxLength={50}/>
+                            <TextInput style={styles.inputHolder} value={refEmail1} onChangeText={(val) => setRefEmail1(val)}
+                                keyboardType='email-address' maxLength={50} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Contact No.1</Text>
-                            <TextInput style={styles.inputHolder} value={refContact1} onChangeText={(val) => setRefContact1(val)} keyboardType='numeric' maxLength={10}/>
+                            <TextInput style={styles.inputHolder} value={refContact1} onChangeText={(val) => setRefContact1(val)} keyboardType='numeric' maxLength={10} />
                         </View>
                     </View>
 
@@ -491,10 +443,7 @@ const PersonalBottomView = ({ onPress }) => {
                                 {filledDetails !== "" ? 'Update Personal Details' : 'Save Personal Details'}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
-
-
                     <View style={{ paddingBottom: 270 }}></View>
-
                 </ScrollView>}
         </View>
     )
@@ -503,7 +452,7 @@ const PersonalBottomView = ({ onPress }) => {
 
 const styles = StyleSheet.create({
     inputHolder: {
-        borderWidth: 1, height: 40, borderColor: COLORS.lightGray, color: COLORS.darkGray, borderRadius: 12
+        borderWidth: 1, height: 40, borderColor: COLORS.black, color: COLORS.darkGray, borderRadius: 8
     },
 })
 

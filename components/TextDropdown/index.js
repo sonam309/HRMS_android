@@ -1,8 +1,9 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZES} from '../../constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import COLORS from '../../constants/theme';
+import { SIZES,FONTS } from '../../constants/font_size';
 
 const TextDropdown = ({
   caption,
@@ -10,6 +11,7 @@ const TextDropdown = ({
   setData,
   setIdvalue,
   defaultButtonText,
+  captionStyle,
 }) => {
   const checkIdValue = value => {
     {
@@ -22,7 +24,7 @@ const TextDropdown = ({
 
   return (
     <View style={{marginVertical: SIZES.base}}>
-      <Text style={{...FONTS.h3, fontWeight: '500'}}>{caption}</Text>
+      <Text style={{...FONTS.h3, fontWeight: '500',...captionStyle}}>{caption}</Text>
       <SelectDropdown
         dropdownStyle={{
           backgroundColor: COLORS.white,
@@ -84,12 +86,12 @@ export default TextDropdown;
 
 const styles = StyleSheet.create({
   inputHolder: {
-    borderWidth: 0.5,
-    borderColor: COLORS.lightGray,
+    borderWidth: 1,
+    borderColor: COLORS.black,
     flex: 1,
     borderRadius: SIZES.base,
     paddingVertical: SIZES.base,
-    // height: 50,
+    height: 40,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',

@@ -47,9 +47,10 @@ const DateButton = ({caption, required, date, setDate}) => {
         <TouchableOpacity
           onPress={() => setShow(true)}
           style={{
-            borderColor: COLORS.lightGray,
-            borderWidth: 0.5,
-            padding: SIZES.radius * 1.1,
+            borderColor: COLORS.black,
+            borderWidth: 1,
+            height:40,
+            padding: SIZES.base,
             borderRadius: SIZES.base,
           }}>
           <Text

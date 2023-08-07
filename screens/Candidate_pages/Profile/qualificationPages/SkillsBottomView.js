@@ -8,12 +8,15 @@ import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
+import TextDropdown from '../../../../components/TextDropdown';
 
 
-const SkillsBottomView = ({ skills, onPress }) => {
+const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
 
   // for getting candidate Id from redux
   const userId = useSelector(state => state.candidateAuth.candidateId)
+
+  const [allSkills, setAllSkills] = useState([]);
 
   const [skill, setSkill] = useState('');
   const [totalExperience, setTotalExperience] = useState('');
@@ -30,6 +33,12 @@ const SkillsBottomView = ({ skills, onPress }) => {
   useEffect(() => {
     getDropdownData(39);
   }, [])
+
+  useEffect(() => {
+    setAllSkills(skills);
+    console.log("skills", skills)
+  }, [skills])
+
 
   // getiing Skill dropdown data 
   const getDropdownData = async (P) => {
@@ -71,6 +80,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
       res = await res.json();
       res = await res?.Result[0]?.MSG
       // onPress
+      fetchSkillsData();
       Toast.show({
         type: 'success',
         text1: res
@@ -104,14 +114,29 @@ const SkillsBottomView = ({ skills, onPress }) => {
   }
 
   // diplaying individual skill
-  const Skill = ({ item }) => {
+  const Skill = ({ item, key }) => {
     return (
-      <View style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
+      <View key={key} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.SKILLS_NAME} </Text>
-          <Icons position='absolute' onPress={() => DeleteSkill({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
-          <Icons position='absolute' onPress={() => UpdateSkill(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} />
+          {/* <Icons position='absolute' onPress={() => DeleteSkill({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
+          <Icons position='absolute' onPress={() => UpdateSkill(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
         </View>
+
+
+        <TouchableOpacity style={{
+          position: 'absolute',
+          right: 0,
+          padding: 5
+        }} onPress={() => DeleteSkill({ txnId: item.TXN_ID })}>
+          <Icons name='trash-can-outline' color={COLORS.green} size={20} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{
+          position: 'absolute', right: 30, padding: 5,
+        }} onPress={() => UpdateSkill(item)}>
+          <Icons name='square-edit-outline' color={COLORS.green} size={20} />
+        </TouchableOpacity>
+
         <Text style={{ fontWeight: 600 }}>Skill Level:- <Text style={{ fontWeight: 400 }}>{item.SKILL_LEVEL}</Text></Text>
         <Text style={{ fontWeight: 600 }}>Total Experience:- <Text style={{ fontWeight: 400 }}>{item.TOTAL_EXP}</Text></Text>
       </View>
@@ -125,14 +150,14 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5, marginTop: 15 }}>
           <Text style={{ fontWeight: 700, color: 'black' }}>Skills: </Text>
-          <TouchableOpacity onPress={() => setShowSkills(false)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity onPress={() => setShowSkills(false)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
             <Text>ADD</Text>
             <Icons name='plus' size={16} />
           </TouchableOpacity>
         </View>
 
         {
-          skills.map((item) => <Skill item={item} key={item.Contact} />)
+          skills.map((item, index) => <Skill item={item} key={index} />)
         }
 
       </View>
@@ -170,8 +195,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
         })
         res = await res.json();
         res = await res?.Result[0]?.MSG
-
-
+        onPress()
         Toast.show({
           type: 'success',
           text1: res
@@ -221,7 +245,7 @@ const SkillsBottomView = ({ skills, onPress }) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {
-          showSkills && skills?.length > 0 ? <SkillDetails /> : (
+          showSkills && allSkills[0]?.FLAG === "S" ? <SkillDetails /> : (
             <View>
               {/* {SkillDetails} */}
               {/* {console.log("first", skills?.length)} */}
@@ -235,8 +259,20 @@ const SkillsBottomView = ({ skills, onPress }) => {
 
               {/* Level dropDown */}
               <View style={{ marginVertical: 5 }}>
-                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
-                <SelectDropdown data={skillLevelDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedSkillLevel(value), checkSkillValue(value) }} defaultButtonText={selectDropDownText("skill")} defaultValueByIndex={(selectDropDownValue("skill"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                <TextDropdown
+                  caption={'Level'}
+                  data={skillLevelDropDown}
+                  setData={setSelectedSkillLevel}
+                  setIdvalue={setSelectedSkillLevelValue}
+                  defaultButtonText={selectedSkillLevel}
+                  captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                />
+
+
+
+                {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
+                <SelectDropdown data={skillLevelDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedSkillLevel(value), checkSkillValue(value) }} defaultButtonText={selectDropDownText("skill")} defaultValueByIndex={(selectDropDownValue("skill"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
               </View>
 
               {/* Total experience */}

@@ -4,6 +4,7 @@ import COLORS from '../../../../constants/theme'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
+import { FONTS } from '../../../../constants/font_size'
 
 const Approved = (props) => {
     const { navigation, flag, notificationCat } = props;
@@ -16,7 +17,7 @@ const Approved = (props) => {
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                console.log("approvals",returnedData);
+                console.log("approvals", returnedData);
                 setApprovedData(returnedData);
             });
     };
@@ -64,12 +65,13 @@ const Approved = (props) => {
             </>
         )
     }
+    
 
     return (
         <View>
-            {flag === "A" ? <Text>It is inside Attendance</Text> : null}
-            {flag === "C" ? <Text>It is inside Claim</Text> : null}
-            {flag === "E" ? <Text>It is inside EResign</Text> : null}
+            {flag === "A" ? <Text>Attendance</Text> : null}
+            {flag === "C" ? <Text> Claim</Text> : null}
+            {flag === "E" ? <Text> EResign</Text> : null}
             {flag === "H" ? <Hiring /> : null}
         </View>
     )
@@ -96,11 +98,18 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     categoryTag: {
-        color: 'white',
+        color: COLORS.white,
         paddingHorizontal: 10,
         paddingVertical: 1,
         marginRight: -5,
         borderRadius: 10
+    },
+    textStyle: {
+        color: COLORS.black,
+        ...FONTS.h1,
+        margin: 40,
+        textAlign: 'center'
+
     }
 })
 

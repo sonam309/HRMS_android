@@ -4,16 +4,16 @@ export default DrawerData = [
         "header":"DashBoard",
         "id":1
     },
-    {
-        "icon":"calendar-month-outline",
-        "header":"Attendance",
-        "id":2
-    },
-    {
-        "icon":"format-list-checkbox",
-        "header":"Holiday List",
-        "id":3
-    },
+    // {
+    //     "icon":"calendar-month-outline",
+    //     "header":"Attendance",
+    //     "id":2
+    // },
+    // {
+    //     "icon":"format-list-checkbox",
+    //     "header":"Holiday List",
+    //     "id":3
+    // },
     // {
     //     "icon":"cash-multiple",
     //     "header":"PaySlip",

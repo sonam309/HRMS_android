@@ -28,11 +28,12 @@ const EmployeeDrawer = (props) => {
     const CustomDrawer = (props) => {
 
         return (
+            // #FDEBD0
             <DrawerContentScrollView {...props} >
-                <View style={{ backgroundColor: '#FDEBD0' }}>
+                <View style={{ backgroundColor: COLORS.lightestGreen }}>
                     <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity style={{ backgroundColor: '#FDEBD0', color: 'white' }} onPress={() => { navigator('Employee_Login'), dispatch(authActions.logOut()) }}>
-                            <Icons name='logout' size={25} style={{ color: COLORS.darkGray2, padding: 8 }} />
+                        <TouchableOpacity style={{ backgroundColor: COLORS.lightestGreen, color: 'white' }} onPress={() => { navigator('Employee_Login'), dispatch(authActions.logOut()) }}>
+                            <Icons name='logout' size={25} style={{ color:COLORS.red, padding: 8 }} />
                         </TouchableOpacity>
                     </View>
 

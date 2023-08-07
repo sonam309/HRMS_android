@@ -315,13 +315,13 @@ const CreateNewJobOpening = (props) => {
             {/* number of position */}
             <View style={{ margin: 7 }}>
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Number of position <Text style={{ color: COLORS.red }}>* </Text> </Text>
-                <CustomTextInput placeholder='Number of position' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} keyboardType='numeric' value={openPosition} onChangeText={(value) => setOpenPosition(value)} />
+                <CustomTextInput placeholder='Number of position' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} keyboardType='numeric' value={openPosition} onChangeText={(value) => setOpenPosition(value)} maxLength={4} />
             </View>
 
             {/* compensation */}
             <View style={{ margin: 7 }}>
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{ color: COLORS.red }}>* </Text> </Text>
-                <CustomTextInput placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric' />
+                <CustomTextInput maxLength={10} placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric'/>
             </View>
 
             {/* experience */}
@@ -354,7 +354,7 @@ const CreateNewJobOpening = (props) => {
             {/* Postal Code */}
             <View style={{ margin: 7 }}>
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Postal Code <Text style={{ color: COLORS.red }}>* </Text></Text>
-                <CustomTextInput placeholder='Postal Code' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={postalCode} onChangeText={(value) => setPostalCode(value)} keyboardType='numeric' />
+                <CustomTextInput placeholder='Postal Code' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={postalCode} onChangeText={(value) => setPostalCode(value)} keyboardType='numeric'maxLength={6} />
             </View>
 
             {/* job Remarks */}

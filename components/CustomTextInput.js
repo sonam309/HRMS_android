@@ -3,7 +3,7 @@ import { TextInput, StyleSheet } from 'react-native'
 
 const CustomTextInput = (props) => {
     return (
-        <TextInput placeholderTextColor='#a5abb5' style={[styles.inputHolder, styles.elevation,props.style]} placeholder={props.placeholder} value={props.value} onChangeText={props.onChangeText} keyboardType={props.keyboardType?props.keyboardType:'default'}/>
+        <TextInput placeholderTextColor='#a5abb5' style={[styles.inputHolder, styles.elevation,props.style]} placeholder={props.placeholder} value={props.value} onChangeText={props.onChangeText} keyboardType={props.keyboardType?props.keyboardType:'default'} maxLength={props.maxLength}/>
     )
 }
 

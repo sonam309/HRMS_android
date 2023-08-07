@@ -70,7 +70,7 @@ const Candidate_profile = () => {
   const [filledDetails, setFilledDetails] = useState();
   const [employHistoryView, setEmployeHistoryView] = useState(false);
   const [filledCandidateInfo, setFilledCandidateInfo] = useState();
-  
+
 
   // For fetching details of Address dropdown -> Personal
   const fetchAddressData = async () => {
@@ -85,7 +85,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    // console.warn(res);
+    // console.log(res);
     setFilledDetails(res);
   }
 
@@ -102,7 +102,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("family data", res);
+    console.log("family data", res);
     setMembers(res);
   }
 
@@ -119,7 +119,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("employment data", res);
+    console.log("employment data", res);
     setEmployement(res);
   }
 
@@ -136,7 +136,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("employment data", res);
+    console.log("employment data", res);
     setSkills(res);
   }
 
@@ -152,7 +152,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("medical data", res);
+    console.log("medical data", res);
     setMedicalPolicy(res);
   }
 
@@ -168,7 +168,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("language data", res);
+    // console.log("language data", res);
     setLanguages(res);
   }
 
@@ -184,7 +184,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.warn("qualfication Data", res);
+    // console.log("qualfication Data", res);
     setQualification(res);
   }
 
@@ -270,20 +270,20 @@ const Candidate_profile = () => {
           {/* Content of About Me dropdown -> personal, Contact and Bank details */}
           {personalView && (
             <BottomUpModal isVisible={personalView} onClose={() => { setPersonalView(false); }} >
-              <PersonalBottomView  onPress={() => setPersonalView(false)} />
+              <PersonalBottomView onPress={() => setPersonalView(false)} />
             </BottomUpModal>
           )}
 
           {contactView && (
             <BottomUpModal isVisible={contactView} onClose={() => { setContactView(false); }} >
-              <ContactBottomView  onPress={() => setContactView(false)} />
+              <ContactBottomView onPress={() => setContactView(false)} />
             </BottomUpModal>
           )}
 
 
           {bankView && (
             <BottomUpModal isVisible={bankView} onClose={() => { setBankView(false); }}>
-              <BankBottomView  onPress={() => setBankView(false)} />
+              <BankBottomView onPress={() => setBankView(false)} />
             </BottomUpModal>
           )}
 
@@ -316,7 +316,7 @@ const Candidate_profile = () => {
           {/* Content of Address dropdown -> Permanent, personal and emergency address */}
           {personalAddressView && (
             <BottomUpModal isVisible={personalAddressView} onClose={() => { setPersonalAddressView(false); }} >
-              <PersonalAddressBottomView  onPress={() => setPersonalAddressView(false)} />
+              <PersonalAddressBottomView onPress={() => setPersonalAddressView(false)} />
             </BottomUpModal>
           )}
 
@@ -358,7 +358,7 @@ const Candidate_profile = () => {
           {/* Content of Family dropdown -> Family, Medical and nomination */}
           {familyDetailsView && (
             <BottomUpModal isVisible={familyDetailsView} onClose={() => { setFamilyDetailsView(false); }} >
-              <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} onPress={() => setFamilyDetailsView(false)} />
+              <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} onPress={() => setFamilyDetailsView(false)} fetchFamilyData={fetchFamilyData}  />
             </BottomUpModal>
           )}
           {nominationView && (
@@ -368,7 +368,7 @@ const Candidate_profile = () => {
           )}
           {medicalView && (
             <BottomUpModal isVisible={medicalView} onClose={() => { setMedicalView(false); }}>
-              <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} onPress={() => setMedicalView(false)} />
+              <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} onPress={() => setMedicalView(false)} fetchMedicalData={fetchMedicalData}/>
             </BottomUpModal>
           )}
 
@@ -411,12 +411,12 @@ const Candidate_profile = () => {
           {
             qualificationsView && (
               <BottomUpModal isVisible={qualificationsView} onClose={() => { setQualificationsView(false); }} >
-                {<QualificationBottomView onPress={() => setQualificationsView(false)} qualification={qualification} />}
+                {<QualificationBottomView onPress={() => setQualificationsView(false)} qualification={qualification} fetchQualificationData={fetchQualificationData} />}
               </BottomUpModal>
             )}
           {skillsView && (
             <BottomUpModal isVisible={skillsView} onClose={() => { setSkillsView(false); }} >
-              {<SkillsBottomView onPress={() => setSkillsView(false)} skills={skills} />}
+              {<SkillsBottomView onPress={() => setSkillsView(false)} skills={skills} fetchSkillsData={fetchSkillsData} />}
             </BottomUpModal>
           )}
           {/* {
@@ -429,7 +429,7 @@ const Candidate_profile = () => {
           {
             languagesView && (
               <BottomUpModal isVisible={languagesView} onClose={() => { setLanguagesView(false); }} visibleHeight={450}>
-                {<LanguageBottomView onPress={() => setLanguagesView(false)} languages={languages} />}
+                {<LanguageBottomView onPress={() => setLanguagesView(false)} languages={languages} fetchLanguageData={fetchLanguageData}  />}
               </BottomUpModal>
             )
           }
@@ -517,7 +517,7 @@ const Candidate_profile = () => {
           {
             employHistoryView && (
               <BottomUpModal isVisible={employHistoryView} onClose={() => { setEmployeHistoryView(false); }} >
-                {<Emp_HistoryBottomView onPress={() => setEmployeHistoryView(false)} employment={employment} setEmployement={setEmployement} />}
+                {<Emp_HistoryBottomView fetchEmploymentData={fetchEmploymentData} onPress={() => setEmployeHistoryView(false)} employment={employment} setEmployement={setEmployement} />}
               </BottomUpModal>
             )
           }

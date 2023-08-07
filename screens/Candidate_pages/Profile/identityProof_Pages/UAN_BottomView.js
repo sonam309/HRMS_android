@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect, isValidElement } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -9,9 +9,13 @@ import axios from 'axios';
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux'
 
 
 const UAN_BottomView = (props) => {
+
+  const userId = useSelector(state => state.candidateAuth.candidateId)
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   // const [EarlierEps, setEarlierEps] = useState([{ lable: 'Yes', value: 'Yes' },
   // { lable: 'No', value: 'No' }]);
@@ -70,17 +74,19 @@ const UAN_BottomView = (props) => {
   };
 
   const getData = () => {
+    setLoaderVisible(true)
     axios
       .post(`${API}/api/hrms/saveCandidateUanInfo`, {
-        candidateId: 333,
-        userId: 333,
+        candidateId: userId,
+        userId: userId,
         operFlag: 'V',
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("getData", returnedData);
         const UANDetails = returnedData[0];
         const msg = returnedData[0].MSG
+        setLoaderVisible(false)
+        console.log("getData", UANDetails);
 
         // Toast.show({
         //   type: 'success',
@@ -99,10 +105,11 @@ const UAN_BottomView = (props) => {
         setCertificatesNum(UANDetails?.SCHEME_CERTIFICATE_NO);
 
         setEdit(returnedData[0]);
-        (UANDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("U"))
+        (Object.keys(UANDetails).length > 2 ? setOperFlag("E") : setOperFlag("U"))
         console.log("editdata", edit);
       })
       .catch(err => {
+        setLoaderVisible(false)
         console.log(err);
       });
   };
@@ -110,10 +117,12 @@ const UAN_BottomView = (props) => {
 
 
   const saveUANDetails = () => {
+
     if (isFormValidated()) {
+      setLoaderVisible(true)
       const body = {
         txnId: '',
-        candidateId: 333,
+        candidateId: userId,
         uanNo: uanNumber,
         uanName: uanName,
         uEPS1995: selectedEarlierEps,
@@ -124,7 +133,7 @@ const UAN_BottomView = (props) => {
         uPreviousAcc: priviousAccNumber,
         uPreviousUan: periviousUan,
         uSchmeCertificateNo: certificateNum,
-        userId: 333,
+        userId: userId,
         operFlag: operFlag,
 
       }
@@ -136,15 +145,16 @@ const UAN_BottomView = (props) => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
           const msg = returnedData[0].MSG
-
+          setLoaderVisible(false)
           Toast.show({
             type: 'success',
             text1: msg
           })
-          { props.onPress }
+          props.onPress()
 
         })
         .catch(err => {
+          setLoaderVisible(false)
           console.log(err);
         });
     }
@@ -171,95 +181,107 @@ const UAN_BottomView = (props) => {
           </TouchableOpacity>
         </View>
       </View>
+      {loaderVisible ? <View style={{
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "20%"
+      }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text style={{
+          ...FONTS.h4,
+          color: COLORS.orange1
+        }} >Loading you data..</Text>
+      </View> :
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View>
+            {/* Uan number */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad"maxLength={15} />
+            </View>
 
-          {/* Uan number */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'
-              onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" />
+            {/* Uan name */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setUanName} value={uanName} />
+            </View>
+
+            {/* Earlier a member of EPS 1995 */}
+            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <TextDropdown
+                                caption={'Caste'}
+                                data={caste}
+                                setData={setSelectedCaste}
+                                setIdvalue={setSelectedCasteValue}
+                                defaultButtonText={selectedCaste}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            /> */}
+             
+             
+             
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
+              <SelectDropdown defaultValue={selectedEarlierEps} data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedEarlierEps(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+            </View>
+
+            {/* International Worker*/}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>International Worker</Text>
+              <SelectDropdown defaultValue={selectdInternationalWork} data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedInternationalWork(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+            </View>
+
+            {/* member of EPS 1952 */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of Eps 1952</Text>
+              <SelectDropdown defaultValue={selectedMemberEps1952} data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1952(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+            </View>
+            {/* member of EPS 1995 */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of EPS 1995</Text>
+              <SelectDropdown defaultValue={selecedMemberEps1995} data={MemberEps1995} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1995(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+            </View>
+
+            {/* PPO no if Issued */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>PPO No if Issued</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setPpoNoIfIssued} value={ppoNOifIssues} keyboardType="number-pad"maxLength={15} />
+            </View>
+
+            {/* Previous Account number */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Account number</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
+            </View>
+            {/* Previous UAN */}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous UAN</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setPriviousUan} value={periviousUan} keyboardType="number-pad" maxLength={15} />
+            </View>
+
+            {/* Scheme Certificate No.*/}
+            <View style={{ height: 75, marginTop: 10 }}>
+              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Scheme Certificate No.</Text>
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
+            </View>
+            {/* save button */}
+            <TouchableOpacity  onPress={() => saveUANDetails()} >
+
+              <LinearGradient
+                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 2, y: 0 }}
+                style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                  {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
+              </LinearGradient>
+
+            </TouchableOpacity>
+
           </View>
 
-          {/* Uan name */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-              onChangeText={setUanName} value={uanName} />
-          </View>
+          <View style={{ marginBottom: 270 }} />
 
-          {/* Earlier a member of EPS 1995 */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
-            <SelectDropdown defaultValue={selectedEarlierEps} data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedEarlierEps(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-          </View>
-
-          {/* International Worker*/}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>International Worker</Text>
-            <SelectDropdown defaultValue={selectdInternationalWork} data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedInternationalWork(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-          </View>
-
-          {/* member of EPS 1952 */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of Eps 1952</Text>
-            <SelectDropdown defaultValue={selectedMemberEps1952} data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1952(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-          </View>
-          {/* member of EPS 1995 */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of EPS 1995</Text>
-            <SelectDropdown defaultValue={selecedMemberEps1995} data={MemberEps1995} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1995(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-          </View>
-
-          {/* PPO no if Issued */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>PPO No if Issued</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-              onChangeText={setPpoNoIfIssued} value={ppoNOifIssues} keyboardType="number-pad" />
-          </View>
-
-          {/* Previous Account number */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Account number</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-              onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
-          </View>
-          {/* Previous UAN */}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous UAN</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-              onChangeText={setPriviousUan} value={periviousUan} keyboardType="number-pad" />
-          </View>
-
-          {/* Scheme Certificate No.*/}
-          <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Scheme Certificate No.</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-              onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
-          </View>
-          {/* save button */}
-          <TouchableOpacity onPress={() => Toast.show({
-            type: 'success',
-            text1: "Data Save Successfully"
-          })}>
-
-            <LinearGradient
-              colors={[COLORS.orange1, COLORS.disableOrange1]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 2, y: 0 }}
-              style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
-              <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveUANDetails()}>
-                Save</Text>
-            </LinearGradient>
-
-          </TouchableOpacity>
-
-        </View>
-
-        <View style={{ marginBottom: 270 }} />
-
-      </ScrollView>
+        </ScrollView>}
     </View>
   )
 }

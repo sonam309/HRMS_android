@@ -9,10 +9,14 @@ import Loader from '../../../../components/Loader'
 import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
+import TextDropdown from '../../../../components/TextDropdown'
 
 
 const PersonalAddressBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
+
+    const [filledDetails, setFilledDetails] = useState();
+
 
     // for getting state and country data
     useEffect(() => {
@@ -91,7 +95,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
     const [permanentCountryEdit, setPermanentCountryEdit] = useState(false)
     const [permanentStateEdit, setPermanentStateEdit] = useState(false)
 
-    const [filledDetails, setFilledDetails] = useState();
 
     // same present and permanent
     const [sameAddress, setSameAddress] = useState(false);
@@ -100,35 +103,28 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
 
     const DisplayPreviousDetails = () => {
-
+        console.log("filledDetails", filledDetails);
         filledDetails && (
             // present address
             // (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
             setPresentSelectedState(filledDetails.STATE_NAME),
             setPresentSelectedStateValue(filledDetails.STATE_ID),
-
             setPresentSelectedCountry(filledDetails.COUNTRY_NAME),
             setPresentSelectedCountryValue(filledDetails.COUNTRY_ID),
-
             setPresentAddress(filledDetails?.PRESENT_ADDRESS),
             setPresentPostOffice(filledDetails?.POST_OFFICE),
-
             setPresentCity(filledDetails?.CITY),
             setPresentPinCode(filledDetails?.PIN_CODE),
             setPresentDistrict(filledDetails?.DISTRICT),
             setPresentSubDivision(filledDetails?.SUB_DIVISION),
             setPresentThana(filledDetails?.THANA),
-
             // Permanent address
             setPermanentSelectedState(filledDetails.PERMANENT_STATE),
             setPermanentSelectedStateValue(filledDetails.PERMANENT_STATE_ID),
-
             setPermanentSelectedCountry(filledDetails.PERMANENT_COUNTRY),
             setPermanentSelectedCountryValue(filledDetails.PERMANENT_COUNTRY_ID),
-
             setPermanentAddress(filledDetails?.PERMANENT_ADDRESS),
             setPermanentPostOffice(filledDetails?.PERMANENT_POST_OFFICE),
-
             setPermanentCity(filledDetails?.PERMANENT_CITY),
             setPermanentPinCode(filledDetails?.PERMANENT_PIN_CODE),
             setPermanentDistrict(filledDetails?.PERMANENT_DISTRICT),
@@ -154,7 +150,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
             })
             res = await res.json()
             res = await res?.Result[0]
-            console.log(res);
+            console.log("res", res);
             setLoaderVisible(false);
             setFilledDetails(res);
         } catch (error) {
@@ -174,7 +170,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
         setPermanentSelectedCountry(presentSelectedCountry);
         setPermanentSelectedStateValue(presentSelectedStateValue);
         setPermanentSelectedCountryValue(presentSelectedCountryValue);
-
         setPermanentAddressHeight(presentAddressHeight);
         setPermanentPostOfficeHeight(presentPostOfficeHeight);
         setPermanentAddress(presentAddress);
@@ -184,7 +179,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
         setPermanentSubDivision(presentSubDivision);
         setPermanentThana(presentThana);
         setPermanentPostOffice(presentPostOffice);
-
         setPermanentAddressEdit(false)
         setPermanentCityEdit(false)
         setPermanentPinCodeEdit(false)
@@ -194,7 +188,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
         setPermanentThanaEdit(false)
         setPermanentCountryEdit(true)
         setPermanentStateEdit(true)
-
         selectDropDownValue("permanentstate")
         selectDropDownValue("permanentcountry")
         selectDropDownText("permanentstate")
@@ -217,7 +210,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
         setPermanentSubDivision('');
         setPermanentThana('');
         setPermanentPostOffice('');
-
         setPermanentAddressEdit(true)
         setPermanentCityEdit(true)
         setPermanentPinCodeEdit(true)
@@ -225,7 +217,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
         setPermanentPostOfficeEdit(true)
         setPermanentSubDivisionEdit(true)
         setPermanentThanaEdit(true)
-
         setPermanentCountryEdit(false)
         setPermanentStateEdit(false)
 
@@ -393,11 +384,30 @@ const PersonalAddressBottomView = ({ onPress }) => {
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentCity} onChangeText={(val) => setPresentCity(val)} />
 
-                    <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedState(value), checkPresentState(value) }} defaultButtonText={selectDropDownText("presentstates")} defaultValueByIndex={(selectDropDownValue("presentstates"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+                    <TextDropdown
+                        caption={'State'}
+                        data={states}
+                        setData={setPresentSelectedState}
+                        setIdvalue={setPresentSelectedStateValue}
+                        defaultButtonText={presentSelectedState}
+                        captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                    />
 
-                    <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedCountry(value), checkPresentCountry(value) }} defaultButtonText={selectDropDownText("presentcountry")} defaultValueByIndex={(selectDropDownValue("presentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} />
+
+                    {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                    <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedState(value), checkPresentState(value) }} defaultButtonText={selectDropDownText("presentstates")} defaultValueByIndex={(selectDropDownValue("presentstates"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
+
+                    <TextDropdown
+                        caption={'Country'}
+                        data={country}
+                        setData={setPresentSelectedCountry}
+                        setIdvalue={setPresentSelectedCountryValue}
+                        defaultButtonText={presentSelectedCountry}
+                        captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                    />
+
+                    {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                    <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPresentSelectedCountry(value), checkPresentCountry(value) }} defaultButtonText={selectDropDownText("presentcountry")} defaultValueByIndex={(selectDropDownValue("presentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
 
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={presentPostOffice} onChangeText={(val) => setPresentPostOffice(val)} multiline={true} onContentSizeChange={event => { setPresentPostOfficeHeight(event.nativeEvent.contentSize.height) }} />
@@ -430,11 +440,29 @@ const PersonalAddressBottomView = ({ onPress }) => {
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>City</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentCity} onChangeText={(val) => setPermanentCity(val)} editable={permanentCityEdit} />
 
-                    <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State</Text>
-                    <SelectDropdown search data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedState(value), checkPermanentState(value) }} defaultButtonText={selectDropDownText("permanentstate")} defaultValueByIndex={(selectDropDownValue("permanentstate"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentStateEdit} value={permanentSelectedState} index={permanentSelectedStateValue} />
+                    <TextDropdown
+                        caption={'State'}
+                        data={states}
+                        setData={setPermanentSelectedState}
+                        setIdvalue={setPermanentSelectedStateValue}
+                        defaultButtonText={permanentSelectedState}
+                        captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                    />
 
-                    <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country</Text>
-                    <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedCountry(value), checkPermanentCountry(value) }} defaultButtonText={selectDropDownText("permanentcountry")} defaultValueByIndex={(selectDropDownValue("permanentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentCountryEdit} value={permanentSelectedCountry} index={permanentSelectedCountryValue} />
+                    {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>State</Text>
+                    <SelectDropdown search data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedState(value), checkPermanentState(value) }} defaultButtonText={selectDropDownText("permanentstate")} defaultValueByIndex={(selectDropDownValue("permanentstate"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentStateEdit} value={permanentSelectedState} index={permanentSelectedStateValue} /> */}
+
+                    <TextDropdown
+                        caption={'Country'}
+                        data={country}
+                        setData={setPermanentSelectedCountry}
+                        setIdvalue={setPermanentSelectedCountryValue}
+                        defaultButtonText={permanentSelectedCountry}
+                        captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                    />
+
+                    {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Country</Text>
+                    <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setPermanentSelectedCountry(value), checkPermanentCountry(value) }} defaultButtonText={selectDropDownText("permanentcountry")} defaultValueByIndex={(selectDropDownValue("permanentcountry"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} disabled={permanentCountryEdit} value={permanentSelectedCountry} index={permanentSelectedCountryValue} /> */}
 
 
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Post Office</Text>
@@ -451,7 +479,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Address Details</Text>
+                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails!==''?"Update Address Details":"Save Address Details"}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                     <View style={{ paddingBottom: 270 }}></View>

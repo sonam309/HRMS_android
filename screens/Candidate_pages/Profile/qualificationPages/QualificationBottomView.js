@@ -8,8 +8,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
+import TextDropdown from '../../../../components/TextDropdown';
 
-const QualificationBottomView = ({ qualification, onPress }) => {
+const QualificationBottomView = ({ qualification, onPress, fetchQualificationData }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
 
     const [showForm, setShowForm] = useState(false)
@@ -92,7 +93,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
-
+            fetchQualificationData();
             Toast.show({
                 type: 'success',
                 text1: res
@@ -166,7 +167,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-
+            onPress()
             Toast.show({
                 type: 'success',
                 text1: res
@@ -267,14 +268,14 @@ const QualificationBottomView = ({ qualification, onPress }) => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 700, color: 'black' }}>Language Details: </Text>
-                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
                         <Text>ADD</Text>
                         <Icons name='plus' size={16} />
                     </TouchableOpacity>
                 </View>
 
                 {
-                    qualification.map((item) => <DisplayQualification item={item} key={item.LANGUAGE_NAME} />)
+                    qualification.map((item, index) => <DisplayQualification item={item} key={index} />)
                 }
 
             </View>
@@ -282,14 +283,27 @@ const QualificationBottomView = ({ qualification, onPress }) => {
     }
 
     // for displaying single language details
-    const DisplayQualification = ({ item }) => {
+    const DisplayQualification = ({ item, key }) => {
         return (
-            <View style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
+            <View key={key} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.QUALIFICATIONS_NAME} </Text>
-                    <Icons position='absolute' onPress={() => DeleteQualification({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
-                    <Icons position='absolute' onPress={() => updateQualification(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} />
+                    {/* <Icons position='absolute' onPress={() => DeleteQualification({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
+                    <Icons position='absolute' onPress={() => updateQualification(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
+
+                    <TouchableOpacity style={{
+                        position: 'absolute',
+                        right: 0,
+                        padding: 5
+                    }} onPress={() => DeleteQualification({ txnID: item.TXN_ID })}>
+                        <Icons name='trash-can-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        position: 'absolute', right: 30, padding: 5,
+                    }} onPress={() => updateQualification(item)}>
+                        <Icons name='square-edit-outline' color={COLORS.green} size={20} />
+                    </TouchableOpacity>
                 </View>
                 <Text style={{ fontWeight: 600 }}>Stream:- <Text style={{ fontWeight: 400 }}>{item.STREAM}</Text></Text>
                 <Text style={{ fontWeight: 600 }}>University:- <Text style={{ fontWeight: 400 }}>{item.UNIVERSITY}</Text></Text>
@@ -315,15 +329,36 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                 {/* Qualifications dropdown */}
                 {!showForm && qualification[0]?.QUALIFICATIONS_NAME && qualification.length > 0 ? <QualificationDetails /> :
                     <View>
-                        <View style={{ height: 75, }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
-                            <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={selectedDropDownText("qualification")} defaultValueByIndex={selectDropDownValue("qualification")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        <View style={{}}>
+
+
+                            <TextDropdown
+                                caption={'Qualifications'}
+                                data={Qualifications}
+                                setData={setSelectQualifications}
+                                setIdvalue={setSelectedQualificationsValue}
+                                defaultButtonText={selectQualifications}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
+                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
+                            <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={selectedDropDownText("qualification")} defaultValueByIndex={selectDropDownValue("qualification")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                         </View>
 
                         {/* Stream dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
-                            <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={selectedDropDownText("Stream")} defaultValueByIndex={selectDropDownValue("Stream")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        <View style={{ marginTop: 10 }}>
+
+                            <TextDropdown
+                                caption={'Stream'}
+                                data={stream}
+                                setData={setSelectedStream}
+                                setIdvalue={setSelectedStreamValue}
+                                defaultButtonText={selectedStream}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
+                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
+                            <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={selectedDropDownText("Stream")} defaultValueByIndex={selectDropDownValue("Stream")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                         </View>
 
                         {/* Specialization */}
@@ -335,7 +370,7 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                         {/* Grades */}
                         <View style={{ height: 75, marginTop: 10 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Percentage(CGPA)</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} />
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} keyboardType='numeric' maxLength={5} />
                         </View>
 
                         {/* Institute dropdown */}
@@ -353,19 +388,28 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                         {/* From year */}
                         <View style={{ height: 75, marginTop: 10 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} />
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} keyboardType='numeric' maxLength={4} />
                         </View>
 
                         {/* Passing year */}
                         <View style={{ height: 75, marginTop: 10 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} />
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} keyboardType='numeric' maxLength={4} />
                         </View>
 
                         {/* Qualifications mode dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
-                            <SelectDropdown data={qualificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={selectedDropDownText("QualificationMode")} defaultValueByIndex={selectDropDownValue("QualificationMode")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        <View style={{ marginTop: 10 }}>
+                            <TextDropdown
+                                caption={'Qualifications Mode'}
+                                data={qualificationMode}
+                                setData={setSelectedQualiMode}
+                                setIdvalue={setSelectedQualiModeValue}
+                                defaultButtonText={selectedQualiMode}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
+                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
+                            <SelectDropdown data={qualificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={selectedDropDownText("QualificationMode")} defaultValueByIndex={selectDropDownValue("QualificationMode")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                         </View>
 
                         {/* City dropdown */}
@@ -375,15 +419,35 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                         </View>
 
                         {/* State dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
-                            <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={selectedDropDownText("state")} defaultValueByIndex={selectDropDownValue("state")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        <View style={{ marginTop: 10 }}>
+
+                            <TextDropdown
+                                caption={'State'}
+                                data={states}
+                                setData={setSelectedState}
+                                setIdvalue={setSelectedStateValue}
+                                defaultButtonText={selectedState}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
+                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
+                            <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={selectedDropDownText("state")} defaultValueByIndex={selectDropDownValue("state")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                         </View>
 
                         {/* Country dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
-                            <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={selectedDropDownText("country")} defaultValueByIndex={selectDropDownValue("country")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+                        <View style={{ marginTop: 10 }}>
+
+                            <TextDropdown
+                                caption={'Country'}
+                                data={country}
+                                setData={setselectCountry}
+                                setIdvalue={setSelecetCountryValue}
+                                defaultButtonText={selectCountry}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                            />
+
+                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
+                            <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={selectedDropDownText("country")} defaultValueByIndex={selectDropDownValue("country")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
                         </View>
 
 
@@ -398,12 +462,9 @@ const QualificationBottomView = ({ qualification, onPress }) => {
                         </View>
 
                         {/* save button */}
-                        <TouchableOpacity onPress={() => Toast.show({
-                            type: 'success',
-                            text1: "Data Save Successfully"
-                        })}>
+                        <TouchableOpacity onPress={() => saveQualificationDetails()}>
                             <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 10, marginTop: 10 }}>
-                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveQualificationDetails()}> Save </Text>
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
