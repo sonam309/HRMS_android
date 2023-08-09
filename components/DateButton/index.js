@@ -4,7 +4,7 @@ import DatePicker from 'react-native-date-picker';
 import COLORS from '../../constants/theme';
 import { SIZES,FONTS } from '../../constants/font_size';
 
-const DateButton = ({caption, required, date, setDate}) => {
+const DateButton = ({caption, required, date, setDate,captionStyle}) => {
   const [show, setShow] = useState(false);
 
   const renderDatePicker = () => {
@@ -41,6 +41,7 @@ const DateButton = ({caption, required, date, setDate}) => {
             marginVertical: SIZES.base / 2,
             ...FONTS.h3,
             fontWeight: '500',
+            ...captionStyle,
           }}>
           {caption} {required && <Text style={{color: COLORS.red}}>*</Text>}
         </Text>

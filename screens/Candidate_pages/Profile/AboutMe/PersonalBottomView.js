@@ -253,29 +253,29 @@ const PersonalBottomView = ({ onPress }) => {
                     <Loader loaderVisible={loaderVisible} />
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Salutation</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Salutation</Text>
                             <TextInput style={styles.inputHolder} value={salutation} onChangeText={(val) => setSalutation(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>First Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>First Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <TextInput style={styles.inputHolder} value={firstName} onChangeText={(val) => setFirstName(val)} editable={false} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Middle Name</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Middle Name</Text>
                             <TextInput style={styles.inputHolder} value={middleName} onChangeText={(val) => setMiddleName(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Last Name</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Last Name</Text>
                             <TextInput style={styles.inputHolder} value={lastName} onChangeText={(val) => setLastName(val)} editable={false} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false} />
                         </View>
                         <View style={{ width: '50%', paddingHorizontal: 3 }}>
@@ -286,13 +286,13 @@ const PersonalBottomView = ({ onPress }) => {
                                 setData={setSelectedCaste}
                                 setIdvalue={setSelectedCasteValue}
                                 defaultButtonText={selectedCaste}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h5 }}
                             />
 
                         </View>
                     </View>
                     <View style={{ margin: 3 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
+                        <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Date of Birth <Text style={{ color: 'red', fontWeight: 500 }}>*</Text> </Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3 }}>
@@ -305,18 +305,17 @@ const PersonalBottomView = ({ onPress }) => {
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Country of Birth</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Country of Birth</Text>
                             <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Place of Birth</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Place of Birth</Text>
                             <TextInput style={styles.inputHolder} value={placeBirth} onChangeText={(val) => setPlaceBirth(val)} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Identification Marks</Text>
                             <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
@@ -327,7 +326,7 @@ const PersonalBottomView = ({ onPress }) => {
                                 setData={setSelectedGender}
                                 setIdvalue={setSelectedGenderValue}
                                 defaultButtonText={selectedGender}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h5 }}
                             />
                         </View>
                     </View>
@@ -341,7 +340,7 @@ const PersonalBottomView = ({ onPress }) => {
                                 setData={setSelectedMarital}
                                 setIdvalue={setSelectedMaritalValue}
                                 defaultButtonText={selectedMarital}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h5 }}
                             />
 
                         </View>
@@ -365,72 +364,71 @@ const PersonalBottomView = ({ onPress }) => {
                                 setData={setSelectedBloodGroup}
                                 setIdvalue={setSelectedBloodGroupValue}
                                 defaultButtonText={selectedBloodGroup}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                captionStyle={{ color: COLORS.green, ...FONTS.h5 }}
                             />
                         </View>
                     </View>
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
+                    <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: pLocationHeight }]} multiline={true} onContentSizeChange={event => { setPLocationHeight(event.nativeEvent.contentSize.height) }} value={preferredLocation} onChangeText={(val) => setPreferredLocation(val)} />
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Current Location</Text>
+                    <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Current Location</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: cLocationHeight }]} multiline={true} onContentSizeChange={event => { setCLocationHeight(event.nativeEvent.contentSize.height) }} value={currentLocation} onChangeText={(val) => setCurrentLocation(val)} />
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Resume Source</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={resumeSource} onChangeText={(val) => setResumeSource(val)} />
+                    {/* / */}
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
 
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Name</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Name 1</Text>
                             <TextInput style={styles.inputHolder} value={refName} onChangeText={(val) => setRefName(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Occupation</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Occupation 1</Text>
                             <TextInput style={styles.inputHolder} value={refOccupation} onChangeText={(val) => setRefOccupation(val)} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Contact No.</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Contact No. 1</Text>
                             <TextInput style={styles.inputHolder} value={refContact} onChangeText={(val) => setRefContact(val)} keyboardType='numeric' maxLength={10} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Ref Email ID 1</Text>
                             <TextInput style={styles.inputHolder} value={refEmail} onChangeText={(val) => setRefEmail(val)}
                                 keyboardType='email-address' maxLength={50} />
                         </View>
 
                     </View>
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address</Text>
+                    <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 1</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight(event.nativeEvent.contentSize.height) }} value={refAddress} onChangeText={(val) => setRefAddress(val)} />
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Name 1</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Name 2</Text>
                             <TextInput style={styles.inputHolder} value={refName1} onChangeText={(val) => setRefName1(val)} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 2 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Occupation 1</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Occupation 2</Text>
                             <TextInput style={styles.inputHolder} value={refOccupation1} onChangeText={(val) => setRefOccupation1(val)} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Ref Email ID 1</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Ref Email ID 2</Text>
                             <TextInput style={styles.inputHolder} value={refEmail1} onChangeText={(val) => setRefEmail1(val)}
                                 keyboardType='email-address' maxLength={50} />
                         </View>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.h4 }}>Reference Contact No.1</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Reference Contact No.2</Text>
                             <TextInput style={styles.inputHolder} value={refContact1} onChangeText={(val) => setRefContact1(val)} keyboardType='numeric' maxLength={10} />
                         </View>
                     </View>
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 1</Text>
+                    <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 2</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight1 }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight1(event.nativeEvent.contentSize.height) }} value={refAddress1} onChangeText={(val) => setRefAddress1(val)} />
 
                     <TouchableOpacity onPress={() => savePersonalDetails()} >

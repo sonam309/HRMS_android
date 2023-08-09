@@ -158,7 +158,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress,fetchMedicalData }) => {
                 </View>
 
                 {
-                    medicalPolicy.map((item) => <DisplayPolicy item={item} key={item.PolicyNumber} />)
+                    medicalPolicy.map((item,index) => <DisplayPolicy item={item} key={index} />)
                 }
 
             </View>

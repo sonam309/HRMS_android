@@ -437,14 +437,14 @@ const BankBottomView = ({ onPress }) => {
               <Text style={styles.inputHeader}>Account holderName</Text>
               <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
 
-              <TextDropdown
+              {/* <TextDropdown
                 caption={'Operation'}
                 data={operation}
                 setData={setSelectedOperation}
                 setIdvalue={setSelectedOperationValue}
                 defaultButtonText={selectedOperation}
                 captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-              />
+              /> */}
 
               <Text style={styles.inputHeader}>IFSC Code</Text>
               <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={10} />

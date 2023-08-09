@@ -45,7 +45,7 @@ import {
             <Text
               style={{
                 color: COLORS.white,
-                ...FONTS.h3,
+                ...FONTS.h4,
                 ...labelStyle,
               }}>
               {label}

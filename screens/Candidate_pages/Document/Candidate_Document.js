@@ -9,7 +9,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import { API } from '../../../utility/services';
-import Toast  from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Candidate_Document = (props) => {
     // Candidate ID & Status
@@ -35,9 +36,9 @@ const Candidate_Document = (props) => {
 
     // Document information -> Pending, Uploading, Rejected, Verified
     const [pendingDocumentCount, setPendingDocumentCount] = useState();
-    const[documentCount,setDocumentCount]=useState();
+    const [documentCount, setDocumentCount] = useState();
     const [verifiedDocCount, setVerifiedDocCount] = useState();
-    const[rejectDocCount,setRejectDocCount]=useState();
+    const [rejectDocCount, setRejectDocCount] = useState();
 
 
     useEffect(() => {
@@ -47,10 +48,10 @@ const Candidate_Document = (props) => {
 
     // getting doc info
     const getDocData = async () => {
-        let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId ,src:"M"}
+        let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
-        console.log("docuploaddata",formData, JSON.stringify(PersonalData))
+        console.log("docuploaddata", formData, JSON.stringify(PersonalData))
         setLoaderVisible(true)
         let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
@@ -60,7 +61,7 @@ const Candidate_Document = (props) => {
         res = await res.json()
         console.log("document data", res)
         setLoaderVisible(false)
-        let pendingCount=(res?.Table1[0]?.Pending-res?.Table1[0]?.Uploaded);
+        let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
         setPendingDocumentCount(pendingCount);
         setDocumentCount(res?.Table1[0]?.Pending);
         setVerifiedDocCount(res?.Table1[0]?.Verified);
@@ -203,10 +204,10 @@ const Candidate_Document = (props) => {
 
         } catch (error) {
             Toast.show({
-                type:'error',
-                text1:'Error Selecting File. Please try again.'
+                type: 'error',
+                text1: 'Error Selecting File. Please try again.'
             })
-            
+
         }
     }
 
@@ -379,7 +380,7 @@ const Candidate_Document = (props) => {
                     candidateName: candidateName + "-" + candidateId,
                     jobTitle: candidateRole,
                     approvelMail: hiringLeadMail,
-                    src:"M",
+                    src: "M",
 
                 }
 
@@ -405,8 +406,8 @@ const Candidate_Document = (props) => {
                 console.log("SaveImages", res);
                 setLoaderVisible(false)
                 Toast.show({
-                    type:'success',
-                    text1:res.MSG
+                    type: 'success',
+                    text1: res.MSG
                 })
                 props.navigation.goBack();
 
@@ -414,17 +415,17 @@ const Candidate_Document = (props) => {
 
             } else {
                 Toast.show({
-                    type:'error',
-                    text1:'Upload Mandatory Documents'
+                    type: 'error',
+                    text1: 'Upload Mandatory Documents'
                 })
             }
         }
         catch (error) {
             loaderVisible(false);
-         
+
             Toast.show({
-                type:'error',
-                text1:error
+                type: 'error',
+                text1: error
             })
         }
 
@@ -432,7 +433,7 @@ const Candidate_Document = (props) => {
 
     const DeleteDoc = async (TXNID) => {
 
-        let candidateData = { txnId: TXNID, operFlag: "D" ,src:"M"}
+        let candidateData = { txnId: TXNID, operFlag: "D", src: "M" }
         // console.warn(candidateData);
 
         let newFormData = new FormData()
@@ -451,8 +452,8 @@ const Candidate_Document = (props) => {
 
         console.log("deleting doc", res)
         Toast.show({
-            type:'Success',
-            text1:res.MSG
+            type: 'Success',
+            text1: res.MSG
         })
     }
 
@@ -731,9 +732,16 @@ const Candidate_Document = (props) => {
                 }
 
                 {
+
                     // (docCount === "3" || docCount === "25") &&
-                    <TouchableOpacity onPress={() => docCount === "25" ? saveDocs("P") : saveDocs("A")} style={{ height: 40, backgroundColor: COLORS.MidGreen, margin: 12, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: 'white' }}>Submit Documents</Text>
+                    <TouchableOpacity onPress={() => docCount === "25" ? saveDocs("P") : saveDocs("A")} >
+                        <LinearGradient
+                            colors={[COLORS.orange1, COLORS.disableOrange1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 2, y: 0 }}
+                            style={{ borderRadius: 8, padding: 10, marginTop: 20,justifyContent:'center' }} >
+                            <Text style={{ color: 'white',textAlign:'center' ,...FONTS.h4}}>Submit Documents</Text>
+                        </LinearGradient>
                     </TouchableOpacity>}
 
 
