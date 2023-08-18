@@ -20,7 +20,7 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('420');
+    const [userId, setUserId] = useState('481');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -141,26 +141,14 @@ const Login = (props) => {
                 backgroundColor={COLORS.white}
                 barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
-
             {/* Company Logo */}
             <View style={{ flex: 1, alignItems: 'flex-start', }}>
                 <Image source={company_logo} style={{ width: "40%", height: '40%', }} />
             </View>
 
-            <View style={{
-                width: responsiveWidth(100),
-                height: 100,
-                marginTop: -170,
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center"
-            }}>
-                <Image source={loginIcon} style={{
-                    height: '100%',
-                    width: '100%',
-                }} resizeMode='stretch' />
+            <View style={{width: responsiveWidth(100),height: 100,marginTop: -170,flex: 1,alignItems: "center",justifyContent: "center"}}>
+                <Image source={loginIcon} style={{height: '100%',width: '100%',}} resizeMode='stretch' />
             </View>
-
             {/* candidate Login titlte */}
             <View style={{ justifyContent: 'center', flex: 1.5, borderRadius: 20, backgroundColor: COLORS.white, paddingHorizontal: 25 }}>
                 <Text style={styles.header}>Candidate Login</Text>
@@ -203,9 +191,12 @@ const Login = (props) => {
             </View>
 
             {/* Bottom element */}
-            <View style={{ flex: 0.5, marginBottom: 5, }}>
-                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
+            <View style={{backgroundColor:COLORS.white,height:30}}>
+                <Text style={{ textAlign: 'center',color: COLORS.gray,...FONTS.h5,fontWeight: '400',padding:5}}>Version:2.2</Text>
             </View>
+            {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
+                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
+            </View> */}
         </View>
     )
 }
@@ -213,7 +204,7 @@ const Login = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: COLORS.white,
     },
     header: {
         marginTop: 60,
@@ -245,6 +236,7 @@ const styles = StyleSheet.create({
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
+        marginBottom:100,
         textAlign: 'center',
     },
     loginButton: {

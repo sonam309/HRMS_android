@@ -48,7 +48,7 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            console.log("candOfferDetails", resultData?.Result[0]);
+            // console.log("candOfferDetails", resultData?.Result[0].DOC_REQ);
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
 
             if (type === "offer") {
@@ -56,12 +56,17 @@ const CandidateDashboard = (props) => {
             }
 
             if (type === "Document") {
-                resultData?.Result[0]?.DOC_REQ !== "0" && resultData.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
+                resultData?.Result[0]?.DOC_REQ !== 0 && resultData.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
                     setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
             }
             if (type === "profile") {
                 resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate_profile") : setProfileAlert(true)
             }
+            // if(type==="experince"){
+
+            //     resultData?.Result[0]?.PO_EXPERIENCE_TYPE==="NO"?console.log("NO"):console.log("yes");
+
+            // }
 
         }).catch((error) => {
             console.log(error)
@@ -165,20 +170,24 @@ const CandidateDashboard = (props) => {
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
                             <View>
-                                {growingDays && <PieChart
+                                {growingDays ? <PieChart
                                     widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
-                                    {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))}
+                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
+                                </PieChart> : <PieChart
+                                    widthAndHeight={100} series={[0, 1]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
                                 </PieChart>}
+
                                 {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
 
-                                <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
+                                {growingDays ? <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
                                     <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
                                     <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
                                     >Days to</Text>
                                     <Text style={{
                                         ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700", lineHeight: 12
                                     }}>Join</Text>
-                                </View>
+                                </View> : <Text style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 18, padding: 5, left: 30, ...FONTS.h1, color: COLORS.black }}>...</Text>}
                             </View>
                             <View>
                                 <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
@@ -203,7 +212,7 @@ const CandidateDashboard = (props) => {
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter  </Text>
-                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { getCandidateOfferDetails("offer") }}>
+                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
                         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
                             <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
                             <Text style={{ fontWeight: 500, fontSize: 14, color: COLORS.orange, marginRight: 30, textAlignVertical: 'center' }}>View Offer Letter{">"}</Text>

@@ -278,7 +278,7 @@ const PersonalBottomView = ({ onPress }) => {
                             <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false} />
                         </View>
-                        <View style={{ width: '50%', paddingHorizontal: 3 }}>
+                        <View style={{ width: '50%', paddingHorizontal: 3, marginTop:-15,marginLeft:5}}>
 
                             <TextDropdown
                                 caption={'Caste'}
@@ -316,9 +316,10 @@ const PersonalBottomView = ({ onPress }) => {
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                        <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Identification Marks</Text>
                             <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
                         </View>
-                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                        <View style={{ width: '48%', paddingHorizontal: 3 , marginTop:-15}}>
 
                             <TextDropdown
                                 caption={'Gender'}
@@ -438,7 +439,7 @@ const PersonalBottomView = ({ onPress }) => {
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
                             <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                                {filledDetails !== "" ? 'Update Personal Details' : 'Save Personal Details'}</Text>
+                                {firstName !==null? 'Update Personal Details' : 'Save Personal Details'}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                     <View style={{ paddingBottom: 270 }}></View>

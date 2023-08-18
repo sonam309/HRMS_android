@@ -188,6 +188,7 @@ const Offer_Letter = (props) => {
           style={{ flex: 1, width: '100%' }}
           onLoadComplete={() => setLoaderVisible(false)}
            onError={(error) => {
+            console.log(`${API}/OfferLetter/${offerLetter}`, error)
           setError(true)
         }} onPressLink={(link) => Linking.openURL(link)} />
       )

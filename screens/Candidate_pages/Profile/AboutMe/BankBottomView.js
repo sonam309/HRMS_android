@@ -63,7 +63,7 @@ const BankBottomView = ({ onPress }) => {
 
 
   const DisplayPreviousDetails = () => {
-    // console.warn("BankDetails", filledDetails);
+    console.log("BankDetailsfilled", filledDetails);
     filledDetails && (
       // (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
@@ -467,14 +467,14 @@ const BankBottomView = ({ onPress }) => {
                 {Object.keys(selectedDoc).length > 0 ? (selectedDoc.map((doc, index) => <DisplayBankDocs key={index} doc={doc} />)) : <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>No Document Selected</Text>}
               </View>}
 
-              <TouchableOpacity onPress={() => (filledDetails !== "" ? saveBankDetails("G") : saveBankDetails("B"))} >
+              <TouchableOpacity onPress={() => (filledDetails?.ACCOUNT_NO  ? saveBankDetails("G") : saveBankDetails("B"))} >
                 <LinearGradient
                   colors={[COLORS.orange1, COLORS.disableOrange1]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 2, y: 0 }}
                   style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
                   <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                    {filledDetails !== "" ? 'Update Bank Details' : 'Save Bank Details'}
+                    {filledDetails?.ACCOUNT_NO  ? 'Update Bank Details' : 'Save Bank Details'}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>

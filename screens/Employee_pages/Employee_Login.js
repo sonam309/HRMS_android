@@ -19,7 +19,7 @@ import Toast from 'react-native-toast-message';
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('16109');
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -130,7 +130,7 @@ const Employee_Login = (props) => {
             <View style={{
                 width: responsiveWidth(100),
                 height: 100,
-                marginTop: -180,
+                marginTop: -220,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center"
@@ -180,9 +180,12 @@ const Employee_Login = (props) => {
                 </TouchableOpacity>
             </View>
             {/* Bottom element */}
-            <View style={{ flex: 0.5, marginBottom: 5 }}>
-                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
+            <View style={{height:30}}>
+                <Text style={{ textAlign: 'center',color: COLORS.gray,...FONTS.h5,fontWeight: '400',padding:5}}>Version:2.2</Text>
             </View>
+            {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
+                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
+            </View> */}
         </View>
 
     )
@@ -195,7 +198,7 @@ const styles = StyleSheet.create({
 
     },
     header: {
-        marginTop: 100,
+        marginTop: 140,
         color: COLORS.black,
         ...FONTS.h3,
         fontSize: 18,
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
-        marginVertical: 8
+        marginVertical: 5
     },
     textInputBox: {
     },
@@ -223,8 +226,9 @@ const styles = StyleSheet.create({
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
+        marginBottom:150,
         textAlign: 'center',
-        marginVertical: 15
+        marginVertical: 10
 
     },
     punchArea: {

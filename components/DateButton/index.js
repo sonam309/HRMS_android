@@ -39,8 +39,8 @@ const DateButton = ({caption, required, date, setDate,captionStyle}) => {
         <Text
           style={{
             marginVertical: SIZES.base / 2,
-            ...FONTS.h3,
-            fontWeight: '500',
+            ...FONTS.h5,
+            color:COLORS.green,
             ...captionStyle,
           }}>
           {caption} {required && <Text style={{color: COLORS.red}}>*</Text>}

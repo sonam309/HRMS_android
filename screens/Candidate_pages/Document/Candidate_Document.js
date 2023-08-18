@@ -39,6 +39,7 @@ const Candidate_Document = (props) => {
     const [documentCount, setDocumentCount] = useState();
     const [verifiedDocCount, setVerifiedDocCount] = useState();
     const [rejectDocCount, setRejectDocCount] = useState();
+    const [experience, setExperience] = useState();
 
 
     useEffect(() => {
@@ -51,7 +52,7 @@ const Candidate_Document = (props) => {
         let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
         let formData = new FormData();
         formData.append('data', JSON.stringify(PersonalData))
-        console.log("docuploaddata", formData, JSON.stringify(PersonalData))
+        // console.log("docuploaddata", formData, JSON.stringify(PersonalData))
         setLoaderVisible(true)
         let res = await fetch(`${API}/api/hrms/assesmentSave`, {
             method: "POST",
@@ -66,6 +67,7 @@ const Candidate_Document = (props) => {
         setDocumentCount(res?.Table1[0]?.Pending);
         setVerifiedDocCount(res?.Table1[0]?.Verified);
         setRejectDocCount(res?.Table1[0]?.Rejected)
+        setExperience(res?.PO_EXPERIENCE_TYPE)
 
         // console.log("pendingCount",pendingCount);
 
@@ -73,7 +75,7 @@ const Candidate_Document = (props) => {
         { docFiles.length > 0 && setOperFlag("E") }
         setDocCount(res.PO_DOC_REQ);
         setDocVerify(res.Table);
-        console.log("docfilesSonam", res.Table);
+        // console.log("docfilesSonam", res.Table);
         // console.log(docFiles)
 
 
@@ -357,7 +359,16 @@ const Candidate_Document = (props) => {
 
     // validating aadharcard & Pancard files
     const ValidateForm = () => {
-        return aadharCard.length > 0 && panCard.length > 0
+        console.log("experince", experience);
+        if (experience === "No") {
+
+            return aadharCard.length > 0 && panCard.length > 0
+
+        } else {
+
+            return aadharCard.length > 0 && panCard.length > 0 && salarySlip.length > 0
+        }
+        // if(doc==="25" && experience)
     }
 
     // for saving documents to backend 
@@ -452,7 +463,7 @@ const Candidate_Document = (props) => {
 
         console.log("deleting doc", res)
         Toast.show({
-            type: 'Success',
+            type: 'success',
             text1: res.MSG
         })
     }
@@ -460,21 +471,25 @@ const Candidate_Document = (props) => {
     // for displaying aadhar, pan and salary slip in front end
     const DocumentUploader = (file, setFile, number, type, Mandatory) => {
 
+
+
         return (
-            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4 }}>
+            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4, borderColor: (docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" ? COLORS.red : COLORS.lightGray, borderWidth: (docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" ? 0.5 : 0 }}>
 
+                {/* <Text>{JSON.stringify((docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R")}</Text> */}
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-
+                    {/* {console.log("staus", file)} */}
                     {/* <Text>{type? typeof type === 'object' && type !== null ? type?.PARAM_NAME : type :type?.PARAM_NAME} {Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text> */}
                     {/* <Text>{type?type:type?.PARAM_NAME}{Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text> */}
                     <Text>{type !== null && typeof type === 'object' ? type?.PARAM_NAME : type}{Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text>
 
+                    {(docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" &&
+                    <Text style={{color:COLORS.red,...FONTS.body5}}>Need Re-upload </Text> }
 
 
                     {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile)}>
                         <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
                     </TouchableOpacity>}
-
                 </View>
 
 
@@ -482,14 +497,15 @@ const Candidate_Document = (props) => {
                 {/* showing all the uploaded files */}
                 {file?.map((item, index) => (
 
-                    <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+                    <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}
                         key={index}>
-
+                        {/* {console.log("yffgyugfugfu", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS)} */}
                         <Text>{item?.name}</Text>
                         {/* {console.log("deleteDoc", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS, index)} */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
                             {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
+
 
                             {/* {docVerify.filter((doc) => doc.TXN_ID===item.txnId) &&  } */}
                             {docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
@@ -512,37 +528,28 @@ const Candidate_Document = (props) => {
     // for display other files in front end 
     const otherFilesUploader = (file, setFile, type, index) => {
         return (
-            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4 }}>
+            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4 ,borderColor: docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray, borderWidth:docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 }}>
 
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-
                     <Text>{type?.PARAM_NAME}</Text>
+
+                    {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" &&
+                    <Text style={{color:COLORS.red,...FONTS.body5}}>Need Re-upload </Text> }
 
                     {!file[index] && <TouchableOpacity onPress={() => selectOtherFile(index)}>
                         <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
                     </TouchableOpacity>}
-
                 </View>
 
                 {
                     file[index] &&
                     (
-                        <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+                        <View style={[{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
                             key={index}>
-
                             <Text>{file[index]?.name}</Text>
-
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
-
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
-
-
-                                {/* {docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
-                                <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
-                                
-                                    <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
-                                </TouchableOpacity>} */}
 
                                 {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
                                     <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
@@ -640,19 +647,13 @@ const Candidate_Document = (props) => {
 
             {/* upload document view */}
             <View style={{ backgroundColor: COLORS.white, marginVertical: SIZES.body5, padding: SIZES.radius, borderRadius: SIZES.radius, borderBottomWidth: 0.5, borderColor: COLORS.lightGray, marginBottom: SIZES.radius, }}>
-
                 <Text style={{ ...FONTS.h3, color: COLORS.black }}>Upload your documents</Text>
-
                 <Text style={{ ...FONTS.body4, marginTop: 8, color: COLORS.gray }}>File size should be less than 10MB  </Text>
-
                 <Text style={{ ...FONTS.body5, color: COLORS.gray }}>JPG, JPEG, PNG, DOC, DOCX, PDF only</Text>
-
                 <View >
-
                     <Text style={{ ...FONTS.body4, alignItems: 'center', color: COLORS.gray }}>
                         <Text style={{ color: COLORS.red, }}>*</Text>Marked Documents are mandatory
                     </Text>
-
                 </View>
 
             </View>
@@ -686,7 +687,8 @@ const Candidate_Document = (props) => {
 
                     {/* For uploading payment slips docs*/}
                     {/* {DocumentUploader(salarySlip, setSalarySlip, 3, document[2]?.PARAM_NAME)} */}
-                    {DocumentUploader(salarySlip, setSalarySlip, 1, document[2]?.PARAM_NAME)}
+
+                    {DocumentUploader(salarySlip, setSalarySlip, 1, document[2]?.PARAM_NAME, experience === "Yes" && "imp")}
 
 
                 </ScrollView>)
@@ -739,8 +741,8 @@ const Candidate_Document = (props) => {
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 10, marginTop: 20,justifyContent:'center' }} >
-                            <Text style={{ color: 'white',textAlign:'center' ,...FONTS.h4}}>Submit Documents</Text>
+                            style={{ borderRadius: 8, padding: 10, marginTop: 20, justifyContent: 'center' }} >
+                            <Text style={{ color: 'white', textAlign: 'center', ...FONTS.h4 }}>Submit Documents</Text>
                         </LinearGradient>
                     </TouchableOpacity>}
 

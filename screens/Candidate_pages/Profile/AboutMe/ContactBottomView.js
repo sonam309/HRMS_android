@@ -160,14 +160,14 @@ const ContactBottomView = ({ onPress }) => {
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7,color:COLORS.black }]} keyboardType='phone-pad' value={phone} onChangeText={(val) => setPhone(val)} maxLength={10} editable={false} />
                     <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Phone No.</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 ,color:COLORS.black}]} keyboardType='phone-pad' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} maxLength={10} />
-                    <TouchableOpacity onPress={() => (filledDetails !== "" ? saveContactDetails('I') : saveContactDetails('C'))} >
+                    <TouchableOpacity onPress={() => (filledDetails?.PHONE_NO ? saveContactDetails('I') : saveContactDetails('C'))} >
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 10, marginTop: 80 }} >
                             <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                                {filledDetails !== "" ? 'Update Contact Details' : 'Save Contact Details'}
+                                {filledDetails?.PHONE_NO ? 'Update Contact Details' : 'Save Contact Details'}
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
