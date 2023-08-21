@@ -277,20 +277,20 @@ const Emp_HistoryBottomView = (props) => {
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setReason(val)} value={reason} />
             </View>
             {/* About Company  */}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>About Company</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setAboutCompany(val)} value={aboutCompany} />
-            </View>
+            </View> */}
             {/* Company address  */}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Company Address</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setCompanyAddress(val)} value={companyAddress} />
-            </View>
+            </View> */}
             {/*web link*/}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Web Link</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5, }} placeholder='https://satyamicrocapital.com/' onChangeText={(val) => setCompanyLink(val)} value={companyLink} />
-            </View>
+            </View> */}
             {/* currently Working */}
             <View style={{ height: 55, flex: 1, flexDirection: 'row', alignItems: 'center', }}>
               <TouchableOpacity onPress={() => setCurrentlyWorking(!currentlyWorking)} style={{ alignItems: "center", width: "100%", flexDirection: "row", justifyContent: "space-between", }} >

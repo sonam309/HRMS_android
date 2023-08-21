@@ -32,7 +32,6 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
     const [contact, setContact] = useState('');
     const [address, setAddress] = useState('');
     const [txnID, setTxnID] = useState('');
-
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [selectedBirthDate, setSelectedBirthDate] = useState('');
     const [birthDate, setBirthDate] = useState(new Date());
@@ -92,12 +91,13 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
     // for updating family member data
     const UpdateMember = (item) => {
+        console.log("family data",item);
         setOperFlag("E")
         setSelectedFamilyMember(item.FAMILY_MEMBER)
         setSelectedFamilyMemberValue(item.FAMILY_MEMBER_ID)
         setSelectedBloodGroup(item.BLOOD_GROUP)
         setSelectedBloodGroupValue(item.BLOOD_GROUP_ID)
-        setSelectedGender(item.PARAM_NAME)
+        setSelectedGender(item.GENDER)
         setSelectedGenderValue(item.GENDER_ID)
         setFirstName(item.MEMBER_FIRST_NAME)
         setMiddleName(item.MEMBER_MIDDLE_NAME)

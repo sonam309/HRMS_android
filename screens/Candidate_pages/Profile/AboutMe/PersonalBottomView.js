@@ -110,7 +110,7 @@ const PersonalBottomView = ({ onPress }) => {
             console.log(PersonalData);
             formData.append('data', JSON.stringify(PersonalData));
             let res = await fetch(
-                'https://econnectsatya.com:7033/api/hrms/savePersonalDetails',
+                `${API}/api/hrms/savePersonalDetails`,
                 {
                     method: 'POST',
                     body: formData,
@@ -304,11 +304,11 @@ const PersonalBottomView = ({ onPress }) => {
                     </View>
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
-                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                        {/* <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Country of Birth</Text>
                             <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
-                        </View>
-                        <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                        </View> */}
+                        <View style={{ width: '98%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Place of Birth</Text>
                             <TextInput style={styles.inputHolder} value={placeBirth} onChangeText={(val) => setPlaceBirth(val)} />
                         </View>
@@ -370,8 +370,8 @@ const PersonalBottomView = ({ onPress }) => {
                         </View>
                     </View>
 
-                    <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: pLocationHeight }]} multiline={true} onContentSizeChange={event => { setPLocationHeight(event.nativeEvent.contentSize.height) }} value={preferredLocation} onChangeText={(val) => setPreferredLocation(val)} />
+                    {/* <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Preferred Location</Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: pLocationHeight }]} multiline={true} onContentSizeChange={event => { setPLocationHeight(event.nativeEvent.contentSize.height) }} value={preferredLocation} onChangeText={(val) => setPreferredLocation(val)} /> */}
 
                     <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Current Location</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: cLocationHeight }]} multiline={true} onContentSizeChange={event => { setCLocationHeight(event.nativeEvent.contentSize.height) }} value={currentLocation} onChangeText={(val) => setCurrentLocation(val)} />

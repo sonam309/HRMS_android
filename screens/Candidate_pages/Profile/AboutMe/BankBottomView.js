@@ -447,7 +447,7 @@ const BankBottomView = ({ onPress }) => {
               /> */}
 
               <Text style={styles.inputHeader}>IFSC Code</Text>
-              <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={10} />
+              <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={20} />
               <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
                 <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: 'white' }}>{selectedDoc.length}</Text>

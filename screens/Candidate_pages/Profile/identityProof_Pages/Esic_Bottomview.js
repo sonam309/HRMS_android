@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
+import SelectDropdown from 'react-native-select-dropdown';
 
 
 
@@ -22,13 +23,15 @@ const Esic_Bottomview = (props) => {
   const [subcode, setSubCode] = useState();
   const [RegNumber, setRegNumber] = useState();
   const [csiNum, setCsiNum] = useState();
-  const [residingWith, setResidingWith] = useState();
+  const [residingWithYou, setResidingWithYou] = useState();
   const [weatherResiding, setWeatherResiding] = useState();
   const [noStatePlace, setNoStatePlace] = useState();
   const [noStatePlaceResidence, setNoStatePlaceResidence] = useState();
   const [priEmpCode, setPriEmpCode] = useState();
   const [priInsuranceNum, setPriInsuranceNum] = useState();
   const [isEdit, setIsEdit] = useState(false);
+
+  const residenceWithYou = ["YES", "NO"]
 
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Esic_Bottomview = (props) => {
       esSubCode: subcode,
       esRegisterationNo: RegNumber,
       esCsiNo: csiNum,
-      esResidingWith: residingWith,
+      esResidingWith: residingWithYou,
       esWhetherResidingWith: weatherResiding,
       esIfNoStatePalce: noStatePlace,
       esIfNoStatePalceResidance: noStatePlaceResidence,
@@ -86,13 +89,12 @@ const Esic_Bottomview = (props) => {
         candidateId: userId,
         userId: userId,
         operFlag: 'W',
-      })
-      .then(response => {
+      }).then(response => {
         const returnedData = response?.data?.Result;
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-         console.log("getDataSonammmm", ESICDetails, Object.keys(ESICDetails).length );
+         console.log("getDataSonammmm", ESICDetails);
 
         if (Object.keys(ESICDetails).length > 2) {
           setIsEdit(true);
@@ -102,16 +104,12 @@ const Esic_Bottomview = (props) => {
         setSubCode(ESICDetails?.SUB_CODE);
         setRegNumber(ESICDetails?.REGISTRATION_NO);
         setCsiNum(ESICDetails?.CSI_NO);
-        setResidingWith(ESICDetails?.RESIDING_WITH_HIMOR_HER);
+        setResidingWithYou(ESICDetails?.RESIDING_WITH_HIMOR_HER);
         setWeatherResiding(ESICDetails?.WHETHER_RESIDING_WITH_HIM_HER);
         setNoStatePlace(ESICDetails?.IF_NO_STATE_PLACE);
         setNoStatePlaceResidence(ESICDetails?.IF_NO_STATE_PLACE_OF_RESIDENSCE);
         setPriEmpCode(ESICDetails?.PREVIOUS_EMPLOYER_CODE_NO);
         setPriInsuranceNum(ESICDetails?.PREVIOUS_INSURANCE_NO);
-
-
-
-
 
       }).catch(error => {
         setLoaderVisible(false)
@@ -153,12 +151,12 @@ const Esic_Bottomview = (props) => {
           </View>
 
           {/* Sub code */}
-          <View style={{ height: 75, marginTop: 10 }}>
+          {/* <View style={{ height: 75, marginTop: 10 }}>
 
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Sub Code</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setSubCode} value={subcode} keyboardType='numeric' maxLength={10} />
-          </View>
+          </View> */}
 
           {/* Registration */}
           <View style={{ height: 75, marginTop: 10 }}>
@@ -169,31 +167,35 @@ const Esic_Bottomview = (props) => {
           </View>
 
           {/* CSI no */}
-          <View style={{ height: 75, marginTop: 10 }}>
+          {/* <View style={{ height: 75, marginTop: 10 }}>
 
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>CSI No.</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setCsiNum} value={csiNum} keyboardType='numeric' maxLength={25} />
-          </View>
+          </View> */}
 
           {/* residing with him or her */}
           <View style={{ height: 75, marginTop: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Residing with him or her</Text>
-            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-              onChangeText={setResidingWith} value={residingWith} maxLength={3} />
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Family Residing with you</Text>
+
+            <SelectDropdown defaultValue={residingWithYou} data={residenceWithYou} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setResidingWithYou(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
+
+            {/* <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
+              onChangeText={setResidingWith} value={residingWith} maxLength={3} /> */}
           </View>
 
           {/* Whether residing with him  her */}
-          <View style={{ height: 75, marginTop: 10 }}>
+          {/* <View style={{ height: 75, marginTop: 10 }}>
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Whether residing with him her</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setWeatherResiding} value={weatherResiding} maxLength={3} />
-          </View>
+          </View> */}
 
           {/* If No State place*/}
           <View style={{ height: 75, marginTop: 10 }}>
 
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text>
+            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text> */}
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setNoStatePlace} value={noStatePlace} maxLength={3} />
           </View>
@@ -201,23 +203,24 @@ const Esic_Bottomview = (props) => {
           {/* If No State place of Residence*/}
           <View style={{ height: 75, marginTop: 10 }}>
 
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text>
+            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place of Residence</Text> */}
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No Residence Address</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               value={noStatePlaceResidence} onChangeText={setNoStatePlaceResidence} />
           </View>
 
           {/* Previous Employee code No.*/}
-          <View style={{ height: 75, marginTop: 10 }}>
+          {/* <View style={{ height: 75, marginTop: 10 }}>
 
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Employee code No.</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setPriEmpCode} value={priEmpCode} />
-          </View>
+          </View> */}
 
           {/* Previous Insurance No.*/}
           <View style={{ height: 75, marginTop: 10 }}>
 
-            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Insurance No.</Text>
+            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous ESIC No.</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
               onChangeText={setPriInsuranceNum} value={priInsuranceNum} keyboardType='numeric' />
           </View>

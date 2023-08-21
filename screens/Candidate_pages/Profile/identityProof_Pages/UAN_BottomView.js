@@ -225,16 +225,16 @@ const UAN_BottomView = (props) => {
             </View>
 
             {/* International Worker*/}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>International Worker</Text>
               <SelectDropdown defaultValue={selectdInternationalWork} data={InternationalWork} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedInternationalWork(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-            </View>
+            </View> */}
 
             {/* member of EPS 1952 */}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of Eps 1952</Text>
               <SelectDropdown defaultValue={selectedMemberEps1952} data={MemberEps1952} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedMemberEps1952(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
-            </View>
+            </View> */}
             {/* member of EPS 1995 */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Member of EPS 1995</Text>
@@ -242,10 +242,10 @@ const UAN_BottomView = (props) => {
             </View>
 
             {/* PPO no if Issued */}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>PPO No if Issued</Text>
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setPpoNoIfIssued} value={ppoNOifIssues} keyboardType="number-pad"maxLength={15} />
-            </View>
+            </View> */}
 
             {/* Previous Account number */}
             <View style={{ height: 75, marginTop: 10 }}>
@@ -259,10 +259,10 @@ const UAN_BottomView = (props) => {
             </View>
 
             {/* Scheme Certificate No.*/}
-            <View style={{ height: 75, marginTop: 10 }}>
+            {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Scheme Certificate No.</Text>
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
-            </View>
+            </View> */}
             {/* save button */}
             <TouchableOpacity  onPress={() => saveUANDetails()} >
 

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
@@ -27,6 +27,11 @@ const NominationBottomView = ({ nominations, onPress }) => {
   const [nomineeMember, setNomineeMember] = useState([]);
   const [loaderVisible, setLoaderVisible] = useState(false);
 
+  const [showNominee, setShowNominee] = useState('');
+  const [allNominee, setAllNominee] = useState([]);
+
+
+
 
   // Nominations Dropdown Data
   const getDropdownData = async P => {
@@ -42,6 +47,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
   useEffect(() => {
     getDropdownData(41);
     getDropdownData(38);
+    getNominationData();
   }, []);
 
 
@@ -53,9 +59,9 @@ const NominationBottomView = ({ nominations, onPress }) => {
       setNomineeMember(oldNominees => [
         ...oldNominees,
         {
-          nominationType: selectedNominationTypeValue,
           familyMember: selectedFamilyMemberValue,
           gaurdianName,
+          nominationType: selectedNominationTypeValue,
           share,
         },
       ]);
@@ -90,19 +96,137 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
   }
 
+  // for deleting skill
+  const DeleteNominee = async ({ txnId }) => {
+    try {
+
+      let nomineeData = {
+        txnId: txnId, operFlag: "D", userId: userId
+      }
+
+      // console.warn(skillData);
+
+      let res = await fetch(`${API}/api/hrms/candidateNomination`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(nomineeData)
+      })
+
+      res = await res.json();
+      res = await res?.Result[0]?.MSG
+      // onPress
+      getNominationData();
+      Toast.show({
+        type: 'success',
+        text1: res
+      })
+      setShowNominee(true)
+
+    }
+    catch (error) {
+
+      Toast.show({
+        type: 'error',
+        text1: error
+      })
+    }
+  }
+
+  // // for updating skill
+  // const UpdateSkill = (item) => {
+
+  //   setOperFlag("E")
+
+  //   setSkill(item.SKILLS_NAME)
+  //   setTotalExperience(item.TOTAL_EXP)
+  //   setTxnId(item.TXN_ID)
+
+  //   setSelectedSkillLevel(item.SKILL_LEVEL)
+  //   setSelectedSkillLevelValue(item.SKILL_LEVEL_ID)
+
+  //   setShowNominee(false);
+
+  // }
+
+  const getNominationData = async () => {
+
+    try {
+
+      setLoaderVisible(true)
+      let nomineeData = {
+        candidateId: userId,
+        userId: userId,
+        operFlag: 'V',
+
+      };
+      console.log('requestData', JSON.stringify(nomineeData));
+      // nomineeData.param = NomineeInfo();
+      let res = await fetch(`${API}/api/hrms/candidateNomination`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nomineeData),
+      });
+      res = await res.json();
+      console.log('getNominee details', res);
+      setAllNominee(res?.Result)
+      setShowNominee(true)
+      setLoaderVisible(false);
+      // Toast.show({
+      //   type: "success",
+      //   text1: "Nominnees saved succesfully"
+      // })
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: error,
+      });
+    }
+
+  }
 
   const submitNominee = async () => {
-
-    if (true) {
+    if (nomineeMember.length > 0) {
       try {
+        var param1 = ""
+
+        nomineeMember.map((nominee, index) => {
+          console.log(param1)
+          if (param1 === "") {
+            if (nomineeMember.length === index + 1) {
+              param1 = `${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}`
+
+            } else {
+              param1 = `${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}~`
+            }
+          } else {
+            if (nomineeMember.length === index + 1) {
+              param1 = `${param1}${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}`
+            } else {
+              param1 = `${param1}${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}~`
+            }
+          }
+          // console.log("dtaatttatatta", param1, nomineeMember.length);
+
+        })
+
+
+
+        setLoaderVisible(true)
+        // if (param1 !== undefined) {
         let nomineeData = {
           txnId: '',
           candidateId: userId,
           userId: userId,
           operFlag: 'A',
-          param: JSON.stringify(nomineeMember),
+          param: param1,
         };
-        console.log('requestData', nomineeData);
+        console.log('requestData', JSON.stringify(nomineeData));
         // nomineeData.param = NomineeInfo();
         let res = await fetch(`${API}/api/hrms/candidateNomination`, {
           method: 'POST',
@@ -113,25 +237,95 @@ const NominationBottomView = ({ nominations, onPress }) => {
           body: JSON.stringify(nomineeData),
         });
         res = await res.json();
-        console.log('saveNominiee details', res);
+        // console.log('saveNominiee details', res);
+        param1 = undefined
+        setLoaderVisible(false);
         Toast.show({
           type: "success",
           text1: "Nominnees saved succesfully"
         })
+        onPress();
+        // } else {
+        //   setLoaderVisible(false);
+        //   Toast.show({
+        //     type: 'error',
+        //     text1: "Please Add nominees"
+        //   })
+        // }
       } catch (error) {
+        setLoaderVisible(false);
         Toast.show({
           type: 'error',
           text1: error,
         });
       }
     } else {
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
-        text1: 'Please Add nominees',
+        text1: "Please Add nominees",
       });
     }
 
   };
+
+
+
+  // diplaying individual Nominee
+  const Nominee = ({ item, key }) => {
+    return (
+      <View key={key} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.GUARDIAN_NAME} </Text>
+          {/* <Icons position='absolute' onPress={() => DeleteSkill({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
+          <Icons position='absolute' onPress={() => UpdateSkill(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
+        </View>
+
+
+        <TouchableOpacity style={{
+          position: 'absolute',
+          right: 0,
+          padding: 5
+        }} onPress={() => DeleteNominee({ txnId: item.TXN_ID })}>
+
+          <Icon name='trash-can-outline' color={COLORS.green} size={20} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity style={{
+          position: 'absolute', right: 30, padding: 5,
+        }}>
+          onPress={() => UpdateSkill(item)}
+          <Icon name='square-edit-outline' color={COLORS.green} size={20} />
+        </TouchableOpacity> */}
+
+        <Text style={{ fontWeight: 600 }}>Nomination Type:- <Text style={{ fontWeight: 400 }}>{item.NOMINATION_TYPE}</Text></Text>
+        <Text style={{ fontWeight: 600 }}>Family Member:- <Text style={{ fontWeight: 400 }}>{item.FAMILY_MEMBER}</Text></Text>
+        <Text style={{ fontWeight: 600 }}>Gaurdian Name:- <Text style={{ fontWeight: 400 }}>{item.GUARDIAN_NAME}</Text></Text>
+        <Text style={{ fontWeight: 600 }}>Share %:- <Text style={{ fontWeight: 400 }}>{item.SHARE}</Text></Text>
+      </View>
+    )
+  }
+
+  // displaying skill details
+  const NomineeDetails = () => {
+    return (
+      <View style={{ padding: 4, marginVertical: 5 }}>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5, marginTop: 15 }}>
+          <Text style={{ fontWeight: 700, color: 'black' }}>Nominee: </Text>
+          <TouchableOpacity onPress={() => setShowNominee(false)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
+            <Text>ADD</Text>
+            <Icon name='plus' size={16} />
+          </TouchableOpacity>
+        </View>
+
+        {
+          allNominee.map((item, index) => <Nominee item={item} key={index} />)
+        }
+
+      </View>
+    )
+  }
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -152,69 +346,95 @@ const NominationBottomView = ({ nominations, onPress }) => {
         </TouchableOpacity>
       </View>
       {/* <Text>{JSON.stringify(nomineeMember)}</Text> */}
-      <ScrollView
-        style={{ marginBottom: 200 }}
-        showsVerticalScrollIndicator={false}>
-        <View
+
+      {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text
           style={{
-            borderWidth: 0.5,
-            borderColor: COLORS.lightGray,
-            padding: SIZES.base,
-            marginVertical: SIZES.radius,
-            borderRadius: SIZES.base,
+            ...FONTS.h3,
+            fontWeight: '500',
+            color: COLORS.orange1,
+            marginTop: SIZES.base,
           }}>
-          <TextDropdown
-            caption={'Nomination type'}
-            data={nominationTypeDw}
-            setData={setSelectedNominationType}
-            setIdvalue={setSelectedNominationTypeValue}
-            defaultButtonText={selectedNominationType}
-          />
+          Loading your details
+        </Text>
+      </View>
+      ) :
 
-          <TextDropdown
-            caption={'Family member'}
-            data={familyMemberDropDown}
-            setData={setSelectedFamilyMember}
-            setIdvalue={setSelectedFamilyMemberValue}
-            defaultButtonText={selectedFamilyMember}
-          />
+        <ScrollView
+          style={{ marginBottom: 200 }}
+          showsVerticalScrollIndicator={false}>
+          {/* {!showNominee  && nomineeMember.length > 0 && <View>
+          {nomineeMember.map((item, index) => {
+            return <Nominee item={item} key={index} />
+          })}
+        </View>} */}
+          {showNominee && allNominee[0]?.CANDIDATE_ID && allNominee.length > 0 ? <NomineeDetails /> : (
+            <>
+              <View
+                style={{
+                  borderWidth: 0.5,
+                  borderColor: COLORS.lightGray,
+                  padding: SIZES.base,
+                  marginVertical: SIZES.radius,
+                  borderRadius: SIZES.base,
+                }}>
+                <TextDropdown
+                  caption={'Nomination type'}
+                  data={nominationTypeDw}
+                  setData={setSelectedNominationType}
+                  setIdvalue={setSelectedNominationTypeValue}
+                  defaultButtonText={selectedNominationType}
+                />
 
-          <CustomInput
-            caption={'Gaurdian name'}
-            required
-            value={gaurdianName}
-            onChangeText={setGaurdianName}
-          />
+                <TextDropdown
+                  caption={'Family member'}
+                  data={familyMemberDropDown}
+                  setData={setSelectedFamilyMember}
+                  setIdvalue={setSelectedFamilyMemberValue}
+                  defaultButtonText={selectedFamilyMember}
+                />
 
-          <CustomInput
-            caption={'Share'}
-            required
-            value={share}
-            onChangeText={setShare}
-          />
+                <CustomInput
+                  caption={'Gaurdian name'}
+                  required
+                  value={gaurdianName}
+                  onChangeText={setGaurdianName}
+                />
 
-          <TextButton
-            label={'Add member'}
-            linearGradientStyle={{
-              height: 50,
-              justifyContent: 'center',
-              borderRadius: SIZES.base,
-            }}
-            onPress={addMember}
-          />
-        </View>
-        <TextButton
-          label={'Submit'}
-          linearGradientStyle={{
-            height: 50,
-            justifyContent: 'center',
-            borderRadius: SIZES.base,
-          }}
-          onPress={submitNominee}
-        />
+                <CustomInput
+                  caption={'Share'}
+                  required
+                  value={share}
+                  onChangeText={setShare}
+                />
 
-        <View style={{ marginBottom: 90 }}></View>
-      </ScrollView>
+                <TextButton
+                  label={'Add member'}
+                  linearGradientStyle={{
+                    height: 50,
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                  }}
+                  onPress={addMember}
+                />
+              </View>
+
+              <TextButton
+                label={'Submit'}
+                linearGradientStyle={{
+                  height: 50,
+                  justifyContent: 'center',
+                  borderRadius: SIZES.base,
+                }}
+                onPress={submitNominee}
+              />
+
+              <View style={{ marginBottom: 90 }}></View>
+            </>
+          )
+          }
+        </ScrollView>}
     </View>
   );
 }

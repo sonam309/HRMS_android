@@ -23,13 +23,14 @@ const TextDropdown = ({
   };
 
   return (
-    <View style={{marginVertical: SIZES.base}}>
+    <View style={{marginVertical: SIZES.base,}}>
       <Text style={{...FONTS.h3, fontWeight: '500',...captionStyle}}>{caption}</Text>
       <SelectDropdown
         dropdownStyle={{
           backgroundColor: COLORS.white,
           borderRadius: SIZES.radius,
           height: 400,
+          marginTop:30,
           paddingVertical: SIZES.padding,
           paddingHorizontal: SIZES.padding,
         }}
@@ -70,7 +71,7 @@ const TextDropdown = ({
                 style={{
                   ...FONTS.body3,
                   color: COLORS.darkGray,
-                  marginLeft: SIZES.padding,
+                  marginLeft: SIZES.radius,
                 }}>
                 {item}
               </Text>

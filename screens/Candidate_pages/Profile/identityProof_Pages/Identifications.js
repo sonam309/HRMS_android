@@ -263,7 +263,7 @@ const Identifications = (props) => {
                 {/* Pan number input */}
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passport Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' keyboardType="number-pad" onChangeText={setPassportNumber} value={passportnumber} maxLength={12}/>
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }}  onChangeText={setPassportNumber} value={passportnumber} maxLength={12}/>
                 </View>
 
                 {/* Date Of issue */}
@@ -298,7 +298,7 @@ const Identifications = (props) => {
                 {/* place of issue */}
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Delhi'
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} 
                     onChangeText={setPassportIssuePlace} value={passportissuePlace} />
                 </View>
               </View>

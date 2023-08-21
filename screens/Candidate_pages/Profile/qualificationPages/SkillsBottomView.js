@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity ,ActivityIndicator} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import { FONTS, SIZES } from '../../../../constants/font_size';
@@ -29,6 +29,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState();
   const [selectedSkillLevelValue, setSelectedSkillLevelValue] = useState('');
 
+  const [loaderVisible, setLoaderVisible] = useState(true);
 
   useEffect(() => {
     getDropdownData(39);
@@ -243,6 +244,21 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
+
+      {/* {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+                <ActivityIndicator color={COLORS.orange1} />
+                <Text
+                    style={{
+                        ...FONTS.h3,
+                        fontWeight: '500',
+                        color: COLORS.orange1,
+                        marginTop: SIZES.base,
+                    }}>
+                    Loading your details
+                </Text>
+            </View>
+            ) : */}
+
       <ScrollView showsVerticalScrollIndicator={false}>
         {
           showSkills && allSkills[0]?.FLAG === "S" ? <SkillDetails /> : (
@@ -299,6 +315,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
         {/* <View style={{ marginBottom: 320 }}></View> */}
 
       </ScrollView>
+      {/* } */}
     </View>
   )
 }

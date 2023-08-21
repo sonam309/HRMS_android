@@ -473,13 +473,13 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentThana} onChangeText={(val) => setPermanentThana(val)} editable={permanentThanaEdit} />
-                    <TouchableOpacity onPress={() => filledDetails !== "" ? saveAddressDetails('E') : saveAddressDetails('A')} >
+                    <TouchableOpacity onPress={() => filledDetails?.PIN_CODE ? saveAddressDetails('E') : saveAddressDetails('A')} >
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails!==''?"Update Address Details":"Save Address Details"}</Text>
+                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE?"Update Address Details":"Save Address Details"}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
                     <View style={{ paddingBottom: 270 }}></View>
