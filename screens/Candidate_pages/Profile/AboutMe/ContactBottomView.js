@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -7,6 +7,7 @@ import COLORS from '../../../../constants/theme'
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient'
 import { API } from '../../../../utility/services'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const ContactBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -18,6 +19,8 @@ const ContactBottomView = ({ onPress }) => {
     const [alternatePhone, setAlternatePhone] = useState('');
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
+    const [approvalFlag, setApprovalFlag] = useState();
+    const[conatcatRemark,setContactRemark]=useState();
 
 
     const ValidateForm = () => {
@@ -67,6 +70,8 @@ const ContactBottomView = ({ onPress }) => {
             console.log('candidate profile', res);
             setLoaderVisible(false);
             setFilledDetails(res);
+            setApprovalFlag(res.CONTACT_APP_FLAG);
+            setContactRemark(res.CONTACT_APP_RMK);
         } catch (error) {
             setLoaderVisible(false);
             Toast.show({
@@ -133,7 +138,23 @@ const ContactBottomView = ({ onPress }) => {
 
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
-                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Contact</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Contact</Text>
+                    {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
+
+                        showAlert({
+                            customIcon:'none',
+                            title: conatcatRemark,
+                            message: "",
+                            alertType: 'error',
+                            btnLabel:"ok",
+                            onPress: () => closeAlert(),
+                        });
+
+                    }}>
+                        <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+                    </TouchableOpacity> : ""}
+                </View>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
@@ -152,15 +173,15 @@ const ContactBottomView = ({ onPress }) => {
             </View>
             ) :
                 <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
-                    <Text style={{ color: COLORS.green,...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Personal Email Id<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7,color:COLORS.black }]} value={personalMail} onChangeText={(val) => setPersonalMail(val)} keyboardType='email-address' maxLength={100} editable={false}/>
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Personal Email Id<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={personalMail} onChangeText={(val) => setPersonalMail(val)} keyboardType='email-address' maxLength={100} editable={false} />
                     <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Email Id</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 ,color:COLORS.black}]} value={alternateMail} onChangeText={(val) => setAlternateMail(val)} keyboardType='email-address' maxLength={100} />
-                    <Text style={{color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Phone No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7,color:COLORS.black }]} keyboardType='phone-pad' value={phone} onChangeText={(val) => setPhone(val)} maxLength={10} editable={false} />
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={alternateMail} onChangeText={(val) => setAlternateMail(val)} keyboardType='email-address' maxLength={100} />
+                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Phone No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={phone} onChangeText={(val) => setPhone(val)} maxLength={10} editable={false} />
                     <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Phone No.</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 ,color:COLORS.black}]} keyboardType='phone-pad' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} maxLength={10} />
-                    <TouchableOpacity onPress={() => (filledDetails?.PHONE_NO ? saveContactDetails('I') : saveContactDetails('C'))} >
+                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} maxLength={10} />
+                    {approvalFlag !== "A" ? <TouchableOpacity onPress={() => (filledDetails?.PHONE_NO ? saveContactDetails('I') : saveContactDetails('C'))} >
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
@@ -170,7 +191,7 @@ const ContactBottomView = ({ onPress }) => {
                                 {filledDetails?.PHONE_NO ? 'Update Contact Details' : 'Save Contact Details'}
                             </Text>
                         </LinearGradient>
-                    </TouchableOpacity>
+                    </TouchableOpacity> : ""}
                 </ScrollView>}
         </View>
     )
@@ -180,7 +201,7 @@ const ContactBottomView = ({ onPress }) => {
 const styles = StyleSheet.create({
     inputHolder: {
         borderWidth: 1, height: 40, borderColor: 'black', borderRadius: 12
-        
+
     },
 })
 

@@ -26,6 +26,8 @@ import { useSelector } from 'react-redux';
 import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 import { API } from '../../../utility/services';
 import GuarantorBottomView from './Guarantor/GuarantorBottomView';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -70,6 +72,51 @@ const Candidate_profile = () => {
   const [filledDetails, setFilledDetails] = useState();
   const [employHistoryView, setEmployeHistoryView] = useState(false);
   const [filledCandidateInfo, setFilledCandidateInfo] = useState();
+  const [personalApprovalFlag, setPersonalApprovalFlag] = useState();
+  const [identificationApproveFlag, setIdentificationApproveFlag] = useState();
+  const [contactAppFlag, setConatctAppFlag] = useState();
+  const [bankAppFlag, setBankAppFlag] = useState();
+  const [addressAppFlag, setAddressAppFlag] = useState();
+  const [familyAppFlag, setFamilyAppFlag] = useState();
+  const [nominationAppFlag, setnominationAppFlag] = useState();
+  const [medicalAppFlag, setMedicalAppFlag] = useState();
+  const [qualiAppFlag, setQualiAppFlag] = useState();
+  const [skillAppFlag, setSkillAppFlag] = useState();
+  const [languageAppFlag, setLanguageAppFlag] = useState();
+  const [esicAppFlag, setEsicAppFlag] = useState();
+  const [uanAppFlag, setUAnAppFlag] = useState();
+  const[employmentAppFlag,setEmployementAppFlag]=useState();
+
+  const fetchPersonalData = async () => {
+    try {
+
+      let PersonalData = { operFlag: 'V', candidateId: userId };
+      var formData = new FormData();
+      console.log(PersonalData);
+      formData.append('data', JSON.stringify(PersonalData));
+      let res = await fetch(
+        `${API}/api/hrms/savePersonalDetails`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
+      res = await res.json();
+      res = await res?.Result[0];
+      console.log('personalApprovalFlag', res.PERSON_APP_FLAG,res.CONTACT_APP_FLAG,res.BANK_APP_FLAG);
+
+      setPersonalApprovalFlag(res.PERSON_APP_FLAG);
+      setConatctAppFlag(res.CONTACT_APP_FLAG);
+      setBankAppFlag(res.BANK_APP_FLAG);
+
+    } catch (error) {
+     
+      Toast.show({
+        type: 'error',
+        text1: error,
+      });
+    }
+  };
 
 
   // For fetching details of Address dropdown -> Personal
@@ -85,8 +132,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    // console.log(res);
+    console.log("Address", res);
     setFilledDetails(res);
+    setAddressAppFlag(res.APPROVAL_FLAG);
   }
 
   // For fetching details of Family dropdown -> Personal
@@ -102,8 +150,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("family data", res);
+    console.log("familydata", res);
     setMembers(res);
+    setFamilyAppFlag(res.APPROVAL_FLAG);
   }
 
   // For fetching details of Family dropdown -> Personal
@@ -119,8 +168,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("employment data", res);
+    console.log("employmentdata", res);
     setEmployement(res);
+    setEmployementAppFlag(res[0].APPROVAL_FLAG);
   }
 
   // For fetching details of Family dropdown -> Personal
@@ -136,8 +186,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("employment data", res);
+    console.log("SkillData", res);
     setSkills(res);
+    setSkillAppFlag(res[0].APPROVAL_FLAG);
   }
 
   const fetchMedicalData = async () => {
@@ -152,8 +203,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("medical data", res);
+    console.log("medicaldata", res);
     setMedicalPolicy(res);
+    setMedicalAppFlag(res[0].APPROVAL_FLAG);
   }
 
   const fetchLanguageData = async () => {
@@ -168,8 +220,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    // console.log("language data", res);
+    console.log("languagedata", res);
     setLanguages(res);
+    setLanguageAppFlag(res[0].APPROVAL_FLAG);
   }
 
   const fetchQualificationData = async () => {
@@ -183,16 +236,108 @@ const Candidate_profile = () => {
       body: JSON.stringify(qualficationData)
     })
     res = await res.json()
-    res = await res?.Result
-    // console.log("qualfication Data", res);
+    res = await res?.Result[0]
+    console.log("qualfication Data", res);
     setQualification(res);
+    setQualiAppFlag(res.APPROVAL_FLAG);
   }
+
+  const getIdentificationData = () => {
+    axios
+      .post(`${API}/api/hrms/indentityProof`, {
+        candidateId: userId,
+        userId: userId,
+        operFlag: 'V',
+      })
+      .then(response => {
+        const returnedData = response?.data?.Result;
+        const preFilledData = returnedData[0];
+        const msg = returnedData[0].MSG
+        setIdentificationApproveFlag(returnedData[0].APPROVAL_FLAG);
+        console.log("identificationData", returnedData[0].APPROVAL_FLAG);
+      })
+      .catch(err => {
+        console.log(err);
+
+      });
+  };
+
+  const getNominationData = async () => {
+
+    try {
+      let nomineeData = {
+        candidateId: userId,
+        userId: userId,
+        operFlag: 'V',
+
+      };
+
+      // nomineeData.param = NomineeInfo();
+      let res = await fetch(`${API}/api/hrms/candidateNomination`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nomineeData),
+      });
+      res = await res.json();
+      console.log('getNominee details', res.Result[0].APPROVAL_FLAG);
+      setnominationAppFlag(res.Result[0].APPROVAL_FLAG);
+    } catch (error) {
+      // Toast.show({
+      //   type: 'error',
+      //   text1: error,
+      // });
+    }
+
+  }
+
+  const getEsicData = () => {
+    axios
+      .post(`${API}/api/hrms/saveCandidateUanInfo`, {
+        candidateId: userId,
+        userId: userId,
+        operFlag: 'W',
+      }).then(response => {
+        const returnedData = response?.data?.Result;
+        const ESICDetails = returnedData[0];
+        const msg = returnedData[0].MSG
+        console.log("getDataSonammmm", ESICDetails);
+        setEsicAppFlag(ESICDetails.APPROVAL_FLAG);
+      }).catch(error => {
+
+      });
+  };
+
+  const getUANData = () => {
+    axios
+      .post(`${API}/api/hrms/saveCandidateUanInfo`, {
+        candidateId: userId,
+        userId: userId,
+        operFlag: 'V',
+      }).then(response => {
+        const returnedData = response?.data?.Result;
+        const ESICDetails = returnedData[0];
+        const msg = returnedData[0].MSG
+        console.log("getUanNumber", ESICDetails);
+        setUAnAppFlag(ESICDetails.APPROVAL_FLAG);
+      }).catch(error => {
+
+      });
+  };
 
   // useEffect(() => {
   //   addressView && fetchAddressData()
   // }, [addressView, personalAddressView])
 
   useEffect(() => {
+    fetchPersonalData();
+    getIdentificationData();
+    fetchAddressData();
+    getNominationData();
+    getEsicData();
+    getUANData();
     familyView && fetchFamilyData()
   }, [familyView, familyDetailsView])
 
@@ -249,15 +394,15 @@ const Candidate_profile = () => {
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setPersonalView(!personalView)}>
                   <Icons name='id-card' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Personal Details</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: personalApprovalFlag === "R" ? COLORS.red : (personalApprovalFlag === "A" ? COLORS.green : COLORS.gray) }}>Personal Details</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setContactView(!contactView)}>
                   <Icons name='cellphone' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Contact Details</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: contactAppFlag === "R" ? COLORS.red : (contactAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Contact Details</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setBankView(!bankView)}>
                   <Icons name='bank' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Bank Details</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: bankAppFlag === "R" ? COLORS.red : (bankAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Bank Details</Text>
 
                 </TouchableOpacity>
 
@@ -298,7 +443,7 @@ const Candidate_profile = () => {
             {/* Address header and it's dropdown content */}
             <TouchableOpacity onPress={() => setAddressView(!addressView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
               <Ionicons name='location-sharp' size={20} color={COLORS.orange} />
-              <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Address</Text>
+              <Text style={{ ...FONTS.h4, paddingHorizontal: 5, }}>Address</Text>
               <FontAwesome style={{ position: 'absolute', right: 5 }} name={addressView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
             </TouchableOpacity>
 
@@ -307,7 +452,7 @@ const Candidate_profile = () => {
               <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
                 <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setPersonalAddressView(!personalAddressView)}>
                   <Icons name='home' color={'green'} size={20} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%' }}>Address</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', color: addressAppFlag === "R" ? COLORS.red : (addressAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Address</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -341,15 +486,15 @@ const Candidate_profile = () => {
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setFamilyDetailsView(!familyDetailsView)}>
                   <MaterialIcons name='family-restroom' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%' }}>Family</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', color: familyAppFlag === "R" ? COLORS.red : (familyAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Family</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setNominationView(!nominationView)}>
                   <Icons name='form-select' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%' }}>Nomination</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', color: nominationAppFlag === "R" ? COLORS.red : (nominationAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Nomination</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setMedicalView(!medicalView)}>
                   <FontAwesome5 name='clinic-medical' color={'green'} size={16} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%' }}>Medical</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', color: medicalAppFlag === "R" ? COLORS.red : (medicalAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Medical</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -358,7 +503,7 @@ const Candidate_profile = () => {
           {/* Content of Family dropdown -> Family, Medical and nomination */}
           {familyDetailsView && (
             <BottomUpModal isVisible={familyDetailsView} onClose={() => { setFamilyDetailsView(false); }} >
-              <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} onPress={() => setFamilyDetailsView(false)} fetchFamilyData={fetchFamilyData}  />
+              <FamilyBottomView members={members} setMembers={setMembers} updateMember={updateMember} setUpdateMember={setUpdateMember} onPress={() => setFamilyDetailsView(false)} fetchFamilyData={fetchFamilyData} />
             </BottomUpModal>
           )}
           {nominationView && (
@@ -368,7 +513,7 @@ const Candidate_profile = () => {
           )}
           {medicalView && (
             <BottomUpModal isVisible={medicalView} onClose={() => { setMedicalView(false); }}>
-              <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} onPress={() => setMedicalView(false)} fetchMedicalData={fetchMedicalData}/>
+              <MedicalBottomView medicalPolicy={medicalPolicy} setMedicalPolicy={setMedicalPolicy} onPress={() => setMedicalView(false)} fetchMedicalData={fetchMedicalData} />
             </BottomUpModal>
           )}
 
@@ -391,11 +536,11 @@ const Candidate_profile = () => {
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setQualificationsView(!qualificationsView)}>
                   <Icons name='book-education-outline' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Qualifications</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: qualiAppFlag === "R" ? COLORS.red : (qualiAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Qualifications</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setSkillsView(!skillsView)}>
                   <Icons name='library' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Skills</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: skillAppFlag === "R" ? COLORS.red : (skillAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Skills</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopWidth: 0.5, borderTopColor: 'black', }} onPress={() => setTrainingView(!trainingView)}>
               <Icons name='human-male-board-poll' color={'green'} size={18} />
@@ -403,7 +548,7 @@ const Candidate_profile = () => {
             </TouchableOpacity> */}
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setLanguagesView(!languagesView)}>
                   <Ionicons name='language' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}>Languages</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: languageAppFlag === "R" ? COLORS.red : (languageAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Languages</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -429,7 +574,7 @@ const Candidate_profile = () => {
           {
             languagesView && (
               <BottomUpModal isVisible={languagesView} onClose={() => { setLanguagesView(false); }} visibleHeight={450}>
-                {<LanguageBottomView onPress={() => setLanguagesView(false)} languages={languages} fetchLanguageData={fetchLanguageData}  />}
+                {<LanguageBottomView onPress={() => setLanguagesView(false)} languages={languages} fetchLanguageData={fetchLanguageData} />}
               </BottomUpModal>
             )
           }
@@ -443,7 +588,7 @@ const Candidate_profile = () => {
           }}>
             <TouchableOpacity onPress={() => setIdentityView(!identityView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
               <Icons name='smart-card-outline' size={20} color={COLORS.orange} />
-              <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Identity Proofs</Text>
+              <Text style={{ ...FONTS.h4, paddingHorizontal: 5, color: identificationApproveFlag === "R" ? COLORS.red : COLORS.gray }}>Identity Proofs</Text>
               <FontAwesome style={{ position: 'absolute', right: 5 }} name={identityView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
             </TouchableOpacity>
 
@@ -451,17 +596,17 @@ const Candidate_profile = () => {
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setIdentifications(!identifications)}>
                   <FontAwesome name='vcard-o' color={COLORS.green} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}> Identifications </Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: identificationApproveFlag === "R" ? COLORS.red : (identificationApproveFlag === "A" ? COLORS.green : COLORS.gray) }}> Identifications </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setEsicView(!esicView)}>
                   <FontAwesome name='id-badge' color={COLORS.green} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}> ESIC</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: esicAppFlag === "R" ? COLORS.red : (esicAppFlag === "A" ? COLORS.green : COLORS.gray) }}> ESIC</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setUanView(!uanView)}>
                   <Ionicons name='finger-print-sharp' color={COLORS.green} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}> UAN</Text>
+                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: uanAppFlag === "R" ? COLORS.red : (uanAppFlag === "A" ? COLORS.green : COLORS.gray) }}> UAN</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -509,7 +654,7 @@ const Candidate_profile = () => {
                 <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                   <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setEmployeHistoryView(!identifications)}>
                     <Icons name='briefcase-clock-outline' color={COLORS.green} size={20} />
-                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4 }}> Employment History </Text>
+                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4,color:employmentAppFlag==="R"?COLORS.red:(employmentAppFlag==="A"?COLORS.green:COLORS.gray) }}> Employment History </Text>
                   </TouchableOpacity>
                 </View>
               )}

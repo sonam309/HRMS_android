@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-native-date-picker'
 import COLORS from '../../../../constants/theme'
@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import Toast from 'react-native-toast-message';
 import DateButton from '../../../../components/DateButton'
 import TextDropdown from '../../../../components/TextDropdown'
+import { showAlert,closeAlert } from "react-native-customisable-alert";
 
 
 const PersonalBottomView = ({ onPress }) => {
@@ -100,6 +101,8 @@ const PersonalBottomView = ({ onPress }) => {
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [operFlag, setOperFlag] = useState("P");
+    const [approvalFlag, setApprovalFlag] = useState();
+    const [approveRemark, setApproveRemark] = useState();
 
     // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
     const fetchPersonalData = async () => {
@@ -121,6 +124,8 @@ const PersonalBottomView = ({ onPress }) => {
             console.log('candidate profile', res);
             setLoaderVisible(false);
             setFilledDetails(res);
+            setApprovalFlag(res.PERSON_APP_FLAG);
+            setApproveRemark(res.PERSON_APP_RMK);
         } catch (error) {
             setLoaderVisible(false);
             Toast.show({
@@ -237,8 +242,21 @@ const PersonalBottomView = ({ onPress }) => {
     return (
         <View style={{ flex: 1 }} >
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
-                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Personal</Text>
-                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Personal</Text>
+                    {approvalFlag==="R"?<TouchableOpacity onPress={() => { showAlert({
+                            title:approveRemark,
+                            customIcon:'none',
+                            message: "",
+                            alertType: 'error',
+                            onPress: ()  => closeAlert(),
+
+                            
+                        });}}>
+                        <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+                    </TouchableOpacity>:""}
+                </View>
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
@@ -278,7 +296,7 @@ const PersonalBottomView = ({ onPress }) => {
                             <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Father Name <Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <TextInput style={styles.inputHolder} value={fatherName} onChangeText={(val) => setFatherName(val)} editable={false} />
                         </View>
-                        <View style={{ width: '50%', paddingHorizontal: 3, marginTop:-15,marginLeft:5}}>
+                        <View style={{ width: '50%', paddingHorizontal: 3, marginTop: -15, marginLeft: 5 }}>
 
                             <TextDropdown
                                 caption={'Caste'}
@@ -316,10 +334,10 @@ const PersonalBottomView = ({ onPress }) => {
 
                     <View style={{ flexDirection: 'row', margin: 3, justifyContent: 'space-between' }}>
                         <View style={{ width: '48%', paddingHorizontal: 3 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Identification Marks</Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Identification Marks</Text>
                             <TextInput style={styles.inputHolder} value={identityMarks} onChangeText={(val) => setIdentityMarks(val)} />
                         </View>
-                        <View style={{ width: '48%', paddingHorizontal: 3 , marginTop:-15}}>
+                        <View style={{ width: '48%', paddingHorizontal: 3, marginTop: -15 }}>
 
                             <TextDropdown
                                 caption={'Gender'}
@@ -432,16 +450,17 @@ const PersonalBottomView = ({ onPress }) => {
                     <Text style={{ color: COLORS.green, ...FONTS.h5, paddingHorizontal: 6, paddingVertical: 3 }}>Reference Address 2</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, height: refAddressHeight1 }]} multiline={true} onContentSizeChange={event => { setRefAddressHeight1(event.nativeEvent.contentSize.height) }} value={refAddress1} onChangeText={(val) => setRefAddress1(val)} />
 
-                    <TouchableOpacity onPress={() => savePersonalDetails()} >
-                        <LinearGradient
-                            colors={[COLORS.orange1, COLORS.disableOrange1]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                                {firstName !==null? 'Update Personal Details' : 'Save Personal Details'}</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+                    {approvalFlag !== "A" ?
+                        <TouchableOpacity onPress={() => savePersonalDetails()} >
+                            <LinearGradient
+                                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 2, y: 0 }}
+                                style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                                    {firstName !== null ? 'Update Personal Details' : 'Save Personal Details'}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity> : ""}
                     <View style={{ paddingBottom: 270 }}></View>
                 </ScrollView>}
         </View>

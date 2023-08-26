@@ -28,6 +28,7 @@
     "react-native-axios": "^0.17.1",
     "react-native-blob-util": "^0.18.3",
     "react-native-calendars": "^1.1297.0",
+    "react-native-customisable-alert": "^0.1.20",
     "react-native-date-picker": "^4.2.13",
     "react-native-document-picker": "^9.0.1",
     "react-native-gesture-handler": "^2.10.1",

@@ -13,7 +13,8 @@ import WebView from 'react-native-webview';
 import TextDropdown from '../../../../components/TextDropdown'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Pdf from 'react-native-pdf'
+import Pdf from 'react-native-pdf';
+import { showAlert } from "react-native-customisable-alert";
 
 const BankBottomView = ({ onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -44,6 +45,7 @@ const BankBottomView = ({ onPress }) => {
   const [selectedOperation, setSelectedOperation] = useState(null);
   const [selectedOperationValue, setSelectedOperationValue] = useState();
   const [loaderVisible, setLoaderVisible] = useState(false);
+  const [approvalFlag, setApprovalFlag] = useState();
 
 
   // for displaying bank documents
@@ -145,6 +147,7 @@ const BankBottomView = ({ onPress }) => {
       console.log('candidate profile', res);
       setLoaderVisible(false);
       setFilledDetails(res);
+      setApprovalFlag(res.BANK_APP_FLAG);
     } catch (error) {
       setLoaderVisible(false);
       Toast.show({
@@ -341,7 +344,22 @@ const BankBottomView = ({ onPress }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Bank Detials</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+          <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Bank Detials</Text>
+          {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
+            showAlert({
+              title:"Are you sure?",
+              customIcon:'none',
+              message: "All your files will be deleted!",
+              alertType: 'warning',
+              // onPress: ()  => closeAlert(),
+
+              
+          });}
+          }>
+            <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+          </TouchableOpacity> : ""}
+        </View>
         <TouchableOpacity onPress={onPress}>
           <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
@@ -467,17 +485,17 @@ const BankBottomView = ({ onPress }) => {
                 {Object.keys(selectedDoc).length > 0 ? (selectedDoc.map((doc, index) => <DisplayBankDocs key={index} doc={doc} />)) : <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>No Document Selected</Text>}
               </View>}
 
-              <TouchableOpacity onPress={() => (filledDetails?.ACCOUNT_NO  ? saveBankDetails("G") : saveBankDetails("B"))} >
+              {approvalFlag !== "A" ? <TouchableOpacity onPress={() => (filledDetails?.ACCOUNT_NO ? saveBankDetails("G") : saveBankDetails("B"))} >
                 <LinearGradient
                   colors={[COLORS.orange1, COLORS.disableOrange1]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 2, y: 0 }}
                   style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
                   <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                    {filledDetails?.ACCOUNT_NO  ? 'Update Bank Details' : 'Save Bank Details'}
+                    {filledDetails?.ACCOUNT_NO ? 'Update Bank Details' : 'Save Bank Details'}
                   </Text>
                 </LinearGradient>
-              </TouchableOpacity>
+              </TouchableOpacity> : ""}
               <View style={{ marginBottom: 270 }}></View>
             </ScrollView>}
         </>

@@ -10,6 +10,8 @@ import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
+import { showAlert,closeAlert } from "react-native-customisable-alert";
+
 
 
 const PersonalAddressBottomView = ({ onPress }) => {
@@ -94,6 +96,8 @@ const PersonalAddressBottomView = ({ onPress }) => {
     const [permanentThanaEdit, setPermanentThanaEdit] = useState(true)
     const [permanentCountryEdit, setPermanentCountryEdit] = useState(false)
     const [permanentStateEdit, setPermanentStateEdit] = useState(false)
+    const [approvalFlag, setApprovalFlag] = useState();
+    const[addressAppRemark,setAddressAppRemark]=useState();
 
 
     // same present and permanent
@@ -150,9 +154,12 @@ const PersonalAddressBottomView = ({ onPress }) => {
             })
             res = await res.json()
             res = await res?.Result[0]
-            console.log("res", res);
+            console.log("address", res.DOC_REJ_REMARK);
             setLoaderVisible(false);
             setFilledDetails(res);
+            setApprovalFlag(res.APPROVAL_FLAG);
+            setAddressAppRemark(res.DOC_REJ_REMARK);
+
         } catch (error) {
             setLoaderVisible(false);
             Toast.show({
@@ -348,7 +355,21 @@ const PersonalAddressBottomView = ({ onPress }) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                 <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
+                {approvalFlag==="R"?<TouchableOpacity onPress={() => { showAlert({
+                            title:addressAppRemark,
+                            customIcon:'none',
+                            message: "",
+                            alertType: 'error',
+                            btnLabel:'ok',
+                            onPress: ()  => closeAlert(),
+
+                            
+                        });}}>
+                        <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+                    </TouchableOpacity>:""}
+                </View>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>

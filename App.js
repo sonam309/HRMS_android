@@ -10,6 +10,7 @@ import store from './redux/store';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomAlert from './components/CustomAlert';
+import CustomisableAlert from 'react-native-customisable-alert';
 
 const App = () => {
 
@@ -58,6 +59,12 @@ const App = () => {
         <EntryStackNav />
       </NavigationContainer>
       <Toast position="top" bottomOffset={20} />
+      <CustomisableAlert
+                    titleStyle={{
+                        fontSize: 18,
+                        fontWeight: "bold"
+                    }}
+                />
       </SafeAreaView>
     </Provider>
   );
