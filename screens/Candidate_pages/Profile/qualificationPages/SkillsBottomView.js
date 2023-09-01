@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity ,ActivityIndicator} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import { FONTS, SIZES } from '../../../../constants/font_size';
@@ -29,7 +29,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
   const [selectedSkillLevel, setSelectedSkillLevel] = useState();
   const [selectedSkillLevelValue, setSelectedSkillLevelValue] = useState('');
 
-  const [loaderVisible, setLoaderVisible] = useState(true);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   useEffect(() => {
     getDropdownData(39);
@@ -185,7 +185,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
           txnId: txnId, operFlag: operFlag, candidateId: userId, userId: userId, skillsName: skill, level: selectedSkillLevelValue, totalExp: totalExperience
         }
         // console.warn(skillData);
-
+        setLoaderVisible(true);
         let res = await fetch(`${API}/api/hrms/candidateSkills`, {
           method: "POST",
           headers: {
@@ -196,6 +196,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
         })
         res = await res.json();
         res = await res?.Result[0]?.MSG
+        setLoaderVisible(false);
         onPress()
         Toast.show({
           type: 'success',
@@ -203,7 +204,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
         })
       }
       else {
-
+        setLoaderVisible(false);
         Toast.show({
           type: 'error',
           text1: "Fill all the Required Fields"
@@ -211,6 +212,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
       }
     }
     catch (error) {
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
         text1: error
@@ -245,77 +247,77 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
         </TouchableOpacity>
       </View>
 
-      {/* {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
-                <ActivityIndicator color={COLORS.orange1} />
-                <Text
-                    style={{
-                        ...FONTS.h3,
-                        fontWeight: '500',
-                        color: COLORS.orange1,
-                        marginTop: SIZES.base,
-                    }}>
-                    Loading your details
-                </Text>
-            </View>
-            ) : */}
+      {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text
+          style={{
+            ...FONTS.h3,
+            fontWeight: '500',
+            color: COLORS.orange1,
+            marginTop: SIZES.base,
+          }}>
+          Loading your details
+        </Text>
+      </View>
+      ) :
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {
-          showSkills && allSkills[0]?.FLAG === "S" ? <SkillDetails /> : (
-            <View>
-              {/* {SkillDetails} */}
-              {/* {console.log("first", skills?.length)} */}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {
+            showSkills && allSkills[0]?.FLAG === "S" ? <SkillDetails /> : (
+              <View>
+                {/* {SkillDetails} */}
+                {/* {console.log("first", skills?.length)} */}
 
-              <View style={{
-                marginVertical: 5, marginTop: 20
-              }}>
-                <Text style={{ color: 'green', paddingHorizontal: 6 }}>Skill</Text>
-                <TextInput value={skill} onChangeText={(val) => setSkill(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-              </View>
+                <View style={{
+                  marginVertical: 5, marginTop: 20
+                }}>
+                  <Text style={{ color: 'green', paddingHorizontal: 6 }}>Skill</Text>
+                  <TextInput value={skill} onChangeText={(val) => setSkill(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                </View>
 
-              {/* Level dropDown */}
-              <View style={{ marginVertical: 5 }}>
+                {/* Level dropDown */}
+                <View style={{ marginVertical: 5 }}>
 
-                <TextDropdown
-                  caption={'Level'}
-                  data={skillLevelDropDown}
-                  setData={setSelectedSkillLevel}
-                  setIdvalue={setSelectedSkillLevelValue}
-                  defaultButtonText={selectedSkillLevel}
-                  captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                />
+                  <TextDropdown
+                    caption={'Level'}
+                    data={skillLevelDropDown}
+                    setData={setSelectedSkillLevel}
+                    setIdvalue={setSelectedSkillLevelValue}
+                    defaultButtonText={selectedSkillLevel}
+                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                  />
 
 
 
-                {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
+                  {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Level</Text>
                 <SelectDropdown data={skillLevelDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedSkillLevel(value), checkSkillValue(value) }} defaultButtonText={selectDropDownText("skill")} defaultValueByIndex={(selectDropDownValue("skill"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
+                </View>
+
+                {/* Total experience */}
+                <View style={{ marginVertical: 5 }}>
+                  <Text style={{ color: 'green', paddingHorizontal: 6 }}>Total Experience</Text>
+                  <TextInput value={totalExperience} onChangeText={(val) => setTotalExperience(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                </View>
+
+                {/* Saving Data */}
+                <TouchableOpacity onPress={() => saveSkillDetails()} >
+                  <LinearGradient
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 2, y: 0 }}
+                    style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Skill Details</Text>
+
+                  </LinearGradient>
+                </TouchableOpacity>
               </View>
+            )
+          }
 
-              {/* Total experience */}
-              <View style={{ marginVertical: 5 }}>
-                <Text style={{ color: 'green', paddingHorizontal: 6 }}>Total Experience</Text>
-                <TextInput value={totalExperience} onChangeText={(val) => setTotalExperience(val)} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-              </View>
+          {/* <View style={{ marginBottom: 320 }}></View> */}
 
-              {/* Saving Data */}
-              <TouchableOpacity onPress={() => saveSkillDetails()} >
-                <LinearGradient
-                  colors={[COLORS.orange1, COLORS.disableOrange1]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 2, y: 0 }}
-                  style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Skill Details</Text>
-
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          )
-        }
-
-        {/* <View style={{ marginBottom: 320 }}></View> */}
-
-      </ScrollView>
-      {/* } */}
+        </ScrollView>
+      }
     </View>
   )
 }

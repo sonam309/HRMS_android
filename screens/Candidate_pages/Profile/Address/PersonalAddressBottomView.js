@@ -10,7 +10,8 @@ import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
-import { showAlert,closeAlert } from "react-native-customisable-alert";
+import { showAlert, closeAlert } from "react-native-customisable-alert";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 
@@ -97,7 +98,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
     const [permanentCountryEdit, setPermanentCountryEdit] = useState(false)
     const [permanentStateEdit, setPermanentStateEdit] = useState(false)
     const [approvalFlag, setApprovalFlag] = useState();
-    const[addressAppRemark,setAddressAppRemark]=useState();
+    const [addressAppRemark, setAddressAppRemark] = useState();
 
 
     // same present and permanent
@@ -355,20 +356,22 @@ const PersonalAddressBottomView = ({ onPress }) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
-                {approvalFlag==="R"?<TouchableOpacity onPress={() => { showAlert({
-                            title:addressAppRemark,
-                            customIcon:'none',
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
+                    {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
+                        showAlert({
+                            title: addressAppRemark,
+                            customIcon: 'none',
                             message: "",
                             alertType: 'error',
-                            btnLabel:'ok',
-                            onPress: ()  => closeAlert(),
+                            btnLabel: 'ok',
+                            onPress: () => closeAlert(),
 
-                            
-                        });}}>
+
+                        });
+                    }}>
                         <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
-                    </TouchableOpacity>:""}
+                    </TouchableOpacity> : ""}
                 </View>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
@@ -387,8 +390,21 @@ const PersonalAddressBottomView = ({ onPress }) => {
                 </Text>
             </View>
             ) :
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ flex: 1, marginBottom: 170 }}
+                    contentContainerStyle={{
+                        paddingBottom: 170
+                    }}
 
-                <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+                    showsVerticalScrollIndicator={false}
+                >
+
+
+                    {/* <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}> */}
                     <Loader loaderVisible={loaderVisible} />
 
                     {/* Present */}
@@ -500,13 +516,14 @@ const PersonalAddressBottomView = ({ onPress }) => {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE?"Update Address Details":"Save Address Details"}</Text>
+                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE ? "Update Address Details" : "Save Address Details"}</Text>
                         </LinearGradient>
                     </TouchableOpacity>
-                    <View style={{ paddingBottom: 270 }}></View>
-
-                </ScrollView>}
-        </View>
+                    {/* <View style={{ paddingBottom: 270 }}></View> */}
+                {/* </ScrollView> */}
+                </KeyboardAwareScrollView>
+                }
+        </View >
     )
 }
 

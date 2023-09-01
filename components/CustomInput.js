@@ -15,6 +15,7 @@ const CustomInput = ({
     icon,
     isPasswordInput,
     returnKeyType="default",
+    maxlength,
     
 }) => {
     return (
@@ -47,6 +48,7 @@ const CustomInput = ({
                         }}
                         keyboardType={keyboardType}
                         secureTextEntry={secureTextEntry}
+                        maxLength={maxlength}
                     />
                     {icon}
                 </View>

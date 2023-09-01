@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient'
 import { API } from '../../../../utility/services'
 import { showAlert, closeAlert } from "react-native-customisable-alert";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ContactBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -20,7 +21,7 @@ const ContactBottomView = ({ onPress }) => {
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [approvalFlag, setApprovalFlag] = useState();
-    const[conatcatRemark,setContactRemark]=useState();
+    const [conatcatRemark, setContactRemark] = useState();
 
 
     const ValidateForm = () => {
@@ -143,11 +144,11 @@ const ContactBottomView = ({ onPress }) => {
                     {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
 
                         showAlert({
-                            customIcon:'none',
+                            customIcon: 'none',
                             title: conatcatRemark,
                             message: "",
                             alertType: 'error',
-                            btnLabel:"ok",
+                            btnLabel: "ok",
                             onPress: () => closeAlert(),
                         });
 
@@ -171,28 +172,41 @@ const ContactBottomView = ({ onPress }) => {
                     Loading your details
                 </Text>
             </View>
-            ) :
-                <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Personal Email Id<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={personalMail} onChangeText={(val) => setPersonalMail(val)} keyboardType='email-address' maxLength={100} editable={false} />
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Email Id</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={alternateMail} onChangeText={(val) => setAlternateMail(val)} keyboardType='email-address' maxLength={100} />
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Phone No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={phone} onChangeText={(val) => setPhone(val)} maxLength={10} editable={false} />
-                    <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Phone No.</Text>
-                    <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} maxLength={10} />
-                    {approvalFlag !== "A" ? <TouchableOpacity onPress={() => (filledDetails?.PHONE_NO ? saveContactDetails('I') : saveContactDetails('C'))} >
-                        <LinearGradient
-                            colors={[COLORS.orange1, COLORS.disableOrange1]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 10, marginTop: 80 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                                {filledDetails?.PHONE_NO ? 'Update Contact Details' : 'Save Contact Details'}
-                            </Text>
-                        </LinearGradient>
-                    </TouchableOpacity> : ""}
-                </ScrollView>}
+            ) :<KeyboardAwareScrollView
+          
+            behavior={'padding'}
+            enableAutomaticScroll={true}
+            keyboardShouldPersistTaps={'always'}
+            style={{ flex: 1, marginBottom: 120 }}
+            contentContainerStyle={{
+                paddingBottom: 120
+            }}
+
+            showsVerticalScrollIndicator={false}
+        >
+             {/* <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}> */}
+                <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Personal Email Id<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={personalMail} onChangeText={(val) => setPersonalMail(val)} keyboardType='email-address' maxLength={100} editable={false} />
+                <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Email Id</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} value={alternateMail} onChangeText={(val) => setAlternateMail(val)} keyboardType='email-address' maxLength={100} />
+                <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Phone No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={phone} onChangeText={(val) => setPhone(val)} maxLength={10} editable={false} />
+                <Text style={{ color: COLORS.green, ...FONTS.h4, paddingHorizontal: 6, paddingVertical: 3 }}>Alternate Phone No.</Text>
+                <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7, color: COLORS.black }]} keyboardType='phone-pad' value={alternatePhone} onChangeText={(val) => setAlternatePhone(val)} maxLength={10} />
+                {approvalFlag !== "A" ? <TouchableOpacity onPress={() => (filledDetails?.PHONE_NO ? saveContactDetails('I') : saveContactDetails('C'))} >
+                    <LinearGradient
+                        colors={[COLORS.orange1, COLORS.disableOrange1]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 2, y: 0 }}
+                        style={{ borderRadius: 8, padding: 10, marginTop: 80 }} >
+                        <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                            {filledDetails?.PHONE_NO ? 'Update Contact Details' : 'Save Contact Details'}
+                        </Text>
+                    </LinearGradient>
+                </TouchableOpacity> : ""}
+            {/* </ScrollView> */}
+            </KeyboardAwareScrollView>
+            }
         </View>
     )
 }

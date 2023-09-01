@@ -33,6 +33,7 @@
     "react-native-document-picker": "^9.0.1",
     "react-native-gesture-handler": "^2.10.1",
     "react-native-get-location": "^3.0.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-orientation-locker": "^1.5.0",
     "react-native-pager-view": "^6.2.0",

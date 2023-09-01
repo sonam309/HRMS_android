@@ -85,7 +85,7 @@ const Candidate_profile = () => {
   const [languageAppFlag, setLanguageAppFlag] = useState();
   const [esicAppFlag, setEsicAppFlag] = useState();
   const [uanAppFlag, setUAnAppFlag] = useState();
-  const[employmentAppFlag,setEmployementAppFlag]=useState();
+  const [employmentAppFlag, setEmployementAppFlag] = useState();
 
   const fetchPersonalData = async () => {
     try {
@@ -103,14 +103,14 @@ const Candidate_profile = () => {
       );
       res = await res.json();
       res = await res?.Result[0];
-      console.log('personalApprovalFlag', res.PERSON_APP_FLAG,res.CONTACT_APP_FLAG,res.BANK_APP_FLAG);
+      console.log('personalApprovalFlag', res.PERSON_APP_FLAG, res.CONTACT_APP_FLAG, res.BANK_APP_FLAG);
 
       setPersonalApprovalFlag(res.PERSON_APP_FLAG);
       setConatctAppFlag(res.CONTACT_APP_FLAG);
       setBankAppFlag(res.BANK_APP_FLAG);
 
     } catch (error) {
-     
+
       Toast.show({
         type: 'error',
         text1: error,
@@ -236,10 +236,10 @@ const Candidate_profile = () => {
       body: JSON.stringify(qualficationData)
     })
     res = await res.json()
-    res = await res?.Result[0]
+    res = await res?.Result
     console.log("qualfication Data", res);
     setQualification(res);
-    setQualiAppFlag(res.APPROVAL_FLAG);
+    setQualiAppFlag(res[0].APPROVAL_FLAG);
   }
 
   const getIdentificationData = () => {
@@ -370,8 +370,8 @@ const Candidate_profile = () => {
         {/* Name and User id of candidate */}
         <View style={[{ backgroundColor: COLORS.white, alignItems: 'center', margin: 10, padding: SIZES.radius, borderRadius: SIZES.base, borderWidth: 0.5, borderColor: COLORS.lightGray, marginTop: SIZES.padding, }]}>
           <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-          <Text style={{ fontWeight: 500 }}>{userName}</Text>
-          <Text style={{ fontWeight: 500 }}>{userId}</Text>
+          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1,marginTop:5 }}>Name: {userName}</Text>
+          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1 ,marginTop:-5}}>Candidate ID: {userId}</Text>
         </View>
 
         {/* About Me header and it's dropdown content */}
@@ -654,7 +654,7 @@ const Candidate_profile = () => {
                 <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                   <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', }} onPress={() => setEmployeHistoryView(!identifications)}>
                     <Icons name='briefcase-clock-outline' color={COLORS.green} size={20} />
-                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4,color:employmentAppFlag==="R"?COLORS.red:(employmentAppFlag==="A"?COLORS.green:COLORS.gray) }}> Employment History </Text>
+                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: employmentAppFlag === "R" ? COLORS.red : (employmentAppFlag === "A" ? COLORS.green : COLORS.gray) }}> Employment History </Text>
                   </TouchableOpacity>
                 </View>
               )}

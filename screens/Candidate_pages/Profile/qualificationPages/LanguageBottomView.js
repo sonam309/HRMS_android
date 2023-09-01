@@ -111,11 +111,12 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            onPress()
+           
             Toast.show({
                 type: 'success',
                 text1: res
             })
+            onPress();
         } catch (error) {
 
             Toast.show({

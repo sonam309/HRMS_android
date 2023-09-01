@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, ActivityIndicator } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
 import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -8,6 +8,8 @@ import { FONTS } from '../../../constants/font_size'
 import { useFocusEffect } from '@react-navigation/native';
 import { API } from '../../../utility/services'
 import Toast from 'react-native-toast-message';
+import Loader from '../../../components/Loader'
+import { err } from 'react-native-svg/lib/typescript/xml'
 
 
 const Interview_status = (props) => {
@@ -15,23 +17,36 @@ const Interview_status = (props) => {
     const [interViewDetail, setInterViewDetail] = useState();
     const [status, setStatus] = useState('P')
     const userId = useSelector(state => state.auth.userId)
-    const[interviewType,setInterviewType]=useState('');
+    const [interviewType, setInterviewType] = useState('');
+    const [loaderVisibility, setLoaderVisibility] = useState(false);
 
     // fetching interviewer's list data
     const fetchInterviewData = async () => {
+        try {
 
-        let res = await fetch(`${API}/api/User/InterviewList`, {
-            method: "POST",
-            headers: { Accept: "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify({ operFlag: "V", userId: userId }),
-        })
-        res = await res.json()
-        res = res.Result;
-        console.log("responseIStatus", res)
-        setInterViewDetail(res)
-        // setInterviewType(res.INTERVIEW_TYPE);
-        // {console.log("InterviewTypesss",res.INTERVIEW_TYPE)}
+            setLoaderVisibility(true);
+            let res = await fetch(`${API}/api/User/InterviewList`, {
+                method: "POST",
+                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({ operFlag: "V", userId: userId }),
+            })
+            res = await res.json()
+            res = res.Result;
+            setLoaderVisibility(false);
+            console.log("responseIStatus", res)
+            setInterViewDetail(res)
+            // setInterviewType(res.INTERVIEW_TYPE);
+            // {console.log("InterviewTypesss",res.INTERVIEW_TYPE)}
+        } catch (error) {
+            setLoaderVisibility(false)
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
+        }
     };
+
+
 
     // useEffect(() => {
     //     fetchInterviewData();
@@ -45,13 +60,13 @@ const Interview_status = (props) => {
     // candidate icons 
     function CandidateList(props) {
 
-        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id,  interviewMail = props.mail,interviewType = props.interviewType
+        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id, interviewMail = props.mail, interviewType = props.interviewType
 
-       
+
 
         return (
             <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail })}>
-                {console.log("TYpe",interviewType)}
+                {console.log("TYpe", interviewType)}
 
                 <View style={{ borderRadius: 15, backgroundColor: COLORS.white, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15, borderWidth: 0.5, borderColor: COLORS.gray }}>
                     <View>
@@ -61,16 +76,16 @@ const Interview_status = (props) => {
                     <View style={{ paddingHorizontal: 10 }}>
 
                         <Text style={{ color: COLORS.green, ...FONTS.h3, }}>{name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}</Text>
-                        <View style={{ flexDirection: 'row',}}>
+                        <View style={{ flexDirection: 'row', }}>
                             <View style={{ flexDirection: 'row', }}>
                                 {/* <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} /> */}
                                 <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, }}>ID:</Text>
                                 <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, }}> {candidateId}</Text>
 
                             </View>
-                            <View style={{ flexDirection: 'row',marginLeft:10 }}>
+                            <View style={{ flexDirection: 'row', marginLeft: 10 }}>
                                 <Icon name="briefcase-variant-outline" color={COLORS.gray} size={20} />
-                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 1 }}> {designation.slice(0,16)}</Text>
+                                <Text style={{ color: COLORS.gray, fontSize: 13, ...FONTS.h5, marginHorizontal: 1 }}> {designation.slice(0, 16)}</Text>
                             </View>
                         </View>
                         {date ? <Text style={{ color: COLORS.gray, ...FONTS.h5, marginTop: -5 }}>Scheduled:{date}</Text> : null}
@@ -91,9 +106,8 @@ const Interview_status = (props) => {
 
     return (
         <ScrollView>
+            <Loader loaderVisible={loaderVisibility} />
             <View style={[{ backgroundColor: COLORS.white, flex: 1, margin: 10, padding: 4, borderRadius: 10, height: '100%' }, styles.Elevation]}>
-
-
                 {/* top buttons */}
                 <View style={{ marginVertical: 10 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginHorizontal: 10, }}>

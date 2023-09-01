@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
@@ -13,8 +13,11 @@ import WebView from 'react-native-webview';
 import TextDropdown from '../../../../components/TextDropdown'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Pdf from 'react-native-pdf';
+import Pdf from 'react-native-pdf'
 import { showAlert } from "react-native-customisable-alert";
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 const BankBottomView = ({ onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -342,6 +345,7 @@ const BankBottomView = ({ onPress }) => {
   }
 
   return (
+    
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
@@ -425,7 +429,19 @@ const BankBottomView = ({ onPress }) => {
                 }
               </View>
             </View>
-            : <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+            :<KeyboardAwareScrollView 
+            extraScrollHeight={150} 
+            behavior={'padding'}
+
+            enableAutomaticScroll={true}
+             keyboardShouldPersistTaps={'always'}
+            style={{flex:1, marginBottom: 170}}
+            contentContainerStyle={{
+              paddingBottom: 170
+            }}
+
+            showsVerticalScrollIndicator={false}
+            >
 
               <TextDropdown
                 caption={'Account Type'}
@@ -496,12 +512,14 @@ const BankBottomView = ({ onPress }) => {
                   </Text>
                 </LinearGradient>
               </TouchableOpacity> : ""}
-              <View style={{ marginBottom: 270 }}></View>
-            </ScrollView>}
+              {/* <View style={{ marginBottom: 120 }}></View> */}
+            </KeyboardAwareScrollView>
+            }
         </>
       )
       }
     </View>
+   
   )
 }
 

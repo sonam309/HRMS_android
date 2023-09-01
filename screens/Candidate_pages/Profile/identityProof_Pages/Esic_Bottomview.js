@@ -9,12 +9,13 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import SelectDropdown from 'react-native-select-dropdown';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 
 
 const Esic_Bottomview = (props) => {
-  
+
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
   const [loaderVisible, setLoaderVisible] = useState(false);
@@ -94,7 +95,7 @@ const Esic_Bottomview = (props) => {
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-         console.log("getDataSonammmm", ESICDetails);
+        console.log("getDataSonammmm", ESICDetails);
 
         if (Object.keys(ESICDetails).length > 2) {
           setIsEdit(true);
@@ -141,7 +142,19 @@ const Esic_Bottomview = (props) => {
           color: COLORS.orange1
         }} >Loading you data..</Text>
       </View> :
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={270}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ flex: 1, marginBottom: 170 }}
+          contentContainerStyle={{
+            paddingBottom: 170
+          }}
+
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
 
           {/* City */}
           <View style={{ height: 75, marginTop: 10 }}>
@@ -197,7 +210,7 @@ const Esic_Bottomview = (props) => {
             {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text> */}
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-              onChangeText={setNoStatePlace} value={noStatePlace} maxLength={3} />
+              onChangeText={setNoStatePlace} value={noStatePlace} maxLength={30} />
           </View>
 
           {/* If No State place of Residence*/}
@@ -243,8 +256,10 @@ const Esic_Bottomview = (props) => {
 
           </TouchableOpacity>
 
-          <View style={{ marginBottom: 270 }}></View>
-        </ScrollView>}
+          {/* <View style={{ marginBottom: 270 }}></View> */}
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+      }
     </View>
 
 

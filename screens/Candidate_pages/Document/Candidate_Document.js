@@ -215,7 +215,7 @@ const Candidate_Document = (props) => {
 
     // for removing other files
     const onRemoveOtherFiles = (index) => {
-        let newFile = undefined
+        let newFile = null|| undefined
         // console.warn("this is new file", newFile);
         setOtherFiles([
             ...otherFiles.slice(0, index),

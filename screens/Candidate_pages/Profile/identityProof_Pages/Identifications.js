@@ -10,6 +10,7 @@ import axios from 'axios';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 const Identifications = (props) => {
@@ -165,7 +166,7 @@ const Identifications = (props) => {
           const returnedData = response?.data?.Result;
           console.log("result..", returnedData);
           const msg = returnedData[0].MSG
-          props.onPress() 
+          props.onPress()
 
           Toast.show({
             type: 'success',
@@ -245,8 +246,20 @@ const Identifications = (props) => {
             }} >Loading you data..</Text>
           </View>
           :
+          <KeyboardAwareScrollView
+            extraScrollHeight={270}
+            behavior={'padding'}
+            enableAutomaticScroll={true}
+            keyboardShouldPersistTaps={'always'}
+            style={{ flex: 1, marginBottom: 170 }}
+            contentContainerStyle={{
+              paddingBottom: 170
+            }}
 
-          <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}>
+            showsVerticalScrollIndicator={false}
+          >
+
+            {/* <ScrollView showsVerticalScrollIndicator={false} style={{ height: '100%' }}> */}
             <View>
               {/* close button */}
               {/* <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
@@ -263,7 +276,7 @@ const Identifications = (props) => {
                 {/* Pan number input */}
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passport Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }}  onChangeText={setPassportNumber} value={passportnumber} maxLength={12}/>
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} onChangeText={setPassportNumber} value={passportnumber} maxLength={12} />
                 </View>
 
                 {/* Date Of issue */}
@@ -298,7 +311,7 @@ const Identifications = (props) => {
                 {/* place of issue */}
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} 
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }}
                     onChangeText={setPassportIssuePlace} value={passportissuePlace} />
                 </View>
               </View>
@@ -310,7 +323,7 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Pan Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Pan Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'maxLength={15} onChangeText={setPanNumber} value={panNumber} />
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setPanNumber} value={panNumber} />
                 </View>
                 {/* name as per pan */}
                 <View style={{ height: 75, marginTop: 10 }}>
@@ -339,7 +352,7 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Voter's Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'maxLength={15}  onChangeText={setVotersNumber} value={votersNumber} />
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setVotersNumber} value={votersNumber} />
                 </View>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
@@ -353,7 +366,7 @@ const Identifications = (props) => {
 
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setDriverNumber} value={driverNumber} maxLength={15}/>
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setDriverNumber} value={driverNumber} maxLength={15} />
                 </View>
                 {/* Date Of issue */}
                 <View style={{ height: 75, marginTop: 10 }}>
@@ -400,14 +413,14 @@ const Identifications = (props) => {
                   start={{ x: 0, y: 0 }}
                   end={{ x: 2, y: 0 }}
                   style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
-                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{edit?.FLAG === "S" ? "Update" :"Save"}</Text>
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{edit?.FLAG === "S" ? "Update" : "Save"}</Text>
                 </LinearGradient>
               </TouchableOpacity>
 
             </View>
-            <View style={{ marginBottom: 270 }} />
-          </ScrollView>
-
+            {/* <View style={{ marginBottom: 270 }} /> */}
+            {/* </ScrollView> */}
+          </KeyboardAwareScrollView>
       }
 
 

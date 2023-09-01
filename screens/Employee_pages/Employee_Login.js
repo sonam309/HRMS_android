@@ -20,7 +20,7 @@ import Toast from 'react-native-toast-message';
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('Test@123');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 

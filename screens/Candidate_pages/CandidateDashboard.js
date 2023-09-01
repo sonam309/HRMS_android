@@ -60,7 +60,7 @@ const CandidateDashboard = (props) => {
                     setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
             }
             if (type === "profile") {
-                resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate_profile") : setProfileAlert(true)
+                resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate profile") : setProfileAlert(true)
             }
             // if(type==="experince"){
 
@@ -246,11 +246,11 @@ const CandidateDashboard = (props) => {
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
                     <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
                         style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
                             <Image source={expernallinkImage}
                                 style={{ height: 20, width: 20, }} />
-                            {/* <Text style={{ marginLeft: SIZES.base, ...FONTS.body5}}>satyamicrocapital.com</Text>  */}
-                        </View>
+                            <Text style={{ marginLeft: SIZES.base, ...FONTS.body5}}>satyamicrocapital.com</Text> 
+                        </View> */}
                         <View style={{ height: 100, width: 200, }}>
                             <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} />
                         </View>

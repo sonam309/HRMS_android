@@ -14,7 +14,7 @@ const CandidateStack = () => {
     return (
         <Stack.Navigator initialRouteName='Home' >
             <Stack.Screen name='CandidateDashboard' options={{ headerShown: false, orientation:'portrait' }} component={CandidateDashboard} />
-            <Stack.Screen name='Candidate_profile' options={{ orientation: 'portrait' }} component={Candidate_profile} />
+            <Stack.Screen name='Candidate profile' options={{ orientation: 'portrait' }} component={Candidate_profile} />
             <Stack.Screen name='Candidate_Document' options={{ orientation: 'portrait', headerShown: false }} component={Candidate_Document} />
             <Stack.Screen name='Offer_Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
             <Stack.Screen name='Status_view_page' options={{ orientation: 'portrait' }} component={Status_view_page} />

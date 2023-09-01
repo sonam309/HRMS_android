@@ -20,7 +20,7 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('483');
+    const [userId, setUserId] = useState('523');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -167,12 +167,12 @@ const Login = (props) => {
                 </View>
 
                 {/* Quick Pin Option */}
-                <View style={styles.loginOption}>
+                {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 30, height: 30, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.base, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
                     buttonContainerStyle={{ width: responsiveWidth(90), height: 50, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}

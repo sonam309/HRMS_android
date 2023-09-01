@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, TextInput,ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { FONTS } from '../../../../constants/font_size'
+import { FONTS,SIZES } from '../../../../constants/font_size'
 import COLORS from '../../../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,6 +10,9 @@ import Loader from '../../../../components/Loader';
 import { API } from '../../../../utility/services';
 import CustomInput from '../../../../components/CustomInput';
 import Toast from 'react-native-toast-message';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+
 
 const GuarantorBottomView = (props) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -131,76 +134,97 @@ const GuarantorBottomView = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+                <ActivityIndicator color={COLORS.orange1} />
+                <Text style={{ ...FONTS.h3, fontWeight: '500', color: COLORS.orange1, marginTop: SIZES.base, }}>
+                    Loading your details
+                </Text>
+            </View>
+            ) :
+            <KeyboardAwareScrollView
+                extraScrollHeight={270}
+                behavior={'padding'}
+                enableAutomaticScroll={true}
+                keyboardShouldPersistTaps={'always'}
+                style={{ flex: 1, marginBottom: 170 }}
+                contentContainerStyle={{
+                    paddingBottom: 170
+                }}
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <Loader loaderVisible={loaderVisible} />
-                <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 6, padding: 8, }}>
-                    <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>First Guarantor</Text>
-                    {/* first guarantor name */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='Name' onChangeText={setFirstGuarantorName} value={firstGuarantorName} />
+                showsVerticalScrollIndicator={false}
+            >
 
-                    </View>
-                    {/* guarantor S/O, D/O, W/O */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorCareOfName} value={firstGrantorCareOfName} />
-                    </View>
-                    {/* guarantor realtion */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorRelation} value={firstGrantorRelation} />
-                    </View>
-                    {/* guarantor Aadhar */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setFirstGrantorAadhaarNo} value={firstGrantorAadhaarNo} maxLength={12} />
-                    </View>
-                    {/* guarantor address */}
-                    <View style={{ marginTop: 10, marginBottom: 15, }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorAddress} value={firstGrantorAddress} />
-                    </View>
-                </View>
+                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+                    {/* <Loader loaderVisible={loaderVisible} /> */}
+                    <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 6, padding: 8, }}>
+                        <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>First Guarantor</Text>
+                        {/* first guarantor name */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='Name' onChangeText={setFirstGuarantorName} value={firstGuarantorName} />
 
-                <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 6, padding: 8, marginTop: 20 }}>
-                    <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>Second Guarantor</Text>
-                    {/* second guarantor name */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='Name' onChangeText={setSecondGrantorName} value={secondGrantorName} />
+                        </View>
+                        {/* guarantor S/O, D/O, W/O */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorCareOfName} value={firstGrantorCareOfName} />
+                        </View>
+                        {/* guarantor realtion */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorRelation} value={firstGrantorRelation} />
+                        </View>
+                        {/* guarantor Aadhar */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setFirstGrantorAadhaarNo} value={firstGrantorAadhaarNo} maxLength={12} />
+                        </View>
+                        {/* guarantor address */}
+                        <View style={{ marginTop: 10, marginBottom: 15, }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>First Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setFirstGrantorAddress} value={firstGrantorAddress} />
+                        </View>
                     </View>
-                    {/* guarantor S/O, D/O, W/O */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorCareOfName} value={secondGrantorCareOfName} />
-                    </View>
-                    {/* guarantor realtion */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorRelation} value={secondGrantorRelation} />
-                    </View>
-                    {/* guarantor Aadhar */}
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setSecondGrantorAadhaarNo} value={secondGrantorAadhaarNo} maxLength={12} />
-                    </View>
-                    {/* guarantor address */}
-                    <View style={{ marginTop: 10, marginBottom: 15, }}>
-                        <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
-                        <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorAddress} value={secondGrantorAddress} />
-                    </View>
-                </View>
 
-                <TouchableOpacity onPress={() => validation()} disabled={isDisabled} >
-                    <LinearGradient colors={!isDisabled ? [COLORS.orange1, COLORS.disableOrange1] : [COLORS.darkGray, COLORS.lightGray]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
-                        <Text
-                            style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
-                <View style={{ marginBottom: 270 }}></View>
-            </ScrollView>
+                    <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 6, padding: 8, marginTop: 20 }}>
+                        <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>Second Guarantor</Text>
+                        {/* second guarantor name */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='Name' onChangeText={setSecondGrantorName} value={secondGrantorName} />
+                        </View>
+                        {/* guarantor S/O, D/O, W/O */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorCareOfName} value={secondGrantorCareOfName} />
+                        </View>
+                        {/* guarantor realtion */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorRelation} value={secondGrantorRelation} />
+                        </View>
+                        {/* guarantor Aadhar */}
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setSecondGrantorAadhaarNo} value={secondGrantorAadhaarNo} maxLength={12} />
+                        </View>
+                        {/* guarantor address */}
+                        <View style={{ marginTop: 10, marginBottom: 15, }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorAddress} value={secondGrantorAddress} />
+                        </View>
+                    </View>
+
+                    <TouchableOpacity onPress={() => validation()} disabled={isDisabled} >
+                        <LinearGradient colors={!isDisabled ? [COLORS.orange1, COLORS.disableOrange1] : [COLORS.darkGray, COLORS.lightGray]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+                            <Text
+                                style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                    {/* <View style={{ marginBottom: 270 }}></View> */}
+                {/* </ScrollView> */}
+                </KeyboardAwareScrollView>
+            }
         </View>
     )
 }

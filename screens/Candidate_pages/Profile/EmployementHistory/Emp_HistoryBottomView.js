@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, editable } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, TextInput, editable, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { FONTS, SIZES } from '../../../../constants/font_size';
 import COLORS from '../../../../constants/theme';
@@ -8,6 +8,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Loader from '../../../../components/Loader';
 
 const Emp_HistoryBottomView = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -35,6 +37,7 @@ const Emp_HistoryBottomView = (props) => {
   const [operFlag, setOperFlag] = useState("A");
 
   const [fillForm, setFillForm] = useState(false);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   const [TXNID, setTXNID] = useState()
 
@@ -57,55 +60,58 @@ const Emp_HistoryBottomView = (props) => {
   const ValidateForm = () => {
     if (
       companyName === '' ||
-        designation === '' ||
-        role === '' ||
-        lastSalary === '' 
+      designation === '' ||
+      role === '' ||
+      lastSalary === ''
     ) { return false }
     else return true
-} 
+  }
 
   const SaveEmploymentData = async () => {
     // console.log("outisde");
-    if(ValidateForm()){
-    try {
-      let employeeData = {
-        txnId: TXNID, operFlag: operFlag, candidateId: userId, userId: userId, companyName: companyName, designation: designation, fDate: selcetedFromDate, tDate: selcetedToDate, role: role, lastDrawnSalary: lastSalary, reportingManager: manager, reasonForChange: reason, aboutCompany: aboutCompany, companyAddress: companyAddress, webLink: companyLink, currentlyWorking: currentlyWorking
+    if (ValidateForm()) {
+      try {
+        let employeeData = {
+          txnId: TXNID, operFlag: operFlag, candidateId: userId, userId: userId, companyName: companyName, designation: designation, fDate: selcetedFromDate, tDate: selcetedToDate, role: role, lastDrawnSalary: lastSalary, reportingManager: manager, reasonForChange: reason, aboutCompany: aboutCompany, companyAddress: companyAddress, webLink: companyLink, currentlyWorking: currentlyWorking
+        }
+        // console.warn("saving/updating", employeeData);
+        console.log("inside", employeeData);
+        setLoaderVisible(true);
+        let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(employeeData)
+        })
+        res = await res.json();
+        res = await res?.Result[0]?.MSG
+        setLoaderVisible(false);
+        console.log("empDetails", res);
+        Toast.show({
+          type: 'success',
+          text1: res
+
+        })
+        props.fetchEmploymentData()
+        setFillForm(false)
       }
-      // console.warn("saving/updating", employeeData);
-      console.log("inside",employeeData);
+      catch (error) {
+        setLoaderVisible(false);
+        Toast.show({
+          type: 'error',
+          text1: error
 
-      let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(employeeData)
-      })
-      res = await res.json();
-      res = await res?.Result[0]?.MSG
-      console.log("empDetails", res);
-      Toast.show({
-        type: 'success',
-        text1: res
-
-      })
-      props.fetchEmploymentData()
-      setFillForm(false)
-    }
-    catch (error) {
+        })
+      }
+    } else {
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
-        text1: error
-
+        text1: 'Please fill all Mandatory feilds'
       })
     }
-  }else{
-    Toast.show({
-      type:'error',
-      text1:'Please fill all Mandatory feilds'
-    })
-  }
   }
 
   const DeleteEmployment = async ({ txnId }) => {
@@ -115,6 +121,7 @@ const Emp_HistoryBottomView = (props) => {
       }
       console.log(employmentData);
       // console.log(employmentData);
+      setLoaderVisible(true);
       let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
         method: "POST",
         headers: {
@@ -125,7 +132,7 @@ const Emp_HistoryBottomView = (props) => {
       })
       res = await res.json();
       res = await res?.Result[0]?.MSG
-
+      setLoaderVisible(false);
       props?.fetchEmploymentData();
       Toast.show({
         type: 'success',
@@ -136,7 +143,7 @@ const Emp_HistoryBottomView = (props) => {
       setFillForm(false)
     }
     catch (error) {
-
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
         text1: error
@@ -184,9 +191,9 @@ const Emp_HistoryBottomView = (props) => {
         <Text style={{ fontWeight: 600 }}>Last Drawn Salary:- <Text style={{ fontWeight: 400 }}>{item.LAST_DRAWN_SALARY}</Text></Text>
         <Text style={{ fontWeight: 600 }}>Reporting Manager:- <Text style={{ fontWeight: 400 }}>{item.REPORTING_MANAGER}</Text></Text>
         <Text style={{ fontWeight: 600 }}>Reason For Change:- <Text style={{ fontWeight: 400 }}>{item.REASON_FOR_CHANGE}</Text></Text>
-        <Text style={{ fontWeight: 600 }}>Company Link:- <Text style={{ fontWeight: 400 }}>{item.WEB_LINK}</Text></Text>
-        <Text style={{ fontWeight: 600 }}>Company Address:- <Text style={{ fontWeight: 400 }}>{item.COMPANY_ADDRESS}</Text></Text>
-        <Text style={{ fontWeight: 600 }}>About Company:- <Text style={{ fontWeight: 400 }}>{item.ABOUT_COMPANY > 5 ? `${item.ABOUT_COMPANY.slice(0, 5)}...` : item.ABOUT_COMPANY}</Text></Text>
+        {/* <Text style={{ fontWeight: 600 }}>Company Link:- <Text style={{ fontWeight: 400 }}>{item.WEB_LINK}</Text></Text> */}
+        {/* <Text style={{ fontWeight: 600 }}>Company Address:- <Text style={{ fontWeight: 400 }}>{item.COMPANY_ADDRESS}</Text></Text> */}
+        {/* <Text style={{ fontWeight: 600 }}>About Company:- <Text style={{ fontWeight: 400 }}>{item.ABOUT_COMPANY > 5 ? `${item.ABOUT_COMPANY.slice(0, 5)}...` : item.ABOUT_COMPANY}</Text></Text> */}
       </View>
     )
   }
@@ -220,98 +227,119 @@ const Emp_HistoryBottomView = (props) => {
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {props.employment.length && props.employment[0]?.COMPANY_NAME && !fillForm > 0 ? <DisplayHistory /> :
-          <View >
-            {/* company name */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Company Name <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Satya Microcapitam Ltd.' onChangeText={(val) => setCompanyName(val)} value={companyName} />
-            </View>
-            {/* designation */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Designation <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Software engineer' onChangeText={(val) => setDesignation(val)} value={designation} />
-            </View>
-            {/* from Date */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Date</Text>
-              <View style={{ flexDirection: 'row', flex: 1 }}>
-                <TextInput style={{ color: COLORS.black, width: '70%', borderWidth: 1, borderColor: COLORS.black, color: editable ? COLORS.black : COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selcetedFromDate} editable={false} />
-                <TouchableOpacity onPress={() => setFromDateOpen(true)} style={{ marginLeft: 20 }}>
-                  <Icons name='calendar-month' size={35} color={COLORS.orange} />
-                  <DatePicker modal open={fromDateOpen} mode="date" date={fromDate} onConfirm={(date) => actualFromDate(date)} onCancel={() => { setFromDateOpen(false) }} />
-                </TouchableOpacity>
+      {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+        <ActivityIndicator color={COLORS.orange1} />
+        <Text style={{ ...FONTS.h3, fontWeight: '500', color: COLORS.orange1, marginTop: SIZES.base, }}>
+          Loading your details
+        </Text>
+      </View>
+      ) :
+        <KeyboardAwareScrollView
+          extraScrollHeight={270}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ flex: 1, marginBottom: 170 }}
+          contentContainerStyle={{
+            paddingBottom: 170
+          }}
+
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+          {props.employment.length && props.employment[0]?.COMPANY_NAME && !fillForm > 0 ? <DisplayHistory /> :
+            <View >
+              {/* company name */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Company Name <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Satya Microcapital Ltd.' onChangeText={(val) => setCompanyName(val)} value={companyName} />
               </View>
-            </View>
-            {/* to Date */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>To Date</Text>
-              <View style={{ flexDirection: 'row', flex: 1 }}>
-                <TextInput style={{ color: COLORS.black, width: '70%', borderWidth: 1, borderColor: COLORS.black, color: editable ? COLORS.black : COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selcetedToDate} editable={false} />
-                <TouchableOpacity onPress={() => setToDateOpen(true)} style={{ marginLeft: 20 }}>
-                  <Icons name='calendar-month' size={35} color={COLORS.orange} />
-                  <DatePicker modal open={toDateOpen} mode="date" date={toDate} onConfirm={(date) => actualToDate(date)} onCancel={() => { setToDateOpen(false) }} />
-                </TouchableOpacity>
+              {/* designation */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Designation <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Software engineer' onChangeText={(val) => setDesignation(val)} value={designation} />
               </View>
-            </View>
-            {/* Role */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Role <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Role' onChangeText={(val) => setRole(val)} value={role} />
-            </View>
-            {/* Last Drawn Salary */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Last Drawn Salary <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='10,000' keyboardType='numeric' onChangeText={(val) => setLastSalary(val)} value={lastSalary}
-              maxLength={8} />
-            </View>
-            {/* Reporting Manager */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Reporting Manager</Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Mr. Ashutosh Shivastva' onChangeText={(val) => setManager(val)} value={manager} />
-            </View>
-            {/* Reason for change */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Reason for Change</Text>
-              <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setReason(val)} value={reason} />
-            </View>
-            {/* About Company  */}
-            {/* <View style={{ height: 75, marginTop: 10 }}>
+              {/* from Date */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Date</Text>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                  <TextInput style={{ color: COLORS.black, width: '70%', borderWidth: 1, borderColor: COLORS.black, color: editable ? COLORS.black : COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selcetedFromDate} editable={false} />
+                  <TouchableOpacity onPress={() => setFromDateOpen(true)} style={{ marginLeft: 20 }}>
+                    <Icons name='calendar-month' size={35} color={COLORS.orange} />
+                    <DatePicker modal open={fromDateOpen} mode="date" date={fromDate} onConfirm={(date) => actualFromDate(date)} onCancel={() => { setFromDateOpen(false) }} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {/* to Date */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>To Date</Text>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                  <TextInput style={{ color: COLORS.black, width: '70%', borderWidth: 1, borderColor: COLORS.black, color: editable ? COLORS.black : COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selcetedToDate} editable={false} />
+                  <TouchableOpacity onPress={() => setToDateOpen(true)} style={{ marginLeft: 20 }}>
+                    <Icons name='calendar-month' size={35} color={COLORS.orange} />
+                    <DatePicker modal open={toDateOpen} mode="date" date={toDate} onConfirm={(date) => actualToDate(date)} onCancel={() => { setToDateOpen(false) }} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {/* Role */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Role <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Role' onChangeText={(val) => setRole(val)} value={role} />
+              </View>
+              {/* Last Drawn Salary */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Last Drawn Salary <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='10,000' keyboardType='numeric' onChangeText={(val) => setLastSalary(val)} value={lastSalary}
+                  maxLength={8} />
+              </View>
+              {/* Reporting Manager */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Reporting Manager</Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Mr. Ashutosh Shivastva' onChangeText={(val) => setManager(val)} value={manager} />
+              </View>
+              {/* Reason for change */}
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Reason for Change</Text>
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setReason(val)} value={reason} />
+              </View>
+              {/* About Company  */}
+              {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>About Company</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setAboutCompany(val)} value={aboutCompany} />
             </View> */}
-            {/* Company address  */}
-            {/* <View style={{ height: 75, marginTop: 10 }}>
+              {/* Company address  */}
+              {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Company Address</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setCompanyAddress(val)} value={companyAddress} />
             </View> */}
-            {/*web link*/}
-            {/* <View style={{ height: 75, marginTop: 10 }}>
+              {/*web link*/}
+              {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Web Link</Text>
               <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5, }} placeholder='https://satyamicrocapital.com/' onChangeText={(val) => setCompanyLink(val)} value={companyLink} />
             </View> */}
-            {/* currently Working */}
-            <View style={{ height: 55, flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-              <TouchableOpacity onPress={() => setCurrentlyWorking(!currentlyWorking)} style={{ alignItems: "center", width: "100%", flexDirection: "row", justifyContent: "space-between", }} >
-                <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Currently Working</Text>
-                {currentlyWorking ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
+              {/* currently Working */}
+              <View style={{ height: 55, flex: 1, flexDirection: 'row', alignItems: 'center', }}>
+                <TouchableOpacity onPress={() => setCurrentlyWorking(!currentlyWorking)} style={{ alignItems: "center", width: "100%", flexDirection: "row", justifyContent: "space-between", }} >
+                  <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Currently Working</Text>
+                  {currentlyWorking ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
+                </TouchableOpacity>
+
+              </View>
+              {/* save button */}
+              <TouchableOpacity onPress={() => SaveEmploymentData()}>
+                <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
+                </LinearGradient>
+
               </TouchableOpacity>
 
+
             </View>
-            {/* save button */}
-            <TouchableOpacity onPress={() => SaveEmploymentData()}>
-              <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
-                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
-              </LinearGradient>
-
-            </TouchableOpacity>
-
-
-          </View>
-        }
-        <View style={{ marginBottom: 270 }}></View>
-      </ScrollView>
+          }
+          {/* <View style={{ marginBottom: 270 }}></View> */}
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+      }
     </View>
   )
 }

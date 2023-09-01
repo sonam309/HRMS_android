@@ -7,12 +7,13 @@ import BottomUpModal from '../../../components/BottomUpModal'
 import Entypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios'
 import PieChart from 'react-native-pie-chart'
-import { FONTS } from '../../../constants/font_size'
+import { FONTS ,SIZES} from '../../../constants/font_size'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { API } from '../../../utility/services'
 import { useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view' 
 
 
 const Candidate_details = (props) => {
@@ -112,7 +113,18 @@ const Candidate_details = (props) => {
           </TouchableOpacity>
         </View>
 
+        <KeyboardAwareScrollView
+                // extraScrollHeight={120}
+                behavior={'padding'}
+                enableAutomaticScroll={true}
+                keyboardShouldPersistTaps={'always'}
+                style={{marginBottom: 150 }}
+                contentContainerStyle={{
+                    paddingBottom: 10
+                }}
 
+                showsVerticalScrollIndicator={false}
+            >
         <View style={{ marginVertical: 12, }}>
 
           <View style={{}}>
@@ -247,6 +259,7 @@ const Candidate_details = (props) => {
 
           </View>
         </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   };

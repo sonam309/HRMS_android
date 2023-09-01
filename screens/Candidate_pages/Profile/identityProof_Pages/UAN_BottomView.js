@@ -9,7 +9,8 @@ import axios from 'axios';
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 const UAN_BottomView = (props) => {
@@ -192,24 +193,36 @@ const UAN_BottomView = (props) => {
           color: COLORS.orange1
         }} >Loading you data..</Text>
       </View> :
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={270}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ flex: 1, marginBottom: 170 }}
+          contentContainerStyle={{
+            paddingBottom: 170
+          }}
+
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <View>
 
             {/* Uan number */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad"maxLength={15} />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
             </View>
 
             {/* Uan name */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setUanName} value={uanName} />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setUanName} value={uanName} />
             </View>
 
             {/* Earlier a member of EPS 1995 */}
             <View style={{ height: 75, marginTop: 10 }}>
-            {/* <TextDropdown
+              {/* <TextDropdown
                                 caption={'Caste'}
                                 data={caste}
                                 setData={setSelectedCaste}
@@ -217,9 +230,9 @@ const UAN_BottomView = (props) => {
                                 defaultButtonText={selectedCaste}
                                 captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
                             /> */}
-             
-             
-             
+
+
+
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
               <SelectDropdown defaultValue={selectedEarlierEps} data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedEarlierEps(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
             </View>
@@ -250,7 +263,7 @@ const UAN_BottomView = (props) => {
             {/* Previous Account number */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Account number</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
             </View>
             {/* Previous UAN */}
             <View style={{ height: 75, marginTop: 10 }}>
@@ -264,7 +277,7 @@ const UAN_BottomView = (props) => {
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
             </View> */}
             {/* save button */}
-            <TouchableOpacity  onPress={() => saveUANDetails()} >
+            <TouchableOpacity onPress={() => saveUANDetails()} >
 
               <LinearGradient
                 colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -281,7 +294,9 @@ const UAN_BottomView = (props) => {
 
           <View style={{ marginBottom: 270 }} />
 
-        </ScrollView>}
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+      }
     </View>
   )
 }
