@@ -61,7 +61,7 @@ const Candidate_Document = (props) => {
             })
 
             res = await res.json()
-            console.log("document data", res)
+            console.log("documentdata", res)
             setLoaderVisible(false)
             let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
             setPendingDocumentCount(pendingCount);
@@ -367,7 +367,7 @@ const Candidate_Document = (props) => {
 
     // validating aadharcard & Pancard files
     const ValidateForm = () => {
-        console.log("experince", experience);
+        // console.log("experince", experience);
         if (experience === "No") {
 
             return aadharCard.length > 0 && panCard.length > 0
@@ -479,8 +479,6 @@ const Candidate_Document = (props) => {
     // for displaying aadhar, pan and salary slip in front end
     const DocumentUploader = (file, setFile, number, type, Mandatory) => {
 
-
-
         return (
             <TouchableOpacity style={{
                 elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4,
@@ -498,7 +496,7 @@ const Candidate_Document = (props) => {
 
 
                     {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile)}>
-                        <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
+                        <Ionicons name="add-circle-outline" size={30} color={COLORS.green} />
                     </TouchableOpacity>}
                 </View>
 
@@ -509,20 +507,23 @@ const Candidate_Document = (props) => {
 
                     <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}
                         key={index}>
-                        {/* {console.log("yffgyugfugfu", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS)} */}
                         <Text>{item?.name}</Text>
-                        {/* {console.log("deleteDoc", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS, index)} */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
                             {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
 
 
                             {/* {docVerify.filter((doc) => doc.TXN_ID===item.txnId) &&  } */}
-                            {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
+                            {console.log("deleteDoc", item.name)}
+                            {console.log("deleteDoc1", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS)}
+
+                            {(docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V")  &&
                                 <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
 
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                 </TouchableOpacity>}
+
+                       
 
                         </View>
 
@@ -530,6 +531,8 @@ const Candidate_Document = (props) => {
 
                 ))
                 }
+
+                
 
             </TouchableOpacity>
         )
@@ -552,7 +555,7 @@ const Candidate_Document = (props) => {
                         <Text style={{ color: COLORS.red, ...FONTS.body5 }}>Need Re-upload </Text>}
 
                     {!file[index] && <TouchableOpacity onPress={() => selectOtherFile(index)}>
-                        <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
+                        <Ionicons name="add-circle-outline" size={30} color={COLORS.green} />
                     </TouchableOpacity>}
                 </View>
 
@@ -566,7 +569,7 @@ const Candidate_Document = (props) => {
 
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
 
-                                {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
+                                {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
                                     <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
                                         <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                     </TouchableOpacity>}

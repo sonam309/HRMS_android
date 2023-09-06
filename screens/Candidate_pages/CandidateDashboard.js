@@ -42,7 +42,7 @@ const CandidateDashboard = (props) => {
 
 
     }, [])
-    
+
     const getCandidateOfferDetails = async (type) => {
 
 
@@ -51,6 +51,8 @@ const CandidateDashboard = (props) => {
 
             const resultData = response.data;
             console.log("candOfferDetails", resultData);
+            // dispatch(candidateAuthActions.updateLogin({ candidateStatusId: resultData?.STATUS }))
+
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
 
             // console.Alert(resultData);

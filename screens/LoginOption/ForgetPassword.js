@@ -66,18 +66,32 @@ const ForgetPassword = (props) => {
 
     if (newPassword == "") {
 
-      console.warn("Plaese Enter New Password");
+      // console.warn("Plaese Enter New Password");
+      Toast.show({
+        type:'error',
+        text1:"Plaese Enter New Password"
+      })
 
     } else if (confirmPassword == "") {
+      Toast.show({
+        type:'error',
+        text1:"Plaese Enter Confirm Password"
+      })
 
-      console.warn("Plaese Enter Confirm Password");
+
+      // console.warn("Plaese Enter Confirm Password");
 
     } else if (newPassword == confirmPassword) {
 
       ChangePasswordApi()
 
     } else {
-      console.warn("Missmatch Passwords");
+
+      Toast.show({
+        type:'error',
+        text1:"Missmatch Passwords"
+      })
+      // console.warn("Missmatch Passwords");
     }
   }
 

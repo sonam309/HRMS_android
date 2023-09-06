@@ -3,7 +3,21 @@ import { act } from "react-test-renderer";
 
 const candidateAuthSlice = createSlice({
     name: "candidateAuth",
-    initialState: { candidateId: null, candidateName: null, candidateStatusId: null, candidateStatus: null, candidatePhone: null, candidateRole: null, candidateRoleId: null, offerAcceptFlag: null, daysToJoin: null, candidateOfferLetter: null, growingDays: null, totalDay: null,hiringLeadMail:null },
+    initialState: {
+        candidateId: null,
+        candidateName: null,
+        candidateStatusId: null,
+        candidateStatus: null,
+        candidatePhone: null,
+        candidateRole: null,
+        candidateRoleId: null,
+        offerAcceptFlag: null,
+        daysToJoin: null,
+        candidateOfferLetter: null,
+        growingDays: null,
+        totalDay: null,
+        hiringLeadMail: null
+    },
     reducers: {
         logIn(state, actions) {
             state.candidateId = actions.payload?.candidateId
@@ -18,9 +32,12 @@ const candidateAuthSlice = createSlice({
             state.candidateOfferLetter = actions.payload?.candidateOfferLetter
             state.growingDays = actions.payload?.growingDays
             state.totalDay = actions.payload?.totalDay
-            state.hiringLeadMail=actions.payload?.hiringLeadMail
+            state.hiringLeadMail = actions.payload?.hiringLeadMail
 
 
+        },
+        updateLogin(state, actions) {
+            state.candidateStatusId = actions.payload?.candidateStatusId
         },
         logOut(state) {
             state.candidateStatusId = null,
@@ -35,7 +52,7 @@ const candidateAuthSlice = createSlice({
                 state.candidateOfferLetter = null,
                 state.growingDays = null,
                 state.totalDay = null,
-                state.hiringLeadMail=null
+                state.hiringLeadMail = null
         }
     }
 })
