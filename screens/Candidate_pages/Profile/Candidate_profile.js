@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
-import { user_profile } from '../../../assets'
+import { approveMark, rejectMark, user_profile } from '../../../assets'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -103,7 +103,7 @@ const Candidate_profile = () => {
       );
       res = await res.json();
       res = await res?.Result[0];
-      console.log('personalApprovalFlag', res.PERSON_APP_FLAG, res.CONTACT_APP_FLAG, res.BANK_APP_FLAG);
+
 
       setPersonalApprovalFlag(res.PERSON_APP_FLAG);
       setConatctAppFlag(res.CONTACT_APP_FLAG);
@@ -370,8 +370,8 @@ const Candidate_profile = () => {
         {/* Name and User id of candidate */}
         <View style={[{ backgroundColor: COLORS.white, alignItems: 'center', margin: 10, padding: SIZES.radius, borderRadius: SIZES.base, borderWidth: 0.5, borderColor: COLORS.lightGray, marginTop: SIZES.padding, }]}>
           <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
-          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1,marginTop:5 }}>Name: {userName}</Text>
-          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1 ,marginTop:-5}}>Candidate ID: {userId}</Text>
+          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1, marginTop: 5 }}>Name: {userName}</Text>
+          <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1, marginTop: -5 }}>Candidate ID: {userId}</Text>
         </View>
 
         {/* About Me header and it's dropdown content */}
@@ -392,20 +392,30 @@ const Candidate_profile = () => {
             {/* about me dropdown option */}
             {aboutMeView && (
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setPersonalView(!personalView)}>
-                  <Icons name='id-card' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: personalApprovalFlag === "R" ? COLORS.red : (personalApprovalFlag === "A" ? COLORS.green : COLORS.gray) }}>Personal Details</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setContactView(!contactView)}>
-                  <Icons name='cellphone' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: contactAppFlag === "R" ? COLORS.red : (contactAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Contact Details</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', }} onPress={() => setBankView(!bankView)}>
-                  <Icons name='bank' color={'green'} size={18} />
-                  <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: bankAppFlag === "R" ? COLORS.red : (bankAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Bank Details</Text>
-
-                </TouchableOpacity>
-
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setPersonalView(!personalView)}>
+                    <Icons name='id-card' color={'green'} size={18} />
+                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: personalApprovalFlag === "R" ? COLORS.red : (personalApprovalFlag === "A" ? COLORS.green : COLORS.gray) }}>Personal Details</Text>
+                  </TouchableOpacity>
+                  {personalApprovalFlag === "A" || personalApprovalFlag === "R" && <Image source={personalApprovalFlag === "A" ? approveMark : (personalApprovalFlag === "R" && rejectMark)}
+                    style={{ height: 20, width: 20, alignItems: 'center', justifyContent: 'center' }} />}
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setContactView(!contactView)}>
+                    <Icons name='cellphone' color={'green'} size={18} />
+                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: contactAppFlag === "R" ? COLORS.red : (contactAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Contact Details</Text>
+                  </TouchableOpacity>
+                  {contactAppFlag === "A" || contactAppFlag === "R" && <Image source={contactAppFlag === "A" ? approveMark : (contactAppFlag === "R" && rejectMark)}
+                    style={{ height: 20, width: 20, alignItems: 'center', justifyContent: 'center' }} />}
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setBankView(!bankView)}>
+                    <Icons name='bank' color={'green'} size={18} />
+                    <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: bankAppFlag === "R" ? COLORS.red : (bankAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Bank Details</Text>
+                  </TouchableOpacity>
+                  {bankAppFlag === "A" || bankAppFlag === "R" && <Image source={bankAppFlag === "A" ? approveMark : (bankAppFlag === "R" && rejectMark)}
+                    style={{ height: 20, width: 20, alignItems: 'center', justifyContent: 'center' }} />}
+                </View>
               </View>
             )}
           </View>

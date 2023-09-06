@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomAlert from './components/CustomAlert';
 import CustomisableAlert from 'react-native-customisable-alert';
+import 'react-native-gesture-handler';
 
 const App = () => {
 

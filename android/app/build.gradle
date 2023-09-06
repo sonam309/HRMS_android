@@ -97,7 +97,14 @@ android {
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
         pickFirst 'lib/x86_64/libc++_shared.so'
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -174,7 +181,8 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation("com.google.firebase:firebase-analytics")
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
+    //noinspection GradleDependency
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

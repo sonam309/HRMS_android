@@ -103,7 +103,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
     if (
       selectedNominationType === '' ||
       selectedNominationTypeValue === '' ||
-      gaurdianName === '' ||
       share === ''
     ) { return false }
     else return true
@@ -419,7 +418,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
                 <CustomInput
                   caption={'Gaurdian name'}
-                  required
                   value={gaurdianName}
                   onChangeText={setGaurdianName}
                 />

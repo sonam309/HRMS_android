@@ -42,22 +42,27 @@ const CandidateDashboard = (props) => {
 
 
     }, [])
+    
     const getCandidateOfferDetails = async (type) => {
-        const userData = { loginId: candidateId }
 
+
+        const userData = { loginId: candidateId }
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            // console.log("candOfferDetails", resultData?.Result[0].DOC_REQ);
+            console.log("candOfferDetails", resultData);
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
 
+            // console.Alert(resultData);
             if (type === "offer") {
-                resultData?.Result[0]?.OFFER_LETTER !== null && resultData.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer_Letter") : setOfferLetterAlert(true)
+                resultData?.Result[0]?.OFFER_LETTER !== null && resultData?.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer_Letter") : setOfferLetterAlert(true)
             }
 
             if (type === "Document") {
-                resultData?.Result[0]?.DOC_REQ !== 0 && resultData.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
-                    setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
+
+                resultData?.Result[0]?.DOC_REQ !== 0 && resultData?.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
+                    setShowAlert(true)
+                //Alert.alert("Document need to be submit after offer letter acceptance")
             }
             if (type === "profile") {
                 resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate profile") : setProfileAlert(true)
@@ -234,7 +239,7 @@ const CandidateDashboard = (props) => {
                         </TouchableOpacity>
                         {/* document view */}
 
-                        <TouchableOpacity onPress={() => { getCandidateOfferDetails("Document") }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
+                        <TouchableOpacity onPress={() => { [getCandidateOfferDetails("Document")] }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
 
                             <Icons name="file-document-outline" size={44} color={COLORS.green} />
                             <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>

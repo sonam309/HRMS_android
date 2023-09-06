@@ -27,11 +27,11 @@ const Candidate_Document = (props) => {
     const [aadharCard, setAadharCard] = useState([]);
     const [panCard, setPanCard] = useState([]);
     const [salarySlip, setSalarySlip] = useState([]);
-    const [otherFiles, setOtherFiles] = useState([...Array(22)]);
+    const [otherFiles, setOtherFiles] = useState([]);
 
     const [operFlag, setOperFlag] = useState("A");
     const [docCount, setDocCount] = useState('');
-    const [docVerify, setDocVerify] = useState('');
+    const [docVerify, setDocVerify] = useState([]);
 
 
     // Document information -> Pending, Uploading, Rejected, Verified
@@ -49,64 +49,71 @@ const Candidate_Document = (props) => {
 
     // getting doc info
     const getDocData = async () => {
-        let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
-        let formData = new FormData();
-        formData.append('data', JSON.stringify(PersonalData))
-        // console.log("docuploaddata", formData, JSON.stringify(PersonalData))
-        setLoaderVisible(true)
-        let res = await fetch(`${API}/api/hrms/assesmentSave`, {
-            method: "POST",
-            body: formData
-        })
+        try {
+            setLoaderVisible(true)
+            let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
+            let formData = new FormData();
+            formData.append('data', JSON.stringify(PersonalData))
+            console.log("docuploaddata", formData, JSON.stringify(PersonalData))
+            let res = await fetch(`${API}/api/hrms/assesmentSave`, {
+                method: "POST",
+                body: formData
+            })
 
-        res = await res.json()
-        console.log("document data", res)
-        setLoaderVisible(false)
-        let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
-        setPendingDocumentCount(pendingCount);
-        setDocumentCount(res?.Table1[0]?.Pending);
-        setVerifiedDocCount(res?.Table1[0]?.Verified);
-        setRejectDocCount(res?.Table1[0]?.Rejected)
-        setExperience(res?.PO_EXPERIENCE_TYPE)
+            res = await res.json()
+            console.log("document data", res)
+            setLoaderVisible(false)
+            let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
+            setPendingDocumentCount(pendingCount);
+            setDocumentCount(res?.Table1[0]?.Pending);
+            setVerifiedDocCount(res?.Table1[0]?.Verified);
+            setRejectDocCount(res?.Table1[0]?.Rejected)
+            setExperience(res?.PO_EXPERIENCE_TYPE)
 
-        // console.log("pendingCount",pendingCount);
+            console.log("pendingCount", pendingCount);
 
-        let docFiles = res.Table;
-        { docFiles.length > 0 && setOperFlag("E") }
-        setDocCount(res.PO_DOC_REQ);
-        setDocVerify(res.Table);
-        // console.log("docfilesSonam", res.Table);
-        // console.log(docFiles)
+            let docFiles = res?.Table;
+            { docFiles?.length > 0 && setOperFlag("E") }
+            setDocCount(res?.PO_DOC_REQ);
+            setDocVerify(res?.Table);
+            console.log("docfilesSonam", res?.Table);
+            console.log(docFiles)
 
 
-        docFiles.map((item) => {
-            let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
+            docFiles.map((item) => {
+                let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
 
-            // console.warn(newFile, "this is newfile", type)
+                console.log(newFile, "this is newfile", type)
 
-            switch (type) {
-                case 129:
-                    setAadharCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
-                    break;
-                case 130:
-                    setPanCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
-                    break;
-                case 131:
-                    setSalarySlip(prevState => [...prevState, { name: newFile, txnId: TXNID }])
-                    break;
-                default:
-                    setOtherFiles(prevState => [
-                        ...prevState.slice(0, type - 132),
-                        {
-                            name: newFile,
-                            txnId: TXNID
-                        },
-                        ...prevState.slice(type - 131)
-                    ])
-                    break;
-            }
+                switch (type) {
+                    case 129:
+                        setAadharCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
+                        break;
+                    case 130:
+                        setPanCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
+                        break;
+                    case 131:
+                        setSalarySlip(prevState => [...prevState, { name: newFile, txnId: TXNID }])
+                        break;
+                    default:
+                        setOtherFiles(prevState => [
+                            ...prevState.slice(0, type - 132),
+                            {
+                                name: newFile,
+                                txnId: TXNID
+                            },
+                            ...prevState.slice(type - 131)
+                        ])
+                        break;
+                }
 
-        })
+            })
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
+        }
 
     }
 
@@ -116,10 +123,11 @@ const Candidate_Document = (props) => {
         let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
+        console.log("dwData", returnedData)
+        // if (P === 22) {
+        setDocument(returnedData)
 
-        if (P === 22) {
-            setDocument(returnedData)
-        }
+        // }
     }
 
 
@@ -215,8 +223,8 @@ const Candidate_Document = (props) => {
 
     // for removing other files
     const onRemoveOtherFiles = (index) => {
-        let newFile = null|| undefined
-        // console.warn("this is new file", newFile);
+        let newFile = ""
+        console.log("this is new file", newFile);
         setOtherFiles([
             ...otherFiles.slice(0, index),
             newFile,
@@ -229,7 +237,7 @@ const Candidate_Document = (props) => {
         let names = '';
 
         for (let index = 0; index < aadharCard.length; index++) {
-            // console.warn("aadhar card", aadharCard[index].uri);
+            console.log("aadhar card", aadharCard[index].uri);
 
             if (aadharCard[index].uri) {
                 const element = aadharCard[index];
@@ -240,7 +248,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < panCard.length; index++) {
 
-            // console.warn("pan card", panCard[index].uri);
+            console.log("pan card", panCard[index].uri);
 
             if (panCard[index].uri) {
                 const element = panCard[index];
@@ -250,7 +258,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < salarySlip.length; index++) {
 
-            // console.warn("ss", salarySlip[index].uri);
+            console.log("ss", salarySlip[index].uri);
 
             if (salarySlip[index].uri) {
                 const element = salarySlip[index];
@@ -260,7 +268,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < otherFiles.length; index++) {
 
-            // console.warn("oF", otherFiles[index]?.uri);
+            console.log("oF", otherFiles[index]?.uri);
 
             if (otherFiles[index]?.uri) {
                 const element = otherFiles[index];
@@ -320,7 +328,7 @@ const Candidate_Document = (props) => {
 
     const FileAdding = () => {
         let fileName = getFileName();
-        // console.warn(fileName);
+        console.log(fileName);
 
         for (let index = 0; index < aadharCard.length; index++) {
             if (aadharCard[index].uri) {
@@ -445,7 +453,7 @@ const Candidate_Document = (props) => {
     const DeleteDoc = async (TXNID) => {
 
         let candidateData = { txnId: TXNID, operFlag: "D", src: "M" }
-        // console.warn(candidateData);
+        console.log(candidateData);
 
         let newFormData = new FormData()
 
@@ -474,17 +482,19 @@ const Candidate_Document = (props) => {
 
 
         return (
-            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4, borderColor: (docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" ? COLORS.red : COLORS.lightGray, borderWidth: (docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" ? 0.5 : 0 }}>
+            <TouchableOpacity style={{
+                elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4,
+                borderColor: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray : "#fff",
+                borderWidth: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 : 0
+            }}>
 
-                {/* <Text>{JSON.stringify((docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R")}</Text> */}
+
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {/* {console.log("staus", file)} */}
-                    {/* <Text>{type? typeof type === 'object' && type !== null ? type?.PARAM_NAME : type :type?.PARAM_NAME} {Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text> */}
-                    {/* <Text>{type?type:type?.PARAM_NAME}{Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text> */}
+
                     <Text>{type !== null && typeof type === 'object' ? type?.PARAM_NAME : type}{Mandatory && <Text style={{ color: COLORS.red, }}>*</Text>}</Text>
 
-                    {(docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" &&
-                    <Text style={{color:COLORS.red,...FONTS.body5}}>Need Re-upload </Text> }
+                    {docVerify.length > 0 && (docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0])?.STATUS === "R" &&
+                        <Text style={{ color: COLORS.red, ...FONTS.body5 }}>Need Re-upload </Text>}
 
 
                     {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile)}>
@@ -508,7 +518,7 @@ const Candidate_Document = (props) => {
 
 
                             {/* {docVerify.filter((doc) => doc.TXN_ID===item.txnId) &&  } */}
-                            {docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
+                            {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V" &&
                                 <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >
 
                                     <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
@@ -528,13 +538,18 @@ const Candidate_Document = (props) => {
     // for display other files in front end 
     const otherFilesUploader = (file, setFile, type, index) => {
         return (
-            <TouchableOpacity style={{ elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4 ,borderColor: docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray, borderWidth:docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 }}>
+            <TouchableOpacity style={{
+                elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4,
+                borderColor: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray : "#fff",
+                borderWidth: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 : 0
+            }}>
 
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+
                     <Text>{type?.PARAM_NAME}</Text>
 
-                    {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" &&
-                    <Text style={{color:COLORS.red,...FONTS.body5}}>Need Re-upload </Text> }
+                    {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" &&
+                        <Text style={{ color: COLORS.red, ...FONTS.body5 }}>Need Re-upload </Text>}
 
                     {!file[index] && <TouchableOpacity onPress={() => selectOtherFile(index)}>
                         <Ionicons name="add-circle-outline" size={24} color={COLORS.green} />
@@ -551,7 +566,7 @@ const Candidate_Document = (props) => {
 
                                 {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: file[index]?.name }) }} />}
 
-                                {docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
+                                {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS !== "V" &&
                                     <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemoveOtherFiles(index, setFile, file), DeleteDoc(file[index]?.txnId) }} >
                                         <MaterialIcons name="delete-outline" size={24} color={COLORS.orange1} />
                                     </TouchableOpacity>}
@@ -672,32 +687,34 @@ const Candidate_Document = (props) => {
                 {/* {docCount==="0"?<Text</Text>} */}
 
                 {/* {document && (candidateStatusId >= "121" && candidateStatusId<"165" */}
-                {document && (docCount && docCount === '3'
+                {document && docCount && docCount === '3'
                     // || candidateStatusId === "124" || candidateStatusId === "122"||candidateStatusId === "123" 
-                ) && (<ScrollView>
+                    && (<ScrollView>
 
 
-                    {/* For uploading aadhar card docs */}
-                    {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0]?.PARAM_NAME, "imp")} */}
-                    {DocumentUploader(aadharCard, setAadharCard, 1, document[0]?.PARAM_NAME, "imp")}
+                        {/* For uploading aadhar card docs */}
+                        {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0]?.PARAM_NAME, "imp")} */}
+                        {DocumentUploader(aadharCard, setAadharCard, 1, document[0]?.PARAM_NAME, "imp")}
 
-                    {/*  For uploading pan card docs  */}
-                    {/* {DocumentUploader(panCard, setPanCard, 2, document[1]?.PARAM_NAME, "imp")} */}
-                    {DocumentUploader(panCard, setPanCard, 1, document[1]?.PARAM_NAME, "imp")}
+                        {/*  For uploading pan card docs  */}
+                        {/* {DocumentUploader(panCard, setPanCard, 2, document[1]?.PARAM_NAME, "imp")} */}
+                        {DocumentUploader(panCard, setPanCard, 1, document[1]?.PARAM_NAME, "imp")}
 
-                    {/* For uploading payment slips docs*/}
-                    {/* {DocumentUploader(salarySlip, setSalarySlip, 3, document[2]?.PARAM_NAME)} */}
+                        {/* For uploading payment slips docs*/}
+                        {/* {DocumentUploader(salarySlip, setSalarySlip, 3, document[2]?.PARAM_NAME)} */}
 
-                    {DocumentUploader(salarySlip, setSalarySlip, 1, document[2]?.PARAM_NAME, experience === "Yes" && "imp")}
+                        {DocumentUploader(salarySlip, setSalarySlip, 1, document[2]?.PARAM_NAME, experience === "Yes" && "imp")}
 
 
-                </ScrollView>)
+                    </ScrollView>)
                 }
 
                 {/* {document && (candidateStatusId && candidateStatusId >= "165") && */}
-                {document && (docCount && docCount === '25') &&
+                {document && docCount && docCount === '25'
+                    &&
                     (
                         <ScrollView>
+                            {/* <Text>{JSON.stringify(document)}</Text> */}
                             {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0], "imp")}
                             {DocumentUploader(panCard, setPanCard, 2, document[1], "imp")}
                             {DocumentUploader(salarySlip, setSalarySlip, 3, document[2])} */}

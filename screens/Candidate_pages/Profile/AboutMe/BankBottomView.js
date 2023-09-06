@@ -14,7 +14,7 @@ import TextDropdown from '../../../../components/TextDropdown'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Pdf from 'react-native-pdf'
-import { showAlert } from "react-native-customisable-alert";
+import { showAlert,closeAlert } from "react-native-customisable-alert";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -49,6 +49,7 @@ const BankBottomView = ({ onPress }) => {
   const [selectedOperationValue, setSelectedOperationValue] = useState();
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [approvalFlag, setApprovalFlag] = useState();
+  const [bankAppRemarks,setBankAppRemarks]=useState();
 
 
   // for displaying bank documents
@@ -147,10 +148,11 @@ const BankBottomView = ({ onPress }) => {
       );
       res = await res.json();
       res = await res?.Result[0];
-      console.log('candidate profile', res);
+      console.log('BankDetails', res);
       setLoaderVisible(false);
       setFilledDetails(res);
       setApprovalFlag(res.BANK_APP_FLAG);
+      setBankAppRemarks(res.BANK_APP_RMK);
     } catch (error) {
       setLoaderVisible(false);
       Toast.show({
@@ -352,13 +354,12 @@ const BankBottomView = ({ onPress }) => {
           <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Bank Detials</Text>
           {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
             showAlert({
-              title:"Are you sure?",
-              customIcon:'none',
-              message: "All your files will be deleted!",
-              alertType: 'warning',
-              // onPress: ()  => closeAlert(),
-
-              
+              title: bankAppRemarks,
+              customIcon: 'none',
+              message: "none",
+              alertType: 'error',
+              btnLabel: 'ok',
+              onPress: () => closeAlert(),
           });}
           }>
             <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
