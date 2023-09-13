@@ -16,8 +16,8 @@ const CandidateStack = () => {
             <Stack.Screen name='CandidateDashboard' options={{ headerShown: false, orientation:'portrait' }} component={CandidateDashboard} />
             <Stack.Screen name='Candidate profile' options={{ orientation: 'portrait' }} component={Candidate_profile} />
             <Stack.Screen name='Candidate_Document' options={{ orientation: 'portrait', headerShown: false }} component={Candidate_Document} />
-            <Stack.Screen name='Offer_Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
-            <Stack.Screen name='Status_view_page' options={{ orientation: 'portrait' }} component={Status_view_page} />
+            <Stack.Screen name='Offer Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
+            <Stack.Screen name='Status view page' options={{ orientation: 'portrait' }} component={Status_view_page} />
             <Stack.Screen name='View_Doc' options={{ orientation: 'portrait' }} component={View_Doc} />
                       
         </Stack.Navigator>

@@ -20,16 +20,16 @@ const Esic_Bottomview = (props) => {
 
   const [loaderVisible, setLoaderVisible] = useState(false);
 
-  const [city, setCity] = useState();
-  const [subcode, setSubCode] = useState();
-  const [RegNumber, setRegNumber] = useState();
-  const [csiNum, setCsiNum] = useState();
-  const [residingWithYou, setResidingWithYou] = useState();
-  const [weatherResiding, setWeatherResiding] = useState();
-  const [noStatePlace, setNoStatePlace] = useState();
-  const [noStatePlaceResidence, setNoStatePlaceResidence] = useState();
-  const [priEmpCode, setPriEmpCode] = useState();
-  const [priInsuranceNum, setPriInsuranceNum] = useState();
+  const [city, setCity] = useState('');
+  const [subcode, setSubCode] = useState('');
+  const [RegNumber, setRegNumber] = useState('');
+  const [csiNum, setCsiNum] = useState('');
+  const [residingWithYou, setResidingWithYou] = useState('');
+  const [weatherResiding, setWeatherResiding] = useState('');
+  const [noStatePlace, setNoStatePlace] = useState('');
+  const [noStatePlaceResidence, setNoStatePlaceResidence] = useState('');
+  const [priEmpCode, setPriEmpCode] = useState('');
+  const [priInsuranceNum, setPriInsuranceNum] = useState('');
   const [isEdit, setIsEdit] = useState(false);
   const [approvalFlag, setApprovalFlag] = useState('');
   const [approveRemark, setApproveRemarks] = useState('');

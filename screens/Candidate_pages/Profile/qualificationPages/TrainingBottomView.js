@@ -14,41 +14,41 @@ const TrainingBottomView = (props) => {
 
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
-  const [selectedState, setSelectedState] = useState();
+  const [selectedState, setSelectedState] = useState('');
   const [selectedStateValue, setSelectedStateValue] = useState('');
-  const [states, setStates] = useState();
+  const [states, setStates] = useState('');
 
-  const [selectCountry, setselectCountry] = useState();
+  const [selectCountry, setselectCountry] = useState('');
   const [selectedCountryValue, setSelecetCountryValue] = useState('');
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState('');
 
-  const [selectQualifications, setSelectQualifications] = useState();
+  const [selectQualifications, setSelectQualifications] = useState('');
   const [selectedQualificationsValue, setSelectedQualificationsValue] = useState('');
-  const [Qualifications, setQualifications] = useState();
+  const [Qualifications, setQualifications] = useState('');
 
-  const [selectedQualiMode, setSelectedQualiMode] = useState();
+  const [selectedQualiMode, setSelectedQualiMode] = useState('');
   const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
-  const [qualificationMode, setQualificationMode] = useState();
+  const [qualificationMode, setQualificationMode] = useState('');
 
-  const [selectedStream, setSelectedStream] = useState();
+  const [selectedStream, setSelectedStream] = useState('');
   const [selectedStreamValue, setSelectedStreamValue] = useState('');
-  const [stream, setStream] = useState();
+  const [stream, setStream] = useState('');
 
   const [txnID, setTxnID] = useState('');
   const [error, setError] = useState('');
   const [operFlag, setOperFlag] = useState("A");
   const [edit, setEdit] = useState({});
 
-  const [specilization, setSpecilization] = useState();
-  const [University, setUniversity] = useState();
-  const [institute, setInstitute] = useState();
-  const [city, setCity] = useState();
-  const [fromYear, setFromYear] = useState();
-  const [toYear, setToYear] = useState();
-  const [passYear, setPassingYear] = useState();
-  const [fromMonth, setFromMonth] = useState();
-  const [toMonth, setToMonth] = useState();
-  const [expiryDate, setExpiryDate] = useState();
+  const [specilization, setSpecilization] = useState('');
+  const [University, setUniversity] = useState('');
+  const [institute, setInstitute] = useState('');
+  const [city, setCity] = useState('');
+  const [fromYear, setFromYear] = useState('');
+  const [toYear, setToYear] = useState('');
+  const [passYear, setPassingYear] = useState('');
+  const [fromMonth, setFromMonth] = useState('');
+  const [toMonth, setToMonth] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
 
 
   useEffect(() => {

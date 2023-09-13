@@ -42,7 +42,7 @@ const Emp_HistoryBottomView = (props) => {
   const [fillForm, setFillForm] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(false);
 
-  const [TXNID, setTXNID] = useState()
+  const [TXNID, setTXNID] = useState('')
 
 
   useEffect(() => {

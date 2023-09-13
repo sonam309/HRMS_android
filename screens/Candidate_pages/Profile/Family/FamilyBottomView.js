@@ -19,14 +19,14 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
     // console.warn("The members", members);
     const userId = useSelector(state => state.candidateAuth.candidateId)
     // getting family member & bloodgroup
-    const [familyMemberDropDown, setFamilyMemberDropDown] = useState()
-    const [selectedFamilyMember, setSelectedFamilyMember] = useState()
+    const [familyMemberDropDown, setFamilyMemberDropDown] = useState('')
+    const [selectedFamilyMember, setSelectedFamilyMember] = useState('')
     const [selectedFamilyMemberValue, setSelectedFamilyMemberValue] = useState('')
-    const [bloodGroup, setBloodGroup] = useState();
-    const [selectedBloodGroup, setSelectedBloodGroup] = useState();
+    const [bloodGroup, setBloodGroup] = useState('');
+    const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
     const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState('');
-    const [gender, setGender] = useState();
-    const [selectedGender, setSelectedGender] = useState();
+    const [gender, setGender] = useState('');
+    const [selectedGender, setSelectedGender] = useState('');
     const [selectedGenderValue, setSelectedGenderValue] = useState('');
     const [operFlag, setOperFlag] = useState("A");
     const [firstName, setFirstName] = useState('');

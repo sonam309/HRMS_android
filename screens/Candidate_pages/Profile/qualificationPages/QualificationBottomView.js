@@ -20,32 +20,32 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
     const [operFlag, setOperFlag] = useState("A");
 
-    const [states, setStates] = useState();
-    const [selectedState, setSelectedState] = useState();
+    const [states, setStates] = useState('');
+    const [selectedState, setSelectedState] = useState('');
     const [selectedStateValue, setSelectedStateValue] = useState('');
 
-    const [country, setCountry] = useState();
-    const [selectCountry, setselectCountry] = useState();
+    const [country, setCountry] = useState('');
+    const [selectCountry, setselectCountry] = useState('');
     const [selectedCountryValue, setSelecetCountryValue] = useState('');
 
-    const [Qualifications, setQualifications] = useState();
-    const [selectQualifications, setSelectQualifications] = useState();
+    const [Qualifications, setQualifications] = useState('');
+    const [selectQualifications, setSelectQualifications] = useState('');
     const [selectedQualificationsValue, setSelectedQualificationsValue] = useState('');
 
-    const [qualificationMode, setQualificationMode] = useState();
-    const [selectedQualiMode, setSelectedQualiMode] = useState();
+    const [qualificationMode, setQualificationMode] = useState('');
+    const [selectedQualiMode, setSelectedQualiMode] = useState('');
     const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
 
-    const [stream, setStream] = useState();
-    const [selectedStream, setSelectedStream] = useState();
+    const [stream, setStream] = useState('');
+    const [selectedStream, setSelectedStream] = useState('');
     const [selectedStreamValue, setSelectedStreamValue] = useState('');
 
-    const [specilization, setSpecilization] = useState();
-    const [University, setUniversity] = useState();
-    const [institute, setInstitute] = useState();
-    const [city, setCity] = useState();
-    const [fromYear, setFromYear] = useState();
-    const [passYear, setPassingYear] = useState();
+    const [specilization, setSpecilization] = useState('');
+    const [University, setUniversity] = useState('');
+    const [institute, setInstitute] = useState('');
+    const [city, setCity] = useState('');
+    const [fromYear, setFromYear] = useState('');
+    const [passYear, setPassingYear] = useState('');
 
     const [isHighestQualification, setIsHighestQualification] = useState(false);
     const [grade, setGrade] = useState('');

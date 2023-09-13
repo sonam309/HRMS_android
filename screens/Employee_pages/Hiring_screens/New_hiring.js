@@ -14,7 +14,7 @@ import { responsiveWidth } from 'react-native-responsive-dimensions'
 
 const New_hiring = (props) => {
     const { navigation, selectedOption, setFilterVisible } = props
-    const [jobOpening, setJobOpening] = useState()
+    const [jobOpening, setJobOpening] = useState('')
     const [loaderVisible, setLoaderVisible] = useState(true);
     let bannerColor;
     let counting = 0;

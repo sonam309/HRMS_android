@@ -104,6 +104,35 @@ const Status_view_page = () => {
             <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "124" ? COLORS.green : (status_ID < "124" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "124" ? 'bold' : 'normal' }}>Offer Letter</Text>
           </View>
 
+          {/* dot view */}
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "165" ? COLORS.green : (status_ID < "165" ? COLORS.gray : COLORS.lightOrange) }} >{status_ID === '165' ? ":" : "|"}</Text>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "165" ? COLORS.green : (status_ID < "165" ? COLORS.gray : COLORS.lightOrange) }}>{status_ID === '165' ? ":" : "|"}</Text>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "165" ? COLORS.green : (status_ID < "165" ? COLORS.gray : COLORS.lightOrange) }}>{status_ID === '165' ? ":" : "|"}</Text>
+          </View>
+
+          {/* Document verifications*/}
+          <View style={{ flexDirection: 'row', flex: 1, }}>
+            <Icons name={status_ID === "166" ? "text-box-check" : (status_ID > "166" ? "text-box-check" : "text-box")} size={30} color={status_ID === "166" ? COLORS.green :
+              (status_ID < "166" ? COLORS.gray : COLORS.lightOrange)} />
+            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "166" ? COLORS.green : (status_ID < "166" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "166" ? 'bold' : 'normal' }}>Document  Verification</Text>
+          </View>
+
+          {/* dot view */}
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "166" ? COLORS.green : (status_ID < "166" ? COLORS.gray : COLORS.lightOrange) }} >{status_ID === '166' ? ":" : "|"}</Text>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "166" ? COLORS.green : (status_ID < "166" ? COLORS.gray : COLORS.lightOrange) }}>{status_ID === '166' ? ":" : "|"}</Text>
+            <Text style={{ marginTop: -7, fontWeight: 800, fontSize: 16, color: status_ID === "166" ? COLORS.green : (status_ID < "166" ? COLORS.gray : COLORS.lightOrange) }}>{status_ID === '166' ? ":" : "|"}</Text>
+          </View>
+
+          {/* Employee Creation*/}
+          <View style={{ flexDirection: 'row', flex: 1, }}>
+            <Icons name={status_ID === "167" ? "text-box-check" : (status_ID > "167" ? "text-box-check" : "text-box")} size={30} color={status_ID === "167" ? COLORS.green :
+              (status_ID < "167" ? COLORS.gray : COLORS.lightOrange)} />
+            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "167" ? COLORS.green : (status_ID < "167" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "167" ? 'bold' : 'normal' }}>Employee Creation</Text>
+          </View>
+
+
         </View>
 
       </View>

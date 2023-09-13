@@ -14,15 +14,15 @@ import Toast from 'react-native-toast-message';
 const CreateNewJobOpening = (props) => {
 
     // for getting and setting data from API  
-    const [titleOption, setTitleOption] = useState();
-    const [states, setStates] = useState()
-    const [employementData, setEmployementData] = useState()
+    const [titleOption, setTitleOption] = useState('');
+    const [states, setStates] = useState('')
+    const [employementData, setEmployementData] = useState('')
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     // for setting and posting Data to API
-    const [selectedTitle, setSelectedTitle] = useState();
+    const [selectedTitle, setSelectedTitle] = useState('');
     const [selectedTitleValue, setSelectedTitleValue] = useState('');
-    const [selectedState, setSelectedState] = useState();
+    const [selectedState, setSelectedState] = useState('');
 
     const [selectedStateValue, setSelectedStateValue] = useState('');
     const [selectedEmployment, setSelectedEmployment] = useState('');

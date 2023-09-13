@@ -9,12 +9,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { API } from '../../../utility/services'
 import Toast from 'react-native-toast-message';
 import Loader from '../../../components/Loader'
-import { err } from 'react-native-svg/lib/typescript/xml'
 
 
 const Interview_status = (props) => {
     const { navigation } = props;
-    const [interViewDetail, setInterViewDetail] = useState();
+    const [interViewDetail, setInterViewDetail] = useState([]);
     const [status, setStatus] = useState('P')
     const userId = useSelector(state => state.auth.userId)
     const [interviewType, setInterviewType] = useState('');

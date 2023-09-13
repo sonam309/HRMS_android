@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 
 const Offer_Letter = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
-  const [offerLetter, setOfferLetter] = useState()
+  const [offerLetter, setOfferLetter] = useState('')
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [btnVisibility, setBtnVisibility] = useState(true);
 

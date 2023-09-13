@@ -57,7 +57,7 @@ const CandidateDashboard = (props) => {
 
             // console.Alert(resultData);
             if (type === "offer") {
-                resultData?.Result[0]?.OFFER_LETTER !== null && resultData?.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer_Letter") : setOfferLetterAlert(true)
+                resultData?.Result[0]?.OFFER_LETTER !== null && resultData?.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer Letter") : setOfferLetterAlert(true)
             }
 
             if (type === "Document") {
@@ -202,7 +202,7 @@ const CandidateDashboard = (props) => {
                                 <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
                                 <TouchableOpacity style={{
                                     marginTop: 12
-                                }} onPress={() => props.navigation.navigate("Status_view_page")}>
+                                }} onPress={() => props.navigation.navigate("Status view page")}>
                                     <LinearGradient
                                         colors={[COLORS.orange1, COLORS.disableOrange1]}
                                         start={{ x: 0, y: 0 }}

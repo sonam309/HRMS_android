@@ -22,7 +22,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const BankBottomView = ({ onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
-  const [filledDetails, setFilledDetails] = useState();
+  const [filledDetails, setFilledDetails] = useState('');
 
   const [showDoc, setShowDoc] = useState('');
 
@@ -36,20 +36,20 @@ const BankBottomView = ({ onPress }) => {
   const [selectedDoc, setSelectedDoc] = useState([]);
   const [IFSCCode, setIFSCCode] = useState('')
 
-  const [bank, setBank] = useState();
+  const [bank, setBank] = useState('');
   const [selectedBank, setSelectedBank] = useState(null);
-  const [selectedBankValue, setSelectedBankValue] = useState();
+  const [selectedBankValue, setSelectedBankValue] = useState('');
 
-  const [accountType, setAccountType] = useState();
+  const [accountType, setAccountType] = useState('');
   const [selectedAccountType, setSelectedAccountType] = useState(null);
-  const [selectedAccountTypeValue, setSelectedAccountTypeValue] = useState();
+  const [selectedAccountTypeValue, setSelectedAccountTypeValue] = useState('');
 
-  const [operation, setOperation] = useState();
+  const [operation, setOperation] = useState('');
   const [selectedOperation, setSelectedOperation] = useState(null);
-  const [selectedOperationValue, setSelectedOperationValue] = useState();
+  const [selectedOperationValue, setSelectedOperationValue] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const [approvalFlag, setApprovalFlag] = useState();
-  const [bankAppRemarks,setBankAppRemarks]=useState();
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [bankAppRemarks,setBankAppRemarks]=useState('');
 
 
   // for displaying bank documents

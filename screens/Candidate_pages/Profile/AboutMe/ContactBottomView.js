@@ -13,15 +13,15 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const ContactBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
 
-    const [filledDetails, setFilledDetails] = useState();
+    const [filledDetails, setFilledDetails] = useState('');
     const [personalMail, setPersonalMail] = useState('');
     const [alternateMail, setAlternateMail] = useState('');
     const [phone, setPhone] = useState('');
     const [alternatePhone, setAlternatePhone] = useState('');
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
-    const [approvalFlag, setApprovalFlag] = useState();
-    const [conatcatRemark, setContactRemark] = useState();
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [conatcatRemark, setContactRemark] = useState('');
 
 
     const ValidateForm = () => {

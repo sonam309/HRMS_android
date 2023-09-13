@@ -26,8 +26,8 @@ const Details = (props) => {
     const userId = useSelector(state => state.auth.userId)
     let modifiedTemplate = null;
 
-    const [hirningLead, setHiringLead] = useState();
-    const [selectedhirningLead, setSelectedHiringLead] = useState();
+    const [hirningLead, setHiringLead] = useState('');
+    const [selectedhirningLead, setSelectedHiringLead] = useState('');
     const [selectedHiringLeadValue, setSelectedHiringLeadValue] = useState('');
 //version 2.2 sonam 2.aug,2023
 

@@ -18,7 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const PersonalAddressBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
 
-    const [filledDetails, setFilledDetails] = useState();
+    const [filledDetails, setFilledDetails] = useState('');
 
 
     // for getting state and country data
@@ -45,42 +45,42 @@ const PersonalAddressBottomView = ({ onPress }) => {
     }
 
     // getting state & country
-    const [states, setStates] = useState()
-    const [country, setCountry] = useState()
+    const [states, setStates] = useState('')
+    const [country, setCountry] = useState('')
 
     // present selected state
-    const [presentSelectedState, setPresentSelectedState] = useState()
-    const [presentSelectedStateValue, setPresentSelectedStateValue] = useState()
+    const [presentSelectedState, setPresentSelectedState] = useState('')
+    const [presentSelectedStateValue, setPresentSelectedStateValue] = useState('')
 
     // present selected country
-    const [presentSelectedCountry, setPresentSelectedCountry] = useState()
-    const [presentSelectedCountryValue, setPresentSelectedCountryValue] = useState()
+    const [presentSelectedCountry, setPresentSelectedCountry] = useState('')
+    const [presentSelectedCountryValue, setPresentSelectedCountryValue] = useState('')
 
     // present address
     const [presentAddressHeight, setPresentAddressHeight] = useState(40)
     const [presentPostOfficeHeight, setPresentPostOfficeHeight] = useState(40)
     const [presentAddress, setPresentAddress] = useState('');
     const [presentCity, setPresentCity] = useState('');
-    const [presentPinCode, setPresentPinCode] = useState();
+    const [presentPinCode, setPresentPinCode] = useState('');
     const [presentDistrict, setPresentDistrict] = useState('');
     const [presentSubDivision, setPresentSubDivision] = useState('');
     const [presentThana, setPresentThana] = useState('');
     const [presentPostOffice, setPresentPostOffice] = useState('');
 
     // permanent selected state
-    const [permanentSelectedState, setPermanentSelectedState] = useState()
-    const [permanentSelectedStateValue, setPermanentSelectedStateValue] = useState()
+    const [permanentSelectedState, setPermanentSelectedState] = useState('')
+    const [permanentSelectedStateValue, setPermanentSelectedStateValue] = useState('')
 
     // permanent selected country
-    const [permanentSelectedCountry, setPermanentSelectedCountry] = useState()
-    const [permanentSelectedCountryValue, setPermanentSelectedCountryValue] = useState()
+    const [permanentSelectedCountry, setPermanentSelectedCountry] = useState('')
+    const [permanentSelectedCountryValue, setPermanentSelectedCountryValue] = useState('')
 
     // permanent address
     const [permanentAddressHeight, setPermanentAddressHeight] = useState(40)
     const [permanentPostOfficeHeight, setPermanentPostOfficeHeight] = useState(40)
     const [permanentAddress, setPermanentAddress] = useState('');
     const [permanentCity, setPermanentCity] = useState('');
-    const [permanentPinCode, setPermanentPinCode] = useState();
+    const [permanentPinCode, setPermanentPinCode] = useState('');
     const [permanentDistrict, setPermanentDistrict] = useState('');
     const [permanentSubDivision, setPermanentSubDivision] = useState('');
     const [permanentThana, setPermanentThana] = useState('');
@@ -97,8 +97,8 @@ const PersonalAddressBottomView = ({ onPress }) => {
     const [permanentThanaEdit, setPermanentThanaEdit] = useState(true)
     const [permanentCountryEdit, setPermanentCountryEdit] = useState(false)
     const [permanentStateEdit, setPermanentStateEdit] = useState(false)
-    const [approvalFlag, setApprovalFlag] = useState();
-    const [addressAppRemark, setAddressAppRemark] = useState();
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [addressAppRemark, setAddressAppRemark] = useState('');
 
 
     // same present and permanent

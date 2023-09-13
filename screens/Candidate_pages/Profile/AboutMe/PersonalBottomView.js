@@ -17,23 +17,23 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const PersonalBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
-    const [filledDetails, setFilledDetails] = useState();
+    const [filledDetails, setFilledDetails] = useState('');
 
-    const [marital, setMarital] = useState();
-    const [selectedMarital, setSelectedMarital] = useState();
-    const [selectedMaritalValue, setSelectedMaritalValue] = useState();
+    const [marital, setMarital] = useState('');
+    const [selectedMarital, setSelectedMarital] = useState('');
+    const [selectedMaritalValue, setSelectedMaritalValue] = useState('');
 
-    const [bloodGroup, setBloodGroup] = useState();
-    const [selectedBloodGroup, setSelectedBloodGroup] = useState();
-    const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState();
+    const [bloodGroup, setBloodGroup] = useState('');
+    const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
+    const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState('');
 
-    const [caste, setCaste] = useState();
-    const [selectedCaste, setSelectedCaste] = useState();
-    const [selectedCasteValue, setSelectedCasteValue] = useState();
+    const [caste, setCaste] = useState('');
+    const [selectedCaste, setSelectedCaste] = useState('');
+    const [selectedCasteValue, setSelectedCasteValue] = useState('');
 
-    const [gender, setGender] = useState();
-    const [selectedGender, setSelectedGender] = useState();
-    const [selectedGenderValue, setSelectedGenderValue] = useState();
+    const [gender, setGender] = useState('');
+    const [selectedGender, setSelectedGender] = useState('');
+    const [selectedGenderValue, setSelectedGenderValue] = useState('s');
     
 
     const getDropdownData = async (P) => {
@@ -81,7 +81,7 @@ const PersonalBottomView = ({ onPress }) => {
     const [selectedRecordBirthDate, setSelectedRecordBirthDate] = useState('');
     const [recordOpen, setRecordOpen] = useState(false)
 
-    const [marriageDate, setMarriageDate] = useState();
+    const [marriageDate, setMarriageDate] = useState('');
 
     const [countryBirth, setCountryBirth] = useState('');
     const [placeBirth, setPlaceBirth] = useState('');
@@ -102,8 +102,8 @@ const PersonalBottomView = ({ onPress }) => {
     const [TXNID, setTXNID] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [operFlag, setOperFlag] = useState("P");
-    const [approvalFlag, setApprovalFlag] = useState();
-    const [approveRemark, setApproveRemark] = useState();
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [approveRemark, setApproveRemark] = useState('');
 
 
     const handleTextChange = (newText) => {

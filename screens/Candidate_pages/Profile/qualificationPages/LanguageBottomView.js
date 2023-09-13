@@ -18,9 +18,9 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
     const [operFlag, setOperFlag] = useState("A");
     const [TXNID, setTXNID] = useState('');
 
-    const [selectedLanguage, setSelectedLanguage] = useState();
-    const [selectedLanguageValue, setSelectedLanguageValue] = useState();
-    const [language, setLanguage] = useState();
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [selectedLanguageValue, setSelectedLanguageValue] = useState('');
+    const [language, setLanguage] = useState('');
 
     const [isMothertongue, setIsMothertongue] = useState("false");
     const [isCanRead, setIsCanRead] = useState("false");
