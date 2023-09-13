@@ -11,6 +11,7 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 const Identifications = (props) => {
@@ -63,6 +64,9 @@ const Identifications = (props) => {
 
   const [error, setError] = useState('');
   const [operFlag, setOperFlag] = useState("A");
+
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
 
   const actualDateSelector = (date) => {
     setPassportIssuedDateOpen(false)
@@ -194,6 +198,9 @@ const Identifications = (props) => {
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
 
+        setApprovalFlag(preFilledData?.APPROVAL_FLAG);
+        setApproveRemarks(preFilledData?.DOC_REJ_REMARK);
+
         setPassportNumber(preFilledData?.PASSPORT_NO);
         setSelectedIssuedDate(preFilledData?.PASSPORT_DATE_OF_ISSUE);
         setSelectedExpiryDate(preFilledData?.PASSPORT_DATE_OF_EXPIRY);
@@ -224,7 +231,21 @@ const Identifications = (props) => {
     <View style={{ flex: 1 }}>
 
       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>Identifications</Text>
+        <Text style={{ ...FONTS.h3, color: COLORS.orange }}>Identifications</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+
         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
           <TouchableOpacity onPress={props.onPress}>
             <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
@@ -406,6 +427,7 @@ const Identifications = (props) => {
               </View>
 
               {/* save button */}
+              {approvalFlag !== "A" ?
               <TouchableOpacity onPress={() => handleSubmit()} >
 
                 <LinearGradient
@@ -415,7 +437,7 @@ const Identifications = (props) => {
                   style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
                   <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{edit?.FLAG === "S" ? "Update" : "Save"}</Text>
                 </LinearGradient>
-              </TouchableOpacity>
+              </TouchableOpacity>:""}
 
             </View>
             {/* <View style={{ marginBottom: 270 }} /> */}

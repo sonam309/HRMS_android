@@ -264,7 +264,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                 // console.warn(operFlag);
                 let AddressData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, presentAddress: presentAddress, country: presentSelectedCountryValue, state: presentSelectedStateValue, city: presentCity, pincode: presentPinCode, district: presentDistrict, postOffice: presentPostOffice, subDivison: presentSubDivision, thana: presentThana, peramanentAddress: permanentAddress, permanentCountry: permanentSelectedCountryValue, permanentState: permanentSelectedStateValue, permanentcity: permanentCity, permanentPincode: permanentPinCode, permanentDistrict: permanentDistrict, permanentPostOffice: permanentPostOffice, permanentSubdivion: permanentSubDivision, permanentThana: permanentThana }
-                console.warn("address",AddressData);
+                console.warn("address", AddressData);
                 let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
                     method: "POST",
                     headers: {
@@ -366,7 +366,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
                             alertType: 'error',
                             btnLabel: 'ok',
                             onPress: () => closeAlert(),
-
 
                         });
                     }}>
@@ -510,19 +509,25 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentThana} onChangeText={(val) => setPermanentThana(val)} editable={permanentThanaEdit} />
-                    <TouchableOpacity onPress={() => filledDetails?.PIN_CODE ? saveAddressDetails('E') : saveAddressDetails('A')} >
-                        <LinearGradient
-                            colors={[COLORS.orange1, COLORS.disableOrange1]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE ? "Update Address Details" : "Save Address Details"}</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
+
+
+
+                    {approvalFlag !== "A" ?
+                        <TouchableOpacity onPress={() => filledDetails?.PIN_CODE ? saveAddressDetails('E') : saveAddressDetails('A')} >
+                            <LinearGradient
+                                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 2, y: 0 }}
+                                style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE ? "Update Address Details" : "Save Address Details"}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity> : ""}
+
+
                     {/* <View style={{ paddingBottom: 270 }}></View> */}
-                {/* </ScrollView> */}
+                    {/* </ScrollView> */}
                 </KeyboardAwareScrollView>
-                }
+            }
         </View >
     )
 }

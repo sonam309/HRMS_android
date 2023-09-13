@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message';
 import TextDropdown from '../../../../components/TextDropdown';
 import Loader from '../../../../components/Loader';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const QualificationBottomView = ({ qualification, onPress, fetchQualificationData }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -49,7 +50,8 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
     const [isHighestQualification, setIsHighestQualification] = useState(false);
     const [grade, setGrade] = useState('');
     const [TXNID, setTXNID] = useState('');
-
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [approveRemark, setApproveRemarks] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     useEffect(() => {
@@ -58,6 +60,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
         getDropdownData(33);
         getDropdownData(34);
         getDropdownData(35);
+        getQualificationData();
     }, []);
 
     // Title, States and Employment Data
@@ -113,6 +116,23 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
             })
         }
 
+    }
+
+    const getQualificationData = async () => {
+        let qualficationData = { operFlag: "V", candidateId: userId }
+        let res = await fetch(`${API}/api/hrms/candidateQualification`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(qualficationData)
+        })
+        res = await res.json()
+        res = await res?.Result
+        console.log("qualficationDataaaaaa", res);
+        setApproveRemarks(res[0].DOC_REJ_REMARK);
+        setApprovalFlag(res[0].APPROVAL_FLAG);
     }
 
     const updateQualification = (item) => {
@@ -283,6 +303,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 700, color: 'black' }}>Language Details: </Text>
+
                     <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
                         <Text>ADD</Text>
                         <Icons name='plus' size={16} />
@@ -333,7 +354,22 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Qualifications</Text>
+                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Qualifications</Text>
+
+                {approvalFlag === "R" ? <TouchableOpacity style={{marginLeft:10}} onPress={() => {
+                    showAlert({
+                        title: approveRemark,
+                        customIcon: 'none',
+                        message: "",
+                        alertType: 'error',
+                        btnLabel: 'ok',
+                        onPress: () => closeAlert(),
+
+                    });
+                }}>
+                    <Icons name='alert-circle-outline' size={25} color={COLORS.red}  />
+                </TouchableOpacity> : ""}
+
                 <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={onPress}>
                         <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
@@ -496,11 +532,12 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
                             </View>
 
                             {/* save button */}
+                            {approvalFlag !== "A" ?
                             <TouchableOpacity onPress={() => saveQualificationDetails()}>
                                 <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 10, marginTop: 10 }}>
                                     <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
                                 </LinearGradient>
-                            </TouchableOpacity>
+                            </TouchableOpacity>:""}
                         </View>
                     }
                     <View style={{ marginBottom: 270 }}></View>

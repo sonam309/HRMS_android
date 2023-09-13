@@ -10,6 +10,7 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Loader from '../../../../components/Loader';
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const Emp_HistoryBottomView = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -33,6 +34,8 @@ const Emp_HistoryBottomView = (props) => {
   const [aboutCompany, setAboutCompany] = useState('');
   const [companyAddress, setCompanyAddress] = useState('');
   const [companyLink, setCompanyLink] = useState('');
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
 
   const [operFlag, setOperFlag] = useState("A");
 
@@ -41,6 +44,12 @@ const Emp_HistoryBottomView = (props) => {
 
   const [TXNID, setTXNID] = useState()
 
+
+  useEffect(() => {
+    setTimeout(() => {
+      getEmploymentData();
+    }, 1000);
+  }, []);
 
   const actualFromDate = (date) => {
     setFromDateOpen(false)
@@ -112,6 +121,23 @@ const Emp_HistoryBottomView = (props) => {
         text1: 'Please fill all Mandatory feilds'
       })
     }
+  }
+
+  const getEmploymentData = async () => {
+    let employmentData = { operFlag: "V", candidateId: userId }
+    let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(employmentData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.log("employmentdata", res);
+    setApproveRemarks(res[0]?.DOC_REJ_REMARK);
+    setApprovalFlag(res[0]?.APPROVAL_FLAG);
   }
 
   const DeleteEmployment = async ({ txnId }) => {
@@ -222,8 +248,21 @@ const Emp_HistoryBottomView = (props) => {
     <View style={{ flex: 1 }}>
       {/* close button */}
       <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Employment Details</Text>
-        <TouchableOpacity onPress={props.onPress}>
+        <Text style={{...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Employment Details</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
@@ -326,12 +365,13 @@ const Emp_HistoryBottomView = (props) => {
 
               </View>
               {/* save button */}
+              {approvalFlag !== "A" ?
               <TouchableOpacity onPress={() => SaveEmploymentData()}>
                 <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
                   <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
                 </LinearGradient>
 
-              </TouchableOpacity>
+              </TouchableOpacity>:""}
 
 
             </View>

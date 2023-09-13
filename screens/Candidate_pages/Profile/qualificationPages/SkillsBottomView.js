@@ -9,6 +9,7 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import TextDropdown from '../../../../components/TextDropdown';
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
@@ -28,11 +29,13 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
   const [skillLevelDropDown, setSkillLevelDropDown] = useState()
   const [selectedSkillLevel, setSelectedSkillLevel] = useState();
   const [selectedSkillLevelValue, setSelectedSkillLevelValue] = useState('');
-
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
 
   useEffect(() => {
     getDropdownData(39);
+    getSkillsData();
   }, [])
 
   useEffect(() => {
@@ -40,6 +43,22 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
     console.log("skills", skills)
   }, [skills])
 
+  const getSkillsData = async () => {
+    let skillsData = { operFlag: "V", candidateId: userId }
+    let res = await fetch(`${API}/api/hrms/candidateSkills`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(skillsData)
+    })
+    res = await res.json()
+    res = await res?.Result
+    console.log("SkillData", res);
+    setApprovalFlag(res[0]?.DOC_REJ_REMARK);
+    setApprovalFlag(res[0]?.APPROVAL_FLAG);
+  }
 
   // getiing Skill dropdown data 
   const getDropdownData = async (P) => {
@@ -241,8 +260,21 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
 
       {/* close header */}
       <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skill's</Text>
-        <TouchableOpacity onPress={onPress}>
+        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skill's</Text>
+        {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
@@ -300,6 +332,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
                 </View>
 
                 {/* Saving Data */}
+                {approvalFlag !== "A" ?
                 <TouchableOpacity onPress={() => saveSkillDetails()} >
                   <LinearGradient
                     colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -309,7 +342,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
                     <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save Skill Details</Text>
 
                   </LinearGradient>
-                </TouchableOpacity>
+                </TouchableOpacity>:""}
               </View>
             )
           }

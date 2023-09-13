@@ -11,6 +11,7 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 const UAN_BottomView = (props) => {
@@ -31,6 +32,8 @@ const UAN_BottomView = (props) => {
   const [selectdInternationalWork, setSelectedInternationalWork] = useState('');
   const [selectedMemberEps1952, setSelectedMemberEps1952] = useState('');
   const [selecedMemberEps1995, setSelectedMemberEps1995] = useState('');
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
   const [error, setError] = useState('');
 
   const [edit, setEdit] = useState({});
@@ -93,6 +96,9 @@ const UAN_BottomView = (props) => {
         //   type: 'success',
         //   text1: msg
         // })
+
+        setApprovalFlag(UANDetails?.APPROVAL_FLAG);
+        setApproveRemarks(UANDetails?.DOC_REJ_REMARK);
 
         setUanNumber(UANDetails?.UAN_NUMBER);
         setUanName(UANDetails?.UAN_NAME);
@@ -175,12 +181,24 @@ const UAN_BottomView = (props) => {
 
       {/* close button */}
       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
-        <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
-          <TouchableOpacity onPress={props.onPress}>
-            <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
-          </TouchableOpacity>
-        </View>
+        <Text style={{...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
+          <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+        </TouchableOpacity>
+
       </View>
       {loaderVisible ? <View style={{
         alignItems: "center",
@@ -277,6 +295,7 @@ const UAN_BottomView = (props) => {
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
             </View> */}
             {/* save button */}
+            {approvalFlag !== "A" ?
             <TouchableOpacity onPress={() => saveUANDetails()} >
 
               <LinearGradient
@@ -288,7 +307,7 @@ const UAN_BottomView = (props) => {
                   {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
               </LinearGradient>
 
-            </TouchableOpacity>
+            </TouchableOpacity>:""}
 
           </View>
 

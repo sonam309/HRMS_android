@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity,ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
-import { FONTS ,SIZES} from '../../../../constants/font_size'
+import { FONTS, SIZES } from '../../../../constants/font_size'
 import SelectDropdown from 'react-native-select-dropdown'
 import DatePicker from 'react-native-date-picker'
 import { useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
 import Loader from '../../../../components/Loader'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => {
     const [showMembers, setShowMembers] = useState(true)
@@ -38,6 +39,8 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
     const [selectedBirthDate, setSelectedBirthDate] = useState('');
     const [birthDate, setBirthDate] = useState(new Date());
     const [loaderVisible, setLoaderVisible] = useState(false);
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const[appRemark,setAppRemark]=useState('');
 
     // let newMember = { Member: null, FirstName: null, MiddleName: null, LastName: null, Gender: null, BirthDate: null, Contact: null, Address: null, BloodGroup: null }
 
@@ -45,6 +48,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
         getDropdownData(31);
         getDropdownData(38);
         getDropdownData(18);
+        getFamilyData();
     }, [])
 
     // family member, blood group & Gender data 
@@ -111,6 +115,25 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
         setTxnID(item.TXN_ID)
         setShowMembers(false);
 
+    }
+    // For fetching details of Family dropdown -> Personal
+    const getFamilyData = async () => {
+        let FamilyData = { operFlag: "V", candidateId: userId }
+        let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(FamilyData)
+        })
+        res = await res.json()
+        res = await res?.Result
+        console.log("familydata", res);
+        setMembers(res);
+        console.log("familyappFlag", res[0].APPROVAL_FLAG)
+        setApprovalFlag(res[0].APPROVAL_FLAG);
+        setAppRemark(res[0].DOC_REJ_REMARK);
     }
 
     // selecting ID of selected family member in dropdown
@@ -293,8 +316,21 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
             {/* close header */}
             <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Family Details</Text>
-                <TouchableOpacity onPress={onPress}>
+                <Text style={{  ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Family Details</Text>
+                {approvalFlag === "R" ? <TouchableOpacity style={{marginLeft:10}} onPress={() => {
+                        showAlert({
+                            title: appRemark,
+                            customIcon: 'none',
+                            message: "",
+                            alertType: 'error',
+                            btnLabel: 'ok',
+                            onPress: () => closeAlert(),
+
+                        });
+                    }}>
+                        <Icon name='alert-circle-outline' size={25} color={COLORS.red}  />
+                    </TouchableOpacity> : ""}
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
@@ -306,19 +342,19 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
                 </Text>
             </View>
             ) :
-            <KeyboardAwareScrollView
-            extraScrollHeight={270}
-            behavior={'padding'}
-            enableAutomaticScroll={true}
-            keyboardShouldPersistTaps={'always'}
-            style={{marginBottom: 180 }}
-            contentContainerStyle={{
-                paddingBottom: 180
-            }}
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ marginBottom: 180 }}
+                    contentContainerStyle={{
+                        paddingBottom: 180
+                    }}
 
-            showsVerticalScrollIndicator={false}
-        >
-                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* <ScrollView showsVerticalScrollIndicator={false}> */}
                     {
                         showMembers && members[0]?.MEMBER_FIRST_NAME && members?.length >= 0 ? <MemberDetails /> :
                             <View>
@@ -395,6 +431,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
                                 {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Blood Group<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <SelectDropdown data={bloodGroup?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedBloodGroup(value), checkSelectedBloodGroup(value) }} defaultButtonText={selectDropDownText("bloodGroup")} defaultValueByIndex={(selectDropDownValue("bloodGroup"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
+                            {approvalFlag !== "A" ?
                                 <TouchableOpacity onPress={() => saveMemberDetails()} >
                                     <LinearGradient
                                         colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -404,11 +441,11 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
                                         <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{"Save Member Details"}</Text>
 
                                     </LinearGradient>
-                                </TouchableOpacity>
+                                </TouchableOpacity>:""}
                             </View>
                     }
                     <View style={{ marginBottom: 300 }}></View>
-                {/* </ScrollView> */}
+                    {/* </ScrollView> */}
                 </KeyboardAwareScrollView>
             }
         </View>

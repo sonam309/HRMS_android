@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput,ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { FONTS,SIZES } from '../../../../constants/font_size'
+import { FONTS, SIZES } from '../../../../constants/font_size'
 import COLORS from '../../../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -11,6 +11,7 @@ import { API } from '../../../../utility/services';
 import CustomInput from '../../../../components/CustomInput';
 import Toast from 'react-native-toast-message';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 
@@ -27,11 +28,15 @@ const GuarantorBottomView = (props) => {
     const [secondGrantorAadhaarNo, setSecondGrantorAadhaarNo] = useState('')
     const [secondGrantorAddress, setSecondGrantorAddress] = useState('')
     const [loaderVisible, setLoaderVisible] = useState(false);
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [approveRemark, setApproveRemarks] = useState('');
     const [isDisabled, setIsDisabled] = useState(false)
 
     useEffect(() => {
-        saveGuarantorDetails("V");
-    }, [])
+        setTimeout(() => {
+            saveGuarantorDetails("V");
+        }, 1000);
+    }, []);
 
 
     const validation = () => {
@@ -96,6 +101,10 @@ const GuarantorBottomView = (props) => {
                     text1: result[0]?.MSG
                 }) : "")
 
+
+                setApproveRemarks(result[0]?.DOC_REJ_REMARK);
+                setApprovalFlag(result[0]?.APPROVAL_FLAG);
+
                 setFirstGuarantorName(result[0]?.FIRST_GURANTR_NAME),
                     setFirstGrantorCareOfName(result[0]?.CAREOF_FIRST_GURANTR_NAME),
                     setFirstGrantorRelation(result[0]?.FIRST_GURANTR_RELATION),
@@ -127,7 +136,20 @@ const GuarantorBottomView = (props) => {
         <View style={{ flex: 1 }}>
             {/* close button */}
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                <Text style={{ flex: 1, ...FONTS.h4, fontSize: 18, color: COLORS.orange }}>Guarantor Details</Text>
+                <Text style={{...FONTS.h4, fontSize: 18, color: COLORS.orange }}>Guarantor Details</Text>
+                {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+                    showAlert({
+                        title: approveRemark,
+                        customIcon: 'none',
+                        message: "",
+                        alertType: 'error',
+                        btnLabel: 'ok',
+                        onPress: () => closeAlert(),
+
+                    });
+                }}>
+                    <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+                </TouchableOpacity> : ""}
                 <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={props.onPress} >
                         <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
@@ -141,20 +163,20 @@ const GuarantorBottomView = (props) => {
                 </Text>
             </View>
             ) :
-            <KeyboardAwareScrollView
-                extraScrollHeight={270}
-                behavior={'padding'}
-                enableAutomaticScroll={true}
-                keyboardShouldPersistTaps={'always'}
-                style={{ flex: 1, marginBottom: 170 }}
-                contentContainerStyle={{
-                    paddingBottom: 170
-                }}
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ flex: 1, marginBottom: 170 }}
+                    contentContainerStyle={{
+                        paddingBottom: 170
+                    }}
 
-                showsVerticalScrollIndicator={false}
-            >
+                    showsVerticalScrollIndicator={false}
+                >
 
-                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+                    {/* <ScrollView showsVerticalScrollIndicator={false}> */}
                     {/* <Loader loaderVisible={loaderVisible} /> */}
                     <View style={{ borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: 6, padding: 8, }}>
                         <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>First Guarantor</Text>
@@ -214,15 +236,15 @@ const GuarantorBottomView = (props) => {
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorAddress} value={secondGrantorAddress} />
                         </View>
                     </View>
-
+                    {approvalFlag !== "A" ?
                     <TouchableOpacity onPress={() => validation()} disabled={isDisabled} >
                         <LinearGradient colors={!isDisabled ? [COLORS.orange1, COLORS.disableOrange1] : [COLORS.darkGray, COLORS.lightGray]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
                             <Text
                                 style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>Save</Text>
                         </LinearGradient>
-                    </TouchableOpacity>
+                    </TouchableOpacity>:""}
                     {/* <View style={{ marginBottom: 270 }}></View> */}
-                {/* </ScrollView> */}
+                    {/* </ScrollView> */}
                 </KeyboardAwareScrollView>
             }
         </View>

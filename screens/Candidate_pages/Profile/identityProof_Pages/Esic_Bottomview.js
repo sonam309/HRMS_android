@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import SelectDropdown from 'react-native-select-dropdown';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 
@@ -31,6 +31,8 @@ const Esic_Bottomview = (props) => {
   const [priEmpCode, setPriEmpCode] = useState();
   const [priInsuranceNum, setPriInsuranceNum] = useState();
   const [isEdit, setIsEdit] = useState(false);
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
 
   const residenceWithYou = ["YES", "NO"]
 
@@ -101,6 +103,10 @@ const Esic_Bottomview = (props) => {
           setIsEdit(true);
 
         }
+
+        setApprovalFlag(ESICDetails?.APPROVAL_FLAG);
+        setApproveRemarks(ESICDetails?.DOC_REJ_REMARK);
+
         setCity(ESICDetails?.CITY);
         setSubCode(ESICDetails?.SUB_CODE);
         setRegNumber(ESICDetails?.REGISTRATION_NO);
@@ -127,6 +133,19 @@ const Esic_Bottomview = (props) => {
       {/* close button */}
       <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
         <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>ESIC Details</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
         <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
@@ -239,6 +258,7 @@ const Esic_Bottomview = (props) => {
           </View>
 
           {/* save button */}
+          {approvalFlag !== "A" ?
           <TouchableOpacity onPress={() => (isEdit ? saveESICDetails('G') : saveESICDetails('C'))}>
 
             <LinearGradient
@@ -254,7 +274,7 @@ const Esic_Bottomview = (props) => {
               </Text>
             </LinearGradient>
 
-          </TouchableOpacity>
+          </TouchableOpacity>:""}
 
           {/* <View style={{ marginBottom: 270 }}></View> */}
           {/* </ScrollView> */}

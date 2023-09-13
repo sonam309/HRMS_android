@@ -30,6 +30,8 @@ const NominationBottomView = ({ nominations, onPress }) => {
   const [allNominee, setAllNominee] = useState([]);
   const [numOfShares, setNumOfShares] = useState(0);
   const [share, setShare] = useState('');
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
   const maxShares = 100;
 
 
@@ -186,14 +188,13 @@ const NominationBottomView = ({ nominations, onPress }) => {
         body: JSON.stringify(nomineeData),
       });
       res = await res.json();
-      console.log('getNominee details', res);
+      console.log('getNominee details', res?.Result[0]);
       setAllNominee(res?.Result)
       setShowNominee(true)
       setLoaderVisible(false);
-      // Toast.show({
-      //   type: "success",
-      //   text1: "Nominnees saved succesfully"
-      // })
+      setApprovalFlag(res?.Result[0]?.APPROVAL_FLAG);
+      setApproveRemarks(res?.Result[0]?.DOC_REJ_REMARK)
+
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -359,10 +360,23 @@ const NominationBottomView = ({ nominations, onPress }) => {
           alignItems: 'center',
         }}>
         <Text
-          style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>
+          style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>
           Nominations
         </Text>
-        <TouchableOpacity onPress={onPress}>
+        {approvalFlag === "R" ? <TouchableOpacity style={{marginLeft:10}} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icon name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
           <Icon name="close-circle-outline" size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
