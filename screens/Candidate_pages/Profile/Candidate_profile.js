@@ -422,7 +422,7 @@ const Candidate_profile = () => {
             {aboutMeView && (
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '25%' }} onPress={() => setPersonalView(!personalView)}>
+                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setPersonalView(!personalView)}>
                     <Icons name='id-card' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: personalApprovalFlag === "R" ? COLORS.red : (personalApprovalFlag === "A" ? COLORS.green : COLORS.gray) }}>Personal Details</Text>
                   </TouchableOpacity>
@@ -432,7 +432,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '25%' }} onPress={() => setContactView(!contactView)}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setContactView(!contactView)}>
                     <Icons name='cellphone' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: contactAppFlag === "R" ? COLORS.red : (contactAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Contact Details</Text>
                   </TouchableOpacity>
@@ -442,7 +442,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '21%' }} onPress={() => setBankView(!bankView)}>
+                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setBankView(!bankView)}>
                     <Icons name='bank' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: bankAppFlag === "R" ? COLORS.red : (bankAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Bank Details</Text>
                   </TouchableOpacity>
@@ -496,7 +496,7 @@ const Candidate_profile = () => {
             {addressView && (
               <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '16%' }} onPress={() => setPersonalAddressView(!personalAddressView)}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setPersonalAddressView(!personalAddressView)}>
                     <Icons name='home' color={'green'} size={20} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', color: addressAppFlag === "R" ? COLORS.red : (addressAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Address</Text>
                   </TouchableOpacity>
@@ -536,7 +536,7 @@ const Candidate_profile = () => {
             {familyView && (
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '14%' }} onPress={() => setFamilyDetailsView(!familyDetailsView)}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setFamilyDetailsView(!familyDetailsView)}>
                     <MaterialIcons name='family-restroom' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', color: familyAppFlag === "R" ? COLORS.red : (familyAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Family</Text>
                   </TouchableOpacity>
@@ -546,7 +546,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '20%' }} onPress={() => setNominationView(!nominationView)}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setNominationView(!nominationView)}>
                     <Icons name='form-select' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', color: nominationAppFlag === "R" ? COLORS.red : (nominationAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Nomination</Text>
                   </TouchableOpacity>
@@ -556,7 +556,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '16%' }} onPress={() => setMedicalView(!medicalView)}>
+                  <TouchableOpacity style={{ marginVertical: 5, flexDirection: 'row', alignItems: 'center', borderTopColor: 'black', width: '45%' }} onPress={() => setMedicalView(!medicalView)}>
                     <FontAwesome5 name='clinic-medical' color={'green'} size={16} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', color: medicalAppFlag === "R" ? COLORS.red : (medicalAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Medical</Text>
                   </TouchableOpacity>
@@ -604,7 +604,7 @@ const Candidate_profile = () => {
             {skillAndQualifView && (
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '22%' }} onPress={() => setQualificationsView(!qualificationsView)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setQualificationsView(!qualificationsView)}>
                     <Icons name='book-education-outline' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: qualiAppFlag === "R" ? COLORS.red : (qualiAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Qualifications</Text>
                   </TouchableOpacity>
@@ -614,7 +614,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '12%' }} onPress={() => setSkillsView(!skillsView)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setSkillsView(!skillsView)}>
                     <Icons name='library' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: skillAppFlag === "R" ? COLORS.red : (skillAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Skills</Text>
                   </TouchableOpacity>
@@ -628,7 +628,7 @@ const Candidate_profile = () => {
               <Text style={{ padding: 4, width: '100%', ...FONTS.body4 }}>Training</Text>
             </TouchableOpacity> */}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '20%' }} onPress={() => setLanguagesView(!languagesView)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setLanguagesView(!languagesView)}>
                     <Ionicons name='language' color={'green'} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: languageAppFlag === "R" ? COLORS.red : (languageAppFlag === "A" ? COLORS.green : COLORS.gray) }}>Languages</Text>
                   </TouchableOpacity>
@@ -682,7 +682,7 @@ const Candidate_profile = () => {
             {identityView && (
               <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '25%' }} onPress={() => setIdentifications(!identifications)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setIdentifications(!identifications)}>
                     <FontAwesome name='vcard-o' color={COLORS.green} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: identificationApproveFlag === "R" ? COLORS.red : (identificationApproveFlag === "A" ? COLORS.green : COLORS.gray) }}> Identifications </Text>
                   </TouchableOpacity>
@@ -692,7 +692,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '12%' }} onPress={() => setEsicView(!esicView)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setEsicView(!esicView)}>
                     <FontAwesome name='id-badge' color={COLORS.green} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: esicAppFlag === "R" ? COLORS.red : (esicAppFlag === "A" ? COLORS.green : COLORS.gray) }}> ESIC</Text>
                   </TouchableOpacity>
@@ -702,7 +702,7 @@ const Candidate_profile = () => {
                   }
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '12%' }} onPress={() => setUanView(!uanView)}>
+                  <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setUanView(!uanView)}>
                     <Ionicons name='finger-print-sharp' color={COLORS.green} size={18} />
                     <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: uanAppFlag === "R" ? COLORS.red : (uanAppFlag === "A" ? COLORS.green : COLORS.gray) }}> UAN</Text>
                   </TouchableOpacity>
@@ -756,7 +756,7 @@ const Candidate_profile = () => {
 
                 <View style={{ paddingHorizontal: 16, marginVertical: SIZES.base }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: "32%" }} onPress={() => setEmployeHistoryView(!identifications)}>
+                    <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: "45%" }} onPress={() => setEmployeHistoryView(!identifications)}>
                       <Icons name='briefcase-clock-outline' color={COLORS.green} size={20} />
                       <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: employmentAppFlag === "R" ? COLORS.red : (employmentAppFlag === "A" ? COLORS.green : COLORS.gray) }}> Employment History </Text>
                     </TouchableOpacity>
@@ -792,7 +792,7 @@ const Candidate_profile = () => {
               esignView && (
                 <View style={{ paddingHorizontal: 16, marginVesaveGrantorInfortical: SIZES.base }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '18%' }} onPress={() => setGuarantorView(!guarantorView)}>
+                    <TouchableOpacity style={{ marginVertical: SIZES.base / 2.5, flexDirection: 'row', alignItems: 'center', width: '45%' }} onPress={() => setGuarantorView(!guarantorView)}>
                       <Icons name='account-check' color={COLORS.green} size={18} />
                       <Text style={{ marginLeft: SIZES.base, width: '100%', ...FONTS.body4, color: guarantorAppFlag === "R" ? COLORS.red : (guarantorAppFlag === "A" ? COLORS.green : COLORS.gray) }}> Guarantor </Text>
                     </TouchableOpacity>

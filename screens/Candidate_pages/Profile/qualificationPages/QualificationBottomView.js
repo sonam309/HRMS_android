@@ -20,23 +20,23 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
     const [operFlag, setOperFlag] = useState("A");
 
-    const [states, setStates] = useState('');
+    const [states, setStates] = useState([]);
     const [selectedState, setSelectedState] = useState('');
     const [selectedStateValue, setSelectedStateValue] = useState('');
 
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState([]);
     const [selectCountry, setselectCountry] = useState('');
     const [selectedCountryValue, setSelecetCountryValue] = useState('');
 
-    const [Qualifications, setQualifications] = useState('');
+    const [Qualifications, setQualifications] = useState([]);
     const [selectQualifications, setSelectQualifications] = useState('');
     const [selectedQualificationsValue, setSelectedQualificationsValue] = useState('');
 
-    const [qualificationMode, setQualificationMode] = useState('');
+    const [qualificationMode, setQualificationMode] = useState([]);
     const [selectedQualiMode, setSelectedQualiMode] = useState('');
     const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
 
-    const [stream, setStream] = useState('');
+    const [stream, setStream] = useState([]);
     const [selectedStream, setSelectedStream] = useState('');
     const [selectedStreamValue, setSelectedStreamValue] = useState('');
 

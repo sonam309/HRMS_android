@@ -16,6 +16,7 @@ import { API, API2 } from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import CustomAlert from '../../components/CustomAlert/index';
 import axios from 'axios';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 
 const CandidateDashboard = (props) => {
@@ -47,10 +48,12 @@ const CandidateDashboard = (props) => {
 
 
         const userData = { loginId: candidateId }
+        setLoaderVisible(true);
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
             console.log("candOfferDetails", resultData);
+            setLoaderVisible(false);
             // dispatch(candidateAuthActions.updateLogin({ candidateStatusId: resultData?.STATUS }))
 
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
@@ -86,6 +89,44 @@ const CandidateDashboard = (props) => {
 
         })
 
+
+    }
+
+
+    const finalSubmit = async () => {
+
+        const userData = { candidateId: candidateId }
+        axios.post(`${API}/api/User/completeCanProfile`, userData).then((response) => {
+
+            const resultData = response.data;
+            console.log("finalSubmit", resultData.FLAG);
+
+            if (resultData.FLAG === "S") {
+
+                Toast.show({
+                    type: 'success',
+                    text1: resultData.MSG
+                })
+            } else {
+
+                Toast.show({
+                    type: 'error',
+                    text1: resultData.MSG
+                })
+
+            }
+
+
+        }).catch((error) => {
+            console.log(error)
+            setLoaderVisible(false)
+
+            Toast.show({
+                type: 'error',
+                text1: error
+            })
+
+        })
 
     }
 
@@ -248,6 +289,28 @@ const CandidateDashboard = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+                {/* final submittion view */}
+                <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
+
+                    <TouchableOpacity style={{
+                        marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
+                    }}
+                        onPress={() => finalSubmit()}>
+                        {/* Toast.show({
+                        type: 'warning',
+                        text1: 'Done'
+                    })} */}
+                        <LinearGradient
+                            colors={[COLORS.orange1, COLORS.disableOrange1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 2, y: 0 }}
+                            style={{ borderRadius: 8, padding: 8, }} >
+                            <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+
+                </View>
+
                 {/* about satya */}
                 <View style={{ marginHorizontal: SIZES.radius, }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>

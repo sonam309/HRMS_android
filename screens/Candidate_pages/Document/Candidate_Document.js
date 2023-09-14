@@ -27,7 +27,7 @@ const Candidate_Document = (props) => {
     const [aadharCard, setAadharCard] = useState([]);
     const [panCard, setPanCard] = useState([]);
     const [salarySlip, setSalarySlip] = useState([]);
-    const [otherFiles, setOtherFiles] = useState([]);
+    const [otherFiles, setOtherFiles] = useState([...Array(22)]);
 
     const [operFlag, setOperFlag] = useState("A");
     const [docCount, setDocCount] = useState('');
@@ -539,17 +539,20 @@ const Candidate_Document = (props) => {
     }
 
     // for display other files in front end 
-    const otherFilesUploader = (file, setFile, type, index) => {
+    const otherFilesUploader = (file, setFile, type, index,Mandatory) => {
         return (
             <TouchableOpacity style={{
                 elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4,
-                borderColor: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray : "#fff",
-                borderWidth: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 : 0
+                borderColor: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0]?.STATUS === "R" ? COLORS.red : COLORS.lightGray : "#fff",
+                borderWidth: docVerify.length > 0 ? docVerify?.filter((doc) => doc?.TXN_ID === file[0]?.txnId)[0]?.STATUS === "R" ? 0.5 : 0 : 0
             }}>
 
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                    <Text>{type?.PARAM_NAME}</Text>
+                <Text>{type !== null && typeof type === 'object' ? type?.PARAM_NAME : type}{Mandatory && <Text style={{ color: COLORS.red, marginLeft:2 }}>*</Text>}</Text>
+                    
+
+                    {/* <Text>{type?.PARAM_NAME}</Text> */}
 
                     {docVerify.length > 0 && docVerify?.filter((doc) => doc?.TXN_ID === file[index]?.txnId)[0]?.STATUS === "R" &&
                         <Text style={{ color: COLORS.red, ...FONTS.body5 }}>Need Re-upload </Text>}
@@ -730,28 +733,28 @@ const Candidate_Document = (props) => {
                                 {DocumentUploader(salarySlip, setSalarySlip, 1, document[2])}
 
 
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[3], 0)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[4], 1)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[5], 2)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[6], 3)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[7], 4)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[8], 5)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[9], 6)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[10], 7)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[11], 8)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[12], 9)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[13], 10)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[14], 11)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[15], 12)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[16], 13)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[17], 14)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[18], 15)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[19], 16)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[20], 17)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[21], 18)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[22], 19)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[23], 20)}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[24], 21)}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[3], 0,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[4], 1,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[5], 2,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[6], 3,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[7], 4,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[8], 5,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[9], 6,experience === "Yes" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[10], 7,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[11], 8,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[12], 9,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[13], 10,experience === "No" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[14], 11,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[15], 12,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[16], 13,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[17], 14,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[18], 15,experience === "Yes" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[19], 16,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[20], 17,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[21], 18,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[22], 19,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[23], 20,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[24], 21,"")}
                             </ScrollView>
                         )
                     }

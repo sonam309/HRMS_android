@@ -19,14 +19,14 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
 
   const [allSkills, setAllSkills] = useState([]);
 
-  const [skill, setSkill] = useState('');
+  const [skill, setSkill] = useState([]);
   const [totalExperience, setTotalExperience] = useState('');
   const [operFlag, setOperFlag] = useState("A");
   const [txnId, setTxnId] = useState('');
 
   const [showSkills, setShowSkills] = useState(true);
 
-  const [skillLevelDropDown, setSkillLevelDropDown] = useState('')
+  const [skillLevelDropDown, setSkillLevelDropDown] = useState([])
   const [selectedSkillLevel, setSelectedSkillLevel] = useState('');
   const [selectedSkillLevelValue, setSelectedSkillLevelValue] = useState('');
   const [approvalFlag, setApprovalFlag] = useState('');

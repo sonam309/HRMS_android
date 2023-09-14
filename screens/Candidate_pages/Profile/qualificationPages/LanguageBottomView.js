@@ -20,7 +20,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
 
     const [selectedLanguage, setSelectedLanguage] = useState('');
     const [selectedLanguageValue, setSelectedLanguageValue] = useState('');
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState([]);
 
     const [isMothertongue, setIsMothertongue] = useState("false");
     const [isCanRead, setIsCanRead] = useState("false");

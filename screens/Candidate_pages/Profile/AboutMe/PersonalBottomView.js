@@ -19,20 +19,20 @@ const PersonalBottomView = ({ onPress }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
     const [filledDetails, setFilledDetails] = useState('');
 
-    const [marital, setMarital] = useState('');
-    const [selectedMarital, setSelectedMarital] = useState('');
-    const [selectedMaritalValue, setSelectedMaritalValue] = useState('');
+    const [marital, setMarital] = useState([]);
+    const [selectedMarital, setSelectedMarital] = useState();
+    const [selectedMaritalValue, setSelectedMaritalValue] = useState();
 
-    const [bloodGroup, setBloodGroup] = useState('');
+    const [bloodGroup, setBloodGroup] = useState([]);
     const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
     const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState('');
 
-    const [caste, setCaste] = useState('');
-    const [selectedCaste, setSelectedCaste] = useState('');
-    const [selectedCasteValue, setSelectedCasteValue] = useState('');
+    const [caste, setCaste] = useState([]);
+    const [selectedCaste, setSelectedCaste] = useState();
+    const [selectedCasteValue, setSelectedCasteValue] = useState();
 
-    const [gender, setGender] = useState('');
-    const [selectedGender, setSelectedGender] = useState('');
+    const [gender, setGender] = useState([]);
+    const [selectedGender, setSelectedGender] = useState();
     const [selectedGenderValue, setSelectedGenderValue] = useState('s');
     
 
