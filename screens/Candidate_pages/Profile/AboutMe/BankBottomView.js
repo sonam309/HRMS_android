@@ -487,12 +487,12 @@ const BankBottomView = ({ onPress }) => {
                 <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: 'white' }}>{selectedDoc.length}</Text>
                 </View>
-                <Text style={{ paddingHorizontal: 4 }}>Upload Bank Documents</Text>
+                <Text style={{ paddingHorizontal: 5,marginRight:5 }}>Upload Bank Documents</Text>
                 <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
                   <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => selectDoc()}>
                     <Icon name='plus' color={COLORS.orange} size={20} />
                   </TouchableOpacity>
-                  <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => setDisplayDocs(!displayDocs)}>
+                  <TouchableOpacity style={{ paddingHorizontal: 5 }} onPress={() => setDisplayDocs(!displayDocs)}>
                     <Icon name={displayDocs ? 'chevron-up' : 'chevron-down'} color={COLORS.orange} size={20} />
                   </TouchableOpacity>
                 </View>

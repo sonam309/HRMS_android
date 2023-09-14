@@ -298,7 +298,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
     return (
       <View key={item.TXN_ID} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.GUARDIAN_NAME} </Text>
+          <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.NOMINATION_TYPE} </Text>
           {/* <Icons position='absolute' onPress={() => DeleteSkill({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
           <Icons position='absolute' onPress={() => UpdateSkill(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
         </View>
