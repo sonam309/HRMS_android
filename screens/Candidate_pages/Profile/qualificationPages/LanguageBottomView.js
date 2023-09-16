@@ -91,7 +91,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
         })
         res = await res.json()
         res = await res?.Result
-        console.log("languagedata", res);
+        // console.log("languagedata", res);
         setApproveRemarks(res[0].DOC_REJ_REMARK);
         setApprovalFlag(res[0].APPROVAL_FLAG);
     }
@@ -119,7 +119,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
                 candidateId: userId, languages: selectedLanguageValue, motherTougue: isMothertongue, canRead: isCanRead, canWrite: isCanWrite, canSpeak: isCanSpeak, userId: userId, operFlag: operFlag, txnId: TXNID
             }
 
-            console.log("request", languageData);
+            // console.log("request", languageData);
             let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
                 method: "POST",
                 headers: {
