@@ -20,8 +20,8 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('553');
-    const [password, setPassword] = useState('Test@123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -57,15 +57,15 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        console.log("msg", otp + " $ " + userId + operFlag);
+        // console.log("msg", otp + " $ " + userId + operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
-                console.log("login", userId);
+                // console.log("login", userId);
                 result[0] === "S" ? (props.navigation.navigate("Otp_Verification", { contact, otp, userId })) : Toast.show({
                     type: 'error',
                     text1: contact
@@ -85,7 +85,7 @@ const Login = (props) => {
         } else {
 
             setLoaderVisible(true)
-            console.log(`${API}/api/User/candidateLogin`)
+            // console.log(`${API}/api/User/candidateLogin`)
             axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
                 const returnedData = response.data.Result[0];
                 let candidateName = returnedData.CANDIDATE_NAME
@@ -101,7 +101,7 @@ const Login = (props) => {
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-                console.log("response", returnedData, hiringLeadMail);
+                // console.log("response", returnedData, hiringLeadMail);
                 setLoaderVisible(false)
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                     candidateId: userId,
@@ -125,7 +125,7 @@ const Login = (props) => {
                     })
 
             }).catch((error) => {
-                console.log(error)
+                // console.log(error)
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'error',

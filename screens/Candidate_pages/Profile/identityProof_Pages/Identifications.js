@@ -68,6 +68,8 @@ const Identifications = (props) => {
   const [approvalFlag, setApprovalFlag] = useState('');
   const [approveRemark, setApproveRemarks] = useState('');
 
+  const [filledDetails, setFilledDetails] = useState();
+
   const actualDateSelector = (date) => {
     setPassportIssuedDateOpen(false)
     let newDate = date.toDateString().split(' ')
@@ -76,7 +78,7 @@ const Identifications = (props) => {
     setSelectedIssuedDate(newDate);
     setPassportIssuedDate(date)
 
-    console.log(newDate)
+    // console.log(newDate)
 
   }
 
@@ -110,20 +112,20 @@ const Identifications = (props) => {
 
   const isFormValidated = () => {
     if (
-      passportnumber === '' ||
-      selectedIssuedDate === '' ||
-      selectedExpiryDate === '' ||
-      passportissuePlace === '' ||
-      panNumber === '' ||
-      nameInPan === '' ||
-      aadharNumber === '' ||
-      nameInAadhar === '' ||
-      votersNumber === '' ||
-      votersIssuePlace === '' ||
-      driverNumber === '' ||
-      selectedDlIssuedDate === '' ||
-      selectedDlExpiryDate === '' ||
-      driverIssuePlace === ''
+      // passportnumber === '' ||
+      // selectedIssuedDate === '' ||
+      // selectedExpiryDate === '' ||
+      // passportissuePlace === '' ||
+      // panNumber === '' ||
+      // nameInPan === '' ||
+      // votersIssuePlace === '' ||
+      // votersNumber === '' ||
+      aadharNumber !== '' ||
+      nameInAadhar !== '' ||
+      driverNumber !== '' ||
+      selectedDlIssuedDate !== '' ||
+      selectedDlExpiryDate !== '' ||
+      driverIssuePlace !== ''
     ) {
       setError('All field are required!');
       setTimeout(function () {
@@ -139,7 +141,15 @@ const Identifications = (props) => {
 
 
   const handleSubmit = () => {
-    if (isFormValidated()) {
+
+    // console.log("checkDatasend",aadharNumber,nameInAadhar,driverNumber,selectedDlIssuedDate,selectedDlExpiryDate,driverIssuePlace)
+
+    if (aadharNumber !== '' && aadharNumber !== undefined &&
+      nameInAadhar !== '' && nameInAadhar !== undefined &&
+      driverNumber !== '' && driverNumber !== undefined &&
+      selectedDlIssuedDate !== '' && selectedDlIssuedDate !== undefined &&
+      selectedDlExpiryDate !== '' && selectedDlExpiryDate !== undefined &&
+      driverIssuePlace !== '' && driverIssuePlace !== undefined) {
       const body = {
         aadhaarNo: aadharNumber,
         aadhaarName: nameInAadhar,
@@ -163,12 +173,12 @@ const Identifications = (props) => {
         // txnId: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
         txnID: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
       };
-      console.log("request", body);
+      // console.log("request", body);
       axios
         .post(`${API}/api/hrms/indentityProof`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
-          console.log("result..", returnedData);
+          // console.log("result..", returnedData);
           const msg = returnedData[0].MSG
           props.onPress()
 
@@ -179,8 +189,17 @@ const Identifications = (props) => {
 
         })
         .catch(err => {
-          console.log(err);
+          // console.log(err);
+          Toast.show({
+            type:'error',
+            text1:error
+          })
         });
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: "Please fill all mandatory feilds"
+      })
     }
   };
 
@@ -194,9 +213,11 @@ const Identifications = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("getData", returnedData);
+        // console.log("getData", returnedData);
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
+
+        setFilledDetails(preFilledData);
 
         setApprovalFlag(preFilledData?.APPROVAL_FLAG);
         setApproveRemarks(preFilledData?.DOC_REJ_REMARK);
@@ -217,11 +238,15 @@ const Identifications = (props) => {
         setDriverIssuePlace(preFilledData?.DL_PLACE_OF_ISSUE);
         setEdit(returnedData[0]);
         (preFilledData.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
-        console.log("editdata", edit);
+        // console.log("editdata", edit);
         setLoaderVisible(false)
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
         setLoaderVisible(false)
       });
   };
@@ -386,12 +411,12 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Driver's Details</Text>
 
                 <View style={{ height: 75, marginTop: 10 }}>
-                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Number</Text>
+                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Number <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
                   <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setDriverNumber} value={driverNumber} maxLength={15} />
                 </View>
                 {/* Date Of issue */}
                 <View style={{ height: 75, marginTop: 10 }}>
-                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Date of Issue</Text>
+                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Date of Issue <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
                   <View style={{ flexDirection: 'row', flex: 1 }}>
                     <TextInput style={{ width: '70%', borderWidth: 1, color: editable ? COLORS.black : COLORS.black, borderColor: COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selectedDlIssuedDate} editable={false} />
                     <TouchableOpacity onPress={() => setDlIssuedDateOpen(true)} style={{ marginLeft: 20 }}>
@@ -406,7 +431,7 @@ const Identifications = (props) => {
 
                 {/* Date Of expiry */}
                 <View style={{ height: 75, marginTop: 10 }}>
-                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Date of Expiry</Text>
+                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Date of Expiry <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
                   <View style={{ flexDirection: 'row', flex: 1 }}>
                     <TextInput style={{ width: '70%', borderWidth: 1, borderColor: COLORS.black, color: editable ? COLORS.black : COLORS.black, borderRadius: 10, height: 40, paddingLeft: 5 }} placeholder='dd/mm/yyyy' value={selectedDlExpiryDate} editable={false} />
                     <TouchableOpacity onPress={() => setDlExpiryDateOpen(true)} style={{ marginLeft: 20 }}>
@@ -420,24 +445,24 @@ const Identifications = (props) => {
                 </View>
 
                 <View style={{ height: 75, marginTop: 10 }}>
-                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
+                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
                   <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Delhi'
                     onChangeText={setDriverIssuePlace} value={driverIssuePlace} />
                 </View>
               </View>
-
+              {/* <Text>{filledDetails?.AADHAR_NO} ssss</Text> */}
               {/* save button */}
               {approvalFlag !== "A" ?
-              <TouchableOpacity onPress={() => handleSubmit()} >
+                <TouchableOpacity onPress={() => handleSubmit()} >
 
-                <LinearGradient
-                  colors={[COLORS.orange1, COLORS.disableOrange1]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 2, y: 0 }}
-                  style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
-                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{edit?.FLAG === "S" ? "Update" : "Save"}</Text>
-                </LinearGradient>
-              </TouchableOpacity>:""}
+                  <LinearGradient
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 2, y: 0 }}
+                    style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
+                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{edit?.FLAG === "S" ? "Update" : "Save"}</Text>
+                  </LinearGradient>
+                </TouchableOpacity> : ""}
 
             </View>
             {/* <View style={{ marginBottom: 270 }} /> */}

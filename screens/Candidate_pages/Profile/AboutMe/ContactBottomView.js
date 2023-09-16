@@ -42,7 +42,7 @@ const ContactBottomView = ({ onPress }) => {
 
     const DisplayPreviousDetails = () => {
         filledDetails && (
-            console.log("filledDetails", filledDetails),
+            // console.log("filledDetails", filledDetails),
             // (filledDetails.PHONE_NO ? setOperFlag("I") : setOperFlag("C")),
             setAlternateMail(filledDetails?.ALTERNATE_EMAIL_ID),
             setAlternatePhone(filledDetails?.ALTERNATE_PHONE_NO),
@@ -58,7 +58,7 @@ const ContactBottomView = ({ onPress }) => {
             setLoaderVisible(true);
             let PersonalData = { operFlag: 'V', candidateId: userId };
             var formData = new FormData();
-            console.log(PersonalData);
+            // console.log(PersonalData);
             formData.append('data', JSON.stringify(PersonalData));
             let res = await fetch(`${API}/api/hrms/savePersonalDetails`,
                 {
@@ -68,7 +68,7 @@ const ContactBottomView = ({ onPress }) => {
             );
             res = await res.json();
             res = await res?.Result[0];
-            console.log('candidate profile', res);
+            // console.log('candidate profile', res);
             setLoaderVisible(false);
             setFilledDetails(res);
             setApprovalFlag(res.CONTACT_APP_FLAG);
@@ -98,7 +98,7 @@ const ContactBottomView = ({ onPress }) => {
                     alternatePhoneNo: alternatePhone,
                 };
 
-                console.log("contcatrequestdata", contactData);
+                // console.log("contcatrequestdata", contactData);
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(contactData));
                 // console.log(formData._parts);

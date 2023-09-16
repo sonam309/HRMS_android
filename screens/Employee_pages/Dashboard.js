@@ -206,7 +206,9 @@ const Home = props => {
           }}
           dayComponent={({ date, state, marking }) => {
             return (
-              <TouchableOpacity onLongPress={() => { setModalVisible(true); console.log('selected day', date.day) }}
+              <TouchableOpacity onLongPress={() => { setModalVisible(true); 
+                // console.log('selected day', date.day)
+               }}
                 style={{ alignItems: 'center', borderColor: COLORS.lightGray, paddingBottom: 8, borderBottomWidth: 0.5, width: '100%', }}>
                 <Text style={{ fontSize: 16, paddingBottom: marking ? 0 : 11, }}> {date.day} </Text>
                 {marking && marking.dotColor === 'orange' ? (

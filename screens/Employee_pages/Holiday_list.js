@@ -215,7 +215,9 @@ const Holiday_list = () => {
         }}
         dayComponent={({ date, state, marking }) => {
           return (
-            <TouchableOpacity onLongPress={() => { setModalVisible(true); console.log('selected day', date.day); }} style={{ padding: 5, alignItems: 'center', }}>
+            <TouchableOpacity onLongPress={() => { setModalVisible(true);
+              //  console.log('selected day', date.day);
+             }} style={{ padding: 5, alignItems: 'center', }}>
               <Text style={{ fontSize: 16, }}>   {date.day} </Text>
               {marking && marking.dotColor === 'orange' ? (
                 <View style={{ height: 10, width: 10, borderRadius: 5, overflow: 'hidden', transform: [{ rotate: '90deg' }], elevation: 2, }}>

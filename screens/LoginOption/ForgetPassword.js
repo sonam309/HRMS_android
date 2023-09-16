@@ -113,7 +113,7 @@ const ForgetPassword = (props) => {
   // Change PAssword in function
   const ChangePasswordApi = () => {
     setLoaderVisible(true);
-    console.log("forgetpass", userId)
+    // console.log("forgetpass", userId)
     const userData = {
       loginId: userId,
       password: newPassword,
@@ -121,8 +121,8 @@ const ForgetPassword = (props) => {
       oprFlag: oper,
     };
     // console.warn(userId);
-    console.log("requestparam", userData);
-    console.log("Url", URL);
+    // console.log("requestparam", userData);
+    // console.log("Url", URL);
     axios.post(URL, userData).then((response) => {
       const returnedData = response.data.Result;
       setLoaderVisible(false);

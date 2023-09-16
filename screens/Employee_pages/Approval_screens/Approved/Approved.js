@@ -17,7 +17,7 @@ const Approved = (props) => {
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                console.log("approvals", returnedData);
+                // console.log("approvals", returnedData);
                 setApprovedData(returnedData);
             });
     };

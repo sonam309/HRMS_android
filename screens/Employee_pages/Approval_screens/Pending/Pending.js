@@ -19,7 +19,7 @@ const Pending = (props) => {
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'P', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                console.log("pending",returnedData);
+                // console.log("pending",returnedData);
                 setPendingData(returnedData);
                 setLoaderVisible(false)
             });

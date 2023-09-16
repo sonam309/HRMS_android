@@ -40,7 +40,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
 
   useEffect(() => {
     setAllSkills(skills);
-    console.log("skills", skills)
+    // console.log("skills", skills)
   }, [skills])
 
   const getSkillsData = async () => {
@@ -55,7 +55,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("SkillData", res);
+    // console.log("SkillData", res);
     setApprovalFlag(res[0]?.DOC_REJ_REMARK);
     setApprovalFlag(res[0]?.APPROVAL_FLAG);
   }

@@ -98,7 +98,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
     // for updating family member data
     const UpdateMember = (item) => {
-        console.log("family data", item);
+        // console.log("family data", item);
         setOperFlag("E")
         setSelectedFamilyMember(item.FAMILY_MEMBER)
         setSelectedFamilyMemberValue(item.FAMILY_MEMBER_ID)
@@ -129,9 +129,9 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
         })
         res = await res.json()
         res = await res?.Result
-        console.log("familydata", res);
+        // console.log("familydata", res);
         setMembers(res);
-        console.log("familyappFlag", res[0].APPROVAL_FLAG)
+        // console.log("familyappFlag", res[0].APPROVAL_FLAG)
         setApprovalFlag(res[0].APPROVAL_FLAG);
         setAppRemark(res[0].DOC_REJ_REMARK);
     }
@@ -360,7 +360,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
                             <View>
                                 {/* dropdown for family member */}
                                 {<Text>
-                                    {console.log("familydata",members[0]?.MEMBER_FIRST_NAME)}
+                                    {/* {console.log("familydata",members[0]?.MEMBER_FIRST_NAME)} */}
                                     {members[0]?.MEMBER_FIRST_NAME}
                                 </Text>}
 

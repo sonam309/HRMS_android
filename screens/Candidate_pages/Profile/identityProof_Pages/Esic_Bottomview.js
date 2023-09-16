@@ -70,7 +70,7 @@ const Esic_Bottomview = (props) => {
       .post(`${API}/api/hrms/saveCandidateUanInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("result..", returnedData);
+        // console.log("result..", returnedData);
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
         Toast.show({
@@ -81,7 +81,7 @@ const Esic_Bottomview = (props) => {
       })
       .catch(err => {
         setLoaderVisible(false)
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -97,7 +97,7 @@ const Esic_Bottomview = (props) => {
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-        console.log("getDataSonammmm", ESICDetails);
+        // console.log("getDataSonammmm", ESICDetails);
 
         if (Object.keys(ESICDetails).length > 2) {
           setIsEdit(true);

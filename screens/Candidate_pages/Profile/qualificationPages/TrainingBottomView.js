@@ -86,12 +86,12 @@ const TrainingBottomView = (props) => {
       operFlag: operFlag,
     }
 
-    console.log("request", body);
+    // console.log("request", body);
     axios
       .post(`${API}/api/hrms/candidateTrainInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("result..", returnedData);
+        // console.log("result..", returnedData);
         const msg = returnedData[0].MSG
 
         Toast.show({
@@ -102,7 +102,11 @@ const TrainingBottomView = (props) => {
 
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
       });
 
   };
@@ -116,7 +120,7 @@ const TrainingBottomView = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("getData", returnedData);
+        // console.log("getData", returnedData);
         const TrainingDetails = returnedData[0];
         const msg = returnedData[0].MSG
 
@@ -155,10 +159,14 @@ const TrainingBottomView = (props) => {
         setTxnID(TrainingDetails?.TXN_ID);
 
         setEdit(returnedData[0]);
-        console.log("editdata", edit);
+        // console.log("editdata", edit);
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
       });
   };
 

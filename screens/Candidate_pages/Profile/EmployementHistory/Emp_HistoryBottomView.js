@@ -84,7 +84,7 @@ const Emp_HistoryBottomView = (props) => {
           txnId: TXNID, operFlag: operFlag, candidateId: userId, userId: userId, companyName: companyName, designation: designation, fDate: selcetedFromDate, tDate: selcetedToDate, role: role, lastDrawnSalary: lastSalary, reportingManager: manager, reasonForChange: reason, aboutCompany: aboutCompany, companyAddress: companyAddress, webLink: companyLink, currentlyWorking: currentlyWorking
         }
         // console.warn("saving/updating", employeeData);
-        console.log("inside", employeeData);
+        // console.log("inside", employeeData);
         setLoaderVisible(true);
         let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
           method: "POST",
@@ -97,7 +97,7 @@ const Emp_HistoryBottomView = (props) => {
         res = await res.json();
         res = await res?.Result[0]?.MSG
         setLoaderVisible(false);
-        console.log("empDetails", res);
+        // console.log("empDetails", res);
         Toast.show({
           type: 'success',
           text1: res
@@ -135,7 +135,7 @@ const Emp_HistoryBottomView = (props) => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("employmentdata", res);
+    // console.log("employmentdata", res);
     setApproveRemarks(res[0]?.DOC_REJ_REMARK);
     setApprovalFlag(res[0]?.APPROVAL_FLAG);
   }
@@ -145,7 +145,7 @@ const Emp_HistoryBottomView = (props) => {
       let employmentData = {
         txnId: txnId, operFlag: "D", userId: userId
       }
-      console.log(employmentData);
+      // console.log(employmentData);
       // console.log(employmentData);
       setLoaderVisible(true);
       let res = await fetch(`${API}/api/hrms/candidateEmployementInfo`, {
@@ -180,7 +180,7 @@ const Emp_HistoryBottomView = (props) => {
 
   const UpdateEmployment = (item) => {
     // console.warn(item.TXN_ID);
-    console.log("updatedData", item)
+    // console.log("updatedData", item)
     setOperFlag("E")
     setSelectedFromDate(item.FROM_DATE)
     setSelectedToDate(item.TO_DATE)

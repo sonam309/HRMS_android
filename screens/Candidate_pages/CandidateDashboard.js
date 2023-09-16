@@ -52,7 +52,7 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            console.log("candOfferDetails", resultData);
+            // console.log("candOfferDetails", resultData);
             setLoaderVisible(false);
             // dispatch(candidateAuthActions.updateLogin({ candidateStatusId: resultData?.STATUS }))
 
@@ -79,7 +79,7 @@ const CandidateDashboard = (props) => {
             // }
 
         }).catch((error) => {
-            console.log(error)
+            // console.log(error)
             setLoaderVisible(false)
 
             Toast.show({
@@ -99,7 +99,7 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/User/completeCanProfile`, userData).then((response) => {
 
             const resultData = response.data;
-            console.log("finalSubmit", resultData.FLAG);
+            // console.log("finalSubmit", resultData.FLAG);
 
             if (resultData.FLAG === "S") {
 
@@ -118,7 +118,7 @@ const CandidateDashboard = (props) => {
 
 
         }).catch((error) => {
-            console.log(error)
+            // console.log(error)
             setLoaderVisible(false)
 
             Toast.show({

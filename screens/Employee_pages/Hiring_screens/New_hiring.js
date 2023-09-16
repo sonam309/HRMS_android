@@ -14,16 +14,17 @@ import { responsiveWidth } from 'react-native-responsive-dimensions'
 
 const New_hiring = (props) => {
     const { navigation, selectedOption, setFilterVisible } = props
-    const [jobOpening, setJobOpening] = useState('')
+    const [jobOpening, setJobOpening] = useState()
     const [loaderVisible, setLoaderVisible] = useState(true);
     let bannerColor;
     let counting = 0;
     const userId = useSelector(state => state.auth.userId)
     const route = useRoute();
 
-    console.log("route", route.name)
+    // console.log("route", route.name)
 
-    if (route.name === "New_hiring") { setFilterVisible(true), console.log("object") }
+    if (route.name === "New_hiring") { 
+        setFilterVisible(true)}
 
 
     // useEffect(() => {
@@ -48,12 +49,12 @@ const New_hiring = (props) => {
             })
             res = await res?.json();
 
-            console.log("jobinfo", res)
+            // console.log("jobinfo", res)
             res = await res?.Table
             setJobOpening(res);
             setLoaderVisible(false)
         } catch (error) {
-            console.log("this is the error", error)
+            // console.log("this is the error", error)
         }
     }
 

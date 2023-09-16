@@ -45,7 +45,7 @@ const Employee_Login = (props) => {
         try {
             const userData = { loginId: userId, password: password, oprFlag: 'L' };
             setLoaderVisible(true)
-            console.log(userData);
+            // console.log(userData);
             axios.post(`${API}/api/User/login`, userData).then((response) => {
                 const returnedData = response?.data?.Result[0];
                 // console.log("resposne", returnedData,response?.data?.Result);
@@ -56,7 +56,7 @@ const Employee_Login = (props) => {
                 let userDeptId = returnedData.DEPT_ID
                 let userDept = returnedData.DEPT_NAME
                 let userEmail = returnedData.EMAIL_ID
-                console.log("returnedData", returnedData);
+                // console.log("returnedData", returnedData);
                 setLoaderVisible(false)
                 result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userEmail, userPassword: password }))) : Toast.show({
                     type: 'error',
@@ -97,7 +97,7 @@ const Employee_Login = (props) => {
             }).then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG.trim());
 

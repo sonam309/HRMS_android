@@ -38,7 +38,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
         let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
-        console.log("params data",returnedData);
+        // console.log("params data",returnedData);
         if (P === 4) { setCountry(returnedData) }
         else if (P === 7) { setStates(returnedData) }
 
@@ -108,7 +108,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
 
     const DisplayPreviousDetails = () => {
-        console.log("filledDetails", filledDetails);
+        // console.log("filledDetails", filledDetails);
         filledDetails && (
             // present address
             // (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
@@ -155,7 +155,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
             })
             res = await res.json()
             res = await res?.Result[0]
-            console.log("address", res?.DOC_REJ_REMARK);
+            // console.log("address", res?.DOC_REJ_REMARK);
             setLoaderVisible(false);
             setFilledDetails(res);
             setApprovalFlag(res?.APPROVAL_FLAG);
@@ -275,7 +275,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
-                console.log("addressRes", res);
+                // console.log("addressRes", res);
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'success',

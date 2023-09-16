@@ -54,14 +54,14 @@ const Candidate_Document = (props) => {
             let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
             let formData = new FormData();
             formData.append('data', JSON.stringify(PersonalData))
-            console.log("docuploaddata", formData, JSON.stringify(PersonalData))
+            // console.log("docuploaddata", formData, JSON.stringify(PersonalData))
             let res = await fetch(`${API}/api/hrms/assesmentSave`, {
                 method: "POST",
                 body: formData
             })
 
             res = await res.json()
-            console.log("documentdata", res)
+            // console.log("documentdata", res)
             setLoaderVisible(false)
             let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
             setPendingDocumentCount(pendingCount);
@@ -70,20 +70,20 @@ const Candidate_Document = (props) => {
             setRejectDocCount(res?.Table1[0]?.Rejected)
             setExperience(res?.PO_EXPERIENCE_TYPE)
 
-            console.log("pendingCount", pendingCount);
+            // console.log("pendingCount", pendingCount);
 
             let docFiles = res?.Table;
             { docFiles?.length > 0 && setOperFlag("E") }
             setDocCount(res?.PO_DOC_REQ);
             setDocVerify(res?.Table);
-            console.log("docfilesSonam", res?.Table);
-            console.log(docFiles)
+            // console.log("docfilesSonam", res?.Table);
+            // console.log(docFiles)
 
 
             docFiles.map((item) => {
                 let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
 
-                console.log(newFile, "this is newfile", type)
+                // console.log(newFile, "this is newfile", type)
 
                 switch (type) {
                     case 129:
@@ -123,7 +123,7 @@ const Candidate_Document = (props) => {
         let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
-        console.log("dwData", returnedData)
+        // console.log("dwData", returnedData)
         // if (P === 22) {
         setDocument(returnedData)
 
@@ -160,7 +160,7 @@ const Candidate_Document = (props) => {
                 ],
                 // allowMultiSelection: true
             });
-            console.log(doc);
+            // console.log(doc);
 
             setFileUpload(current => [
                 ...current,
@@ -174,7 +174,7 @@ const Candidate_Document = (props) => {
             ]);
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
 
@@ -224,7 +224,7 @@ const Candidate_Document = (props) => {
     // for removing other files
     const onRemoveOtherFiles = (index) => {
         let newFile = ""
-        console.log("this is new file", newFile);
+        // console.log("this is new file", newFile);
         setOtherFiles([
             ...otherFiles.slice(0, index),
             newFile,
@@ -237,7 +237,7 @@ const Candidate_Document = (props) => {
         let names = '';
 
         for (let index = 0; index < aadharCard.length; index++) {
-            console.log("aadhar card", aadharCard[index].uri);
+            // console.log("aadhar card", aadharCard[index].uri);
 
             if (aadharCard[index].uri) {
                 const element = aadharCard[index];
@@ -248,7 +248,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < panCard.length; index++) {
 
-            console.log("pan card", panCard[index].uri);
+            // console.log("pan card", panCard[index].uri);
 
             if (panCard[index].uri) {
                 const element = panCard[index];
@@ -258,7 +258,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < salarySlip.length; index++) {
 
-            console.log("ss", salarySlip[index].uri);
+            // console.log("ss", salarySlip[index].uri);
 
             if (salarySlip[index].uri) {
                 const element = salarySlip[index];
@@ -268,7 +268,7 @@ const Candidate_Document = (props) => {
 
         for (let index = 0; index < otherFiles.length; index++) {
 
-            console.log("oF", otherFiles[index]?.uri);
+            // console.log("oF", otherFiles[index]?.uri);
 
             if (otherFiles[index]?.uri) {
                 const element = otherFiles[index];
@@ -328,7 +328,7 @@ const Candidate_Document = (props) => {
 
     const FileAdding = () => {
         let fileName = getFileName();
-        console.log(fileName);
+        // console.log(fileName);
 
         for (let index = 0; index < aadharCard.length; index++) {
             if (aadharCard[index].uri) {
@@ -405,13 +405,13 @@ const Candidate_Document = (props) => {
 
                 candidateData.attachment = FileAttachment();
 
-                console.log("candidateDatarwuq", candidateData);
+                // console.log("candidateDatarwuq", candidateData);
 
                 formData.append('data', JSON.stringify(candidateData))
 
                 FileAdding();
 
-                console.log(formData._parts)
+                // console.log(formData._parts)
 
                 let res = await fetch(`${API}/api/hrms/assesmentSave`, {
                     method: "POST",
@@ -422,7 +422,7 @@ const Candidate_Document = (props) => {
                 })
 
                 res = await res.json();
-                console.log("SaveImages", res);
+                // console.log("SaveImages", res);
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'success',
@@ -453,7 +453,7 @@ const Candidate_Document = (props) => {
     const DeleteDoc = async (TXNID) => {
 
         let candidateData = { txnId: TXNID, operFlag: "D", src: "M" }
-        console.log(candidateData);
+        // console.log(candidateData);
 
         let newFormData = new FormData()
 
@@ -469,7 +469,7 @@ const Candidate_Document = (props) => {
 
         res = await res.json()
 
-        console.log("deleting doc", res)
+        // console.log("deleting doc", res)
         Toast.show({
             type: 'success',
             text1: res.MSG
@@ -514,8 +514,8 @@ const Candidate_Document = (props) => {
 
 
                             {/* {docVerify.filter((doc) => doc.TXN_ID===item.txnId) &&  } */}
-                            {console.log("deleteDoc", item.name)}
-                            {console.log("deleteDoc1", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS)}
+                            {/* {console.log("deleteDoc", item.name)} */}
+                            {/* {console.log("deleteDoc1", docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS)} */}
 
                             {(docVerify?.filter((doc) => doc?.TXN_ID === item.txnId)[0]?.STATUS !== "V") &&
                                 <TouchableOpacity style={{ marginLeft: SIZES.base }} onPress={() => { onRemovePress(index, setFile, file), DeleteDoc(item.txnId) }} >

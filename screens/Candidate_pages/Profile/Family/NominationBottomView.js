@@ -177,7 +177,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         operFlag: 'V',
 
       };
-      console.log('requestData', JSON.stringify(nomineeData));
+      // console.log('requestData', JSON.stringify(nomineeData));
       // nomineeData.param = NomineeInfo();
       let res = await fetch(`${API}/api/hrms/candidateNomination`, {
         method: 'POST',
@@ -188,7 +188,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         body: JSON.stringify(nomineeData),
       });
       res = await res.json();
-      console.log('getNominee details', res?.Result[0]);
+      // console.log('getNominee details', res?.Result[0]);
       setAllNominee(res?.Result)
       setShowNominee(true)
       setLoaderVisible(false);
@@ -210,7 +210,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         var param1 = ""
 
         nomineeMember.map((nominee, index) => {
-          console.log(param1)
+          // console.log(param1)
           if (param1 === "") {
             if (nomineeMember.length === index + 1) {
               param1 = `${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}`
@@ -240,7 +240,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
           operFlag: 'A',
           param: param1,
         };
-        console.log('requestData', JSON.stringify(nomineeData));
+        // console.log('requestData', JSON.stringify(nomineeData));
         // nomineeData.param = NomineeInfo();
         let res = await fetch(`${API}/api/hrms/candidateNomination`, {
           method: 'POST',
@@ -251,7 +251,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
           body: JSON.stringify(nomineeData),
         });
         res = await res.json();
-        console.log('saveNominieedetails', res.Result[0]);
+        // console.log('saveNominieedetails', res.Result[0]);
         param1 = undefined
         setLoaderVisible(false);
         if (res.Result[0].FLAG === "F") {

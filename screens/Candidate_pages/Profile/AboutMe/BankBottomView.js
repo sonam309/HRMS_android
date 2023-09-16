@@ -69,7 +69,7 @@ const BankBottomView = ({ onPress }) => {
 
 
   const DisplayPreviousDetails = () => {
-    console.log("BankDetailsfilled", filledDetails);
+    // console.log("BankDetailsfilled", filledDetails);
     filledDetails && (
       // (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
@@ -138,7 +138,7 @@ const BankBottomView = ({ onPress }) => {
       setLoaderVisible(true);
       let PersonalData = { operFlag: 'V', candidateId: userId };
       var formData = new FormData();
-      console.log(PersonalData);
+      // console.log(PersonalData);
       formData.append('data', JSON.stringify(PersonalData));
       let res = await fetch(`${API}/api/hrms/savePersonalDetails`,
         {
@@ -148,7 +148,7 @@ const BankBottomView = ({ onPress }) => {
       );
       res = await res.json();
       res = await res?.Result[0];
-      console.log('BankDetails', res);
+      // console.log('BankDetails', res);
       setLoaderVisible(false);
       setFilledDetails(res);
       setApprovalFlag(res.BANK_APP_FLAG);
@@ -182,7 +182,7 @@ const BankBottomView = ({ onPress }) => {
           fileAttachment: fileName,
         };
 
-        console.log('bankdetails', bankData);
+        // console.log('bankdetails', bankData);
         var formData = new FormData();
         formData.append('data', JSON.stringify(bankData));
         selectedDoc.map(file => {
@@ -191,13 +191,13 @@ const BankBottomView = ({ onPress }) => {
             formData.append('fileUpload', file);
           }
         });
-        console.log(formData._parts);
+        // console.log(formData._parts);
         let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
           method: 'POST',
           body: formData,
         });
 
-        console.log('response', res);
+        // console.log('response', res);
         res = await res.json();
         res = await res?.Result[0]?.MSG;
         Toast.show({
@@ -263,7 +263,7 @@ const BankBottomView = ({ onPress }) => {
             DocumentPicker.types.images,
           ],
         });
-        console.log(doc);
+        // console.log(doc);
 
         setSelectedDoc(current => [
           ...current,
@@ -275,7 +275,7 @@ const BankBottomView = ({ onPress }) => {
           },
         ]);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     } else {
       Toast.show({

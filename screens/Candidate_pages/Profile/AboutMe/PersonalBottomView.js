@@ -118,7 +118,7 @@ const PersonalBottomView = ({ onPress }) => {
             setLoaderVisible(true);
             let PersonalData = { operFlag: 'V', candidateId: userId };
             var formData = new FormData();
-            console.log(PersonalData);
+            // console.log(PersonalData);
             formData.append('data', JSON.stringify(PersonalData));
             let res = await fetch(
                 `${API}/api/hrms/savePersonalDetails`,
@@ -129,7 +129,7 @@ const PersonalBottomView = ({ onPress }) => {
             );
             res = await res.json();
             res = await res?.Result[0];
-            console.log('candidate profile', res);
+            // console.log('candidate profile', res);
             setLoaderVisible(false);
             setFilledDetails(res);
             setApprovalFlag(res.PERSON_APP_FLAG);
@@ -216,7 +216,7 @@ const PersonalBottomView = ({ onPress }) => {
 
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(PersonalData))
-                console.log(formData._parts)
+                // console.log(formData._parts)
                 let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
                     method: "POST",
                     body: formData

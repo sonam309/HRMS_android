@@ -91,7 +91,7 @@ const GuarantorBottomView = (props) => {
                 operFlag: "V",
 
             }
-            console.log("GuarantoDataRequest", guarantorData)
+            // console.log("GuarantoDataRequest", guarantorData)
             setLoaderVisible(true);
             axios.post(`${API}/api/hrms/saveGrantorInfo`, guarantorData).then((response) => {
                 // axios.post('http://192.168.1.169:7038/api/hrms/saveGrantorInfo', guarantorData).then((response) => {
@@ -103,7 +103,7 @@ const GuarantorBottomView = (props) => {
                 //     props.onPress();
 
                 // }
-                console.log("getresultguarantor", result);
+                // console.log("getresultguarantor", result);
 
                 (result[0].MSG !== "" ? Toast.show({
                     type: 'success',
@@ -126,7 +126,7 @@ const GuarantorBottomView = (props) => {
                     setSecondGrantorAddress(result[0]?.SECOND_GURANTR_ADDRESS)
                     setFilledDetails(result[0]);
 
-                console.log(Object.keys(result[0])?.length);
+                // console.log(Object.keys(result[0])?.length);
                 if (Object.keys(result[0])?.length > 0 && result[0]?.FIRST_GURANTR_AADHAR_NO != null) {
                     setIsDisabled(true)
                 }
@@ -135,7 +135,7 @@ const GuarantorBottomView = (props) => {
             })
         } catch (error) {
 
-            console.log("error", error);
+            // console.log("error", error);
             setLoaderVisible(false);
 
         }
@@ -160,7 +160,7 @@ const GuarantorBottomView = (props) => {
                 operFlag: flag,
 
             }
-            console.log("GuarantoDataRequest", guarantorData)
+            // console.log("GuarantoDataRequest", guarantorData)
             setLoaderVisible(true);
             axios.post(`${API}/api/hrms/saveGrantorInfo`, guarantorData).then((response) => {
                 // axios.post('http://192.168.1.169:7038/api/hrms/saveGrantorInfo', guarantorData).then((response) => {
@@ -172,7 +172,7 @@ const GuarantorBottomView = (props) => {
                     props.onPress();
 
                 }
-                console.log("resultguarantor", result);
+                // console.log("resultguarantor", result);
 
                 (result[0].MSG !== "" ? Toast.show({
                     type: 'success',
@@ -202,8 +202,12 @@ const GuarantorBottomView = (props) => {
 
             })
         } catch (error) {
+            Toast.show({
+                type:'error',
+                text1:error
+            })
 
-            console.log("error", error);
+            // console.log("error", error);
             setLoaderVisible(false);
 
         }

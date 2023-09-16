@@ -29,12 +29,12 @@ const Candidate_details = (props) => {
   const {userId}=useSelector(state=>state.auth);
   
 
-  console.log("candidateId", candidateId);
-  console.log("interviewId", interviewId);
-  console.log("interviewType", interviewType);
-  console.log("interviewMail", interviewMail);
-  console.log("resume", resume);
-  console.log("UserID",userId);
+  // console.log("candidateId", candidateId);
+  // console.log("interviewId", interviewId);
+  // console.log("interviewType", interviewType);
+  // console.log("interviewMail", interviewMail);
+  // console.log("resume", resume);
+  // console.log("UserID",userId);
   let theInterviewType = "";
   let theInterviewId = "";
 
@@ -81,7 +81,7 @@ const Candidate_details = (props) => {
         }),
         
       })
-      console.log("dfghj",theInterviewType);
+      // console.log("dfghj",theInterviewType);
 
       res = await res.json()
       res = res.Result[0]
@@ -93,7 +93,7 @@ const Candidate_details = (props) => {
       if(res.FLAG === "S"){
         props.navigation.navigate("Interview_status")
       }
-      console.log("response", res)
+      // console.log("response", res)
 
 
     }
@@ -276,7 +276,7 @@ const Candidate_details = (props) => {
     res = await res.json()
     res = res.Result[0]
     setFeedback(res)
-    console.log("response", res)
+    // console.log("response", res)
 
   };
 

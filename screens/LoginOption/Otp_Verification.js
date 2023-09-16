@@ -62,12 +62,12 @@ const Otp_Verification = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
+        // console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
                 setsendOtp(otp);
@@ -91,7 +91,7 @@ const Otp_Verification = (props) => {
     //otp Validation
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
-        console.log("otpvry", userId);
+        // console.log("otpvry", userId);
 
         setLoaderVisible(true);
         if (sendOtp == inputOtp) {

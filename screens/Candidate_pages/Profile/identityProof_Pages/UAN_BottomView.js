@@ -90,7 +90,7 @@ const UAN_BottomView = (props) => {
         const UANDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-        console.log("getData", UANDetails);
+        // console.log("getData", UANDetails);
 
         // Toast.show({
         //   type: 'success',
@@ -113,11 +113,11 @@ const UAN_BottomView = (props) => {
 
         setEdit(returnedData[0]);
         (Object.keys(UANDetails).length > 2 ? setOperFlag("E") : setOperFlag("U"))
-        console.log("editdata", edit);
+        // console.log("editdata", edit);
       })
       .catch(err => {
         setLoaderVisible(false)
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -145,12 +145,12 @@ const UAN_BottomView = (props) => {
 
       }
 
-      console.log("request", body);
+      // console.log("request", body);
       axios
         .post(`${API}/api/hrms/saveCandidateUanInfo`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
-          console.log("result..", returnedData);
+          // console.log("result..", returnedData);
           const msg = returnedData[0].MSG
           setLoaderVisible(false)
           Toast.show({
@@ -162,7 +162,11 @@ const UAN_BottomView = (props) => {
         })
         .catch(err => {
           setLoaderVisible(false)
-          console.log(err);
+          // console.log(err);
+          Toast.show({
+            type:'error',
+            text1:err
+          })
         });
     }
   };

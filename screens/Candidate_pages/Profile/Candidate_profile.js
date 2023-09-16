@@ -93,7 +93,7 @@ const Candidate_profile = () => {
 
       let PersonalData = { operFlag: 'V', candidateId: userId };
       var formData = new FormData();
-      console.log(PersonalData);
+      // console.log(PersonalData);
       formData.append('data', JSON.stringify(PersonalData));
       let res = await fetch(
         `${API}/api/hrms/savePersonalDetails`,
@@ -105,7 +105,7 @@ const Candidate_profile = () => {
       res = await res.json();
       res = await res?.Result[0];
 
-      console.log("personamDetailsBankkkkkkkkkkkkkkk", res);
+      // console.log("personamDetailsBankkkkkkkkkkkkkkk", res);
 
       setPersonalApprovalFlag(res.PERSON_APP_FLAG);
       setConatctAppFlag(res.CONTACT_APP_FLAG);
@@ -134,7 +134,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result[0]
-    console.log("Address", res);
+    // console.log("Address", res);
     setFilledDetails(res);
     setAddressAppFlag(res.APPROVAL_FLAG);
   }
@@ -152,9 +152,9 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("familydata", res);
+    // console.log("familydata", res);
     setMembers(res);
-    console.log("familyappFlagSonammm", res[0].APPROVAL_FLAG)
+    // console.log("familyappFlagSonammm", res[0].APPROVAL_FLAG)
     setFamilyAppFlag(res[0].APPROVAL_FLAG);
   }
 
@@ -171,7 +171,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("employmentdata", res);
+    // console.log("employmentdata", res);
     setEmployement(res);
     setEmployementAppFlag(res[0].APPROVAL_FLAG);
   }
@@ -189,7 +189,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("SkillData", res);
+    // console.log("SkillData", res);
     setSkills(res);
     setSkillAppFlag(res[0].APPROVAL_FLAG);
   }
@@ -206,7 +206,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("medicaldata", res);
+    // console.log("medicaldata", res);
     setMedicalPolicy(res);
     setMedicalAppFlag(res[0].APPROVAL_FLAG);
   }
@@ -223,7 +223,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("languagedata", res);
+    // console.log("languagedata", res);
     setLanguages(res);
     setLanguageAppFlag(res[0].APPROVAL_FLAG);
   }
@@ -240,7 +240,7 @@ const Candidate_profile = () => {
     })
     res = await res.json()
     res = await res?.Result
-    console.log("qualfication Data", res);
+    // console.log("qualfication Data", res);
     setQualification(res);
     setQualiAppFlag(res[0].APPROVAL_FLAG);
   }
@@ -257,10 +257,14 @@ const Candidate_profile = () => {
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
         setIdentificationApproveFlag(returnedData[0].APPROVAL_FLAG);
-        console.log("identificationData", returnedData[0].APPROVAL_FLAG);
+        // console.log("identificationData", returnedData[0].APPROVAL_FLAG);
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
 
       });
   };
@@ -285,7 +289,7 @@ const Candidate_profile = () => {
         body: JSON.stringify(nomineeData),
       });
       res = await res.json();
-      console.log('getNominee details', res.Result[0].APPROVAL_FLAG);
+      // console.log('getNominee details', res.Result[0].APPROVAL_FLAG);
       setnominationAppFlag(res.Result[0].APPROVAL_FLAG);
     } catch (error) {
       // Toast.show({
@@ -306,7 +310,7 @@ const Candidate_profile = () => {
         const returnedData = response?.data?.Result;
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
-        console.log("getEsignDataSonammmm", ESICDetails);
+        // console.log("getEsignDataSonammmm", ESICDetails);
         setEsicAppFlag(ESICDetails.APPROVAL_FLAG);
       }).catch(error => {
 
@@ -323,7 +327,7 @@ const Candidate_profile = () => {
         const returnedData = response?.data?.Result;
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
-        console.log("getUanNumber", ESICDetails);
+        // console.log("getUanNumber", ESICDetails);
         setUAnAppFlag(ESICDetails.APPROVAL_FLAG);
       }).catch(error => {
 
@@ -338,10 +342,10 @@ const Candidate_profile = () => {
         operFlag: "V",
 
       }
-      console.log("GuarantoDataRequest", guarantorData)
+      // console.log("GuarantoDataRequest", guarantorData)
       axios.post(`${API}/api/hrms/saveGrantorInfo`, guarantorData).then((response) => {
         const result = response.data.Result;
-        console.log("resultguarantor", result);
+        // console.log("resultguarantor", result);
 
         setGuarantorAppFlag(result[0].APPROVAL_FLAG);
       })

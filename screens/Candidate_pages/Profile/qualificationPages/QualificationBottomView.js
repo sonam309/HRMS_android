@@ -130,13 +130,13 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
         })
         res = await res.json()
         res = await res?.Result
-        console.log("qualficationDataaaaaa", res);
+        // console.log("qualficationDataaaaaa", res);
         setApproveRemarks(res[0].DOC_REJ_REMARK);
         setApprovalFlag(res[0].APPROVAL_FLAG);
     }
 
     const updateQualification = (item) => {
-        console.log("getQualifications", item);
+        // console.log("getQualifications", item);
         (item.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
         setSpecilization(item?.SPECIALIZATION);
         setUniversity(item?.UNIVERSITY);
@@ -174,14 +174,14 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
 
     const saveQualificationDetails = async () => {
-        console.log("selectedQualifications", selectQualifications);
+        // console.log("selectedQualifications", selectQualifications);
         if (selectQualifications !== undefined) {
             try {
                 const qualificationData = {
                     txnId: TXNID, candidateId: userId, qualifications: selectedQualificationsValue, stream: selectedStreamValue, specilization: specilization, university: University, institute: institute, qualificatinMode: selectedQualiModeValue, country: selectedCountryValue, state: selectedStateValue, city: city, fromYear: fromYear, passYear: passYear, isHighestQualification: isHighestQualification, userId: userId, operFlag: operFlag, percentage: grade
                 }
 
-                console.log("request", qualificationData);
+                // console.log("request", qualificationData);
                 setLoaderVisible(true);
                 let res = await fetch(`${API}/api/hrms/candidateQualification`, {
                     method: "POST",
@@ -193,7 +193,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
-                console.log("QualificationResponse", res);
+                // console.log("QualificationResponse", res);
                 setLoaderVisible(false);
                 onPress()
                 Toast.show({

@@ -32,7 +32,7 @@ const Interview_status = (props) => {
             res = await res.json()
             res = res.Result;
             setLoaderVisibility(false);
-            console.log("responseIStatus", res)
+            // console.log("responseIStatus", res)
             setInterViewDetail(res)
             // setInterviewType(res.INTERVIEW_TYPE);
             // {console.log("InterviewTypesss",res.INTERVIEW_TYPE)}
@@ -65,7 +65,7 @@ const Interview_status = (props) => {
 
         return (
             <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail })}>
-                {console.log("TYpe", interviewType)}
+                {/* {console.log("TYpe", interviewType)} */}
 
                 <View style={{ borderRadius: 15, backgroundColor: COLORS.white, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15, borderWidth: 0.5, borderColor: COLORS.gray }}>
                     <View>

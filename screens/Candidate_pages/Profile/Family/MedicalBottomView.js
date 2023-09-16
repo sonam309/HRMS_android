@@ -103,7 +103,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress, fetchMedicalData }) => {
         })
         res = await res.json()
         res = await res?.Result
-        console.log("MedsicalDetailsssss", res[0]);
+        // console.log("MedsicalDetailsssss", res[0]);
         setApprovalFlag(res[0]?.APPROVAL_FLAG);
         setApprovalRemarks(res[0]?.DOC_REJ_REMARK);
     }

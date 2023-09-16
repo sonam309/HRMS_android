@@ -43,7 +43,7 @@ const Offer_Letter = (props) => {
         },
       );
 
-      console.log("permission", isReadGranted);
+      // console.log("permission", isReadGranted);
       if (isReadGranted === PermissionsAndroid.RESULTS.GRANTED) {
         downloadFile();
       } else if (isReadGranted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
@@ -89,7 +89,7 @@ const Offer_Letter = (props) => {
       })
       .then((res) => {
         // the temp file path
-        console.log('The file saved to ', res.path())
+        // console.log('The file saved to ', res.path())
         Toast.show({
           type: 'success',
           text1: "File saved Successfully to" + res.path()
@@ -115,7 +115,7 @@ const Offer_Letter = (props) => {
 
     totalData = await totalData.json()
     totalData = totalData.Result[0]
-    console.log("totaldata", totalData);
+    // console.log("totaldata", totalData);
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
@@ -147,12 +147,12 @@ const Offer_Letter = (props) => {
       operFlag: operFlag,
     };
 
-    console.log("345678765432", data);
+    // console.log("345678765432", data);
 
     axios
       .post(`${API}/api/hrms/OfferAceptance`, data)
       .then(res => {
-        console.log('hjsdfvhjs', res?.data?.Result);
+        // console.log('hjsdfvhjs', res?.data?.Result);
 
         if (res?.data?.Result[0]?.FLAG == 'S') {
           Toast.show({
@@ -163,7 +163,7 @@ const Offer_Letter = (props) => {
         }
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
 
         Toast.show({
           type: 'error',
@@ -204,7 +204,7 @@ const Offer_Letter = (props) => {
           style={{ flex: 1, width: '100%' }}
           onLoadComplete={() => setLoaderVisible(false)}
           onError={(error) => {
-            console.log(`${API}/OfferLetter/${offerLetter}`, error)
+            // console.log(`${API}/OfferLetter/${offerLetter}`, error)
             setError(true)
           }} onPressLink={(link) => Linking.openURL(link)} />
       )

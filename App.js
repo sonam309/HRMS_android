@@ -24,7 +24,7 @@ const App = () => {
           AsyncStorage.setItem('FCMToken', fcmToken);
         }
       } catch (error) {
-        console.log("error fetching FCM token")
+        // console.log("error fetching FCM token")
       }
 
     }
@@ -44,11 +44,11 @@ const App = () => {
   useEffect(() => {
     requestPermission();
     const otherOne = messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
+      // console.log('Message handled in the background!', remoteMessage);
     });
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert(JSON.stringify(remoteMessage?.notification?.title), JSON.stringify(remoteMessage?.notification?.body));
-      console.log(JSON.stringify(remoteMessage));
+      // console.log(JSON.stringify(remoteMessage));
     });
 
   }, []);
