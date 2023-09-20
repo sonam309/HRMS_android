@@ -57,12 +57,12 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        // console.log("msg", otp + " $ " + userId + operFlag);
+        console.log("msg", otp + " $ " + userId + operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                // console.log(returnedData);
+                console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
                 // console.log("login", userId);
@@ -101,7 +101,7 @@ const Login = (props) => {
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-                // console.log("response", returnedData, hiringLeadMail);
+                console.log("response", returnedData, hiringLeadMail);
                 setLoaderVisible(false)
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                     candidateId: userId,

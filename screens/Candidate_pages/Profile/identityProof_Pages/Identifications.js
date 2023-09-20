@@ -12,6 +12,8 @@ import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { showAlert, closeAlert } from "react-native-customisable-alert";
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { bootstrapAnalyticsAsync } from 'expo-cli';
 
 
 const Identifications = (props) => {
@@ -69,6 +71,7 @@ const Identifications = (props) => {
   const [approveRemark, setApproveRemarks] = useState('');
 
   const [filledDetails, setFilledDetails] = useState();
+  const [panValidationMsg, setPanValidationMsg] = useState();
 
   const actualDateSelector = (date) => {
     setPassportIssuedDateOpen(false)
@@ -139,6 +142,56 @@ const Identifications = (props) => {
     }
   };
 
+  const validatePan = () => {
+    if (panNumber !== "" && panNumber !== undefined) {
+      console.log("panNumber", panNumber);
+      const body = { id_number: panNumber };
+      setLoaderVisible(true)
+
+      axios
+        .post(`${API}/api/hrms/VerifyPan`, body)
+        .then(response => {
+          const returnedData = response.data.Result[0];
+          setLoaderVisible(false);
+          console.log("result..", returnedData);
+          // const msg = returnedData[0].MSG
+
+          setPanValidationMsg(returnedData.MSG);
+
+          if (returnedData.MSG === "Invalid Pan") {
+
+            Toast.show({
+              type: 'error',
+              text1: returnedData.MSG,
+            });
+
+          } else {
+            Toast.show({
+              type: 'success',
+              text1: returnedData.MSG,
+            });
+          }
+
+        })
+        .catch(error => {
+          console.log("sonnnnnnnnnnnnnnnnnnn", error);
+          setLoaderVisible(false);
+          Toast.show({
+            type: 'error',
+            text1: error
+          })
+        });
+
+    } else {
+      setLoaderVisible(false);
+      console.log("sonnnngffffffffffffffffh");
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter Pan Number'
+      })
+
+    }
+  }
 
   const handleSubmit = () => {
 
@@ -149,7 +202,7 @@ const Identifications = (props) => {
       driverNumber !== '' && driverNumber !== undefined &&
       selectedDlIssuedDate !== '' && selectedDlIssuedDate !== undefined &&
       selectedDlExpiryDate !== '' && selectedDlExpiryDate !== undefined &&
-      driverIssuePlace !== '' && driverIssuePlace !== undefined) {
+      driverIssuePlace !== '' && driverIssuePlace !== undefined && panValidationMsg==="Pan card Validation Success") {
       const body = {
         aadhaarNo: aadharNumber,
         aadhaarName: nameInAadhar,
@@ -191,8 +244,8 @@ const Identifications = (props) => {
         .catch(err => {
           // console.log(err);
           Toast.show({
-            type:'error',
-            text1:error
+            type: 'error',
+            text1: error
           })
         });
     } else {
@@ -244,8 +297,8 @@ const Identifications = (props) => {
       .catch(err => {
         // console.log(err);
         Toast.show({
-          type:'error',
-          text1:err
+          type: 'error',
+          text1: err
         })
         setLoaderVisible(false)
       });
@@ -377,6 +430,25 @@ const Identifications = (props) => {
                   <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
                     onChangeText={setNameInPan} value={nameInPan} />
                 </View>
+
+                <View style={{flexDirection: 'row', width: '100%', }}>
+
+                  {panValidationMsg && <Text style={{color:(panValidationMsg==="Invalid Pan"?COLORS.red:COLORS.green),width:'50%',verticalAlign:'middle',...FONTS.h4}}>
+                    {panValidationMsg}
+                  </Text>}
+
+                  <TouchableOpacity style={{ marginBottom: 10,width:'35%', alignSelf:"flex-end", justifyContent:"flex-end"  }} onPress={() => validatePan()}>
+
+                    <LinearGradient
+                      colors={[COLORS.orange1, COLORS.disableOrange1]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 2, y: 0 }}
+                      style={{ borderRadius: 8, padding: 6, marginTop: 20 }} >
+                      <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.h4, }}>Validate Pan</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+
               </View>
 
               {/* Aadhar View */}

@@ -3,7 +3,6 @@ import React from 'react'
 import { FONTS } from '../../constants/font_size'
 import COLORS from '../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Image from 'react-native-vector-icons/MaterialIcons'
 import { useSelector } from 'react-redux';
 
 
@@ -11,6 +10,7 @@ import { useSelector } from 'react-redux';
 const Status_view_page = () => {
 
   const status_ID = useSelector(state => state.candidateAuth.candidateStatusId)
+  console.log("candidateStausviewwww",status_ID);
 
   return (
     <ScrollView>

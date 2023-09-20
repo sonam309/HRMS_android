@@ -33,28 +33,33 @@ const CandidateDashboard = (props) => {
     const [offerLetterAlert, setOfferLetterAlert] = useState(false);
 
 
-
-
-
-
     useEffect(() => {
         // setShowAlert(true)
-        // getCandidateOfferDetails()
+        if (candidateId) {
+            // console.log("insidee",candidateId);
+            getCandidateOfferDetails()
+        }
+        // return () => { getCandidateOfferDetails() }
+    }, [candidateId])
 
 
-    }, [])
+    // console.log("candidateStaus",current_Status);
 
     const getCandidateOfferDetails = async (type) => {
-
 
         const userData = { loginId: candidateId }
         setLoaderVisible(true);
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            // console.log("candOfferDetails", resultData);
+            console.log("candOfferDetails", resultData?.Result[0]);
             setLoaderVisible(false);
-            // dispatch(candidateAuthActions.updateLogin({ candidateStatusId: resultData?.STATUS }))
+            dispatch(candidateAuthActions.updateLogin({
+                candidateStatusId: resultData?.Result[0]?.STATUS,
+                candidateStatus: resultData?.Result[0]?.CANDIDATE_STATUS
+            }))
+
+
 
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
 
@@ -71,6 +76,10 @@ const CandidateDashboard = (props) => {
             }
             if (type === "profile") {
                 resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate profile") : setProfileAlert(true)
+            }
+            if (type === "track") {
+
+                resultData?.Result[0]?.CANDIDATE_STATUS && props.navigation.navigate("Status view page")
             }
             // if(type==="experince"){
 
@@ -243,7 +252,7 @@ const CandidateDashboard = (props) => {
                                 <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
                                 <TouchableOpacity style={{
                                     marginTop: 12
-                                }} onPress={() => props.navigation.navigate("Status view page")}>
+                                }} onPress={() => getCandidateOfferDetails("track")}>
                                     <LinearGradient
                                         colors={[COLORS.orange1, COLORS.disableOrange1]}
                                         start={{ x: 0, y: 0 }}
@@ -291,8 +300,10 @@ const CandidateDashboard = (props) => {
                 </View>
                 {/* final submittion view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
+                    {console.log("curreeenttttetetete", candidateStatusId)}
+                    
 
-                    <TouchableOpacity style={{
+                    {candidateStatusId <= "166" && <TouchableOpacity style={{
                         marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
                     }}
                         onPress={() => finalSubmit()}>
@@ -305,9 +316,10 @@ const CandidateDashboard = (props) => {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 8, }} >
+                                
                             <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
                         </LinearGradient>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
 
                 </View>
 

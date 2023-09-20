@@ -11,6 +11,7 @@ import Loader from '../../../components/Loader';
 import { API } from '../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 const Candidate_Document = (props) => {
     // Candidate ID & Status
@@ -40,6 +41,7 @@ const Candidate_Document = (props) => {
     const [verifiedDocCount, setVerifiedDocCount] = useState('');
     const [rejectDocCount, setRejectDocCount] = useState('');
     const [experience, setExperience] = useState('');
+    const [aadharParamId, setAadharParamId] = useState('');
 
 
     useEffect(() => {
@@ -77,16 +79,16 @@ const Candidate_Document = (props) => {
             setDocCount(res?.PO_DOC_REQ);
             setDocVerify(res?.Table);
             // console.log("docfilesSonam", res?.Table);
-            // console.log(docFiles)
 
 
             docFiles.map((item) => {
                 let type = Number(item?.DOC_TYPE), newFile = item?.FILE_ATTACHMENT, TXNID = item?.TXN_ID
 
                 // console.log(newFile, "this is newfile", type)
-
+                     
                 switch (type) {
                     case 129:
+                        console.log("bjhdvjhfj",type)
                         setAadharCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
                         break;
                     case 130:
@@ -149,7 +151,7 @@ const Candidate_Document = (props) => {
     }
 
     // for selecting Aadhar, Pan and 3 month salary slip
-    const selectDoc = async (setFileUpload) => {
+    const selectDoc = async (setFileUpload, type) => {
         try {
             const doc = await DocumentPicker.pick({
                 type: [
@@ -160,18 +162,35 @@ const Candidate_Document = (props) => {
                 ],
                 // allowMultiSelection: true
             });
-            // console.log(doc);
+            console.log(type);
+            if (type == "Aadhar Card") {
+                setFileUpload(current => [
+                    ...current,
+                    {
 
-            setFileUpload(current => [
-                ...current,
-                {
-                    name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${doc[0].type.split('/')[1]
-                        }`,
-                    type: doc[0].type,
-                    uri: doc[0].uri,
-                    txnId: ''
-                },
-            ]);
+                        name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${doc[0].type.split('/')[1]
+                            }`,
+                        type: doc[0].type,
+                        uri: doc[0].uri,
+                        txnId: ''
+                    },
+                ]);
+            }
+            else {
+                setFileUpload(current => [
+                    ...current,
+                    {
+
+                        name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${doc[0].type.split('/')[1]
+                            }`,
+                        type: doc[0].type,
+                        uri: doc[0].uri,
+                        txnId: ''
+                    },
+                ]);
+
+            }
+
 
         } catch (error) {
             // console.log(error);
@@ -495,7 +514,7 @@ const Candidate_Document = (props) => {
                         <Text style={{ color: COLORS.red, ...FONTS.body5 }}>Need Re-upload </Text>}
 
 
-                    {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile)}>
+                    {file.length < number && <TouchableOpacity onPress={() => selectDoc(setFile, type)}>
                         <Ionicons name="add-circle-outline" size={30} color={COLORS.green} />
                     </TouchableOpacity>}
                 </View>
@@ -507,7 +526,10 @@ const Candidate_Document = (props) => {
 
                     <View style={{ padding: SIZES.base, borderTopWidth: 0.5, borderColor: COLORS.lightGray, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}
                         key={index}>
-                        <Text>{item?.name}</Text>
+                        {/* {
+                                console.log("dfghjkhvcxsdfcgvbhvcdxcfgvhb",item?.name)
+                            } */}
+                        <Text style={{ width: responsiveWidth(70) }}>{item?.name}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
 
                             {operFlag === "E" && <Ionicons name="eye" size={24} color={COLORS.green} onPress={() => { props.navigation.navigate("View_Doc", { file: item.name }) }} />}
@@ -539,7 +561,7 @@ const Candidate_Document = (props) => {
     }
 
     // for display other files in front end 
-    const otherFilesUploader = (file, setFile, type, index,Mandatory) => {
+    const otherFilesUploader = (file, setFile, type, index, Mandatory) => {
         return (
             <TouchableOpacity style={{
                 elevation: 6, backgroundColor: COLORS.white, borderRadius: SIZES.radius, marginVertical: SIZES.base, paddingHorizontal: SIZES.base, paddingVertical: SIZES.base / 3, marginHorizontal: SIZES.base / 4,
@@ -548,9 +570,10 @@ const Candidate_Document = (props) => {
             }}>
 
                 <View style={{ paddingVertical: SIZES.radius, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    {console.log("documentName", type?.PARAM_NAME)}
 
-                <Text>{type !== null && typeof type === 'object' ? type?.PARAM_NAME : type}{Mandatory && <Text style={{ color: COLORS.red, marginLeft:2 }}>*</Text>}</Text>
-                    
+                    <Text>{type !== null && typeof type === 'object' ? type?.PARAM_NAME : type}{Mandatory && <Text style={{ color: COLORS.red, marginLeft: 2 }}>*</Text>}</Text>
+
 
                     {/* <Text>{type?.PARAM_NAME}</Text> */}
 
@@ -597,7 +620,7 @@ const Candidate_Document = (props) => {
                 paddingHorizontal: SIZES.radius,
                 backgroundColor: COLORS.white,
                 elevation: 10,
-                marginBottom:5,
+                marginBottom: 5,
                 // shadowColor: COLORS.orange1,
                 // shadowOffset: { width: 0, height: 2, },
                 // shadowOpacity: 0.1,
@@ -614,7 +637,7 @@ const Candidate_Document = (props) => {
     };
 
     return (
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
             {renderHeader()}
             <ScrollView style={{ backgroundColor: COLORS.white, flex: 1 }}>
                 <Loader loaderVisible={loaderVisible} />
@@ -701,6 +724,7 @@ const Candidate_Document = (props) => {
                         && (<ScrollView>
 
 
+
                             {/* For uploading aadhar card docs */}
                             {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0]?.PARAM_NAME, "imp")} */}
                             {DocumentUploader(aadharCard, setAadharCard, 1, document[0]?.PARAM_NAME, "imp")}
@@ -733,28 +757,28 @@ const Candidate_Document = (props) => {
                                 {DocumentUploader(salarySlip, setSalarySlip, 1, document[2])}
 
 
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[3], 0,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[4], 1,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[5], 2,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[6], 3,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[7], 4,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[8], 5,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[9], 6,experience === "Yes" && "imp")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[10], 7,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[11], 8,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[12], 9,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[13], 10,experience === "No" && "imp")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[14], 11,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[15], 12,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[16], 13,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[17], 14,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[18], 15,experience === "Yes" && "imp")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[19], 16,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[20], 17,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[21], 18,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[22], 19,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[23], 20,"")}
-                                {otherFilesUploader(otherFiles, setOtherFiles, document[24], 21,"")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[3], 0, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[4], 1, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[5], 2, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[6], 3, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[7], 4, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[8], 5, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[9], 6, experience === "Yes" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[10], 7, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[11], 8, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[12], 9, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[13], 10, experience === "No" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[14], 11, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[15], 12, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[16], 13, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[17], 14, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[18], 15, experience === "Yes" && "imp")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[19], 16, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[20], 17, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[21], 18, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[22], 19, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[23], 20, "")}
+                                {otherFilesUploader(otherFiles, setOtherFiles, document[24], 21, "")}
                             </ScrollView>
                         )
                     }
