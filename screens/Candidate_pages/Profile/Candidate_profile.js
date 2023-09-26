@@ -789,7 +789,7 @@ const Candidate_profile = () => {
           }}>
             <TouchableOpacity onPress={() => setEsignView(!esignView)} style={{ flexDirection: 'row', padding: 5, alignItems: 'center' }}>
               <Icons name='account-check' size={20} color={COLORS.orange} />
-              <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Guarantor Details</Text>
+              <Text style={{ ...FONTS.h4, paddingHorizontal: 5 }}>Guarantor Details for Indemnity bond</Text>
               <FontAwesome style={{ position: 'absolute', right: 5 }} name={esignView ? 'angle-up' : 'angle-down'} size={20} color={COLORS.orange} />
             </TouchableOpacity>
             {

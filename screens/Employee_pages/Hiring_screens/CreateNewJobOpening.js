@@ -324,7 +324,7 @@ const CreateNewJobOpening = (props) => {
 
             {/* compensation */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{ color: COLORS.red }}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation Monthly<Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <CustomTextInput maxLength={10} placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric'/>
             </View>
 

@@ -1,7 +1,7 @@
 import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, StyleSheet, } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import RenderHtml from 'react-native-render-html';
+import RenderHtml, { RenderHTML } from 'react-native-render-html';
 import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message';
 import { removeElement, isTag } from 'domutils';
 import TextDropdown from '../../../components/TextDropdown';
 import { TextInput } from 'react-native-gesture-handler';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 
 
@@ -32,7 +33,8 @@ const Details = (props) => {
     const [hirningLead, setHiringLead] = useState([]);
     const [selectedhirningLead, setSelectedHiringLead] = useState('');
     const [selectedHiringLeadValue, setSelectedHiringLeadValue] = useState('');
-    const [compensationAmount, setCompensationAmount] = useState('')
+    const [compensationAmount, setCompensationAmount] = useState('');
+    const[numOfPosition,setNumOfPosition]=useState('');
     var n = '';
 
     const [test, setTest] = useState("")
@@ -201,8 +203,8 @@ const Details = (props) => {
                 // Alert.alert('Error', error);
                 // console.log("error", error)
                 Toast.show({
-                    type:'error',
-                    text1:error
+                    type: 'error',
+                    text1: error
                 })
             });
     };
@@ -211,12 +213,12 @@ const Details = (props) => {
         // console.warn("opr flag", opr);
         if (selectedhirningLead != "" && compensationAmount != "") {
 
-        // console.log("sendData",JSON.stringify({
-        //     operFlag: opr,
-        //     txnId: jobId,
-        //     jobLeadId: selectedHiringLeadValue,
-        //     compensation: compensationAmount,
-        // }))
+            // console.log("sendData",JSON.stringify({
+            //     operFlag: opr,
+            //     txnId: jobId,
+            //     jobLeadId: selectedHiringLeadValue,
+            //     compensation: compensationAmount,
+            // }))
 
             var formData = new FormData();
             formData.append('data', JSON.stringify({
@@ -249,8 +251,8 @@ const Details = (props) => {
             } catch (error) {
                 // console.log(error)
                 Toast.show({
-                    type:'error',
-                    text1:error
+                    type: 'error',
+                    text1: error
                 })
             }
 
@@ -266,7 +268,12 @@ const Details = (props) => {
 
     const jobOpeningAction = async (opr) => {
 
-        let jobInfodata = { oper: opr, jobId: jobId };
+        let jobInfodata = { 
+            oper: opr, 
+            jobId: jobId,
+            jobLeadId: selectedHiringLeadValue,
+            compensation: compensationAmount,
+         };
         jobInfodata = JSON.stringify(jobInfodata)
         // console.log(jobInfodata)
         try {
@@ -291,8 +298,8 @@ const Details = (props) => {
 
         } catch (error) {
             Toast.show({
-                type:'error',
-                text1:error
+                type: 'error',
+                text1: error
             })
             // console.log(error)
         }
@@ -475,6 +482,9 @@ const Details = (props) => {
         // console.log("responsedataJobb req",res)
         setJobRequestData(res)
         setCompensationAmount(res?.COMPENSATION)
+        setSelectedHiringLead(res?.HIRING_LEAD_NAME)
+        setNumOfPosition(jobRequestData?.NO_OF_POSITION);
+        setSelectedHiringLeadValue(res?.HIRING_LEAD_ID)
         // console.log("jobrequestsssssssssssssssss", res?.COMPENSATION);
     }
 
@@ -484,7 +494,12 @@ const Details = (props) => {
         // console.warn(jobId);
         res = await res?.json();
         res = await res?.Table[0];
+        console.log("jobOpening", res)
         setJobOpeningData(res);
+        setCompensationAmount(res?.COMPENSATION)
+        setSelectedHiringLead(res?.HIRING_LEAD_NAME)
+        setSelectedHiringLeadValue(res?.HIRING_LEAD_ID)
+
         // console.warn(res);
     }
 
@@ -538,8 +553,8 @@ const Details = (props) => {
                                     <Icons name='rupee' size={25} />
                                 </View>
                                 <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobOpeningData?.COMPENSATION}</Text>
-
+                                {/* <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobOpeningData?.COMPENSATION}</Text> */}
+                                <TextInput defaultValue={compensationAmount} onChangeText={(value) => n = value} onEndEditing={() => setCompensationAmount(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 40, marginTop: 5, borderRadius: 8, paddingHorizontal: 8 }} keyboardType='number-pad' maxLength={10} />
                             </View>
                         </View>
 
@@ -569,14 +584,27 @@ const Details = (props) => {
                     <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
 
                         <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.HIRING_LEAD_NAME}</Text>
+                        {/* <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.HIRING_LEAD_NAME}</Text> */}
+                        <TextDropdown
+                            caption={'Hiring Lead'}
+                            data={hirningLead}
+                            setData={setSelectedHiringLead}
+                            setIdvalue={setSelectedHiringLeadValue}
+                            defaultButtonText={selectedhirningLead}
+                        // captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                        />
 
 
                         <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Address</Text>
                         <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.CITY}, {jobOpeningData?.PROVINCE_NAME}, {jobOpeningData?.COUNTRY_NAME}</Text>
 
                         <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Job Remarks</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobOpeningData?.JOB_DESC}</Text>
+                        {/* <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobOpeningData?.JOB_DESC}</Text> */}
+                        <RenderHTML 
+                        source={{html: jobOpeningData?.JOB_DESC}}
+                        contentWidth={responsiveWidth(100)}
+                     
+                        />
                     </View>
                     {jobOpeningData && setLoaderVisible(false)}
                 </ScrollView>
@@ -611,7 +639,7 @@ const Details = (props) => {
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                     <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
-                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                    <Text style={{ paddingHorizontal: 1, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
 
                     <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='clock' size={20} color={COLORS.lightOrange} /> {jobRequestData?.JOB_STATUS}</Text>
 
@@ -624,7 +652,15 @@ const Details = (props) => {
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Icons name='briefcase' size={25} color={COLORS.purple} />
                         <Text style={{ paddingVertical: 5, fontWeight: 500 }}>No. of Positions</Text>
-                        <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text>
+
+                        
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
+                            <Text style={{ fontWeight: 400, color: COLORS.black }}>Rs.</Text>
+                            <TextInput defaultValue={numOfPosition} onChangeText={(value) => n = value} onEndEditing={() => setNumOfPosition(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 35,width:'30%',textAlign:'center', marginTop: 5, borderRadius: 8,  }} keyboardType='number-pad' maxLength={10} />
+                        </View>
+
+
+                        {/* <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.NO_OF_POSITION}</Text> */}
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
@@ -635,7 +671,7 @@ const Details = (props) => {
                         <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                             <Icons name='rupee' size={25} />
                         </View>
-                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
+                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation/M</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
                             <Text style={{ fontWeight: 500, color: COLORS.black }}>Rs.</Text>
                             <TextInput defaultValue={compensationAmount} onChangeText={(value) => n = value} onEndEditing={() => setCompensationAmount(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 40, marginTop: 5, borderRadius: 8, paddingHorizontal: 8 }} keyboardType='number-pad' maxLength={10} />

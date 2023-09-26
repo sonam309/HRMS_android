@@ -8,24 +8,33 @@ import Loader from '../../../../components/Loader'
 import { API } from '../../../../utility/services'
 
 const Pending = (props) => {
-    const { navigation, flag, notificationCat } = props;
+    const { navigation, flag, notificationCat, name } = props;
     const [pendingData, setPendingData] = useState([])
-    const [loaderVisible, setLoaderVisible] = useState(true);
+    const [loaderVisible, setLoaderVisible] = useState(false);
+
+
     let action = "P";
     let openingCategory, backColor;
     const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
+        setLoaderVisible(true)
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'P', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log("pending",returnedData);
                 setPendingData(returnedData);
                 setLoaderVisible(false)
-            });
+            }).catch((error)=> {
+                console.log(error)
+                setLoaderVisible(false)
+            })
     };
 
+    
+
     useEffect(() => {
+        
         getData();
         // console.log("Hello from pending")
     }, [notificationCat])
@@ -73,7 +82,7 @@ const Pending = (props) => {
         return (
             <>
                 <Loader loaderVisible={loaderVisible} />
-                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
+                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList refreshing={loaderVisible} onRefresh={() => getData()}  style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
             </>
 
         )

@@ -313,8 +313,8 @@ const Candidate_details = (props) => {
 
         </View>
 
-        <View style={{ borderRadius: 12, marginVertical: 10, backgroundColor: COLORS.lightPink, justifyContent: 'center' }}>
-          {feedback?.REMARK ? <Text style={{ padding: 10 }}> {feedback.REMARK} </Text> : null}
+        <View style={{ borderRadius: 12, marginVertical: 10, backgroundColor: COLORS.disableGreen, borderWidth: 0.5, borderColor: COLORS.green, justifyContent: 'center' }}>
+          {feedback?.REMARK ? <Text style={{ padding: 10, color: "#000", fontWeight: "600" }}> {feedback.REMARK} </Text> : null}
         </View>
       </>
     )

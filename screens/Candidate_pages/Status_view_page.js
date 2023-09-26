@@ -47,7 +47,7 @@ const Status_view_page = () => {
           {/* schedule interview view */}
           <View style={{ flexDirection: 'row', flex: 1, }}>
             <Icons name={status_ID === "118" ? "text-box-check" : (status_ID > "118" ? "text-box-check" : "text-box")} size={30} color={status_ID === "118" ? COLORS.green : (status_ID < "118" ? COLORS.gray : COLORS.lightOrange)} />
-            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "118" ? COLORS.green : (status_ID < "118" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "118" ? 'bold' : 'normal' }}>Sheduled Interview</Text>
+            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: status_ID === "118" ? COLORS.green : (status_ID < "118" ? COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: status_ID === "118" ? 'bold' : 'normal' }}>Schedule Interview</Text>
           </View>
 
           {/* dot view */}

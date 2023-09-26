@@ -62,6 +62,8 @@ const Employee_Login = (props) => {
                     type: 'error',
                     text1: "Please enter correct credentials"
                 })
+                setUserId("");
+                setPassword("")
             })
         } catch (error) {
             setLoaderVisible(false);
@@ -144,11 +146,14 @@ const Employee_Login = (props) => {
                 <Text style={styles.header}>Employee Login</Text>
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}  >
-                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
+                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} required onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
                 </View>
                 {/* Password */}
                 <View style={[styles.textInputBox]} >
-                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput
+                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput textInputStyle={{
+                        width: responsiveWidth(70)
+                    }}
+
                         icon={<Pressable onPress={changeVisibility}><AntDesign name="eye" size={22} />
                         </Pressable>} />
                 </View>
@@ -180,8 +185,8 @@ const Employee_Login = (props) => {
                 </TouchableOpacity>
             </View>
             {/* Bottom element */}
-            <View style={{height:30}}>
-                <Text style={{ textAlign: 'center',color: COLORS.gray,...FONTS.h5,fontWeight: '400',padding:5}}>Version:2.2</Text>
+            <View style={{ height: 30 }}>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:2.2</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
@@ -226,7 +231,7 @@ const styles = StyleSheet.create({
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
-        marginBottom:150,
+        marginBottom: 150,
         textAlign: 'center',
         marginVertical: 10
 

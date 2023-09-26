@@ -7,20 +7,30 @@ import { API } from '../../../../utility/services'
 import { FONTS } from '../../../../constants/font_size'
 
 const Approved = (props) => {
-    const { navigation, flag, notificationCat } = props;
+    const { navigation, flag, notificationCat, name } = props;
     const [approvedData, setApprovedData] = useState([])
     let action = "A";
     let openingCategory, backColor;
     const userId = useSelector(state => state.auth.userId)
 
+    const [loading, setLoading] = useState(false)
+
     const getData = () => {
+        setLoading(true)
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 // console.log("approvals", returnedData);
                 setApprovedData(returnedData);
-            });
+                setLoading(false)
+            }).catch((error) => {
+                setLoading(false)
+                console.log(error)
+            }
+            )
     };
+
+
 
     useEffect(() => {
         getData();
@@ -61,11 +71,11 @@ const Approved = (props) => {
     const Hiring = () => {
         return (
             <>
-                {approvedData && (approvedData[0] ? approvedData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={approvedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} approved_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
+                {approvedData && (approvedData[0] ? approvedData[0].APPROVER_ID : null) ? <FlatList refreshing={loading} onRefresh={() => getData()} style={{ marginVertical: 10 }} data={approvedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} approved_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
             </>
         )
     }
-    
+
 
     return (
         <View>

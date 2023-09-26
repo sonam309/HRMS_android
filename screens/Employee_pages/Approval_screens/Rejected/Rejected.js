@@ -6,19 +6,27 @@ import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
 
 const Rejected = (props) => {
-    const { navigation, flag, notificationCat } = props;
+    const { navigation, flag, notificationCat, name } = props;
     const [rejectedData, setRejectedData] = useState([])
+
+    const [loading, setLoading] = useState(false)
+
     let action = "R";
     let openingCategory, backColor;
     const userId = useSelector(state => state.auth.userId)
 
     const getData = () => {
+        setLoading(true)
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'R', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
                 console.log("Reject",returnedData);
                 setRejectedData(returnedData);
-            });
+                setLoading(false)
+            }).catch((error)=>{
+                console.log(error)
+                setLoading(false)
+            })
     };
 
     useEffect(() => {
@@ -61,7 +69,7 @@ const Rejected = (props) => {
     const Hiring = () => {
         return (
             <>
-                {rejectedData && (rejectedData[0] ? rejectedData[0].APPROVER_ID : null) ? <FlatList style={{ marginVertical: 10 }} data={rejectedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} jobId={item.JOB_ID} rejected_by={item.REJECT_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
+                {rejectedData && (rejectedData[0] ? rejectedData[0].APPROVER_ID : null) ? <FlatList onRefresh={getData} refreshing={loading} style={{ marginVertical: 10 }} data={rejectedData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} jobId={item.JOB_ID} rejected_by={item.REJECT_BY} id={item.CANDIDATE_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data Found</Text>}
             </>
         )
     }

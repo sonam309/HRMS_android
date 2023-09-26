@@ -260,7 +260,7 @@ const SkillsBottomView = ({ skills, onPress, fetchSkillsData }) => {
 
       {/* close header */}
       <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skill's</Text>
+        <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Skills</Text>
         {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
           showAlert({
             title: approveRemark,

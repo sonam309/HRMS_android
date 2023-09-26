@@ -469,7 +469,7 @@ const BankBottomView = ({ onPress }) => {
               <Text style={styles.inputHeader}>Confirm Account No.</Text>
               <TextInput value={cAccountNo} onChangeText={(val) => (setCAccountNo(val), setCheckAccountError(true))} style={styles.inputHolder} keyboardType='numeric' maxLength={20} />
               {checkAccountError && cAccountNo != accountNo && <Text style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>Account No. Fields don't match</Text>}
-              <Text style={styles.inputHeader}>Account holderName</Text>
+              <Text style={styles.inputHeader}>Account holder Name</Text>
               <TextInput value={accountHolder} onChangeText={(val) => setAccountHolder(val)} style={styles.inputHolder} />
 
               {/* <TextDropdown
@@ -482,7 +482,7 @@ const BankBottomView = ({ onPress }) => {
               /> */}
 
               <Text style={styles.inputHeader}>IFSC Code</Text>
-              <TextInput value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={20} />
+              <TextInput autoCapitalize='characters' value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={20} />
               <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
                 <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: 'white' }}>{selectedDoc.length}</Text>

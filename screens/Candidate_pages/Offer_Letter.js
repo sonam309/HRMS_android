@@ -234,6 +234,8 @@ const Offer_Letter = (props) => {
             // borderWidth: 1,
             borderRadius: 30,
             borderWidth: 1,
+            marginRight:30,
+            marginBottom:5,
             borderColor: btnVisibility ? COLORS.green : COLORS.lightGray,
             alignItems: 'center',
             justifyContent: 'center',
@@ -247,7 +249,7 @@ const Offer_Letter = (props) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           disabled={!btnVisibility}
           onPress={() => approveOffer('R')}
           style={{
@@ -268,7 +270,7 @@ const Offer_Letter = (props) => {
             }}>
             Reject
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>)}
     </>
   )

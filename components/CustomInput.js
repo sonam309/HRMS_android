@@ -16,7 +16,7 @@ const CustomInput = ({
     isPasswordInput,
     returnKeyType="default",
     maxlength,
-    
+    textInputStyle
 }) => {
     return (
         <>
@@ -45,6 +45,7 @@ const CustomInput = ({
                             // padding: SIZES.radius * 1.3,
                             height: 45,
                             borderRadius: SIZES.base,
+
                         }}
                         keyboardType={keyboardType}
                         secureTextEntry={secureTextEntry}
@@ -73,7 +74,8 @@ const CustomInput = ({
                         alignItems: "center",
                         height: 45,
                        paddingHorizontal:10,
-                        justifyContent: "space-between"
+                        justifyContent: "space-between",
+
                     }}>
                         <TextInput
                             placeholder={caption}
@@ -81,6 +83,8 @@ const CustomInput = ({
                             onChangeText={onChangeText}
                             style={{
                                 justifyContent: "center",
+                                ...textInputStyle
+
                             }}
                             keyboardType={keyboardType}
                             secureTextEntry={secureTextEntry}

@@ -226,12 +226,12 @@ const Identifications = (props) => {
         // txnId: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
         txnID: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
       };
-      // console.log("request", body);
+      console.log("request", body);
       axios
         .post(`${API}/api/hrms/indentityProof`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
-          // console.log("result..", returnedData);
+          console.log("result..", returnedData);
           const msg = returnedData[0].MSG
           props.onPress()
 
@@ -266,7 +266,7 @@ const Identifications = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        // console.log("getData", returnedData);
+        console.log("getData", returnedData);
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
 
@@ -375,7 +375,7 @@ const Identifications = (props) => {
                 {/* Pan number input */}
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passport Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} onChangeText={setPassportNumber} value={passportnumber} maxLength={12} />
+                  <TextInput autoCapitalize='characters' style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} onChangeText={setPassportNumber} value={passportnumber} maxLength={12} />
                 </View>
 
                 {/* Date Of issue */}
@@ -422,7 +422,7 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Pan Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Pan Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setPanNumber} value={panNumber} />
+                  <TextInput autoCapitalize='characters' style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setPanNumber} value={panNumber} />
                 </View>
                 {/* name as per pan */}
                 <View style={{ height: 75, marginTop: 10 }}>
@@ -470,7 +470,7 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Voter's Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Number</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setVotersNumber} value={votersNumber} />
+                  <TextInput autoCapitalize='characters' style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setVotersNumber} value={votersNumber} />
                 </View>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
@@ -484,7 +484,7 @@ const Identifications = (props) => {
 
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Number <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setDriverNumber} value={driverNumber} maxLength={15} />
+                  <TextInput autoCapitalize='characters' style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setDriverNumber} value={driverNumber} maxLength={15} />
                 </View>
                 {/* Date Of issue */}
                 <View style={{ height: 75, marginTop: 10 }}>

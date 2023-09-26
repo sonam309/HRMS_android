@@ -294,28 +294,28 @@ const GuarantorBottomView = (props) => {
                         <Text style={{ color: COLORS.orange1, ...FONTS.h2, fontSize: 16 }}>Second Guarantor</Text>
                         {/* second guarantor name */}
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Second Guarantor Name <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='Name' onChangeText={setSecondGrantorName} value={secondGrantorName} />
                         </View>
                         {/* guarantor S/O, D/O, W/O */}
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Second Guarantor S/O, D/O, W/O <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorCareOfName} value={secondGrantorCareOfName} />
                         </View>
                         {/* guarantor realtion */}
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Second Guarantor Relation <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorRelation} value={secondGrantorRelation} />
                         </View>
                         {/* guarantor Aadhar */}
                         <View style={{ marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Second Guarantor Aadhar Number <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' keyboardType='number-pad' onChangeText={setSecondGrantorAadhaarNo} value={secondGrantorAadhaarNo} maxLength={12} />
                         </View>
                         {/* <Text style={{ color: "#000"}}>{JSON.stringify(filledDetails.FIRST_GURANTR_AADHAR_NO == null)}</Text> */}
                         {/* guarantor address */}
                         <View style={{ marginTop: 10, marginBottom: 15, }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>second Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
+                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Second Guarantor Address <Text style={{ color: COLORS.red, ...FONTS.h4, textAlign: 'center', fontSize: 16 }}>*</Text></Text>
                             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 8, height: 40, paddingLeft: 8, marginTop: 5 }} placeholder='' onChangeText={setSecondGrantorAddress} value={secondGrantorAddress} />
                         </View>
                     </View>
