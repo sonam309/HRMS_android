@@ -71,7 +71,9 @@ const Identifications = (props) => {
   const [approveRemark, setApproveRemarks] = useState('');
 
   const [filledDetails, setFilledDetails] = useState();
-  const [panValidationMsg, setPanValidationMsg] = useState();
+  const [panValidationMsg, setPanValidationMsg] = useState('');
+  const [validatePanUser, setValidatePanUser] = useState('');
+  const [panStausCode, setPanStatusCode] = useState('');
 
   const actualDateSelector = (date) => {
     setPassportIssuedDateOpen(false)
@@ -143,6 +145,8 @@ const Identifications = (props) => {
   };
 
   const validatePan = () => {
+
+    setPanValidationMsg('');
     if (panNumber !== "" && panNumber !== undefined) {
       console.log("panNumber", panNumber);
       const body = { id_number: panNumber };
@@ -151,30 +155,34 @@ const Identifications = (props) => {
       axios
         .post(`${API}/api/hrms/VerifyPan`, body)
         .then(response => {
-          const returnedData = response.data.Result[0];
+          const returnedData = response.data;
           setLoaderVisible(false);
-          console.log("result..", returnedData);
+          console.log("resultPAnnnn", response.data);
           // const msg = returnedData[0].MSG
 
-          setPanValidationMsg(returnedData.MSG);
+          setPanValidationMsg(returnedData.status_code);
+          // setPanStatusCode(returnedData.status_code)
+          setValidatePanUser(returnedData.data.full_name);
 
-          if (returnedData.MSG === "Invalid Pan") {
+          if ((returnedData.status_code) == "200") {
+
+            Toast.show({
+              type: 'success',
+              text1: "Pan Validate Successfully",
+            });
+
+
+          } else {
 
             Toast.show({
               type: 'error',
-              text1: returnedData.MSG,
-            });
-
-          } else {
-            Toast.show({
-              type: 'success',
-              text1: returnedData.MSG,
+              text1: "Invalidate PAN"
             });
           }
 
         })
         .catch(error => {
-          console.log("sonnnnnnnnnnnnnnnnnnn", error);
+          console.log("sonnnnnnnnnnnnnnnnnnn", (error));
           setLoaderVisible(false);
           Toast.show({
             type: 'error',
@@ -202,7 +210,10 @@ const Identifications = (props) => {
       driverNumber !== '' && driverNumber !== undefined &&
       selectedDlIssuedDate !== '' && selectedDlIssuedDate !== undefined &&
       selectedDlExpiryDate !== '' && selectedDlExpiryDate !== undefined &&
-      driverIssuePlace !== '' && driverIssuePlace !== undefined && panValidationMsg==="Pan card Validation Success") {
+      driverIssuePlace !== '' && driverIssuePlace !== undefined 
+      // && panValidationMsg === "200"
+      ) {
+     if(validatePanUser!==undefined && validatePanUser!==''){
       const body = {
         aadhaarNo: aadharNumber,
         aadhaarName: nameInAadhar,
@@ -223,6 +234,7 @@ const Identifications = (props) => {
         operFlag: operFlag,
         candidateId: userId,
         userId: userId,
+        paValidateName: validatePanUser,
         // txnId: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
         txnID: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
       };
@@ -248,6 +260,14 @@ const Identifications = (props) => {
             text1: error
           })
         });
+     }else{
+
+      Toast.show({
+        type:'error',
+        text1:'Please verify Pan Details First'
+      })
+
+     }
     } else {
       Toast.show({
         type: 'error',
@@ -421,7 +441,7 @@ const Identifications = (props) => {
                 {/* pan details */}
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Pan Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
-                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Pan Number</Text>
+                  <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Pan Number <Text style={{ color: COLORS.red, ...FONTS.h4, justifyContent: 'center' }}>*</Text></Text>
                   <TextInput autoCapitalize='characters' style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={15} onChangeText={setPanNumber} value={panNumber} />
                 </View>
                 {/* name as per pan */}
@@ -431,13 +451,20 @@ const Identifications = (props) => {
                     onChangeText={setNameInPan} value={nameInPan} />
                 </View>
 
-                <View style={{flexDirection: 'row', width: '100%', }}>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: "space-evenly" }}>
+                  {/* <Text>{JSON.stringify(panValidationMsg)}
+                    {console.log("panmsg", panValidationMsg)}
+                  </Text> */}
 
-                  {panValidationMsg && <Text style={{color:(panValidationMsg==="Invalid Pan"?COLORS.red:COLORS.green),width:'50%',verticalAlign:'middle',...FONTS.h4}}>
-                    {panValidationMsg}
-                  </Text>}
+                  <Text style={{ textAlign: 'left', color: (panValidationMsg !== '' && panValidationMsg == "200" ? COLORS.green : COLORS.red), width: '50%', verticalAlign: 'middle', ...FONTS.h4 }}>
 
-                  <TouchableOpacity style={{ marginBottom: 10,width:'35%', alignSelf:"flex-end", justifyContent:"flex-end"  }} onPress={() => validatePan()}>
+                    {/* {typeof panValidationMsg === "string" && panValidationMsg} */}
+                    {
+                      panValidationMsg !== '' ? (panValidationMsg == "200" ? "Validate Pan Successfully" : "Invalid Pan Details") : ''
+                    }
+                  </Text>
+
+                  <TouchableOpacity style={{ marginBottom: 10, width: '35%', alignSelf: "flex-end", justifyContent: "flex-end", }} onPress={() => validatePan()}>
 
                     <LinearGradient
                       colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -456,12 +483,12 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Aadhar Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Aadhar Number<Text style={{ color: COLORS.red, ...FONTS.body4 }}>*</Text></Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={12} keyboardType="number-pad" onChangeText={setAadharNumber} value={aadharNumber} />
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={12} keyboardType="number-pad" onChangeText={setAadharNumber} value={aadharNumber} editable={false}/>
                 </View>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name As Per Aadhar<Text style={{ color: COLORS.red, ...FONTS.body4 }}>*</Text></Text>
                   <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
-                    onChangeText={setNameInAadhar} value={nameInAadhar} />
+                    onChangeText={setNameInAadhar} value={nameInAadhar} editable={false} />
                 </View>
               </View>
 
@@ -474,7 +501,7 @@ const Identifications = (props) => {
                 </View>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue</Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Delhi'
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} 
                     onChangeText={setVotersIssuePlace} value={votersIssuePlace} />
                 </View>
               </View>
@@ -518,7 +545,7 @@ const Identifications = (props) => {
 
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Place of Issue <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Delhi'
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} 
                     onChangeText={setDriverIssuePlace} value={driverIssuePlace} />
                 </View>
               </View>

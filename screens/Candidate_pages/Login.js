@@ -20,8 +20,8 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('');
+    const [userId, setUserId] = useState('604');
+    const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');

@@ -291,12 +291,12 @@ const Emp_HistoryBottomView = (props) => {
               {/* company name */}
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Company Name <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Satya Microcapital Ltd.' onChangeText={(val) => setCompanyName(val)} value={companyName} />
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}  onChangeText={(val) => setCompanyName(val)} value={companyName} />
               </View>
               {/* designation */}
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Designation <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Eg. Software engineer' onChangeText={(val) => setDesignation(val)} value={designation} />
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}  onChangeText={(val) => setDesignation(val)} value={designation} />
               </View>
               {/* from Date */}
               <View style={{ height: 75, marginTop: 10 }}>
@@ -323,18 +323,18 @@ const Emp_HistoryBottomView = (props) => {
               {/* Role */}
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Role <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Role' onChangeText={(val) => setRole(val)} value={role} />
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} onChangeText={(val) => setRole(val)} value={role} />
               </View>
               {/* Last Drawn Salary */}
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Last Drawn Salary <Text style={{ color: COLORS.red, ...FONTS.body3 }}>*</Text></Text>
-                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='10,000' keyboardType='numeric' onChangeText={(val) => setLastSalary(val)} value={lastSalary}
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} keyboardType='numeric' onChangeText={(val) => setLastSalary(val)} value={lastSalary}
                   maxLength={8} />
               </View>
               {/* Reporting Manager */}
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Reporting Manager</Text>
-                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Mr. Ashutosh Shivastva' onChangeText={(val) => setManager(val)} value={manager} />
+                <TextInput style={{ color: COLORS.black, borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}  onChangeText={(val) => setManager(val)} value={manager} />
               </View>
               {/* Reason for change */}
               <View style={{ height: 75, marginTop: 10 }}>

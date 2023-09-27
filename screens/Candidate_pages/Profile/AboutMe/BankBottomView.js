@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView} from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import DocumentPicker from 'react-native-document-picker'
@@ -14,9 +14,10 @@ import TextDropdown from '../../../../components/TextDropdown'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Pdf from 'react-native-pdf'
-import { showAlert,closeAlert } from "react-native-customisable-alert";
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import axios from 'axios'
 
 
 const BankBottomView = ({ onPress }) => {
@@ -49,7 +50,9 @@ const BankBottomView = ({ onPress }) => {
   const [selectedOperationValue, setSelectedOperationValue] = useState();
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [approvalFlag, setApprovalFlag] = useState('');
-  const [bankAppRemarks,setBankAppRemarks]=useState('');
+  const [bankAppRemarks, setBankAppRemarks] = useState('');
+  const [banKValidateUserName, setBanKValidateUserName] = useState('')
+  const [statusCode, setStatusCode] = useState('');
 
 
   // for displaying bank documents
@@ -138,7 +141,7 @@ const BankBottomView = ({ onPress }) => {
       setLoaderVisible(true);
       let PersonalData = { operFlag: 'V', candidateId: userId };
       var formData = new FormData();
-      // console.log(PersonalData);
+      console.log(PersonalData);
       formData.append('data', JSON.stringify(PersonalData));
       let res = await fetch(`${API}/api/hrms/savePersonalDetails`,
         {
@@ -162,55 +165,109 @@ const BankBottomView = ({ onPress }) => {
     }
   };
 
+  const validateBank = () => {
+    try {
+      setBanKValidateUserName('');
+      if (accountNo !== '' && accountNo != undefined && IFSCCode !== '' && IFSCCode != undefined) {
+        const value = {
+          "id_number": accountNo,
+          "ifsc": IFSCCode
+        }
+        const data = {
+          raw: JSON.stringify(value)
+        }
+        setLoaderVisible(true);
+        axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
+
+          console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
+          setLoaderVisible(false)
+          setStatusCode(response.data.status_code);
+          setBanKValidateUserName(response.data.data.full_name);
+        })
+      } else {
+
+        Toast.show({
+          type: 'error',
+          text1: "Please fill all Mandatory feilds"
+        })
+
+      }
+    } catch (error) {
+
+      setLoaderVisible(false);
+      console.log("error", error);
+      Toast.show({
+        type: 'error',
+        text1: error
+      })
+
+    }
+
+  }
+
   const saveBankDetails = async operFlag => {
     if (ValidateForm()) {
       try {
-        let fileName = filingHandleName();
+        if (banKValidateUserName !== undefined && banKValidateUserName !== '') {
+          let fileName = filingHandleName();
 
-        let bankData = {
-          txnId: userId,
-          operFlag: operFlag,
-          candidateId: userId,
-          userId: userId,
-          accountNo: accountNo,
-          operation: selectedOperationValue,
-          accountHolderName: accountHolder,
-          ifscCode: IFSCCode,
-          bankName: selectedBankValue,
-          branchName: branchName,
-          accountType: selectedAccountTypeValue,
-          fileAttachment: fileName,
-        };
+          let bankData = {
+            txnId: userId,
+            operFlag: operFlag,
+            candidateId: userId,
+            userId: userId,
+            accountNo: accountNo,
+            operation: selectedOperationValue,
+            accountHolderName: accountHolder,
+            ifscCode: IFSCCode,
+            bankName: selectedBankValue,
+            branchName: branchName,
+            accountType: selectedAccountTypeValue,
+            fileAttachment: fileName,
+            bankValidateName: banKValidateUserName,
+          };
 
-        // console.log('bankdetails', bankData);
-        var formData = new FormData();
-        formData.append('data', JSON.stringify(bankData));
-        selectedDoc.map(file => {
-          // console.log("file",file)
-          if (file.uri) {
-            formData.append('fileUpload', file);
-          }
-        });
-        // console.log(formData._parts);
-        let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
-          method: 'POST',
-          body: formData,
-        });
+          setLoaderVisible(true);
+          console.log('bankdetails', bankData);
+          var formData = new FormData();
+          formData.append('data', JSON.stringify(bankData));
+          selectedDoc.map(file => {
+            // console.log("file",file)
+            if (file.uri) {
+              formData.append('fileUpload', file);
+            }
+          });
+          // console.log(formData._parts);
+          let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
+            method: 'POST',
+            body: formData,
+          });
 
-        // console.log('response', res);
-        res = await res.json();
-        res = await res?.Result[0]?.MSG;
-        Toast.show({
-          type: 'success',
-          text1: res,
-        });
+          setLoaderVisible(false);
+          console.log('response', res);
+          res = await res.json();
+          res = await res?.Result[0]?.MSG;
+          Toast.show({
+            type: 'success',
+            text1: res,
+          });
+        } else {
+          setLoaderVisible(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Please verify Bank Details First'
+          })
+
+        }
       } catch (error) {
+        setLoaderVisible(false);
         Toast.show({
           type: 'error',
           text1: error,
         });
       }
     } else {
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
         text1: 'Fill all the Marked Fields',
@@ -347,7 +404,7 @@ const BankBottomView = ({ onPress }) => {
   }
 
   return (
-    
+
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
@@ -360,7 +417,8 @@ const BankBottomView = ({ onPress }) => {
               alertType: 'error',
               btnLabel: 'ok',
               onPress: () => closeAlert(),
-          });}
+            });
+          }
           }>
             <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
           </TouchableOpacity> : ""}
@@ -430,18 +488,18 @@ const BankBottomView = ({ onPress }) => {
                 }
               </View>
             </View>
-            :<KeyboardAwareScrollView 
-            extraScrollHeight={150} 
-            behavior={'padding'}
+            : <KeyboardAwareScrollView
+              extraScrollHeight={150}
+              behavior={'padding'}
 
-            enableAutomaticScroll={true}
-             keyboardShouldPersistTaps={'always'}
-            style={{flex:1, marginBottom: 170}}
-            contentContainerStyle={{
-              paddingBottom: 170
-            }}
+              enableAutomaticScroll={true}
+              keyboardShouldPersistTaps={'always'}
+              style={{ flex: 1, marginBottom: 170 }}
+              contentContainerStyle={{
+                paddingBottom: 170
+              }}
 
-            showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
             >
 
               <TextDropdown
@@ -463,7 +521,7 @@ const BankBottomView = ({ onPress }) => {
 
               <Text style={styles.inputHeader}>Branch Name</Text>
               <TextInput style={[styles.inputHolder, { height: branchHeight }]} multiline={true} onContentSizeChange={event => { setBranchHeight(event.nativeEvent.contentSize.height) }} value={branchName} onChangeText={(val) => setBranchName(val)} />
-              <Text style={styles.inputHeader}>Account No.</Text>
+              <Text style={styles.inputHeader}>Account No. <Text style={{ color: COLORS.red, ...FONTS.h4, justifyContent: 'center' }}>*</Text></Text>
               <TextInput value={accountNo} onChangeText={(val) => setAccountNo(val)} style={[styles.inputHolder]} keyboardType='numeric'
                 maxLength={20} />
               <Text style={styles.inputHeader}>Confirm Account No.</Text>
@@ -481,13 +539,30 @@ const BankBottomView = ({ onPress }) => {
                 captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
               /> */}
 
-              <Text style={styles.inputHeader}>IFSC Code</Text>
+              <Text style={styles.inputHeader}>IFSC Code <Text style={{ color: COLORS.red, ...FONTS.h4, justifyContent: 'center' }}>*</Text></Text>
               <TextInput autoCapitalize='characters' value={IFSCCode} onChangeText={(val) => setIFSCCode(val)} style={styles.inputHolder} maxLength={20} />
+
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly', width: '100%' }}>
+                <Text style={{ textAlign: 'left', color: statusCode == "200" ? COLORS.green : COLORS.red, ...FONTS.h4, width: '50%', verticalAlign: 'middle', marginLeft: 10 }}>
+                  {statusCode !== '' ? (statusCode == '200' ? banKValidateUserName : "Invalid Bank Info") : ""}
+                </Text>
+                <TouchableOpacity style={{ marginBottom: 15, width: '40%', alignSelf: "flex-end", justifyContent: "flex-end", justifyContent: 'center', }} onPress={() => validateBank()}>
+                  <LinearGradient
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 2, y: 0 }}
+                    style={{ borderRadius: 8, padding: 8, marginTop: 20 }} >
+                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.h4, }}>Validate Bank Info</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+
+
               <View style={[styles.inputHolder, { paddingHorizontal: 6, margin: 7, height: 40, alignItems: 'center', borderColor: COLORS.skyBlue, backgroundColor: 'white', flexDirection: 'row' }]}>
                 <View style={{ backgroundColor: COLORS.orange, borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: 'white' }}>{selectedDoc.length}</Text>
                 </View>
-                <Text style={{ paddingHorizontal: 5,marginRight:5 }}>Upload Bank Documents</Text>
+                <Text style={{ paddingHorizontal: 5, marginRight: 5 }}>Upload Bank Documents</Text>
                 <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
                   <TouchableOpacity style={{ paddingHorizontal: 3 }} onPress={() => selectDoc()}>
                     <Icon name='plus' color={COLORS.orange} size={20} />
@@ -515,12 +590,12 @@ const BankBottomView = ({ onPress }) => {
               </TouchableOpacity> : ""}
               {/* <View style={{ marginBottom: 120 }}></View> */}
             </KeyboardAwareScrollView>
-            }
+          }
         </>
       )
       }
     </View>
-   
+
   )
 }
 
