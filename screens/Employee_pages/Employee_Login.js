@@ -15,6 +15,7 @@ import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Employee_Login = (props) => {
@@ -158,13 +159,13 @@ const Employee_Login = (props) => {
                         </Pressable>} />
                 </View>
                 {/* Quick Pin Option */}
-                <View style={styles.loginOption}>
+                {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 28, height: 28, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
-                </View>
-                <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.base, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
+                </View> */}
+                <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.font, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
                     buttonContainerStyle={{ width: responsiveWidth(90), height: 45, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}
                     onPress={() => submit()} />
                 {/* Punching Option */}
@@ -176,17 +177,38 @@ const Employee_Login = (props) => {
                         <Text style={[styles.loginButtonText, { color: COLORS.orange1 }]}>Punch Out</Text>
                     </TouchableOpacity>
                 </View>
-                {/* Forgot Password */}
-                <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Toast.show({
-                        type: 'error',
-                        text1: "Please enter User id"
-                    }))}>Forgot Password?</Text>
-                </TouchableOpacity>
+
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+
+                    {/* signIn for Employee */}
+                    <TouchableOpacity onPress={async() => {
+                        props.navigation.navigate("Candidate_Login")
+                        console.log("clickkkk")
+                        await AsyncStorage.setItem("type", "candidate")
+                        
+                    }}>
+                        <Text style={{
+                            color: COLORS.hyperlinkBlue,
+                            ...FONTS.h5,
+                            fontSize: 14,
+                            marginBottom: 100,
+                            verticalAlign: 'middle',
+                            textDecorationLine: 'underline',
+                        }}>Sign In as Candidate</Text>
+                    </TouchableOpacity>
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Toast.show({
+                            type: 'error',
+                            text1: "Please enter User id"
+                        }))}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             {/* Bottom element */}
             <View style={{ height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:2.2</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.0</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
@@ -232,8 +254,7 @@ const styles = StyleSheet.create({
         ...FONTS.h4,
         fontSize: 14,
         marginBottom: 150,
-        textAlign: 'center',
-        marginVertical: 10
+
 
     },
     punchArea: {

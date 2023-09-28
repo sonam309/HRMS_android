@@ -494,7 +494,7 @@ const Details = (props) => {
         // console.warn(jobId);
         res = await res?.json();
         res = await res?.Table[0];
-        console.log("jobOpening", res)
+        // console.log("jobOpening", res)
         setJobOpeningData(res);
         setCompensationAmount(res?.COMPENSATION)
         setSelectedHiringLead(res?.HIRING_LEAD_NAME)

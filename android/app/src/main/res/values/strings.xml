@@ -1,3 +1,3 @@
 <resources>
-    <string name="app_name">HRMS</string>
+    <string name="app_name" translatable="false">Satya One OnBoarding</string>
 </resources>

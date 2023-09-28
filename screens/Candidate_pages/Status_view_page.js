@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 const Status_view_page = () => {
 
   const status_ID = useSelector(state => state.candidateAuth.candidateStatusId)
-  console.log("candidateStausviewwww",status_ID);
+  // console.log("candidateStausviewwww",status_ID);
 
   return (
     <ScrollView>

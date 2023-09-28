@@ -20,11 +20,11 @@ const Rejected = (props) => {
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'R', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                console.log("Reject",returnedData);
+                // console.log("Reject",returnedData);
                 setRejectedData(returnedData);
                 setLoading(false)
             }).catch((error)=>{
-                console.log(error)
+                // console.log(error)
                 setLoading(false)
             })
     };

@@ -31,6 +31,7 @@ const CandidateDashboard = (props) => {
     const [exitAlert, setExitAlert] = useState(false);
     const [profileAlert, setProfileAlert] = useState(false);
     const [offerLetterAlert, setOfferLetterAlert] = useState(false);
+    const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
 
 
     useEffect(() => {
@@ -52,14 +53,16 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            console.log("candOfferDetails", resultData?.Result[0]);
+            // console.log("candOfferDetails", resultData?.Result[0]);
             setLoaderVisible(false);
             dispatch(candidateAuthActions.updateLogin({
                 candidateStatusId: resultData?.Result[0]?.STATUS,
                 candidateStatus: resultData?.Result[0]?.CANDIDATE_STATUS
             }))
 
+            // console.log("employeeCreateFlag", resultData?.Result[0]?.EMP_CREATION_FLAG);
 
+            setEmployeeCreateFlag(resultData?.Result[0]?.EMP_CREATION_FLAG);
 
             // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
 
@@ -220,8 +223,13 @@ const CandidateDashboard = (props) => {
             </View>
             <ScrollView>
                 <Loader loaderVisible={loaderVisible} />
-                {/* header view */}
-                {/* Status view */}
+               {/* {
+                employeeCreateFlag!==''&& employeeCreateFlag!==null?<View>
+
+
+                </View>: */}
+                {/* // header view
+                //  Status view  */}
                 <View style={{ marginHorizontal: 12, }}>
                     <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
@@ -265,6 +273,7 @@ const CandidateDashboard = (props) => {
                         </View>
                     </View>
                 </View>
+               {/* } */}
 
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
@@ -301,7 +310,7 @@ const CandidateDashboard = (props) => {
                 {/* final submittion view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
                     {console.log("curreeenttttetetete", candidateStatusId)}
-                    
+
 
                     {candidateStatusId <= "166" && <TouchableOpacity style={{
                         marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
@@ -316,7 +325,7 @@ const CandidateDashboard = (props) => {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 2, y: 0 }}
                             style={{ borderRadius: 8, padding: 8, }} >
-                                
+
                             <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
                         </LinearGradient>
                     </TouchableOpacity>}

@@ -88,7 +88,7 @@ const Candidate_Document = (props) => {
                      
                 switch (type) {
                     case 129:
-                        console.log("bjhdvjhfj",type)
+                        // console.log("bjhdvjhfj",type)
                         setAadharCard(prevState => [...prevState, { name: newFile, txnId: TXNID }])
                         break;
                     case 130:
@@ -162,7 +162,7 @@ const Candidate_Document = (props) => {
                 ],
                 // allowMultiSelection: true
             });
-            console.log(type);
+            // console.log(type);
             if (type == "Aadhar Card") {
                 setFileUpload(current => [
                     ...current,

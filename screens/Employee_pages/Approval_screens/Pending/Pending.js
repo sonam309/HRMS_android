@@ -26,7 +26,7 @@ const Pending = (props) => {
                 setPendingData(returnedData);
                 setLoaderVisible(false)
             }).catch((error)=> {
-                console.log(error)
+                // console.log(error)
                 setLoaderVisible(false)
             })
     };

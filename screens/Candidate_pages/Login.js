@@ -17,11 +17,12 @@ import TextButton from '../../components/TextButton';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
 
+
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('604');
-    const [password, setPassword] = useState('Test@123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -57,12 +58,12 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        console.log("msg", otp + " $ " + userId + operFlag);
+        // console.log("msg", otp + " $ " + userId + operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
                 // console.log("login", userId);
@@ -101,7 +102,7 @@ const Login = (props) => {
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-                console.log("response", returnedData, hiringLeadMail);
+                // console.log("response", returnedData, hiringLeadMail);
                 setLoaderVisible(false)
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                     candidateId: userId,
@@ -146,8 +147,8 @@ const Login = (props) => {
                 <Image source={company_logo} style={{ width: "40%", height: '40%', }} />
             </View>
 
-            <View style={{width: responsiveWidth(100),height: 100,marginTop: -170,flex: 1,alignItems: "center",justifyContent: "center"}}>
-                <Image source={loginIcon} style={{height: '100%',width: '100%',}} resizeMode='stretch' />
+            <View style={{ width: responsiveWidth(100), height: 100, marginTop: -170, flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <Image source={loginIcon} style={{ height: '100%', width: '100%', }} resizeMode='stretch' />
             </View>
             {/* candidate Login titlte */}
             <View style={{ justifyContent: 'center', flex: 1.5, borderRadius: 20, backgroundColor: COLORS.white, paddingHorizontal: 25 }}>
@@ -178,21 +179,39 @@ const Login = (props) => {
                     buttonContainerStyle={{ width: responsiveWidth(90), height: 50, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}
                     onPress={() => submit()} />
 
-                {/* Forgot Password */}
-                <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => {
-                        userId !== '' ? forgetPasswordApi() : Toast.show({
-                            type: 'error',
-                            text1: "Please enter User Id"
-                        })
-                    }}>Forgot Password? </Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                    {/* signIn for Employee */}
+                    <TouchableOpacity onPress={async() => {
+                        props.navigation.navigate("Employee_Login")
+                        console.log("clickkkk")
+                        await AsyncStorage.setItem("type", "employee")
+                    }}>
+                        <Text style={{
+                            color: COLORS.hyperlinkBlue,
+                            ...FONTS.h5,
+                            fontSize: 14,
+                            marginBottom: 100,
+                            textDecorationLine: 'underline',
+                        }}>Sign In as Employee</Text>
+                    </TouchableOpacity>
+
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPassword} onPress={() => {
+                            userId !== '' ? forgetPasswordApi() : Toast.show({
+                                type: 'error',
+                                text1: "Please enter User Id"
+                            })
+                        }}>Forgot Password? </Text>
+                    </TouchableOpacity>
+                </View>
 
             </View>
 
             {/* Bottom element */}
-            <View style={{backgroundColor:COLORS.white,height:30}}>
-                <Text style={{ textAlign: 'center',color: COLORS.gray,...FONTS.h5,fontWeight: '400',padding:5}}>Version:2.2</Text>
+            <View style={{ backgroundColor: COLORS.white, height: 30 }}>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.0</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
@@ -230,14 +249,13 @@ const styles = StyleSheet.create({
         marginVertical: 12
     },
     textInputBox: {
-       
+
     },
     forgotPassword: {
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
-        marginBottom:100,
-        textAlign: 'center',
+        marginBottom: 100,
     },
     loginButton: {
         marginHorizontal: 25,

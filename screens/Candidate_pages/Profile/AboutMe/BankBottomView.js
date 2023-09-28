@@ -141,7 +141,7 @@ const BankBottomView = ({ onPress }) => {
       setLoaderVisible(true);
       let PersonalData = { operFlag: 'V', candidateId: userId };
       var formData = new FormData();
-      console.log(PersonalData);
+      // console.log(PersonalData);
       formData.append('data', JSON.stringify(PersonalData));
       let res = await fetch(`${API}/api/hrms/savePersonalDetails`,
         {
@@ -179,7 +179,7 @@ const BankBottomView = ({ onPress }) => {
         setLoaderVisible(true);
         axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
 
-          console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
+          // console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
           setLoaderVisible(false)
           setStatusCode(response.data.status_code);
           setBanKValidateUserName(response.data.data.full_name);
@@ -195,7 +195,7 @@ const BankBottomView = ({ onPress }) => {
     } catch (error) {
 
       setLoaderVisible(false);
-      console.log("error", error);
+      // console.log("error", error);
       Toast.show({
         type: 'error',
         text1: error
@@ -228,7 +228,7 @@ const BankBottomView = ({ onPress }) => {
           };
 
           setLoaderVisible(true);
-          console.log('bankdetails', bankData);
+          // console.log('bankdetails', bankData);
           var formData = new FormData();
           formData.append('data', JSON.stringify(bankData));
           selectedDoc.map(file => {
@@ -244,7 +244,7 @@ const BankBottomView = ({ onPress }) => {
           });
 
           setLoaderVisible(false);
-          console.log('response', res);
+          // console.log('response', res);
           res = await res.json();
           res = await res?.Result[0]?.MSG;
           Toast.show({

@@ -125,12 +125,18 @@ android {
             keyPassword 'Hrms@123'
         }
     }
+    buildTypes {
+        release {
+
+            signingConfig signingConfigs.release
+        }
+    }
 
     splits {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk true  // If true, also generate a universal APK
             include(*reactNativeArchitectures())
         }
     }

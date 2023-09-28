@@ -148,7 +148,7 @@ const Identifications = (props) => {
 
     setPanValidationMsg('');
     if (panNumber !== "" && panNumber !== undefined) {
-      console.log("panNumber", panNumber);
+      // console.log("panNumber", panNumber);
       const body = { id_number: panNumber };
       setLoaderVisible(true)
 
@@ -157,7 +157,7 @@ const Identifications = (props) => {
         .then(response => {
           const returnedData = response.data;
           setLoaderVisible(false);
-          console.log("resultPAnnnn", response.data);
+          // console.log("resultPAnnnn", response.data);
           // const msg = returnedData[0].MSG
 
           setPanValidationMsg(returnedData.status_code);
@@ -182,7 +182,7 @@ const Identifications = (props) => {
 
         })
         .catch(error => {
-          console.log("sonnnnnnnnnnnnnnnnnnn", (error));
+          // console.log("sonnnnnnnnnnnnnnnnnnn", (error));
           setLoaderVisible(false);
           Toast.show({
             type: 'error',
@@ -192,7 +192,7 @@ const Identifications = (props) => {
 
     } else {
       setLoaderVisible(false);
-      console.log("sonnnngffffffffffffffffh");
+      // console.log("sonnnngffffffffffffffffh");
       Toast.show({
         type: 'error',
         text1: 'Please enter Pan Number'
@@ -238,12 +238,12 @@ const Identifications = (props) => {
         // txnId: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
         txnID: Object.keys(edit).length > 0 ? edit?.TXN_ID : '',
       };
-      console.log("request", body);
+      // console.log("request", body);
       axios
         .post(`${API}/api/hrms/indentityProof`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
-          console.log("result..", returnedData);
+          // console.log("result..", returnedData);
           const msg = returnedData[0].MSG
           props.onPress()
 
@@ -286,7 +286,7 @@ const Identifications = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("getData", returnedData);
+        // console.log("getData", returnedData);
         const preFilledData = returnedData[0];
         const msg = returnedData[0].MSG
 
