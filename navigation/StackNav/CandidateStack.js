@@ -21,7 +21,7 @@ const CandidateStack = () => {
             <Stack.Screen name='Offer Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
             <Stack.Screen name='Status view page' options={{ orientation: 'portrait' }} component={Status_view_page} />
             <Stack.Screen name='View_Doc' options={{ orientation: 'portrait' }} component={View_Doc} />
-            <Stack.Screen name='Pending_Esign_list' options={{ orientation: 'portrait' }} component={PendigEsignList} />
+            <Stack.Screen name='Pending_Esign_list' options={{headerShown:false, orientation: 'portrait' }} component={PendigEsignList} />
             
           
                       
