@@ -183,8 +183,7 @@ const Login = (props) => {
 
                     {/* signIn for Employee */}
                     <TouchableOpacity onPress={async() => {
-                        props.navigation.navigate("Employee_Login")
-                        console.log("clickkkk")
+                        props.navigation.push("Employee_Login")
                         await AsyncStorage.setItem("type", "employee")
                     }}>
                         <Text style={{

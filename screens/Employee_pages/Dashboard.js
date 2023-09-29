@@ -15,6 +15,8 @@ import COLORS from '../../constants/theme';
 import { useSelector } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API } from '../../utility/services';
+import Toast from 'react-native-toast-message';
+import { showDevelopmetMode } from '../../functions/utils';
 
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -188,7 +190,7 @@ const Home = props => {
             </Text>}
           </View>
 
-          <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
+          <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={showDevelopmetMode}>
             <Icons name="bell-ring-outline" color={COLORS.green} size={30} />
           </TouchableOpacity>
 
@@ -206,9 +208,10 @@ const Home = props => {
           }}
           dayComponent={({ date, state, marking }) => {
             return (
-              <TouchableOpacity onLongPress={() => { setModalVisible(true); 
+              <TouchableOpacity 
+              // onLongPress={() => { setModalVisible(true)
                 // console.log('selected day', date.day)
-               }}
+              //  }}
                 style={{ alignItems: 'center', borderColor: COLORS.lightGray, paddingBottom: 8, borderBottomWidth: 0.5, width: '100%', }}>
                 <Text style={{ fontSize: 16, paddingBottom: marking ? 0 : 11, }}> {date.day} </Text>
                 {marking && marking.dotColor === 'orange' ? (
@@ -291,15 +294,15 @@ const Home = props => {
         </View>
 
         <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
+          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
             <Text style={styles.actionText}>Leave apply</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#E41B17' },]}>
+          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: '#E41B17' },]}>
             <Text style={[styles.actionText]}>Regularize</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue },]}>
+          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue },]}>
             <Text style={styles.actionText}>Outdoor</Text>
           </TouchableOpacity>
         </View>
@@ -313,12 +316,12 @@ const Home = props => {
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
+          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <Foundation name="megaphone" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Company Announcement</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]}>
+          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <FontAwesome5 name="birthday-cake" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Birthday & Anniversary</Text>
           </TouchableOpacity>

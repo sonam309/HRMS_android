@@ -31,12 +31,14 @@ const Employee_Login = (props) => {
     }
     // preventing going to entry page
     const navigation = useNavigation();
+
     useEffect(() => {
         const preventBack = navigation.addListener('beforeRemove', event => {
             event.preventDefault();
         })
         return preventBack
     }, [navigation])
+    
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -183,8 +185,7 @@ const Employee_Login = (props) => {
 
                     {/* signIn for Employee */}
                     <TouchableOpacity onPress={async() => {
-                        props.navigation.navigate("Candidate_Login")
-                        console.log("clickkkk")
+                        props.navigation.push("Candidate_Login")
                         await AsyncStorage.setItem("type", "candidate")
                         
                     }}>

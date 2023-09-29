@@ -23,7 +23,8 @@ const Entry_page = (props) => {
         console.log("type", page)
 
         {
-           (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login"))
+            page &&
+                (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login"))
         }
     }
     useEffect(() => {
