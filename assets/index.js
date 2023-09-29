@@ -16,6 +16,7 @@ import loginIcon from './images/candidate_icon.png'
 import employeeLoginBanner from './images/employee_login_banner.png'
 import approveMark from './images/approve_mark.png'
 import rejectMark from './images/reject_mark.png'
+import esignIcon from './images/esign.png'
 
 
-export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon, expernallinkImage,loginBanner,tag,loginIcon, employeeLoginBanner,approveMark,rejectMark}
+export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon, expernallinkImage,loginBanner,tag,loginIcon, employeeLoginBanner,approveMark,rejectMark,esignIcon}

@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { View, Text, TouchableOpacity, ScrollView, Linking, Image, BackHandler, Alert } from 'react-native'
 import { FONTS, SIZES } from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
-import { company_logo_2, expernallinkImage } from '../../assets';
+import { company_logo_2, esignIcon, expernallinkImage } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -223,14 +223,28 @@ const CandidateDashboard = (props) => {
             </View>
             <ScrollView>
                 <Loader loaderVisible={loaderVisible} />
-               {/* {
-                employeeCreateFlag!==''&& employeeCreateFlag!==null?<View>
+                {/* {
+                employeeCreateFlag!==''&& employeeCreateFlag!==null && employeeCreateFlag==='Y'?
+                : */}
 
+                <TouchableOpacity onPress={()=>Toast.show({
+                    type:'success',
+                    text1:'Click for esign'
+                })}>
 
-                </View>: */}
+                    <View style={{ flex: 1, backgroundColor: COLORS.disableOrange1, height: 100, marginHorizontal: 10, marginTop: 20, borderRadius: 12, flexDirection: 'row' }}>
+
+                        <Image source={esignIcon} style={{ width: 80, height: 100, tintColor: COLORS.orange1, justifyContent: 'center', resizeMode: 'center', marginLeft: 20 }} />
+
+                        <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15, marginTop: 10, alignSelf: 'center', marginBottom: 10 }}>Proceed for E-Sign</Text>
+
+                        <Icons name="arrow-right" size={30} color={COLORS.green} style={{ alignSelf: 'center', marginLeft: 60 }} />
+
+                    </View>
+                </TouchableOpacity>
                 {/* // header view
                 //  Status view  */}
-                <View style={{ marginHorizontal: 12, }}>
+                <View style={{ marginHorizontal: 10, }}>
                     <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
@@ -273,7 +287,7 @@ const CandidateDashboard = (props) => {
                         </View>
                     </View>
                 </View>
-               {/* } */}
+                {/* } */}
 
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
@@ -333,7 +347,7 @@ const CandidateDashboard = (props) => {
                 </View>
 
                 {/* about satya */}
-                <View style={{ marginHorizontal: SIZES.radius, }}>
+                <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
                     <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
                         style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>

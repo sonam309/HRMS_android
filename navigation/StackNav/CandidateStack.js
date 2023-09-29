@@ -7,6 +7,7 @@ import Candidate_Document from '../../screens/Candidate_pages/Document/Candidate
 import Offer_Letter from '../../screens/Candidate_pages/Offer_Letter';
 import Status_view_page from '../../screens/Candidate_pages/Status_view_page';
 import View_Doc from '../../screens/Candidate_pages/Document/View_Doc';
+import PendigEsignList from '../../screens/Candidate_pages/ProceedEsign/Pending_Esign_list';
 
 
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,8 @@ const CandidateStack = () => {
             <Stack.Screen name='Offer Letter' options={{ orientation: 'portrait' }} component={Offer_Letter} />
             <Stack.Screen name='Status view page' options={{ orientation: 'portrait' }} component={Status_view_page} />
             <Stack.Screen name='View_Doc' options={{ orientation: 'portrait' }} component={View_Doc} />
+            <Stack.Screen name='Pending_Esign_list' options={{ orientation: 'portrait' }} component={PendigEsignList} />
+            
           
                       
         </Stack.Navigator>
