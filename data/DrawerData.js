@@ -44,11 +44,11 @@ export default DrawerData = [
         "header":"Hiring",
         "id":9
     },
-    {
-        "icon":"help-network-outline",
-        "header":"Help Desk",
-        "id":10
-    },
+    // {
+    //     "icon":"help-network-outline",
+    //     "header":"Help Desk",
+    //     "id":10
+    // },
     // {
     //     "icon":"map-marker-outline",
     //     "header":"Location Mapping",
