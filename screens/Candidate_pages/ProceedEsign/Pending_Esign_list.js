@@ -11,6 +11,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import _ from "lodash";
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import TextButton from '../../../components/TextButton';
+import Toast from 'react-native-toast-message';
 
 
 const Pending_Esifn_list = (props) => {
@@ -51,16 +52,12 @@ const Pending_Esifn_list = (props) => {
           <Icons name="arrow-left" size={28} color={COLORS.black} style={{ alignSelf: 'center', }} verticalAlign={'center'} />
 
         </TouchableOpacity>
-        <Text style={{ ...FONTS.body3, fontSize: 20, color: COLORS.black, verticalAlign: 'middle', marginLeft: 20 }}>Candidate Information </Text>
+        <Text style={{ ...FONTS.body3, fontSize: 17, color: COLORS.black, verticalAlign: 'middle', marginLeft: 20 }}>Candidate Information </Text>
       </View>
 
 
       {loading ?
-        (<View style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center"
-        }}>
+        (<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           <View style={{
           }}>
             <ActivityIndicator color={COLORS.orange1} />
@@ -80,12 +77,14 @@ const Pending_Esifn_list = (props) => {
               alignItems: "center",
               justifyContent: "space-between",
               alignSelf: "center",
-              gap: 10,
+              // gap: 10,
               backgroundColor: COLORS.white,
               marginTop: SIZES.radius,
               padding: SIZES.radius,
               borderRadius: SIZES.radius
             }} key={index}>
+
+
               <View>
 
                 <View>
@@ -135,56 +134,40 @@ const Pending_Esifn_list = (props) => {
                           <Text>Initiated Kyc</Text>
                   }
                 </View>
-
               </View>
 
-
-              <View>
+              <View style={{
+                marginBottom: 30
+              }}>
 
                 <View>
-                  <Text style={{
-                    ...FONTS.h4,
-                    color: COLORS.black
-                  }}>Post</Text>
-                  <Text style={{
-                    ...FONTS.body4,
-                    fontWeight: "600"
-                  }}>{item?.POST}</Text>
+                  <Text style={{ ...FONTS.h4, color: COLORS.black }}>Post</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600" }}>{item?.POST}</Text>
                 </View>
 
-                <View style={{
-                  marginTop: SIZES.radius
-                }}>
-                  <Text style={{
-                    ...FONTS.h4,
-                    color: COLORS.black
-                  }}>Mobile No.</Text>
-                  <Text style={{
-                    ...FONTS.body4,
-                    fontWeight: "600"
-                  }}>{item?.CANDIDATE_MOB}</Text>
+                <View style={{ marginTop: SIZES.radius }}>
+                  <Text style={{ ...FONTS.h4, color: COLORS.black }}>Mobile No.</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600" }}>{item?.CANDIDATE_MOB}</Text>
                 </View>
 
-                <View style={{
-                  marginTop: SIZES.radius
-                }} >
+                <View style={{ marginTop: SIZES.radius, }} >
                   <TextButton
+                    onPress={() => props.navigation.navigate("Proceed_for_Esign")}
                     label={"Proceed for Esign"}
-                    buttonContainerStyle={{
-                      padding: 8,
-                      paddingHorizontal: 12,
-
-                      borderRadius: SIZES.radius
-                    }}
-                    linearGradientStyle={{
-                      borderRadius: SIZES.padding * 2
-                    }}
-                    labelStyle={{
-                      lineHeight: 19
-                    }}
+                    buttonContainerStyle={{ padding: 8, paddingHorizontal: 12, borderRadius: SIZES.radius, }}
+                    linearGradientStyle={{ borderRadius: SIZES.padding * 2 }}
+                    labelStyle={{ lineHeight: 19 }}
+                    elevation={6}
                   />
+                  
                 </View>
+
+
               </View>
+              <TouchableOpacity style={{ position: "absolute", bottom: 5, right: 20  }} onPress={()=>props.navigation.navigate("viewEsignStamp")} >
+                    <Icons name="eye" size={25} color={COLORS.green} />
+                  </TouchableOpacity>
+
             </View>
           )
         }))
