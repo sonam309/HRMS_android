@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import { showDevelopmetMode } from '../../functions/utils';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -190,8 +191,8 @@ const Home = props => {
             </Text>}
           </View>
 
-          <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={showDevelopmetMode}>
-            <Icons name="bell-ring-outline" color={COLORS.green} size={30} />
+          <TouchableOpacity style={{ position: 'absolute', right: 10 }} >
+            {/* <Icons name="bell-ring-outline" color={COLORS.green} size={30} /> */}
           </TouchableOpacity>
 
         </SafeAreaView>
@@ -293,7 +294,7 @@ const Home = props => {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+        {/* <View style={{ flexDirection: 'row', marginVertical: 10 }}>
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
             <Text style={styles.actionText}>Leave apply</Text>
           </TouchableOpacity>
@@ -305,18 +306,18 @@ const Home = props => {
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue },]}>
             <Text style={styles.actionText}>Outdoor</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <Text style={styles.headerText}>Others</Text>
 
         {/* Other options */}
         <View style={styles.others}>
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]} onPress={() => props.navigation.navigate('Pending Approval')}>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation, { width: 120, marginHorizontal: 10}]} onPress={() => props.navigation.navigate('Pending Approval')}>
             <Icons name="timetable" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
+          {/* <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <Foundation name="megaphone" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Company Announcement</Text>
           </TouchableOpacity>
@@ -324,7 +325,7 @@ const Home = props => {
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <FontAwesome5 name="birthday-cake" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Birthday & Anniversary</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
       </ScrollView>
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
   },
   otherOptions: {
     height: 100,
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'white',
     borderRadius: 8,
     marginVertical: 12,

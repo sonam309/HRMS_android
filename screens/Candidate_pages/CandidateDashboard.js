@@ -256,14 +256,10 @@ const CandidateDashboard = (props) => {
                 employeeCreateFlag!==''&& employeeCreateFlag!==null && employeeCreateFlag==='Y'?
                 : */}
 
-                <TouchableOpacity onPress={() => props.navigation.navigate("Pending_Esign_list")
-                    // Toast.show({
-                    //     type:'success',
-                    //     text1:'Click for esign'
-                    // })
+                {/* <TouchableOpacity onPress={() => props.navigation.navigate("Pending_Esign_list")
+                   
                 }>
                     <View style={{ flex: 1, backgroundColor: COLORS.white, marginHorizontal: 10, marginTop: 20, borderRadius: 12, padding: 15 }}>
-                        {/* <Text>{esignCount}</Text> */}
 
 
                         <View style={{ flexDirection: 'row', }}>
@@ -283,10 +279,7 @@ const CandidateDashboard = (props) => {
 
 
 
-                        {/* <Icons name={esignCount === "0" ? "text-box-check" : ("116" > "116" ? "text-box-check" : "text-box")} size={30} color={"116" === "116" ? COLORS.green : ("116" < "116" ? COLORS.gray : COLORS.lightOrange)} />
-                            <Text style={{ textAlignVertical: 'center', marginLeft: 8, color: "116" === "116" ? COLORS.green : ("116" < "116" ? COLORS.COLORS.gray : COLORS.lightOrange), fontSize: 16, fontWeight: "116" === "116" ? 'bold' : 'normal' }}>Fresh Candidate</Text> */}
-
-
+                        
                     </View>
 
                     <View style={{ display: 'none', marginHorizontal: 10, marginTop: 20, borderRadius: 12, flexDirection: 'row' }}>
@@ -299,128 +292,128 @@ const CandidateDashboard = (props) => {
 
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            {/* // header view
+                {/* // header view
                 //  Status view  */}
-            <View style={{ marginHorizontal: 10, }}>
-                <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
-                    <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
-                        <View>
-                            {growingDays ? <PieChart
-                                widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
-                                {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
-                            </PieChart> : <PieChart
-                                widthAndHeight={100} series={[0, 1]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
-                                {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
-                            </PieChart>}
+                <View style={{ marginHorizontal: 10, }}>
+                    <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
+                        <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
+                            <View>
+                                {growingDays ? <PieChart
+                                    widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
+                                </PieChart> : <PieChart
+                                    widthAndHeight={100} series={[0, 1]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
+                                </PieChart>}
 
-                            {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
+                                {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
 
-                            {growingDays ? <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
-                                <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
-                                <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
-                                >Days to</Text>
-                                <Text style={{
-                                    ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700", lineHeight: 12
-                                }}>Join</Text>
-                            </View> : <Text style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 18, padding: 5, left: 30, ...FONTS.h1, color: COLORS.black }}>...</Text>}
-                        </View>
-                        <View>
-                            <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
+                                {growingDays ? <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
+                                    <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
+                                    <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
+                                    >Days to</Text>
+                                    <Text style={{
+                                        ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700", lineHeight: 12
+                                    }}>Join</Text>
+                                </View> : <Text style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 18, padding: 5, left: 30, ...FONTS.h1, color: COLORS.black }}>...</Text>}
+                            </View>
+                            <View>
+                                <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
 
-                            <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
-                            <TouchableOpacity style={{
-                                marginTop: 12
-                            }} onPress={() => getCandidateOfferDetails("track")}>
-                                <LinearGradient
-                                    colors={[COLORS.orange1, COLORS.disableOrange1]}
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 2, y: 0 }}
-                                    style={{ borderRadius: 8, padding: 8, }} >
-                                    <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Track job Status</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
+                                <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
+                                <TouchableOpacity style={{
+                                    marginTop: 12
+                                }} onPress={() => getCandidateOfferDetails("track")}>
+                                    <LinearGradient
+                                        colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 2, y: 0 }}
+                                        style={{ borderRadius: 8, padding: 8, }} >
+                                        <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Track job Status</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
-            </View>
-            {/* } */}
+                {/* } */}
 
-            {/* offer Letter view */}
-            <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-                <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter  </Text>
-                <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
-                    <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
-                        <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
-                        <Text style={{ fontWeight: 500, fontSize: 14, color: COLORS.orange, marginRight: 30, textAlignVertical: 'center' }}>View Offer Letter{">"}</Text>
-                    </View>
+                {/* offer Letter view */}
+                <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter  </Text>
+                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
+                        <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
+                            <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
+                            <Text style={{ fontWeight: 500, fontSize: 14, color: COLORS.orange, marginRight: 30, textAlignVertical: 'center' }}>View Offer Letter{">"}</Text>
+                        </View>
 
-                </TouchableOpacity>
-            </View>
-
-
-            {/* task view */}
-            <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
-                <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task  </Text>
-                <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginVertical: 6, elevation: 5 }}>
-                    {/* profile view */}
-                    <TouchableOpacity style={{ height: 160, width: "45%", borderColor: COLORS.orange, borderWidth: 0.5, backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}
-                        onPress={() => { getCandidateOfferDetails("profile") }}>
-                        <FontAwesome5 name="user" size={44} color={COLORS.orange1} />
-                        <Text style={{ color: COLORS.orange1, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Your profile     </Text>
-                    </TouchableOpacity>
-                    {/* document view */}
-
-                    <TouchableOpacity onPress={() => { [getCandidateOfferDetails("Document")] }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
-
-                        <Icons name="file-document-outline" size={44} color={COLORS.green} />
-                        <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
-            {/* final submittion view */}
-            <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
-                {console.log("curreeenttttetetete", candidateStatusId)}
 
 
-                {candidateStatusId <= "166" && <TouchableOpacity style={{
-                    marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
-                }}
-                    onPress={() => finalSubmit()}>
-                    {/* Toast.show({
+                {/* task view */}
+                <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task  </Text>
+                    <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginVertical: 6, elevation: 5 }}>
+                        {/* profile view */}
+                        <TouchableOpacity style={{ height: 160, width: "45%", borderColor: COLORS.orange, borderWidth: 0.5, backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}
+                            onPress={() => { getCandidateOfferDetails("profile") }}>
+                            <FontAwesome5 name="user" size={44} color={COLORS.orange1} />
+                            <Text style={{ color: COLORS.orange1, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Your profile     </Text>
+                        </TouchableOpacity>
+                        {/* document view */}
+
+                        <TouchableOpacity onPress={() => { [getCandidateOfferDetails("Document")] }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
+
+                            <Icons name="file-document-outline" size={44} color={COLORS.green} />
+                            <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                {/* final submittion view */}
+                <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
+                    {console.log("curreeenttttetetete", candidateStatusId)}
+
+
+                    {candidateStatusId <= "166" && <TouchableOpacity style={{
+                        marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
+                    }}
+                        onPress={() => finalSubmit()}>
+                        {/* Toast.show({
                         type: 'warning',
                         text1: 'Done'
                     })} */}
-                    <LinearGradient
-                        colors={[COLORS.orange1, COLORS.disableOrange1]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 2, y: 0 }}
-                        style={{ borderRadius: 8, padding: 8, }} >
+                        <LinearGradient
+                            colors={[COLORS.orange1, COLORS.disableOrange1]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 2, y: 0 }}
+                            style={{ borderRadius: 8, padding: 8, }} >
 
-                        <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
-                    </LinearGradient>
-                </TouchableOpacity>}
+                            <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>}
 
-            </View>
+                </View>
 
-            {/* about satya */}
-            <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100 }}>
-                <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
-                <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
-                    style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
-                    {/* <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
+                {/* about satya */}
+                <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
+                        style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
                             <Image source={expernallinkImage}
                                 style={{ height: 20, width: 20, }} />
                             <Text style={{ marginLeft: SIZES.base, ...FONTS.body5}}>satyamicrocapital.com</Text> 
                         </View> */}
-                    <View style={{ height: 100, width: 200, }}>
-                        <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+                        <View style={{ height: 100, width: 200, }}>
+                            <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </View >
     )
 }
