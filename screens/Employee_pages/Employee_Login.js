@@ -209,7 +209,7 @@ const Employee_Login = (props) => {
             </View>
             {/* Bottom element */}
             <View style={{ height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.2</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.3</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
