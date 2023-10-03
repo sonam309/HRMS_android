@@ -20,11 +20,12 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('488');
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
+    const[loginResponse,setLoginResponse]=useState('');
 
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
@@ -85,7 +86,6 @@ const Login = (props) => {
         } else {
 
             setLoaderVisible(true)
-            console.log(`${API}/api/User/candidateLogin`)
             axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
                 const returnedData = response.data.Result[0];
                 let candidateName = returnedData.CANDIDATE_NAME
@@ -101,8 +101,8 @@ const Login = (props) => {
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-                console.log("response", returnedData, hiringLeadMail);
                 setLoaderVisible(false)
+                setLoginResponse(returnedData);
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
                     candidateId: userId,
                     candidateName,
@@ -125,7 +125,6 @@ const Login = (props) => {
                     })
 
             }).catch((error) => {
-                console.log(error)
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'error',
@@ -152,6 +151,7 @@ const Login = (props) => {
             {/* candidate Login titlte */}
             <View style={{ justifyContent: 'center', flex: 1.5, borderRadius: 20, backgroundColor: COLORS.white, paddingHorizontal: 25 }}>
                 <Text style={styles.header}>Candidate Login</Text>
+
                 {/* user credentials - userId */}
                 <View style={styles.textInputBox}>
                     <CustomInput placeholder={'Candidate Id'} caption={'Candidate ID'} value={userId} onChangeText={name => setUserId(name)}
