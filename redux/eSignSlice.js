@@ -5,6 +5,8 @@ const eSignSlice = createSlice({
     name: "eSign",
     initialState: {
         candidateList: [],
+        coordinatesList:{},
+        coordinateLoading:false,
         loading: false,
         error: ""
     },
@@ -24,6 +26,24 @@ const eSignSlice = createSlice({
             isAnyOf(getCandidateList.rejected),
             (state, action) => {
               state.loading = false;
+            }
+          );
+
+          builder.addMatcher(isAnyOf(getCoordinates.pending), (state) => {
+            state.coordinateLoading = true;
+          });
+          builder.addMatcher(
+            isAnyOf(getCoordinates.fulfilled),
+            (state, action) => {
+                // console.log("coordinates",action.payload.Result[0])
+              state.coordinateLoading = false;
+              state.coordinatesList = action.payload.Result[0];
+            }
+          );
+          builder.addMatcher(
+            isAnyOf(getCoordinates.rejected),
+            (state, action) => {
+              state.coordinateLoading = false;
             }
           );
     }

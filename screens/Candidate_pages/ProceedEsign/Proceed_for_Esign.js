@@ -15,7 +15,7 @@ const Proceed_for_Esign = (props) => {
 
     const dispatch = useDispatch()
 
-    const { candidateList, loading } = useSelector((state) => state.eSign)
+    const { candidateList, loading, coordinatesList } = useSelector((state) => state.eSign)
 
 
     const [isMobileOtp, setIsMobileOtp] = useState(false);
@@ -33,6 +33,7 @@ const Proceed_for_Esign = (props) => {
     const [fileName, setFileName] = useState('');
     const [loanType, setLoanType] = useState('');
     const [esignCount, setEsignCount] = useState('');
+    const [XYAXIS, setXYAXIS] = useState('');
 
 
 
@@ -118,7 +119,24 @@ const Proceed_for_Esign = (props) => {
         dispatch(getCandidateList(data))
     }
 
-    
+    // useEffect(() => {
+
+    //    if(!docTypeView){
+
+    //     console.log("getCoordinateDat",coordinatesList.XYAXIS);
+
+
+    //    }
+
+    // }, [docTypeView])
+
+
+    const getAxisData = () => {
+
+        console.log("getCoordinateDat", coordinatesList.XYAXIS);
+        setXYAXIS(coordinatesList?.XYAXIS);
+        setDocTypeView(false);
+    }
 
 
     return (
@@ -231,7 +249,7 @@ const Proceed_for_Esign = (props) => {
 
                         docTypeView && (
                             <BottomUpModal isVisible={docTypeView} onClose={() => { setDocTypeView(false); }}>
-                                {<DocumentTypeBottomView loanType={loanType} onPress={() => setDocTypeView(false)} />}
+                                {<DocumentTypeBottomView loanType={loanType} getAxisData={getAxisData} onPress={() => setDocTypeView(false)} />}
                             </BottomUpModal>
                         )
                     }
@@ -239,12 +257,13 @@ const Proceed_for_Esign = (props) => {
                 </View>
 
                 {/* submit button */}
-                <View style={{paddingLeft:20,
-                paddingRight:20,
-               marginTop:150,
+                <View style={{
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    marginTop: 150,
                 }}>
 
-                    <TouchableOpacity  onPress={()=>Toast.show({type:'error',text1:'Click'})}>
+                    <TouchableOpacity onPress={() => Toast.show({ type: 'error', text1: 'Click' })}>
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}
