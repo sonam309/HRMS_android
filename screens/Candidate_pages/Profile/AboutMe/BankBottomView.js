@@ -168,7 +168,7 @@ const BankBottomView = ({ onPress }) => {
   const validateBank = () => {
     try {
       setBanKValidateUserName('');
-      if (accountNo !== '' && accountNo != undefined && IFSCCode !== '' && IFSCCode != undefined) {
+      if (accountNo !== '' && accountNo !== undefined && IFSCCode !== '' && IFSCCode !== undefined) {
         const value = {
           "id_number": accountNo,
           "ifsc": IFSCCode
@@ -179,7 +179,7 @@ const BankBottomView = ({ onPress }) => {
         setLoaderVisible(true);
         axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
 
-          // console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
+          console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
           setLoaderVisible(false)
           setStatusCode(response.data.status_code);
           setBanKValidateUserName(response.data.data.full_name);

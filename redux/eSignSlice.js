@@ -38,3 +38,10 @@ export const getCandidateList = createAsyncThunk(
         return await AxiosClient("POST", `/api/saveEsignDataMob`, payload, toolkit);
     }
 );
+
+export const getCoordinates = createAsyncThunk(
+  "mobile/getCoordinates",
+  async (payload, toolkit) => {
+      return await AxiosClient("POST", `/api/saveEsignCordinate`, payload, toolkit);
+  }
+);
