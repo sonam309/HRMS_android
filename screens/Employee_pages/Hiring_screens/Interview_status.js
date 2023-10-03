@@ -124,9 +124,9 @@ const Interview_status = (props) => {
 
                 {/* ListView  */}
                 <View style={{ flex: 1, flexDirection: 'row', padding: 8, justifyContent: 'space-between' }}>
-                    {interViewDetail[0].TXN_ID>0?<ScrollView >
-                        {<Text>{interViewDetail.length.TXN_ID}</Text>}
-                        {console.log(interViewDetail)}
+                    {interViewDetail[0]?.TXN_ID!==undefined&& interViewDetail[0]?.TXN_ID!==null?<ScrollView >
+                       
+                        {/* {console.log("sonnammmmmm",interViewDetail[0]?.TXN_ID)} */}
                         {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={item.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
                     </ScrollView>:
                     <View style={{justifyContent:'center',alignItems:'center',width:'100%'}} >
