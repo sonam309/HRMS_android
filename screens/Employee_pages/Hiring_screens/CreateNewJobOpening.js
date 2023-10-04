@@ -67,7 +67,7 @@ const CreateNewJobOpening = (props) => {
             .then(response => {
                 const returnedData = response?.data?.Result;
                 setLoaderVisible(false);
-                console.log('approver data', returnedData);
+                // console.log('approver data', returnedData);
                 //   setApproverData(returnedData[0]);
                 setApproverId(returnedData[0].EMPLOYEE_ID)
                 setApproverName(returnedData[0].FIRST_NAME)
@@ -76,7 +76,11 @@ const CreateNewJobOpening = (props) => {
             })
             .catch(error => {
                 setLoaderVisible(false);
-                console.log("error while approver info", error)
+                Toast.show({
+                    type:'error',
+                    text1:error
+                })
+                // console.log("error while approver info", error)
             });
 
     }
@@ -223,8 +227,8 @@ const CreateNewJobOpening = (props) => {
                 formData.append('data', JSON.stringify(jobOpeningdata))
 
                 Object.keys(selectedDoc).length > 0 && formData.append('fileUpload', selectedDoc)
-                console.log("form info", formData._parts)
-                console.log("docs", Object.keys(selectedDoc).length)
+                // console.log("form info", formData._parts)
+                // console.log("docs", Object.keys(selectedDoc).length)
 
 
                 // Posting new job opening 
@@ -234,7 +238,7 @@ const CreateNewJobOpening = (props) => {
 
                 })
                 res = await res.json();
-                console.log("job applied", res)
+                // console.log("job applied", res)
 
                 Toast.show({
                     type: 'success',
@@ -256,7 +260,7 @@ const CreateNewJobOpening = (props) => {
                 setLoaderVisible(false)
             } catch (error) {
                 setLoaderVisible(false)
-                console.log(error?.response)
+                // console.log(error?.response)
             }
         }
     }
@@ -309,7 +313,7 @@ const CreateNewJobOpening = (props) => {
             <View style={{ margin: 7 }}>
                 {/* {console.warn(titleName)} */}
                 <Text style={{ color: COLORS.black, fontWeight: '500' }}>Posting Title <Text style={{ color: COLORS.red }}>* </Text></Text>
-                <SelectDropdown search data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value), console.log("Sonam", selectedTitleValue, selectedTitle, value) }} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
+                <SelectDropdown search data={titleOption?.map(a => a.PARAM_NAME)} buttonStyle={[styles.elevation, styles.inputHolder, { borderColor: COLORS.skyBlue }]} onSelect={(value) => { setSelectedTitle(value), checkTitleValue(value)}} defaultButtonText={titleOption?.map(a => a.PARAM_NAME)[0]} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} />
             </View>
 
             {/* number of position */}
@@ -320,7 +324,7 @@ const CreateNewJobOpening = (props) => {
 
             {/* compensation */}
             <View style={{ margin: 7 }}>
-                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation <Text style={{ color: COLORS.red }}>* </Text> </Text>
+                <Text style={{ color: COLORS.black, fontWeight: '500' }}>Compensation Monthly<Text style={{ color: COLORS.red }}>* </Text> </Text>
                 <CustomTextInput maxLength={10} placeholder='Compensation' style={{ borderColor: COLORS.skyBlue, marginHorizontal: 0 }} value={compensation} onChangeText={(value) => setCompensation(value)} keyboardType='numeric'/>
             </View>
 
@@ -392,7 +396,7 @@ const CreateNewJobOpening = (props) => {
                         text1: "Job description is Mandatory"
                     })
                 }}>
-                    <Text style={{ color: 'white' }}>Save Job Opening{console.log("first", Object.keys(selectedDoc).length)}</Text>
+                    <Text style={{ color: 'white' }}>Save Job Opening</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.regilizationBtn, styles.elevation, { backgroundColor: COLORS.red }]} onPress={() => props.navigation.navigate("Hiring_page")}>
                     <Text style={{ color: 'white' }}> Cancel </Text>

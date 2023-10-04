@@ -41,7 +41,7 @@ const CreateHiringTab = (props) => {
                     <Text style={{ ...FONTS.h2, color: COLORS.darkGray2 }}> Filters </Text>
                     <TouchableOpacity onPress={() => setIsVisible(false)}>
                         <Icons name="close" size={34} color={COLORS.orange1} />
-                    </TouchableOpacity>)
+                    </TouchableOpacity>
                 </View>
 
                 <View>

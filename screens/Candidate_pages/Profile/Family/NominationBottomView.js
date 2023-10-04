@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
 import CustomInput from '../../../../components/CustomInput'
 import TextButton from '../../../../components/TextButton'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const NominationBottomView = ({ nominations, onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
@@ -23,13 +24,15 @@ const NominationBottomView = ({ nominations, onPress }) => {
   const [selectedFamilyMemberValue, setSelectedFamilyMemberValue] =
     useState('');
   const [gaurdianName, setGaurdianName] = useState('');
-  const [share, setShare] = useState('');
   const [nomineeMember, setNomineeMember] = useState([]);
   const [loaderVisible, setLoaderVisible] = useState(false);
-
   const [showNominee, setShowNominee] = useState('');
   const [allNominee, setAllNominee] = useState([]);
-
+  const [numOfShares, setNumOfShares] = useState(0);
+  const [share, setShare] = useState('');
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
+  const maxShares = 100;
 
 
 
@@ -49,10 +52,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
     getDropdownData(38);
     getNominationData();
   }, []);
-
-
-
-
 
   const addMember = () => {
     if (ValidateForm()) {
@@ -82,14 +81,30 @@ const NominationBottomView = ({ nominations, onPress }) => {
     }
   };
 
+  const handleInput = (text) => {
+    setShare(text);
+  };
 
+  const checkShareValue = () => {
+    const newSharesCount = numOfShares + parseInt(share);
+
+    if (newSharesCount <= maxShares) {
+      setNumOfShares(newSharesCount);
+    } else {
+      Toast({
+        type: 'error',
+        text1: 'value error'
+      })
+    }
+    setShare('');
+
+  };
 
   const ValidateForm = () => {
 
     if (
       selectedNominationType === '' ||
       selectedNominationTypeValue === '' ||
-      gaurdianName === '' ||
       share === ''
     ) { return false }
     else return true
@@ -162,7 +177,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         operFlag: 'V',
 
       };
-      console.log('requestData', JSON.stringify(nomineeData));
+      // console.log('requestData', JSON.stringify(nomineeData));
       // nomineeData.param = NomineeInfo();
       let res = await fetch(`${API}/api/hrms/candidateNomination`, {
         method: 'POST',
@@ -173,14 +188,13 @@ const NominationBottomView = ({ nominations, onPress }) => {
         body: JSON.stringify(nomineeData),
       });
       res = await res.json();
-      console.log('getNominee details', res);
+      // console.log('getNominee details', res?.Result[0]);
       setAllNominee(res?.Result)
       setShowNominee(true)
       setLoaderVisible(false);
-      // Toast.show({
-      //   type: "success",
-      //   text1: "Nominnees saved succesfully"
-      // })
+      setApprovalFlag(res?.Result[0]?.APPROVAL_FLAG);
+      setApproveRemarks(res?.Result[0]?.DOC_REJ_REMARK)
+
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -196,7 +210,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
         var param1 = ""
 
         nomineeMember.map((nominee, index) => {
-          console.log(param1)
+          // console.log(param1)
           if (param1 === "") {
             if (nomineeMember.length === index + 1) {
               param1 = `${nominee.nominationType},${nominee?.familyMember},${nominee?.gaurdianName},${nominee?.share}`
@@ -226,7 +240,7 @@ const NominationBottomView = ({ nominations, onPress }) => {
           operFlag: 'A',
           param: param1,
         };
-        console.log('requestData', JSON.stringify(nomineeData));
+        // console.log('requestData', JSON.stringify(nomineeData));
         // nomineeData.param = NomineeInfo();
         let res = await fetch(`${API}/api/hrms/candidateNomination`, {
           method: 'POST',
@@ -237,14 +251,22 @@ const NominationBottomView = ({ nominations, onPress }) => {
           body: JSON.stringify(nomineeData),
         });
         res = await res.json();
-        // console.log('saveNominiee details', res);
+        // console.log('saveNominieedetails', res.Result[0]);
         param1 = undefined
         setLoaderVisible(false);
-        Toast.show({
-          type: "success",
-          text1: "Nominnees saved succesfully"
-        })
-        onPress();
+        if (res.Result[0].FLAG === "F") {
+          Toast.show({
+            type: 'error',
+            text1: res.Result[0].MSG
+          })
+        } else {
+          onPress();
+          Toast.show({
+            type: "success",
+            text1: res.Result[0].MSG
+          })
+        }
+        // onPress();
         // } else {
         //   setLoaderVisible(false);
         //   Toast.show({
@@ -274,9 +296,9 @@ const NominationBottomView = ({ nominations, onPress }) => {
   // diplaying individual Nominee
   const Nominee = ({ item, key }) => {
     return (
-      <View key={key} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
+      <View key={item.TXN_ID} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.GUARDIAN_NAME} </Text>
+          <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.NOMINATION_TYPE} </Text>
           {/* <Icons position='absolute' onPress={() => DeleteSkill({ txnId: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
           <Icons position='absolute' onPress={() => UpdateSkill(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
         </View>
@@ -338,10 +360,23 @@ const NominationBottomView = ({ nominations, onPress }) => {
           alignItems: 'center',
         }}>
         <Text
-          style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>
+          style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>
           Nominations
         </Text>
-        <TouchableOpacity onPress={onPress}>
+        {approvalFlag === "R" ? <TouchableOpacity style={{marginLeft:10}} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icon name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
           <Icon name="close-circle-outline" size={30} color={COLORS.orange} />
         </TouchableOpacity>
       </View>
@@ -397,7 +432,6 @@ const NominationBottomView = ({ nominations, onPress }) => {
 
                 <CustomInput
                   caption={'Gaurdian name'}
-                  required
                   value={gaurdianName}
                   onChangeText={setGaurdianName}
                 />
@@ -406,7 +440,15 @@ const NominationBottomView = ({ nominations, onPress }) => {
                   caption={'Share'}
                   required
                   value={share}
-                  onChangeText={setShare}
+                  maxlength={3}
+                  onChangeText={share <= 100 ? setShare : [showAlert({
+                    title: "You can not distribute more than 100 shares",
+                    customIcon: 'none',
+                    message: "",
+                    alertType: 'error',
+                    onPress: () => closeAlert(),
+                  }), setShare('')]}
+                  keyboardType='numeric'
                 />
 
                 <TextButton

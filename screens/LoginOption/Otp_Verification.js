@@ -62,12 +62,12 @@ const Otp_Verification = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
+        // console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG);
                 setsendOtp(otp);
@@ -91,7 +91,7 @@ const Otp_Verification = (props) => {
     //otp Validation
     const validateOtp = () => {
         let inputOtp = f1 + f2 + f3 + f4 + f5 + f6;
-        console.log("otpvry", userId);
+        // console.log("otpvry", userId);
 
         setLoaderVisible(true);
         if (sendOtp == inputOtp) {
@@ -122,14 +122,14 @@ const Otp_Verification = (props) => {
 
             {/* otp input boxes */}
             <View style={{ backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center' }}>
-                <TextInput ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f1}
+                <TextInput textContentType="oneTimeCode" ref={et1} style={[style.inputView, { borderColor: f1.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f1}
                     onChangeText={txt => {
                         setF1(txt);
                         if (txt.length >= 1) {
                             et2.current.focus();
                         }
                     }} />
-                <TextInput ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
+                <TextInput textContentType="oneTimeCode" ref={et2} style={[style.inputView, { borderColor: f2.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f2} onChangeText={txt => {
                     setF2(txt)
                     if (txt.length >= 1) {
                         et3.current.focus();
@@ -138,7 +138,7 @@ const Otp_Verification = (props) => {
                         et1.current.focus();
                     }
                 }} />
-                <TextInput ref={et3} style={[style.inputView, { borderColor: f3.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
+                <TextInput textContentType="oneTimeCode" ref={et3} style={[style.inputView, { borderColor: f3.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f3} onChangeText={txt => {
                     setF3(txt)
                     if (txt.length >= 1) {
                         et4.current.focus();
@@ -146,7 +146,7 @@ const Otp_Verification = (props) => {
                         et2.current.focus();
                     }
                 }} />
-                <TextInput ref={et4} style={[style.inputView, { borderColor: f4.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
+                <TextInput textContentType="oneTimeCode" ref={et4} style={[style.inputView, { borderColor: f4.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f4} onChangeText={txt => {
                     setF4(txt)
                     if (txt.length >= 1) {
                         et5.current.focus();
@@ -155,7 +155,7 @@ const Otp_Verification = (props) => {
                         et3.current.focus();
                     }
                 }} />
-                <TextInput ref={et5} style={[style.inputView, { borderColor: f5.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
+                <TextInput textContentType="oneTimeCode" ref={et5} style={[style.inputView, { borderColor: f5.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f5} onChangeText={txt => {
                     setF5(txt)
                     if (txt.length >= 1) {
                         et6.current.focus();
@@ -163,7 +163,7 @@ const Otp_Verification = (props) => {
                         et4.current.focus();
                     }
                 }} />
-                <TextInput ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => {
+                <TextInput textContentType="oneTimeCode" ref={et6} style={[style.inputView, { borderColor: f6.length >= 1 ? COLORS.green : COLORS.lightOrange }]} keyboardType="number-pad" maxLength={1} value={f6} onChangeText={txt => {
                     setF6(txt)
                     if (txt.length >= 1) {
                     } else if (txt.length < 1) { et5.current.focus(); }

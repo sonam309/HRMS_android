@@ -119,9 +119,9 @@ const EmployeeActionsTab = (props) => {
                     // tabBarAndroidRipple: { borderless: false }, // ripple effect on pressing the button
                 }}
             >
-                <Tab.Screen name="Approved" children={() => <Approved flag={flag} notificationCat={notificationCat} navigation={props.navigation} />} />
-                <Tab.Screen name="Pending" children={() => <Pending flag={flag} notificationCat={notificationCat} navigation={props.navigation} />} />
-                <Tab.Screen name="Rejected" children={() => <Rejected flag={flag} notificationCat={notificationCat} navigation={props.navigation} />} />
+                <Tab.Screen name="Approved" children={() => <Approved flag={flag} notificationCat={notificationCat} name={"Approved"} navigation={props.navigation} />} />
+                <Tab.Screen name="Pending" children={() => <Pending flag={flag} notificationCat={notificationCat} name="Pending" navigation={props.navigation} />} />
+                <Tab.Screen name="Rejected" children={() => <Rejected flag={flag} notificationCat={notificationCat} name="Rejected" navigation={props.navigation} />} />
             </Tab.Navigator>
 
             {/* Bottom Up Modal to display filter options */}

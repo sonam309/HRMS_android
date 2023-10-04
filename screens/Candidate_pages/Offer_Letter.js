@@ -1,7 +1,7 @@
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Linking, PermissionsAndroid, SafeAreaView, View, TouchableOpacity, Text } from 'react-native';
+import { Linking, PermissionsAndroid, SafeAreaView, View, TouchableOpacity, Text, Platform } from 'react-native';
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -10,11 +10,11 @@ import { SIZES, FONTS } from '../../constants/font_size';
 import axios from 'axios';
 import WebView from 'react-native-webview';
 import { API } from '../../utility/services';
-import Toast  from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 
 const Offer_Letter = (props) => {
   const userId = useSelector(state => state.candidateAuth.candidateId)
-  const [offerLetter, setOfferLetter] = useState()
+  const [offerLetter, setOfferLetter] = useState('')
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [btnVisibility, setBtnVisibility] = useState(true);
 
@@ -29,8 +29,11 @@ const Offer_Letter = (props) => {
   const requestFilePermission = async () => {
     // console.warn("Inside permisiion funct");
     try {
-      const granted = await PermissionsAndroid.request(
+      isReadGranted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
         {
           title: 'File Permission',
           message:
@@ -39,14 +42,27 @@ const Offer_Letter = (props) => {
           buttonPositive: 'OK',
         },
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+      // console.log("permission", isReadGranted);
+      if (isReadGranted === PermissionsAndroid.RESULTS.GRANTED) {
         downloadFile();
-      } else {
+      } else if (isReadGranted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        downloadFile();
+
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Storage access denied'
+        // })
+
+      }
+      else {
         Toast.show({
-          type:'error',
-          text1:'Storage access denied'
+          type: 'error',
+          text1: 'Storage access denied'
         })
       }
+
+
     } catch (err) {
       console.warn(err);
     }
@@ -73,10 +89,10 @@ const Offer_Letter = (props) => {
       })
       .then((res) => {
         // the temp file path
-        console.log('The file saved to ', res.path())
+        // console.log('The file saved to ', res.path())
         Toast.show({
-          type:'success',
-          text1:"File saved Successfully to" + res.path()
+          type: 'success',
+          text1: "File saved Successfully to" + res.path()
         })
       })
   }
@@ -99,22 +115,22 @@ const Offer_Letter = (props) => {
 
     totalData = await totalData.json()
     totalData = totalData.Result[0]
-    console.log("totaldata", totalData);
+    // console.log("totaldata", totalData);
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
       Toast.show({
-        type:'error',
-        text1:'No Offer letter is Present'
+        type: 'error',
+        text1: 'No Offer letter is Present'
       })
     }
-    if (totalData?.FLAG ==="S" &&( totalData?.OFER_ACPT_FLAG === "R"||totalData?.OFER_ACPT_FLAG==="A")) {
+    if (totalData?.FLAG === "S" && (totalData?.OFER_ACPT_FLAG === "R" || totalData?.OFER_ACPT_FLAG === "A")) {
       setBtnVisibility(false);
-    }else{
+    } else {
       setBtnVisibility(true)
     }
 
-    
+
     //  else if (totalData?.FLAG == 'S' && totalData?.STATUS == 124) {
     //   setBtnVisibility(true);
     // } 
@@ -131,27 +147,27 @@ const Offer_Letter = (props) => {
       operFlag: operFlag,
     };
 
-    console.log("345678765432", data);
+    // console.log("345678765432", data);
 
     axios
       .post(`${API}/api/hrms/OfferAceptance`, data)
       .then(res => {
-        console.log('hjsdfvhjs', res?.data?.Result);
+        // console.log('hjsdfvhjs', res?.data?.Result);
 
         if (res?.data?.Result[0]?.FLAG == 'S') {
           Toast.show({
-            type:'success',
-            text1:JSON.stringify(res?.data?.Result[0]?.MSG)
+            type: 'success',
+            text1: JSON.stringify(res?.data?.Result[0]?.MSG)
           })
           props.navigation.goBack();
         }
       })
       .catch(error => {
-        console.log(error);
-        
+        // console.log(error);
+
         Toast.show({
-          type:'error',
-          text1:JSON.stringify(error)
+          type: 'error',
+          text1: JSON.stringify(error)
         })
       });
   };
@@ -179,26 +195,26 @@ const Offer_Letter = (props) => {
       </View>
       {offerLetter && offerLetter != "" ? (
         <Pdf
-         trustAllCerts={false} 
-         source={{ uri: `${API}/OfferLetter/${offerLetter}`}} 
-         renderActivityIndicator={() => 
-         <Loader loaderVisible={loaderVisible} />}
-          minScale={0.5} 
-          spacing={15} 
+          trustAllCerts={false}
+          source={{ uri: `${API}/OfferLetter/${offerLetter}` }}
+          renderActivityIndicator={() =>
+            <Loader loaderVisible={loaderVisible} />}
+          minScale={0.5}
+          spacing={15}
           style={{ flex: 1, width: '100%' }}
           onLoadComplete={() => setLoaderVisible(false)}
-           onError={(error) => {
-            console.log(`${API}/OfferLetter/${offerLetter}`, error)
-          setError(true)
-        }} onPressLink={(link) => Linking.openURL(link)} />
+          onError={(error) => {
+            // console.log(`${API}/OfferLetter/${offerLetter}`, error)
+            setError(true)
+          }} onPressLink={(link) => Linking.openURL(link)} />
       )
-      :"" 
+        : ""
       }
 
       {error && (<Text style={{ flex: 1, textAlign: "center", color: COLORS.red, ...FONTS.h2 }}>File or directory not found</Text>)}
 
 
-      {offerLetter && !error&& (<View
+      {offerLetter && !error && (<View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -218,6 +234,8 @@ const Offer_Letter = (props) => {
             // borderWidth: 1,
             borderRadius: 30,
             borderWidth: 1,
+            marginRight:30,
+            marginBottom:5,
             borderColor: btnVisibility ? COLORS.green : COLORS.lightGray,
             alignItems: 'center',
             justifyContent: 'center',
@@ -231,7 +249,7 @@ const Offer_Letter = (props) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           disabled={!btnVisibility}
           onPress={() => approveOffer('R')}
           style={{
@@ -252,7 +270,7 @@ const Offer_Letter = (props) => {
             }}>
             Reject
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>)}
     </>
   )

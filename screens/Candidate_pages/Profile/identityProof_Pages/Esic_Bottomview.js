@@ -9,27 +9,30 @@ import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import SelectDropdown from 'react-native-select-dropdown';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 
 const Esic_Bottomview = (props) => {
-  
+
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
   const [loaderVisible, setLoaderVisible] = useState(false);
 
-  const [city, setCity] = useState();
-  const [subcode, setSubCode] = useState();
-  const [RegNumber, setRegNumber] = useState();
-  const [csiNum, setCsiNum] = useState();
-  const [residingWithYou, setResidingWithYou] = useState();
-  const [weatherResiding, setWeatherResiding] = useState();
-  const [noStatePlace, setNoStatePlace] = useState();
-  const [noStatePlaceResidence, setNoStatePlaceResidence] = useState();
-  const [priEmpCode, setPriEmpCode] = useState();
-  const [priInsuranceNum, setPriInsuranceNum] = useState();
+  const [city, setCity] = useState('');
+  const [subcode, setSubCode] = useState('');
+  const [RegNumber, setRegNumber] = useState('');
+  const [csiNum, setCsiNum] = useState('');
+  const [residingWithYou, setResidingWithYou] = useState('');
+  const [weatherResiding, setWeatherResiding] = useState('');
+  const [noStatePlace, setNoStatePlace] = useState('');
+  const [noStatePlaceResidence, setNoStatePlaceResidence] = useState('');
+  const [priEmpCode, setPriEmpCode] = useState('');
+  const [priInsuranceNum, setPriInsuranceNum] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
 
   const residenceWithYou = ["YES", "NO"]
 
@@ -67,7 +70,7 @@ const Esic_Bottomview = (props) => {
       .post(`${API}/api/hrms/saveCandidateUanInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("result..", returnedData);
+        // console.log("result..", returnedData);
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
         Toast.show({
@@ -78,7 +81,7 @@ const Esic_Bottomview = (props) => {
       })
       .catch(err => {
         setLoaderVisible(false)
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -94,12 +97,16 @@ const Esic_Bottomview = (props) => {
         const ESICDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-         console.log("getDataSonammmm", ESICDetails);
+        // console.log("getDataSonammmm", ESICDetails);
 
         if (Object.keys(ESICDetails).length > 2) {
           setIsEdit(true);
 
         }
+
+        setApprovalFlag(ESICDetails?.APPROVAL_FLAG);
+        setApproveRemarks(ESICDetails?.DOC_REJ_REMARK);
+
         setCity(ESICDetails?.CITY);
         setSubCode(ESICDetails?.SUB_CODE);
         setRegNumber(ESICDetails?.REGISTRATION_NO);
@@ -126,6 +133,19 @@ const Esic_Bottomview = (props) => {
       {/* close button */}
       <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
         <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>ESIC Details</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
         <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
           <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
         </TouchableOpacity>
@@ -141,7 +161,19 @@ const Esic_Bottomview = (props) => {
           color: COLORS.orange1
         }} >Loading you data..</Text>
       </View> :
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={270}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ flex: 1, marginBottom: 170 }}
+          contentContainerStyle={{
+            paddingBottom: 170
+          }}
+
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
 
           {/* City */}
           <View style={{ height: 75, marginTop: 10 }}>
@@ -197,7 +229,7 @@ const Esic_Bottomview = (props) => {
             {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State place</Text> */}
             <Text style={{ color: COLORS.green, ...FONTS.body4 }}>If No State</Text>
             <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }}
-              onChangeText={setNoStatePlace} value={noStatePlace} maxLength={3} />
+              onChangeText={setNoStatePlace} value={noStatePlace} maxLength={30} />
           </View>
 
           {/* If No State place of Residence*/}
@@ -226,6 +258,7 @@ const Esic_Bottomview = (props) => {
           </View>
 
           {/* save button */}
+          {approvalFlag !== "A" ?
           <TouchableOpacity onPress={() => (isEdit ? saveESICDetails('G') : saveESICDetails('C'))}>
 
             <LinearGradient
@@ -241,10 +274,12 @@ const Esic_Bottomview = (props) => {
               </Text>
             </LinearGradient>
 
-          </TouchableOpacity>
+          </TouchableOpacity>:""}
 
-          <View style={{ marginBottom: 270 }}></View>
-        </ScrollView>}
+          {/* <View style={{ marginBottom: 270 }}></View> */}
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+      }
     </View>
 
 

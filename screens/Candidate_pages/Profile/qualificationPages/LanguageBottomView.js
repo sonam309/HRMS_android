@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import TextDropdown from '../../../../components/TextDropdown';
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -17,18 +18,21 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
     const [operFlag, setOperFlag] = useState("A");
     const [TXNID, setTXNID] = useState('');
 
-    const [selectedLanguage, setSelectedLanguage] = useState();
-    const [selectedLanguageValue, setSelectedLanguageValue] = useState();
-    const [language, setLanguage] = useState();
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [selectedLanguageValue, setSelectedLanguageValue] = useState('');
+    const [language, setLanguage] = useState([]);
 
     const [isMothertongue, setIsMothertongue] = useState("false");
     const [isCanRead, setIsCanRead] = useState("false");
     const [isCanWrite, setIsCanWrite] = useState("false");
     const [isCanSpeak, setIsCanSpeak] = useState("false");
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [approveRemark, setApproveRemarks] = useState('');
 
     // for getting dropdown language data
     useEffect(() => {
         getDropdownData(29);
+        getLanguageData();
     }, []);
 
 
@@ -75,6 +79,22 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
 
     }
 
+    const getLanguageData = async () => {
+        let languageData = { operFlag: "V", candidateId: userId }
+        let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(languageData)
+        })
+        res = await res.json()
+        res = await res?.Result
+        // console.log("languagedata", res);
+        setApproveRemarks(res[0].DOC_REJ_REMARK);
+        setApprovalFlag(res[0].APPROVAL_FLAG);
+    }
     // for updating language
     const UpdateLanguage = async (item) => {
         setOperFlag("E")
@@ -99,7 +119,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
                 candidateId: userId, languages: selectedLanguageValue, motherTougue: isMothertongue, canRead: isCanRead, canWrite: isCanWrite, canSpeak: isCanSpeak, userId: userId, operFlag: operFlag, txnId: TXNID
             }
 
-            console.log("request", languageData);
+            // console.log("request", languageData);
             let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
                 method: "POST",
                 headers: {
@@ -111,11 +131,12 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
 
             res = await res.json();
             res = await res?.Result[0]?.MSG
-            onPress()
+
             Toast.show({
                 type: 'success',
                 text1: res
             })
+            onPress();
         } catch (error) {
 
             Toast.show({
@@ -208,7 +229,20 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
         <ScrollView showsVerticalScrollIndicator={false}>
             {/* close button */}
             <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Languages</Text>
+                <Text style={{...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Languages</Text>
+                {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+                    showAlert({
+                        title: approveRemark,
+                        customIcon: 'none',
+                        message: "",
+                        alertType: 'error',
+                        btnLabel: 'ok',
+                        onPress: () => closeAlert(),
+
+                    });
+                }}>
+                    <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+                </TouchableOpacity> : ""}
                 <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={onPress}>
                         <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
@@ -219,7 +253,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
                 <View >
 
                     {/* Language dropdown */}
-                    <View style={{ }}>
+                    <View style={{}}>
 
                         <TextDropdown
                             caption={'Languages'}
@@ -271,6 +305,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
                     </View>
 
                     {/* save button */}
+                    {approvalFlag !== "A" ?
                     <TouchableOpacity onPress={() => Toast.show({
                         type: 'success',
                         text1: "Data Save Successfully"
@@ -278,7 +313,7 @@ const LanguageBottomView = ({ languages, onPress, fetchLanguageData }) => {
                         <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 8, marginTop: 30 }}>
                             <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} onPress={() => saveLanguageDetails()}> Save</Text>
                         </LinearGradient>
-                    </TouchableOpacity>
+                    </TouchableOpacity>:""}
                 </View>}
             <View style={{ marginBottom: 370 }}></View>
         </ScrollView>

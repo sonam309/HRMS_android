@@ -15,12 +15,13 @@ import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Employee_Login = (props) => {
     const [showVisibility, setShowVisibility] = useState(true);
     const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('Test@123');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -30,12 +31,14 @@ const Employee_Login = (props) => {
     }
     // preventing going to entry page
     const navigation = useNavigation();
+
     useEffect(() => {
         const preventBack = navigation.addListener('beforeRemove', event => {
             event.preventDefault();
         })
         return preventBack
     }, [navigation])
+    
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -45,7 +48,7 @@ const Employee_Login = (props) => {
         try {
             const userData = { loginId: userId, password: password, oprFlag: 'L' };
             setLoaderVisible(true)
-            console.log(userData);
+            // console.log(userData);
             axios.post(`${API}/api/User/login`, userData).then((response) => {
                 const returnedData = response?.data?.Result[0];
                 // console.log("resposne", returnedData,response?.data?.Result);
@@ -56,12 +59,14 @@ const Employee_Login = (props) => {
                 let userDeptId = returnedData.DEPT_ID
                 let userDept = returnedData.DEPT_NAME
                 let userEmail = returnedData.EMAIL_ID
-                console.log("returnedData", returnedData);
+                // console.log("returnedData", returnedData);
                 setLoaderVisible(false)
                 result[0] === "S" ? ((props.navigation.navigate("Employee_page")), dispatch(authActions.logIn({ userId, userName, userDeptId, userDept, userEmail, userPassword: password }))) : Toast.show({
                     type: 'error',
                     text1: "Please enter correct credentials"
                 })
+                setUserId("");
+                setPassword("")
             })
         } catch (error) {
             setLoaderVisible(false);
@@ -97,7 +102,7 @@ const Employee_Login = (props) => {
             }).then((response) => {
                 const returnedData = response.data.Result;
                 setLoaderVisible(false);
-                console.log(returnedData);
+                // console.log(returnedData);
                 let result = returnedData.map(a => a.FLAG);
                 let contact = returnedData.map(b => b.MSG.trim());
 
@@ -144,22 +149,25 @@ const Employee_Login = (props) => {
                 <Text style={styles.header}>Employee Login</Text>
                 {/* user credentials -username */}
                 <View style={[styles.textInputBox]}  >
-                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
+                    <CustomInput placeholder={'User Id'} caption={'User ID'} value={userId} required onChangeText={(id) => (setUserId(id), dispatch(authActions.logIn({ userId: id, userPassword: password })))} />
                 </View>
                 {/* Password */}
                 <View style={[styles.textInputBox]} >
-                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput
+                    <CustomInput placeholder={'Password'} caption={'Password'} value={password} onChangeText={security => setPassword(security)} required secureTextEntry={showVisibility} isPasswordInput textInputStyle={{
+                        width: responsiveWidth(70)
+                    }}
+
                         icon={<Pressable onPress={changeVisibility}><AntDesign name="eye" size={22} />
                         </Pressable>} />
                 </View>
                 {/* Quick Pin Option */}
-                <View style={styles.loginOption}>
+                {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 28, height: 28, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
-                </View>
-                <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.base, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
+                </View> */}
+                <TextButton color1={COLORS.green} color2={'#9ADD00'} linearGradientStyle={{ marginTop: SIZES.font, marginBottom: SIZES.radius, borderRadius: SIZES.base, }}
                     buttonContainerStyle={{ width: responsiveWidth(90), height: 45, }} label={'Log In'} labelStyle={{ color: COLORS.white, }}
                     onPress={() => submit()} />
                 {/* Punching Option */}
@@ -171,17 +179,37 @@ const Employee_Login = (props) => {
                         <Text style={[styles.loginButtonText, { color: COLORS.orange1 }]}>Punch Out</Text>
                     </TouchableOpacity>
                 </View>
-                {/* Forgot Password */}
-                <TouchableOpacity>
-                    <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Toast.show({
-                        type: 'error',
-                        text1: "Please enter User id"
-                    }))}>Forgot Password?</Text>
-                </TouchableOpacity>
+
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+
+                    {/* signIn for Employee */}
+                    <TouchableOpacity onPress={async() => {
+                        props.navigation.push("Candidate_Login")
+                        await AsyncStorage.setItem("type", "candidate")
+                        
+                    }}>
+                        <Text style={{
+                            color: COLORS.hyperlinkBlue,
+                            ...FONTS.h5,
+                            fontSize: 14,
+                            marginBottom: 100,
+                            verticalAlign: 'middle',
+                            textDecorationLine: 'underline',
+                        }}>Sign In as Candidate</Text>
+                    </TouchableOpacity>
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPassword} onPress={() => (userId !== '' ? forgetPasswordApi() : Toast.show({
+                            type: 'error',
+                            text1: "Please enter User id"
+                        }))}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             {/* Bottom element */}
-            <View style={{height:30}}>
-                <Text style={{ textAlign: 'center',color: COLORS.gray,...FONTS.h5,fontWeight: '400',padding:5}}>Version:2.2</Text>
+            <View style={{ height: 30 }}>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.1</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
@@ -226,9 +254,8 @@ const styles = StyleSheet.create({
         color: COLORS.orange1,
         ...FONTS.h4,
         fontSize: 14,
-        marginBottom:150,
-        textAlign: 'center',
-        marginVertical: 10
+        marginBottom: 150,
+
 
     },
     punchArea: {

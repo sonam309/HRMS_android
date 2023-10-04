@@ -14,41 +14,41 @@ const TrainingBottomView = (props) => {
 
   const userId = useSelector(state => state.candidateAuth.candidateId)
 
-  const [selectedState, setSelectedState] = useState();
+  const [selectedState, setSelectedState] = useState('');
   const [selectedStateValue, setSelectedStateValue] = useState('');
-  const [states, setStates] = useState();
+  const [states, setStates] = useState('');
 
-  const [selectCountry, setselectCountry] = useState();
+  const [selectCountry, setselectCountry] = useState('');
   const [selectedCountryValue, setSelecetCountryValue] = useState('');
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState('');
 
-  const [selectQualifications, setSelectQualifications] = useState();
+  const [selectQualifications, setSelectQualifications] = useState('');
   const [selectedQualificationsValue, setSelectedQualificationsValue] = useState('');
-  const [Qualifications, setQualifications] = useState();
+  const [Qualifications, setQualifications] = useState('');
 
-  const [selectedQualiMode, setSelectedQualiMode] = useState();
+  const [selectedQualiMode, setSelectedQualiMode] = useState('');
   const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
-  const [qualificationMode, setQualificationMode] = useState();
+  const [qualificationMode, setQualificationMode] = useState('');
 
-  const [selectedStream, setSelectedStream] = useState();
+  const [selectedStream, setSelectedStream] = useState('');
   const [selectedStreamValue, setSelectedStreamValue] = useState('');
-  const [stream, setStream] = useState();
+  const [stream, setStream] = useState('');
 
   const [txnID, setTxnID] = useState('');
   const [error, setError] = useState('');
   const [operFlag, setOperFlag] = useState("A");
   const [edit, setEdit] = useState({});
 
-  const [specilization, setSpecilization] = useState();
-  const [University, setUniversity] = useState();
-  const [institute, setInstitute] = useState();
-  const [city, setCity] = useState();
-  const [fromYear, setFromYear] = useState();
-  const [toYear, setToYear] = useState();
-  const [passYear, setPassingYear] = useState();
-  const [fromMonth, setFromMonth] = useState();
-  const [toMonth, setToMonth] = useState();
-  const [expiryDate, setExpiryDate] = useState();
+  const [specilization, setSpecilization] = useState('');
+  const [University, setUniversity] = useState('');
+  const [institute, setInstitute] = useState('');
+  const [city, setCity] = useState('');
+  const [fromYear, setFromYear] = useState('');
+  const [toYear, setToYear] = useState('');
+  const [passYear, setPassingYear] = useState('');
+  const [fromMonth, setFromMonth] = useState('');
+  const [toMonth, setToMonth] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
 
 
   useEffect(() => {
@@ -86,12 +86,12 @@ const TrainingBottomView = (props) => {
       operFlag: operFlag,
     }
 
-    console.log("request", body);
+    // console.log("request", body);
     axios
       .post(`${API}/api/hrms/candidateTrainInfo`, body)
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("result..", returnedData);
+        // console.log("result..", returnedData);
         const msg = returnedData[0].MSG
 
         Toast.show({
@@ -102,7 +102,11 @@ const TrainingBottomView = (props) => {
 
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
       });
 
   };
@@ -116,7 +120,7 @@ const TrainingBottomView = (props) => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log("getData", returnedData);
+        // console.log("getData", returnedData);
         const TrainingDetails = returnedData[0];
         const msg = returnedData[0].MSG
 
@@ -155,10 +159,14 @@ const TrainingBottomView = (props) => {
         setTxnID(TrainingDetails?.TXN_ID);
 
         setEdit(returnedData[0]);
-        console.log("editdata", edit);
+        // console.log("editdata", edit);
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        Toast.show({
+          type:'error',
+          text1:err
+        })
       });
   };
 

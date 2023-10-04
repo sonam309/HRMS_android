@@ -10,6 +10,9 @@ import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 
 const PersonalAddressBottomView = ({ onPress }) => {
@@ -35,7 +38,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
         let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
-        // console.warn(returnedData);
+        // console.log("params data",returnedData);
         if (P === 4) { setCountry(returnedData) }
         else if (P === 7) { setStates(returnedData) }
 
@@ -94,16 +97,18 @@ const PersonalAddressBottomView = ({ onPress }) => {
     const [permanentThanaEdit, setPermanentThanaEdit] = useState(true)
     const [permanentCountryEdit, setPermanentCountryEdit] = useState(false)
     const [permanentStateEdit, setPermanentStateEdit] = useState(false)
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [addressAppRemark, setAddressAppRemark] = useState('');
 
 
     // same present and permanent
     const [sameAddress, setSameAddress] = useState(false);
-    const [loaderVisible, setLoaderVisible] = useState(true);
+    const [loaderVisible, setLoaderVisible] = useState(false);
     const [TXNID, setTXNID] = useState('');
 
 
     const DisplayPreviousDetails = () => {
-        console.log("filledDetails", filledDetails);
+        // console.log("filledDetails", filledDetails);
         filledDetails && (
             // present address
             // (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
@@ -150,9 +155,12 @@ const PersonalAddressBottomView = ({ onPress }) => {
             })
             res = await res.json()
             res = await res?.Result[0]
-            console.log("res", res);
+            // console.log("address", res?.DOC_REJ_REMARK);
             setLoaderVisible(false);
             setFilledDetails(res);
+            setApprovalFlag(res?.APPROVAL_FLAG);
+            setAddressAppRemark(res?.DOC_REJ_REMARK);
+
         } catch (error) {
             setLoaderVisible(false);
             Toast.show({
@@ -256,7 +264,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                 // console.warn(operFlag);
                 let AddressData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, presentAddress: presentAddress, country: presentSelectedCountryValue, state: presentSelectedStateValue, city: presentCity, pincode: presentPinCode, district: presentDistrict, postOffice: presentPostOffice, subDivison: presentSubDivision, thana: presentThana, peramanentAddress: permanentAddress, permanentCountry: permanentSelectedCountryValue, permanentState: permanentSelectedStateValue, permanentcity: permanentCity, permanentPincode: permanentPinCode, permanentDistrict: permanentDistrict, permanentPostOffice: permanentPostOffice, permanentSubdivion: permanentSubDivision, permanentThana: permanentThana }
-                // console.warn("address",AddressData);
+                console.warn("address", AddressData);
                 let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
                     method: "POST",
                     headers: {
@@ -267,7 +275,7 @@ const PersonalAddressBottomView = ({ onPress }) => {
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
-                console.log("first", res);
+                // console.log("addressRes", res);
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'success',
@@ -348,7 +356,22 @@ const PersonalAddressBottomView = ({ onPress }) => {
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>
-                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Address</Text>
+                    {approvalFlag === "R" ? <TouchableOpacity onPress={() => {
+                        showAlert({
+                            title: addressAppRemark,
+                            customIcon: 'none',
+                            message: "",
+                            alertType: 'error',
+                            btnLabel: 'ok',
+                            onPress: () => closeAlert(),
+
+                        });
+                    }}>
+                        <Icon name='alert-circle-outline' size={25} color={COLORS.red} style={{ marginLeft: 10 }} />
+                    </TouchableOpacity> : ""}
+                </View>
                 <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
@@ -366,8 +389,21 @@ const PersonalAddressBottomView = ({ onPress }) => {
                 </Text>
             </View>
             ) :
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ flex: 1, marginBottom: 170 }}
+                    contentContainerStyle={{
+                        paddingBottom: 170
+                    }}
 
-                <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}>
+                    showsVerticalScrollIndicator={false}
+                >
+
+
+                    {/* <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}> */}
                     <Loader loaderVisible={loaderVisible} />
 
                     {/* Present */}
@@ -473,19 +509,26 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                     <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Thana</Text>
                     <TextInput style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} value={permanentThana} onChangeText={(val) => setPermanentThana(val)} editable={permanentThanaEdit} />
-                    <TouchableOpacity onPress={() => filledDetails?.PIN_CODE ? saveAddressDetails('E') : saveAddressDetails('A')} >
-                        <LinearGradient
-                            colors={[COLORS.orange1, COLORS.disableOrange1]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE?"Update Address Details":"Save Address Details"}</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                    <View style={{ paddingBottom: 270 }}></View>
 
-                </ScrollView>}
-        </View>
+
+
+                    {approvalFlag !== "A" ?
+                        <TouchableOpacity onPress={() => filledDetails?.PIN_CODE ? saveAddressDetails('E') : saveAddressDetails('A')} >
+                            <LinearGradient
+                                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 2, y: 0 }}
+                                style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{filledDetails?.PIN_CODE ? "Update Address Details" : "Save Address Details"}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity> : ""}
+
+
+                    {/* <View style={{ paddingBottom: 270 }}></View> */}
+                    {/* </ScrollView> */}
+                </KeyboardAwareScrollView>
+            }
+        </View >
     )
 }
 

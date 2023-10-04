@@ -10,6 +10,8 @@ import store from './redux/store';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomAlert from './components/CustomAlert';
+import CustomisableAlert from 'react-native-customisable-alert';
+import 'react-native-gesture-handler';
 
 const App = () => {
 
@@ -22,7 +24,7 @@ const App = () => {
           AsyncStorage.setItem('FCMToken', fcmToken);
         }
       } catch (error) {
-        console.log("error fetching FCM token")
+        // console.log("error fetching FCM token")
       }
 
     }
@@ -42,11 +44,11 @@ const App = () => {
   useEffect(() => {
     requestPermission();
     const otherOne = messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
+      // console.log('Message handled in the background!', remoteMessage);
     });
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert(JSON.stringify(remoteMessage?.notification?.title), JSON.stringify(remoteMessage?.notification?.body));
-      console.log(JSON.stringify(remoteMessage));
+      // console.log(JSON.stringify(remoteMessage));
     });
 
   }, []);
@@ -58,6 +60,12 @@ const App = () => {
         <EntryStackNav />
       </NavigationContainer>
       <Toast position="top" bottomOffset={20} />
+      <CustomisableAlert
+                    titleStyle={{
+                        fontSize: 18,
+                        fontWeight: "bold"
+                    }}
+                />
       </SafeAreaView>
     </Provider>
   );

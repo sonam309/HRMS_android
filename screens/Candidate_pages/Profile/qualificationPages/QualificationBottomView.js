@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -9,6 +9,9 @@ import { useSelector } from 'react-redux';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import TextDropdown from '../../../../components/TextDropdown';
+import Loader from '../../../../components/Loader';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const QualificationBottomView = ({ qualification, onPress, fetchQualificationData }) => {
     const userId = useSelector(state => state.candidateAuth.candidateId)
@@ -17,36 +20,39 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
     const [operFlag, setOperFlag] = useState("A");
 
-    const [states, setStates] = useState();
-    const [selectedState, setSelectedState] = useState();
+    const [states, setStates] = useState([]);
+    const [selectedState, setSelectedState] = useState('');
     const [selectedStateValue, setSelectedStateValue] = useState('');
 
-    const [country, setCountry] = useState();
-    const [selectCountry, setselectCountry] = useState();
+    const [country, setCountry] = useState([]);
+    const [selectCountry, setselectCountry] = useState('');
     const [selectedCountryValue, setSelecetCountryValue] = useState('');
 
-    const [Qualifications, setQualifications] = useState();
-    const [selectQualifications, setSelectQualifications] = useState();
+    const [Qualifications, setQualifications] = useState([]);
+    const [selectQualifications, setSelectQualifications] = useState('');
     const [selectedQualificationsValue, setSelectedQualificationsValue] = useState('');
 
-    const [qualificationMode, setQualificationMode] = useState();
-    const [selectedQualiMode, setSelectedQualiMode] = useState();
+    const [qualificationMode, setQualificationMode] = useState([]);
+    const [selectedQualiMode, setSelectedQualiMode] = useState('');
     const [selectedQualiModeValue, setSelectedQualiModeValue] = useState('');
 
-    const [stream, setStream] = useState();
-    const [selectedStream, setSelectedStream] = useState();
+    const [stream, setStream] = useState([]);
+    const [selectedStream, setSelectedStream] = useState('');
     const [selectedStreamValue, setSelectedStreamValue] = useState('');
 
-    const [specilization, setSpecilization] = useState();
-    const [University, setUniversity] = useState();
-    const [institute, setInstitute] = useState();
-    const [city, setCity] = useState();
-    const [fromYear, setFromYear] = useState();
-    const [passYear, setPassingYear] = useState();
+    const [specilization, setSpecilization] = useState('');
+    const [University, setUniversity] = useState('');
+    const [institute, setInstitute] = useState('');
+    const [city, setCity] = useState('');
+    const [fromYear, setFromYear] = useState('');
+    const [passYear, setPassingYear] = useState('');
 
     const [isHighestQualification, setIsHighestQualification] = useState(false);
     const [grade, setGrade] = useState('');
     const [TXNID, setTXNID] = useState('');
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [approveRemark, setApproveRemarks] = useState('');
+    const [loaderVisible, setLoaderVisible] = useState(false);
 
     useEffect(() => {
         getDropdownData(7);
@@ -54,6 +60,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
         getDropdownData(33);
         getDropdownData(34);
         getDropdownData(35);
+        getQualificationData();
     }, []);
 
     // Title, States and Employment Data
@@ -82,7 +89,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
                 txnId: txnID, operFlag: "D", userId: userId
             }
             // console.warn(qualificationData);
-
+            setLoaderVisible(true);
             let res = await fetch(`${API}/api/hrms/candidateQualification`, {
                 method: "POST",
                 headers: {
@@ -93,6 +100,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
             })
             res = await res.json();
             res = await res?.Result[0]?.MSG
+            setLoaderVisible(false);
             fetchQualificationData();
             Toast.show({
                 type: 'success',
@@ -101,7 +109,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
         }
         catch (error) {
-
+            setLoaderVisible(false);
             Toast.show({
                 type: 'error',
                 text1: error
@@ -110,8 +118,25 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
     }
 
-    const updateQualification = (item) => {
+    const getQualificationData = async () => {
+        let qualficationData = { operFlag: "V", candidateId: userId }
+        let res = await fetch(`${API}/api/hrms/candidateQualification`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(qualficationData)
+        })
+        res = await res.json()
+        res = await res?.Result
+        // console.log("qualficationDataaaaaa", res);
+        setApproveRemarks(res[0].DOC_REJ_REMARK);
+        setApprovalFlag(res[0].APPROVAL_FLAG);
+    }
 
+    const updateQualification = (item) => {
+        // console.log("getQualifications", item);
         (item.FLAG === "S" ? setOperFlag("E") : setOperFlag("A"))
         setSpecilization(item?.SPECIALIZATION);
         setUniversity(item?.UNIVERSITY);
@@ -149,34 +174,44 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
 
     const saveQualificationDetails = async () => {
+        // console.log("selectedQualifications", selectQualifications);
+        if (selectQualifications !== undefined) {
+            try {
+                const qualificationData = {
+                    txnId: TXNID, candidateId: userId, qualifications: selectedQualificationsValue, stream: selectedStreamValue, specilization: specilization, university: University, institute: institute, qualificatinMode: selectedQualiModeValue, country: selectedCountryValue, state: selectedStateValue, city: city, fromYear: fromYear, passYear: passYear, isHighestQualification: isHighestQualification, userId: userId, operFlag: operFlag, percentage: grade
+                }
 
-        try {
-            const qualificationData = {
-                txnId: TXNID, candidateId: userId, qualifications: selectedQualificationsValue, stream: selectedStreamValue, specilization: specilization, university: University, institute: institute, qualificatinMode: selectedQualiModeValue, country: selectedCountryValue, state: selectedStateValue, city: city, fromYear: fromYear, passYear: passYear, isHighestQualification: isHighestQualification, userId: userId, operFlag: operFlag, percentage: grade
+                // console.log("request", qualificationData);
+                setLoaderVisible(true);
+                let res = await fetch(`${API}/api/hrms/candidateQualification`, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(qualificationData)
+                })
+                res = await res.json();
+                res = await res?.Result[0]?.MSG
+                // console.log("QualificationResponse", res);
+                setLoaderVisible(false);
+                onPress()
+                Toast.show({
+                    type: 'success',
+                    text1: res
+                })
+            } catch (error) {
+                setLoaderVisible(false);
+                Toast.show({
+                    type: 'error',
+                    text1: error
+                })
             }
-
-            console.log("request", qualificationData);
-            let res = await fetch(`${API}/api/hrms/candidateQualification`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(qualificationData)
-            })
-
-            res = await res.json();
-            res = await res?.Result[0]?.MSG
-            onPress()
-            Toast.show({
-                type: 'success',
-                text1: res
-            })
-        } catch (error) {
-
+        } else {
+            setLoaderVisible(false);
             Toast.show({
                 type: 'error',
-                text1: error
+                text1: 'Please select Qualificataions'
             })
         }
 
@@ -268,6 +303,7 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 700, color: 'black' }}>Language Details: </Text>
+
                     <TouchableOpacity onPress={() => setShowForm(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
                         <Text>ADD</Text>
                         <Icons name='plus' size={16} />
@@ -318,159 +354,196 @@ const QualificationBottomView = ({ qualification, onPress, fetchQualificationDat
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Qualifications</Text>
+                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Qualifications</Text>
+
+                {approvalFlag === "R" ? <TouchableOpacity style={{marginLeft:10}} onPress={() => {
+                    showAlert({
+                        title: approveRemark,
+                        customIcon: 'none',
+                        message: "",
+                        alertType: 'error',
+                        btnLabel: 'ok',
+                        onPress: () => closeAlert(),
+
+                    });
+                }}>
+                    <Icons name='alert-circle-outline' size={25} color={COLORS.red}  />
+                </TouchableOpacity> : ""}
+
                 <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={onPress}>
                         <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
                     </TouchableOpacity>
                 </View>
             </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Qualifications dropdown */}
-                {!showForm && qualification[0]?.QUALIFICATIONS_NAME && qualification.length > 0 ? <QualificationDetails /> :
-                    <View>
-                        <View style={{}}>
+            {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+                <ActivityIndicator color={COLORS.orange1} />
+                <Text style={{ ...FONTS.h3, fontWeight: '500', color: COLORS.orange1, marginTop: SIZES.base, }}>
+                    Loading your details
+                </Text>
+            </View>
+            ) :
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ flex: 1, marginBottom: 170 }}
+                    contentContainerStyle={{
+                        paddingBottom: 170
+                    }}
+
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+                    {/* Qualifications dropdown */}
+                    {!showForm && qualification[0]?.QUALIFICATIONS_NAME && qualification.length > 0 ? <QualificationDetails /> :
+                        <View>
+                            <View style={{}}>
 
 
-                            <TextDropdown
-                                caption={'Qualifications'}
-                                data={Qualifications}
-                                setData={setSelectQualifications}
-                                setIdvalue={setSelectedQualificationsValue}
-                                defaultButtonText={selectQualifications}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                <TextDropdown
+                                    caption={'Qualifications'}
+                                    data={Qualifications}
+                                    setData={setSelectQualifications}
+                                    setIdvalue={setSelectedQualificationsValue}
+                                    defaultButtonText={selectQualifications}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
+                                {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications</Text>
                             <SelectDropdown data={Qualifications?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectQualifications(value), checkQualificationsValue(value) }} defaultButtonText={selectedDropDownText("qualification")} defaultValueByIndex={selectDropDownValue("qualification")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
-                        </View>
+                            </View>
 
-                        {/* Stream dropdown */}
-                        <View style={{ marginTop: 10 }}>
+                            {/* Stream dropdown */}
+                            <View style={{ marginTop: 10 }}>
 
-                            <TextDropdown
-                                caption={'Stream'}
-                                data={stream}
-                                setData={setSelectedStream}
-                                setIdvalue={setSelectedStreamValue}
-                                defaultButtonText={selectedStream}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                <TextDropdown
+                                    caption={'Stream'}
+                                    data={stream}
+                                    setData={setSelectedStream}
+                                    setIdvalue={setSelectedStreamValue}
+                                    defaultButtonText={selectedStream}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
+                                {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Stream</Text>
                             <SelectDropdown data={stream?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedStream(value), checkStreamValue(value) }} defaultButtonText={selectedDropDownText("Stream")} defaultValueByIndex={selectDropDownValue("Stream")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
-                        </View>
+                            </View>
 
-                        {/* Specialization */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Specialization</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization} />
-                        </View>
+                            {/* Specialization */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Specialization</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setSpecilization} value={specilization} />
+                            </View>
 
-                        {/* Grades */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Percentage(CGPA)</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} keyboardType='numeric' maxLength={5} />
-                        </View>
+                            {/* Grades */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Percentage(CGPA)</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setGrade} value={grade} keyboardType='numeric' maxLength={5} />
+                            </View>
 
-                        {/* Institute dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Institute</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Institute Name' onChangeText={setInstitute} value={institute} />
-                        </View>
+                            {/* Institute dropdown */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Institute</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='Institute Name' onChangeText={setInstitute} value={institute} />
+                            </View>
 
-                        {/* University dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>University</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setUniversity} value={University} />
-                        </View>
+                            {/* University dropdown */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>University</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='' onChangeText={setUniversity} value={University} />
+                            </View>
 
-                        {/* From year */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} keyboardType='numeric' maxLength={4} />
-                        </View>
+                            {/* From year */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>From Year</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setFromYear} value={fromYear} keyboardType='numeric' maxLength={4} />
+                            </View>
 
-                        {/* Passing year */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} keyboardType='numeric' maxLength={4} />
-                        </View>
+                            {/* Passing year */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Passing Year</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='yyyy' onChangeText={setPassingYear} value={passYear} keyboardType='numeric' maxLength={4} />
+                            </View>
 
-                        {/* Qualifications mode dropdown */}
-                        <View style={{ marginTop: 10 }}>
-                            <TextDropdown
-                                caption={'Qualifications Mode'}
-                                data={qualificationMode}
-                                setData={setSelectedQualiMode}
-                                setIdvalue={setSelectedQualiModeValue}
-                                defaultButtonText={selectedQualiMode}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                            {/* Qualifications mode dropdown */}
+                            <View style={{ marginTop: 10 }}>
+                                <TextDropdown
+                                    caption={'Qualifications Mode'}
+                                    data={qualificationMode}
+                                    setData={setSelectedQualiMode}
+                                    setIdvalue={setSelectedQualiModeValue}
+                                    defaultButtonText={selectedQualiMode}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
+                                {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Qualifications Mode</Text>
                             <SelectDropdown data={qualificationMode?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedQualiMode(value), checkQualificationsModeValue(value) }} defaultButtonText={selectedDropDownText("QualificationMode")} defaultValueByIndex={selectDropDownValue("QualificationMode")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
-                        </View>
+                            </View>
 
-                        {/* City dropdown */}
-                        <View style={{ height: 75, marginTop: 10 }}>
-                            <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
-                            <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' onChangeText={setCity} value={city} />
-                        </View>
+                            {/* City dropdown */}
+                            <View style={{ height: 75, marginTop: 10 }}>
+                                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>City</Text>
+                                <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 12, height: 45, paddingLeft: 5 }} placeholder='City' onChangeText={setCity} value={city} />
+                            </View>
 
-                        {/* State dropdown */}
-                        <View style={{ marginTop: 10 }}>
+                            {/* State dropdown */}
+                            <View style={{ marginTop: 10 }}>
 
-                            <TextDropdown
-                                caption={'State'}
-                                data={states}
-                                setData={setSelectedState}
-                                setIdvalue={setSelectedStateValue}
-                                defaultButtonText={selectedState}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                <TextDropdown
+                                    caption={'State'}
+                                    data={states}
+                                    setData={setSelectedState}
+                                    setIdvalue={setSelectedStateValue}
+                                    defaultButtonText={selectedState}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
+                                {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>State</Text>
                             <SelectDropdown data={states?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setSelectedState(value), checkStateValue(value) }} defaultButtonText={selectedDropDownText("state")} defaultValueByIndex={selectDropDownValue("state")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
-                        </View>
+                            </View>
 
-                        {/* Country dropdown */}
-                        <View style={{ marginTop: 10 }}>
+                            {/* Country dropdown */}
+                            <View style={{ marginTop: 10 }}>
 
-                            <TextDropdown
-                                caption={'Country'}
-                                data={country}
-                                setData={setselectCountry}
-                                setIdvalue={setSelecetCountryValue}
-                                defaultButtonText={selectCountry}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                <TextDropdown
+                                    caption={'Country'}
+                                    data={country}
+                                    setData={setselectCountry}
+                                    setIdvalue={setSelecetCountryValue}
+                                    defaultButtonText={selectCountry}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
+                                {/* <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Country</Text>
                             <SelectDropdown data={country?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder]} onSelect={(value) => { setselectCountry(value), checkCountryValue(value) }} defaultButtonText={selectedDropDownText("country")} defaultValueByIndex={selectDropDownValue("country")} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} /> */}
+                            </View>
+
+
+                            {/* hieghest Qualification check  */}
+                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
+                                <TouchableOpacity onPress={() => setIsHighestQualification(isHighestQualification == "true" ? "false" : "true")}
+                                    style={{ alignItems: "center", width: "90%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }} >
+                                    <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Is Highest Qualification</Text>
+                                    {isHighestQualification === "true" ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
+                                    {/* </View> */}
+                                </TouchableOpacity>
+                            </View>
+
+                            {/* save button */}
+                            {approvalFlag !== "A" ?
+                            <TouchableOpacity onPress={() => saveQualificationDetails()}>
+                                <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 10, marginTop: 10 }}>
+                                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
+                                </LinearGradient>
+                            </TouchableOpacity>:""}
                         </View>
-
-
-                        {/* hieghest Qualification check  */}
-                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', }}>
-                            <TouchableOpacity onPress={() => setIsHighestQualification(isHighestQualification == "true" ? "false" : "true")}
-                                style={{ alignItems: "center", width: "90%", padding: SIZES.base, flexDirection: "row", justifyContent: "space-between", }} >
-                                <Text style={{ color: COLORS.green, ...FONTS.body3, textAlign: 'center' }}>Is Highest Qualification</Text>
-                                {isHighestQualification === "true" ? <Icons name='checkbox-marked-circle-outline' size={25} color={COLORS.orange} /> : <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />}
-                                {/* </View> */}
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* save button */}
-                        <TouchableOpacity onPress={() => saveQualificationDetails()}>
-                            <LinearGradient colors={[COLORS.orange1, COLORS.disableOrange1]} start={{ x: 0, y: 0 }} end={{ x: 2, y: 0 }} style={{ borderRadius: 8, padding: 10, marginTop: 10 }}>
-                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }} > Save </Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    </View>
-                }
-                <View style={{ marginBottom: 270 }}></View>
-            </ScrollView>
+                    }
+                    <View style={{ marginBottom: 270 }}></View>
+                    {/* </ScrollView> */}
+                </KeyboardAwareScrollView>
+            }
         </View>
 
     )

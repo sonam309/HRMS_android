@@ -9,7 +9,9 @@ import axios from 'axios';
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 const UAN_BottomView = (props) => {
@@ -30,6 +32,8 @@ const UAN_BottomView = (props) => {
   const [selectdInternationalWork, setSelectedInternationalWork] = useState('');
   const [selectedMemberEps1952, setSelectedMemberEps1952] = useState('');
   const [selecedMemberEps1995, setSelectedMemberEps1995] = useState('');
+  const [approvalFlag, setApprovalFlag] = useState('');
+  const [approveRemark, setApproveRemarks] = useState('');
   const [error, setError] = useState('');
 
   const [edit, setEdit] = useState({});
@@ -86,12 +90,15 @@ const UAN_BottomView = (props) => {
         const UANDetails = returnedData[0];
         const msg = returnedData[0].MSG
         setLoaderVisible(false)
-        console.log("getData", UANDetails);
+        // console.log("getData", UANDetails);
 
         // Toast.show({
         //   type: 'success',
         //   text1: msg
         // })
+
+        setApprovalFlag(UANDetails?.APPROVAL_FLAG);
+        setApproveRemarks(UANDetails?.DOC_REJ_REMARK);
 
         setUanNumber(UANDetails?.UAN_NUMBER);
         setUanName(UANDetails?.UAN_NAME);
@@ -106,11 +113,11 @@ const UAN_BottomView = (props) => {
 
         setEdit(returnedData[0]);
         (Object.keys(UANDetails).length > 2 ? setOperFlag("E") : setOperFlag("U"))
-        console.log("editdata", edit);
+        // console.log("editdata", edit);
       })
       .catch(err => {
         setLoaderVisible(false)
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -138,12 +145,12 @@ const UAN_BottomView = (props) => {
 
       }
 
-      console.log("request", body);
+      // console.log("request", body);
       axios
         .post(`${API}/api/hrms/saveCandidateUanInfo`, body)
         .then(response => {
           const returnedData = response?.data?.Result;
-          console.log("result..", returnedData);
+          // console.log("result..", returnedData);
           const msg = returnedData[0].MSG
           setLoaderVisible(false)
           Toast.show({
@@ -155,7 +162,11 @@ const UAN_BottomView = (props) => {
         })
         .catch(err => {
           setLoaderVisible(false)
-          console.log(err);
+          // console.log(err);
+          Toast.show({
+            type:'error',
+            text1:err
+          })
         });
     }
   };
@@ -174,12 +185,24 @@ const UAN_BottomView = (props) => {
 
       {/* close button */}
       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <Text style={{ flex: 1, ...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
-        <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }}>
-          <TouchableOpacity onPress={props.onPress}>
-            <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
-          </TouchableOpacity>
-        </View>
+        <Text style={{...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
+        {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+          showAlert({
+            title: approveRemark,
+            customIcon: 'none',
+            message: "",
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+
+          });
+        }}>
+          <Icons name='alert-circle-outline' size={25} color={COLORS.red} />
+        </TouchableOpacity> : ""}
+        <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={props.onPress}>
+          <Icons name='close-circle-outline' size={30} color={COLORS.orange} />
+        </TouchableOpacity>
+
       </View>
       {loaderVisible ? <View style={{
         alignItems: "center",
@@ -192,24 +215,36 @@ const UAN_BottomView = (props) => {
           color: COLORS.orange1
         }} >Loading you data..</Text>
       </View> :
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView
+          extraScrollHeight={270}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ flex: 1, marginBottom: 170 }}
+          contentContainerStyle={{
+            paddingBottom: 170
+          }}
+
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <View>
 
             {/* Uan number */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number'onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad"maxLength={15} />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
             </View>
 
             {/* Uan name */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setUanName} value={uanName} />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setUanName} value={uanName} />
             </View>
 
             {/* Earlier a member of EPS 1995 */}
             <View style={{ height: 75, marginTop: 10 }}>
-            {/* <TextDropdown
+              {/* <TextDropdown
                                 caption={'Caste'}
                                 data={caste}
                                 setData={setSelectedCaste}
@@ -217,9 +252,9 @@ const UAN_BottomView = (props) => {
                                 defaultButtonText={selectedCaste}
                                 captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
                             /> */}
-             
-             
-             
+
+
+
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Earlier a member of EPS 1995</Text>
               <SelectDropdown defaultValue={selectedEarlierEps} data={EarlierEps} buttonStyle={[styles.inputHolder]} onSelect={(selectedItem, index) => { setSelectedEarlierEps(selectedItem) }} defaultButtonText={"Select"} buttonTextStyle={{ fontSize: 15, color: COLORS.gray }} />
             </View>
@@ -250,7 +285,7 @@ const UAN_BottomView = (props) => {
             {/* Previous Account number */}
             <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Previous Account number</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
+              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setPriviousAccNumber} value={priviousAccNumber} keyboardType="number-pad" />
             </View>
             {/* Previous UAN */}
             <View style={{ height: 75, marginTop: 10 }}>
@@ -264,7 +299,8 @@ const UAN_BottomView = (props) => {
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
             </View> */}
             {/* save button */}
-            <TouchableOpacity  onPress={() => saveUANDetails()} >
+            {approvalFlag !== "A" ?
+            <TouchableOpacity onPress={() => saveUANDetails()} >
 
               <LinearGradient
                 colors={[COLORS.orange1, COLORS.disableOrange1]}
@@ -275,13 +311,15 @@ const UAN_BottomView = (props) => {
                   {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
               </LinearGradient>
 
-            </TouchableOpacity>
+            </TouchableOpacity>:""}
 
           </View>
 
           <View style={{ marginBottom: 270 }} />
 
-        </ScrollView>}
+          {/* </ScrollView> */}
+        </KeyboardAwareScrollView>
+      }
     </View>
   )
 }

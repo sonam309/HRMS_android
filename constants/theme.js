@@ -40,8 +40,6 @@ export const COLORS = {
   darkGray2: 'rgba(105, 104, 104, 1)',
   lightGray: 'rgba(105, 104, 104, 0.3)',
   levender: 'rgba(198, 203, 239, 1)',
-
-
   transparent: 'transparent',
   transparentBlack1: 'rgba(0, 0, 0, 0.1)',
   transparentBlack7: 'rgba(0, 0, 0, 0.7)',

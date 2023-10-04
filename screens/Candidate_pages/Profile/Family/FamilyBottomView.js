@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
-import { FONTS } from '../../../../constants/font_size'
+import { FONTS, SIZES } from '../../../../constants/font_size'
 import SelectDropdown from 'react-native-select-dropdown'
 import DatePicker from 'react-native-date-picker'
 import { useSelector } from 'react-redux'
@@ -10,20 +10,23 @@ import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
 import LinearGradient from 'react-native-linear-gradient'
 import TextDropdown from '../../../../components/TextDropdown'
+import Loader from '../../../../components/Loader'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { showAlert, closeAlert } from "react-native-customisable-alert";
 
 const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => {
     const [showMembers, setShowMembers] = useState(true)
     // console.warn("The members", members);
     const userId = useSelector(state => state.candidateAuth.candidateId)
     // getting family member & bloodgroup
-    const [familyMemberDropDown, setFamilyMemberDropDown] = useState()
-    const [selectedFamilyMember, setSelectedFamilyMember] = useState()
+    const [familyMemberDropDown, setFamilyMemberDropDown] = useState([])
+    const [selectedFamilyMember, setSelectedFamilyMember] = useState('')
     const [selectedFamilyMemberValue, setSelectedFamilyMemberValue] = useState('')
-    const [bloodGroup, setBloodGroup] = useState();
-    const [selectedBloodGroup, setSelectedBloodGroup] = useState();
+    const [bloodGroup, setBloodGroup] = useState([]);
+    const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
     const [selectedBloodGroupValue, setSelectedBloodGroupValue] = useState('');
-    const [gender, setGender] = useState();
-    const [selectedGender, setSelectedGender] = useState();
+    const [gender, setGender] = useState([]);
+    const [selectedGender, setSelectedGender] = useState('');
     const [selectedGenderValue, setSelectedGenderValue] = useState('');
     const [operFlag, setOperFlag] = useState("A");
     const [firstName, setFirstName] = useState('');
@@ -35,6 +38,9 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [selectedBirthDate, setSelectedBirthDate] = useState('');
     const [birthDate, setBirthDate] = useState(new Date());
+    const [loaderVisible, setLoaderVisible] = useState(false);
+    const [approvalFlag, setApprovalFlag] = useState('');
+    const [appRemark, setAppRemark] = useState('');
 
     // let newMember = { Member: null, FirstName: null, MiddleName: null, LastName: null, Gender: null, BirthDate: null, Contact: null, Address: null, BloodGroup: null }
 
@@ -42,6 +48,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
         getDropdownData(31);
         getDropdownData(38);
         getDropdownData(18);
+        getFamilyData();
     }, [])
 
     // family member, blood group & Gender data 
@@ -91,7 +98,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
     // for updating family member data
     const UpdateMember = (item) => {
-        console.log("family data",item);
+        // console.log("family data", item);
         setOperFlag("E")
         setSelectedFamilyMember(item.FAMILY_MEMBER)
         setSelectedFamilyMemberValue(item.FAMILY_MEMBER_ID)
@@ -108,6 +115,25 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
         setTxnID(item.TXN_ID)
         setShowMembers(false);
 
+    }
+    // For fetching details of Family dropdown -> Personal
+    const getFamilyData = async () => {
+        let FamilyData = { operFlag: "V", candidateId: userId }
+        let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(FamilyData)
+        })
+        res = await res.json()
+        res = await res?.Result
+        // console.log("familydata", res);
+        setMembers(res);
+        // console.log("familyappFlag", res[0].APPROVAL_FLAG)
+        setApprovalFlag(res[0].APPROVAL_FLAG);
+        setAppRemark(res[0].DOC_REJ_REMARK);
     }
 
     // selecting ID of selected family member in dropdown
@@ -244,11 +270,12 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
             if (ValidateForm()) {
 
 
+
                 let familyData = {
                     txnId: txnID, operFlag: operFlag, candidateId: userId, userId: userId, familyMember: selectedFamilyMemberValue, memberFirstName: firstName, memberMiddleName: middleName, memberLastName: lastName, gender: selectedGenderValue, dateOfBirth: selectedBirthDate, contactNo: contact, address: address, bloodGroup: selectedBloodGroupValue,
                 }
                 // console.warn("familydata", familyData);
-
+                setLoaderVisible(true);
                 let res = await fetch(`${API}/api/hrms/saveFamilyInfo`, {
                     method: "POST",
                     headers: {
@@ -259,6 +286,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
                 })
                 res = await res.json();
                 res = await res?.Result[0]?.MSG
+                setLoaderVisible(false);
                 onPress()
                 Toast.show({
                     type: 'success',
@@ -266,6 +294,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
                 })
             }
             else {
+                setLoaderVisible(false);
 
                 Toast.show({
                     type: 'error',
@@ -274,7 +303,7 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
             }
         }
         catch (error) {
-
+            setLoaderVisible(false);
             Toast.show({
                 type: 'error',
                 text1: error
@@ -287,103 +316,141 @@ const FamilyBottomView = ({ members, setMembers, onPress, fetchFamilyData }) => 
 
             {/* close header */}
             <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ flex: 1, ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Family Details</Text>
-                <TouchableOpacity onPress={onPress}>
+                <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>Family Details</Text>
+                {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
+                    showAlert({
+                        title: appRemark,
+                        customIcon: 'none',
+                        message: "",
+                        alertType: 'error',
+                        btnLabel: 'ok',
+                        onPress: () => closeAlert(),
+
+                    });
+                }}>
+                    <Icon name='alert-circle-outline' size={25} color={COLORS.red} />
+                </TouchableOpacity> : ""}
+                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'flex-end' }} onPress={onPress}>
                     <Icon name='close-circle-outline' size={30} color={COLORS.orange} />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {
-                    showMembers && members[0]?.MEMBER_FIRST_NAME && members?.length >= 0 ? <MemberDetails /> :
-                        <View>
-                            {/* dropdown for family member */}
+            {loaderVisible ? (<View style={{ alignItems: 'center', marginTop: '30%', }}>
+                <ActivityIndicator color={COLORS.orange1} />
+                <Text style={{ ...FONTS.h3, fontWeight: '500', color: COLORS.orange1, marginTop: SIZES.base, }}>
+                    Loading your details
+                </Text>
+            </View>
+            ) :
+                <KeyboardAwareScrollView
+                    extraScrollHeight={270}
+                    behavior={'padding'}
+                    enableAutomaticScroll={true}
+                    keyboardShouldPersistTaps={'always'}
+                    style={{ marginBottom: 180 }}
+                    contentContainerStyle={{
+                        paddingBottom: 180
+                    }}
+
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+                    {
+                        showMembers && members[0]?.MEMBER_FIRST_NAME && members?.length >= 0 ? <MemberDetails /> :
+                            <View>
+                                {/* dropdown for family member */}
+                                {<Text>
+                                    {/* {console.log("familydata",members[0]?.MEMBER_FIRST_NAME)} */}
+                                    {members[0]?.MEMBER_FIRST_NAME}
+                                </Text>}
+
+                                <TextDropdown
+                                    caption={'Family Member'}
+                                    data={familyMemberDropDown}
+                                    setData={setSelectedFamilyMember}
+                                    setIdvalue={setSelectedFamilyMemberValue}
+                                    defaultButtonText={selectedFamilyMember}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
 
-                            <TextDropdown
-                                caption={'Family Member'}
-                                data={familyMemberDropDown}
-                                setData={setSelectedFamilyMember}
-                                setIdvalue={setSelectedFamilyMemberValue}
-                                defaultButtonText={selectedFamilyMember}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text> */}
+                                {/* <TextInput onChangeText={(val) => newMember.Member = val} value={newMember.Member} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} /> */}
+                                {/* <SelectDropdown data={familyMemberDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedFamilyMember(value), checkFamilyMemberValue(value) }} defaultButtonText={selectDropDownText("familyMember")} defaultValueByIndex={(selectDropDownValue("familyMember"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
+
+                                {/* first name */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member First Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                <TextInput onChangeText={(val) => setFirstName(val)} value={firstName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+
+                                {/* middle name */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member Middle Name</Text>
+                                <TextInput onChangeText={(val) => setMiddleName(val)} value={middleName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+
+                                {/* last name */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member Last Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                <TextInput onChangeText={(val) => setLastName(val)} value={lastName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+
+                                {/* dropdown for gender */}
+
+                                <TextDropdown
+                                    caption={'Gender'}
+                                    data={gender}
+                                    setData={setSelectedGender}
+                                    setIdvalue={setSelectedGenderValue}
+                                    defaultButtonText={selectedGender}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
 
-                            {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text> */}
-                            {/* <TextInput onChangeText={(val) => newMember.Member = val} value={newMember.Member} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} /> */}
-                            {/* <SelectDropdown data={familyMemberDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedFamilyMember(value), checkFamilyMemberValue(value) }} defaultButtonText={selectDropDownText("familyMember")} defaultValueByIndex={(selectDropDownValue("familyMember"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
-
-                            {/* first name */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member First Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput onChangeText={(val) => setFirstName(val)} value={firstName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-
-                            {/* middle name */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member Middle Name</Text>
-                            <TextInput onChangeText={(val) => setMiddleName(val)} value={middleName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-
-                            {/* last name */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Member Last Name<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput onChangeText={(val) => setLastName(val)} value={lastName} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-
-                            {/* dropdown for gender */}
-
-                            <TextDropdown
-                                caption={'Gender'}
-                                data={gender}
-                                setData={setSelectedGender}
-                                setIdvalue={setSelectedGenderValue}
-                                defaultButtonText={selectedGender}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
-
-
-                            {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Gender<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Gender<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <SelectDropdown data={gender?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedGender(value), checkSelectedGender(value) }} defaultButtonText={selectDropDownText("gender")} defaultValueByIndex={(selectDropDownValue("gender"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
 
-                            {/* for date of birth */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Date of Birth<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                {/* for date of birth */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Date of Birth<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
 
-                            <View style={{ flexDirection: 'row', margin: 3 }}>
-                                <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedBirthDate} />
-                                <DatePicker modal theme='light' open={calendarOpen} mode="date" date={birthDate} onConfirm={(date) => setDateofBirth(date)} onCancel={() => { setCalendarOpen(false) }} />
-                                <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Icon name='calendar-month' color={COLORS.orange} size={24} />
-                                </TouchableOpacity>
-                            </View>
-                            {/* for contact info */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Contact No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput onChangeText={(val) => setContact(val)} value={contact} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' maxLength={10} />
-                            {/* for address */}
-                            <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Address<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <TextInput onChangeText={(val) => setAddress(val)} value={address} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
-                            {/* for blood group */}
+                                <View style={{ flexDirection: 'row', margin: 3 }}>
+                                    <TextInput style={[styles.inputHolder, { width: '48%', margin: 3 }]} placeholder='dd/mm/yyyy' editable={false} value={selectedBirthDate} />
+                                    <DatePicker modal theme='light' open={calendarOpen} mode="date" date={birthDate} onConfirm={(date) => setDateofBirth(date)} onCancel={() => { setCalendarOpen(false) }} />
+                                    <TouchableOpacity onPress={() => setCalendarOpen(true)} style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                                        <Icon name='calendar-month' color={COLORS.orange} size={24} />
+                                    </TouchableOpacity>
+                                </View>
+                                {/* for contact info */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Contact No.<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                <TextInput onChangeText={(val) => setContact(val)} value={contact} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} keyboardType='numeric' maxLength={10} />
+                                {/* for address */}
+                                <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Address<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                <TextInput onChangeText={(val) => setAddress(val)} value={address} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} />
+                                {/* for blood group */}
 
-                            <TextDropdown
-                                caption={'Blood Group'}
-                                data={bloodGroup}
-                                setData={setSelectedBloodGroup}
-                                setIdvalue={setSelectedBloodGroupValue}
-                                defaultButtonText={selectedBloodGroup}
-                                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
-                            />
+                                <TextDropdown
+                                    caption={'Blood Group'}
+                                    data={bloodGroup}
+                                    setData={setSelectedBloodGroup}
+                                    setIdvalue={setSelectedBloodGroupValue}
+                                    defaultButtonText={selectedBloodGroup}
+                                    captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                                />
 
-                            {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Blood Group<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
+                                {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Blood Group<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
                             <SelectDropdown data={bloodGroup?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedBloodGroup(value), checkSelectedBloodGroup(value) }} defaultButtonText={selectDropDownText("bloodGroup")} defaultValueByIndex={(selectDropDownValue("bloodGroup"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
-                            <TouchableOpacity onPress={() => saveMemberDetails()} >
-                                <LinearGradient
-                                    colors={[COLORS.orange1, COLORS.disableOrange1]}
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 2, y: 0 }}
-                                    style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                                    <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{"Save Member Details"}</Text>
+                                {approvalFlag !== "A" ?
+                                    <TouchableOpacity onPress={() => saveMemberDetails()} >
+                                        <LinearGradient
+                                            colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                            start={{ x: 0, y: 0 }}
+                                            end={{ x: 2, y: 0 }}
+                                            style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
+                                            <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>{"Save Member Details"}</Text>
 
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </View>
-                }
-                <View style={{ marginBottom: 300 }}></View>
-            </ScrollView>
+                                        </LinearGradient>
+                                    </TouchableOpacity> : ""}
+                            </View>
+                    }
+                    <View style={{ marginBottom: 300 }}></View>
+                    {/* </ScrollView> */}
+                </KeyboardAwareScrollView>
+            }
         </View>
     )
 }

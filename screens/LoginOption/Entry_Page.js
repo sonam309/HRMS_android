@@ -11,6 +11,7 @@ const Entry_page = (props) => {
 
     let page = null
 
+
     const setEmployee = async () => {
         await AsyncStorage.setItem("type", "employee")
     }
@@ -19,8 +20,11 @@ const Entry_page = (props) => {
     }
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
+        console.log("type", page)
+
         {
-            page ? (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login")) : null
+            page &&
+                (page === 'employee' ? props.navigation.navigate("Employee_Login") : props.navigation.navigate("Candidate_Login"))
         }
     }
     useEffect(() => {
@@ -29,9 +33,9 @@ const Entry_page = (props) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar 
-            backgroundColor={COLORS.white} 
-            barStyle="dark-content"/>
+            <StatusBar
+                backgroundColor={COLORS.white}
+                barStyle="dark-content" />
 
             {/* Company Logo */}
             <View style={{ flex: 2 }}>

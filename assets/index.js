@@ -14,6 +14,14 @@ import loginBanner from './images/loginBanner.png'
 import tag from './images/tag.png'
 import loginIcon from './images/candidate_icon.png'
 import employeeLoginBanner from './images/employee_login_banner.png'
+import approveMark from './images/approve_mark.png'
+import rejectMark from './images/reject_mark.png'
+import esignIcon from './images/esign.png'
+import circleTranceparent from './images/transparent_circle.png'
+import circleFill from './images/fill_circle.png'
+import esignViewIcon from './images/ic_esgin.png'
+import circleGreen from './images/fill_circle_green.png'
+import EsignD from './images/d_esign.png'
 
 
-export {company_logo_2,company_logo,create_mpin,Entry_logo,mobile_otp,new_mpin,Pinlock,security_pin_icon,user_profile,candidateIcon, company_icon, expernallinkImage,loginBanner,tag,loginIcon, employeeLoginBanner}
+export { company_logo_2, company_logo, create_mpin, Entry_logo, mobile_otp, new_mpin, Pinlock, security_pin_icon, user_profile, candidateIcon, company_icon, expernallinkImage, loginBanner, tag, loginIcon, employeeLoginBanner, approveMark, rejectMark, esignIcon, circleTranceparent, circleFill, esignViewIcon ,circleGreen,EsignD}
