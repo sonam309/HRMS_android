@@ -49,7 +49,7 @@ const CandidateDashboard = (props) => {
     const [input, setInput] = useState("");
     const [count, setCount] = useState("");
 
-    
+
 
     useEffect(() => {
         // setShowAlert(true)
@@ -60,68 +60,64 @@ const CandidateDashboard = (props) => {
         // return () => { getCandidateOfferDetails() }
     }, [candidateId])
 
-   
-    
+
+
 
 
 
     const EsignEvent = async () => {
+        const data = {
+            documentName: "Candidated Essign",
+            noOfPages: "16",
+            userId: "TMP2140",
+            docPath: "7aa8f0de-5a8a-4773-910a-bf1b62888f18.pdf",
+            status: "A",
+            eSignCount: "0",
+            appVersion: "2.5",
+            rawData: JSON.stringify({
+                "pdf_pre_uploaded": true,
+                "config": {
+                    "auth_mode": "1", "reason": "Candidated Essign",
+                    "positions": {
+                        "1": [{ "x": 100, "y": 35 }],
+                        "2": [{ "x": 40, "y": 20 }],
+                        "3": [{ "x": 50, "y": 300 }],
+                        "4": [{ "x": 70, "y": 140 }]
+                    },
+                    "skip_email": true, "name_match": { "match": true, "score": 55 }
+                },
+                "prefill_options": {
+                    "full_name": "Sonam kaushal",
+                    "mobile_number": "8858776799",
+                    "user_email": "systemadministrator@satyamicrocapital.com"
+                }
+            })
+        }
 
-      
-        axios.post(`${API}/api/Kyc/ProceedForEsign`, 
-            {
-                documentName: "Candidated Essign",
-                noOfPages: "16",
-                userId: "TMP6828",
-                docPath: "399671eb-cbe7-4435-8b6b-19eb9f3c1641.pdf",
-                status: "A",
-                eSignCount: "0",
-                appVersion: "2.5",
-                rawData:JSON.stringify( { "pdf_pre_uploaded": true, 
-            "config": { "auth_mode": "1", "reason": "Candidated Essign",
-             "positions": { "1": [{ "x": 100, "y": 35 }], 
-             "2": [{ "x": 40, "y": 20 }], 
-             "3": [{ "x": 50, "y": 300 }],
-              "4": [{ "x": 70, "y": 140 }] }, 
-              "skip_email": true, "name_match": { "match": true, "score": 55 } }, 
-              "prefill_options": { "full_name": "Kamaljeet Singh", 
-              "mobile_number": "7986512870",
-              "user_email": "systemadministrator@satyamicrocapital.com" } })
-            }
-        )
-            .then(async(response) => {
+        console.log("DashboardEsignButton",data)
+
+        axios.post(`${API}/api/Kyc/ProceedForEsign`,data)
+            .then(async (response) => {
 
                 const returnedData = response.data;
-                 setTkenRes(returnedData?.data?.token);
+                setTkenRes(returnedData?.data?.token);
                 var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
 
-            }).catch((error)=>{
+            }).catch((error) => {
                 Alert.alert('Alert Title', error, [
                     {
-                      text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
-                      style: 'cancel',
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
                     },
-                    {text: 'OK', onPress: () => console.log('OK Pressed')},
-                  ]);
-              
+                    { text: 'OK', onPress: () => console.log('OK Pressed') },
+                ]);
+
             })
-
-        // try {
-
-
-        //     // var EsignRes = await EsignModule.createEsignPromise("Abce");
-        //     var tokenRes = await EsignModule.GetToken(tkenRes?.token);
-        //     // console.log("result", EsignRes)
-        // } catch (e) {
-
-
-        //     console.log("error", e);
-        // }
     }
 
 
-useEffect(() => {
+    useEffect(() => {
 
         eventEmitter.addListener("EventCount", (eventCount) => {
             // console.log("eventCount", eventCount);
@@ -334,11 +330,11 @@ useEffect(() => {
                     </View>
 
 
-                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, padding: 4, borderColor: COLORS.orange1, borderRadius: 6, borderWidth: 1, marginRight: 10 }} onPress={() => EsignEvent()} >
+                    {/* <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, padding: 4, borderColor: COLORS.orange1, borderRadius: 6, borderWidth: 1, marginRight: 10 }} onPress={() => EsignEvent()} >
                         <Text style={{ color: COLORS.orange1, height: 30, textAlignVertical: 'center' }}>
                             Proceed Esign
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
 
 
@@ -420,15 +416,15 @@ useEffect(() => {
 
 
                 <TouchableOpacity onPress={() => props.navigation.navigate("Pending_Esign_list")}>
-                    <View style={{ borderRadius: 12,backgroundColor:COLORS.white,width:'35%',justifyContent:'center',padding:15,marginLeft:20,elevation:4 }}>
+                    <View style={{ borderRadius: 12, backgroundColor: COLORS.white, width: '35%', justifyContent: 'center', padding: 15, marginLeft: 20, elevation: 4 }}>
 
-                        <Image source={EsignD}  style={{ width: 60, height: 60,marginTop:10, justifyContent: 'center', alignItems:'center',marginLeft:30 }} />
+                        <Image source={EsignD} style={{ width: 60, height: 60, marginTop: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 30 }} />
 
-                      <Text style={{ ...FONTS.h5, color: COLORS.black, alignSelf: 'center',marginTop:5 }}>My Esign</Text>
+                        <Text style={{ ...FONTS.h5, color: COLORS.black, alignSelf: 'center', marginTop: 5 }}>My Esign</Text>
 
-                            {/* <Icons name="arrow-right" size={30} color={COLORS.green} style={{ alignSelf: 'center', marginLeft: 60 }} />  */}
+                        {/* <Icons name="arrow-right" size={30} color={COLORS.green} style={{ alignSelf: 'center', marginLeft: 60 }} />  */}
 
-                            
+
 
                     </View>
                 </TouchableOpacity>
@@ -482,7 +478,7 @@ useEffect(() => {
 
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter {JSON.stringify(tkenRes)} </Text>
+                    {/* <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter {JSON.stringify(tkenRes)} </Text> */}
                     <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
                         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
                             <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
@@ -495,7 +491,7 @@ useEffect(() => {
 
                 {/* task view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
-                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task1{JSON.stringify(count,"ggvbg")} </Text>
+                    {/* <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task1{JSON.stringify(count,"ggvbg")} </Text> */}
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginVertical: 6, elevation: 5 }}>
                         {/* profile view */}
                         <TouchableOpacity style={{ height: 160, width: "45%", borderColor: COLORS.orange, borderWidth: 0.5, backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}

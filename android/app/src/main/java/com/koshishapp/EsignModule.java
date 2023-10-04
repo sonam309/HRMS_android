@@ -49,7 +49,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     public void createEsignEvent(Callback callback) {
         Log.d("Esign Module", "This is my Esign Module");
 
-        Toast.makeText(context, "This is my Esign Module", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "This is my Esign Module", Toast.LENGTH_SHORT).show();
         callback.invoke("Data return from Native modeule");
     }
 
@@ -59,7 +59,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
             Log.e("promise", "sonam");
 
 
-            Toast.makeText(context, "This is my Esign 1:", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "This is my Esign 1:", Toast.LENGTH_SHORT).show();
 
             promise.resolve("Data return from promise");
 //            token = token;
@@ -98,7 +98,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     //
     @ReactMethod
     public void GetToken(String Token) {
-        Toast.makeText(context, "" + Token, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "" + Token, Toast.LENGTH_SHORT).show();
 
 
         reactContext.addActivityEventListener(this);
@@ -111,7 +111,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 
     @Override
     public void onActivityResult(Activity activity, int i, int i1, @Nullable Intent intent) {
-        Toast.makeText(context, "ok" + i + "," + i1, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "ok" + i + "," + i1, Toast.LENGTH_SHORT).show();
 
 
         if (i == 10001) {
@@ -119,10 +119,12 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
                 String result = intent.getStringExtra("signedResponse");
                 sendEvent(getReactApplicationContext(), "EventCount", result);
 
+//            Toast.makeText(activity, result, Toast.LENGTH_SHORT).show();
+
 
         } else {
             sendEvent(getReactApplicationContext(), "EventCount", "EventCount4");
-            Toast.makeText(context, "kuch to gadbad he dya4", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "kuch to gadbad he dya4", Toast.LENGTH_SHORT).show();
 
         }
 

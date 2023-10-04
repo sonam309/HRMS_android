@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet,  BackHandler, SafeAreaView } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -42,10 +42,10 @@ const Home = props => {
 
 
 
-  
+
   const getCurrentLocation = async (val) => {
     setLoaderVisible(true)
-    Geolocation({ val });
+    Geolocation({ val, type: "dashboard" });
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
     loadingData(val)
@@ -174,7 +174,7 @@ const Home = props => {
       <ScrollView>
 
         {/* header */}
-        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor:COLORS.green }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor: COLORS.green }}>
 
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
@@ -199,7 +199,7 @@ const Home = props => {
         {/* Main Content-Calendar */}
         <Calendar
           initialDate=''
-          style={{ marginBottom: 20, backgroundColor: '#fff',  justifyContent: 'center', marginTop: 10 }}
+          style={{ marginBottom: 20, backgroundColor: '#fff', justifyContent: 'center', marginTop: 10 }}
           theme={{ arrowColor: 'black', monthTextColor: 'black', textSectionTitleColor: 'black', }}
           markedDates={markedDate}
           onMonthChange={month => {
@@ -208,10 +208,10 @@ const Home = props => {
           }}
           dayComponent={({ date, state, marking }) => {
             return (
-              <TouchableOpacity 
-              // onLongPress={() => { setModalVisible(true)
+              <TouchableOpacity
+                // onLongPress={() => { setModalVisible(true)
                 // console.log('selected day', date.day)
-              //  }}
+                //  }}
                 style={{ alignItems: 'center', borderColor: COLORS.lightGray, paddingBottom: 8, borderBottomWidth: 0.5, width: '100%', }}>
                 <Text style={{ fontSize: 16, paddingBottom: marking ? 0 : 11, }}> {date.day} </Text>
                 {marking && marking.dotColor === 'orange' ? (
@@ -274,7 +274,7 @@ const Home = props => {
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchInTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.transparentVoilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
+            <TouchableOpacity disabled={punchInTime !== '' && punchInTime !== null ? false : true} style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: (punchInTime !== '' && punchInTime !== null ? COLORS.lightGreen : COLORS.lightGray), marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
               <Text style={{ color: COLORS.voilet }}> Punch in </Text>
             </TouchableOpacity>
           </View>

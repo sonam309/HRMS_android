@@ -27,7 +27,7 @@ const Employee_Login = (props) => {
 
 
     const getCurrentLocation = async (val) => {
-        Geolocation({ val });
+        Geolocation({ val,userId,password });
     }
     // preventing going to entry page
     const navigation = useNavigation();
@@ -38,7 +38,7 @@ const Employee_Login = (props) => {
         })
         return preventBack
     }, [navigation])
-    
+
     // displaying password
     const changeVisibility = () => {
         setShowVisibility(!showVisibility)
@@ -48,10 +48,10 @@ const Employee_Login = (props) => {
         try {
             const userData = { loginId: userId, password: password, oprFlag: 'L' };
             setLoaderVisible(true)
-            // console.log(userData);
+            console.log(userData);
             axios.post(`${API}/api/User/login`, userData).then((response) => {
                 const returnedData = response?.data?.Result[0];
-                // console.log("resposne", returnedData,response?.data?.Result);
+                console.log("resposne", returnedData, response?.data?.Result);
 
                 let result = response?.data?.Result.map(a => a.FLAG);
                 let userId = returnedData.USER_ID
@@ -184,10 +184,10 @@ const Employee_Login = (props) => {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
 
                     {/* signIn for Employee */}
-                    <TouchableOpacity onPress={async() => {
+                    <TouchableOpacity onPress={async () => {
                         props.navigation.push("Candidate_Login")
                         await AsyncStorage.setItem("type", "candidate")
-                        
+
                     }}>
                         <Text style={{
                             color: COLORS.hyperlinkBlue,

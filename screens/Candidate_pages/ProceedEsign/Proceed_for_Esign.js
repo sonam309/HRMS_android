@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Linking, Image, BackHandler, Alert, NativeModules, NativeEventEmitter } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FONTS, SIZES } from '../../../constants/font_size';
 import COLORS from '../../../constants/theme';
@@ -10,6 +10,14 @@ import Toast from 'react-native-toast-message';
 import BottomUpModal from '../../../components/BottomUpModal';
 import DocumentTypeBottomView from './DocumentTypeBottomView';
 import LinearGradient from 'react-native-linear-gradient'
+import axios from 'axios';
+import { API } from '../../../utility/services';
+const { EsignModule } = NativeModules;
+const eventEmitter = new NativeEventEmitter(EsignModule);
+
+
+
+
 
 const Proceed_for_Esign = (props) => {
 
@@ -34,6 +42,25 @@ const Proceed_for_Esign = (props) => {
     const [loanType, setLoanType] = useState('');
     const [esignCount, setEsignCount] = useState('');
     const [XYAXIS, setXYAXIS] = useState('');
+    const [documentName, setDocumentName] = useState('');
+    const [numberOfPages, setNumberOfPages] = useState('');
+
+    const [error, setError] = useState(false)
+    const [tkenRes, setTkenRes] = useState();
+    const [input, setInput] = useState("");
+    const [count, setCount] = useState("");
+    const [authMode, setAuthMode] = useState('2');
+
+
+    useEffect(() => {
+
+        eventEmitter.addListener("EventCount", (eventCount) => {
+            setCount(eventCount)
+        });
+        return () => {
+            eventEmitter.removeAllListeners();
+        }
+    }, [])
 
 
 
@@ -119,22 +146,97 @@ const Proceed_for_Esign = (props) => {
         dispatch(getCandidateList(data))
     }
 
-    // useEffect(() => {
 
-    //    if(!docTypeView){
+    const generateEsignJson = () => {
+        let prefillJson = {};
 
-    //     console.log("getCoordinateDat",coordinatesList.XYAXIS);
+        if (esignCount === 0) {
+            prefillJson = {
+                full_name: candidateName,
+                mobile_number: candidateMobileNo,
+            };
+        } else if (esignCount < 2) {
+            prefillJson = {
+                full_name: IstGuarantorName,
+                mobile_number: candidateMobileNo,
+            };
+        } else if (esignCount === 2) {
+            prefillJson = {
+                full_name: IIndGuarantorName,
+                mobile_number: candidateMobileNo,
+            };
+        }
+
+        prefillJson.user_email = 'systemadministrator@satyamicrocapital.com';
 
 
-    //    }
+        return prefillJson;
+    }
 
-    // }, [docTypeView])
 
+
+    const EsignEvent = async () => {
+
+        if (isMobileOtp) {
+            setAuthMode('1');
+        } else if (isBiometric) {
+            setAuthMode('2');
+        } else {
+            setAuthMode('');
+        }
+
+        const data = {
+            documentName: documentName,
+            noOfPages: numberOfPages,
+            userId: "TMP2140",
+            docPath: fileName,
+            status: "A",
+            eSignCount: esignCount,
+            appVersion: "2.5",
+            rawData: JSON.stringify({
+                "pdf_pre_uploaded": true, "config": {
+                    "auth_mode": authMode,
+                    "reason": documentName,
+                    "positions": JSON.parse(XYAXIS),
+                    "skip_email": true,
+                    "name_match": {
+                        "match": true,
+                        "score": 55
+                    }
+                },
+                "prefill_options": generateEsignJson()
+            })
+        }
+
+        console.log("esignProddatatatattat", data);
+
+        axios.post(`${API}/api/Kyc/ProceedForEsign`, data)
+            .then(async (response) => {
+
+                const returnedData = response.data;
+                console.log("proceesEsignResponse",returnedData);
+                setTkenRes(returnedData?.data?.token);
+                var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
+
+            }).catch((error) => {
+                Alert.alert('Alert Title', error, [
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                    },
+                    { text: 'OK', onPress: () => console.log('OK Pressed') },
+                ]);
+
+            })
+    }
 
     const getAxisData = () => {
 
         console.log("getCoordinateDat", coordinatesList.XYAXIS);
         setXYAXIS(coordinatesList?.XYAXIS);
+        setDocumentName(coordinatesList?.Document_name);
+        setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
         setDocTypeView(false);
     }
 
@@ -223,7 +325,7 @@ const Proceed_for_Esign = (props) => {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 15, marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 15, marginTop: 20 }}>
                     <View>
                         <Text style={{ color: COLORS.gray, fontSize: 11 }}>
                             Document Type
@@ -263,7 +365,8 @@ const Proceed_for_Esign = (props) => {
                     marginTop: 150,
                 }}>
 
-                    <TouchableOpacity onPress={() => Toast.show({ type: 'error', text1: 'Click' })}>
+                    <TouchableOpacity disabled={XYAXIS !== '' && XYAXIS != null ? false : true}
+                        onPress={() => [EsignEvent()]}>
                         <LinearGradient
                             colors={[COLORS.orange1, COLORS.disableOrange1]}
                             start={{ x: 0, y: 0 }}

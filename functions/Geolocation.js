@@ -3,9 +3,10 @@ import GetLocation from 'react-native-get-location'
 import Punch from './Punch';
 import ReverseGeocoding from './ReverseGeocoding';
 
-const Geolocation = async ({ val }) => {
+const Geolocation = async ({ val,userId,password, type }) => {
     let action = (val === "I" ? "In" : "Out")
 
+    console.log("userCredentials",userId,password)
     // Degree to radians 
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
@@ -34,7 +35,7 @@ const Geolocation = async ({ val }) => {
             // console.log(location);
             dist = getDistInKm(location.latitude, location.longitude, 28.54395, 77.33066);
             ReverseGeocoding(location.latitude, location.longitude)
-            dist < 0.3 ? Punch({ val }) : (Alert.alert(`Punch ${action} from your office`))
+            dist < 0.3 ? Punch({ val,userId,password,type }) : (Alert.alert(`Punch ${action} from your office`))
         })
         .catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
 
