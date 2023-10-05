@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet,  BackHandler, SafeAreaView } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, BackHandler, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -34,28 +34,39 @@ const Home = props => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
-  const [loaderVisible, setLoaderVisible] = useState(true);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   const [present, setPresent] = useState(0);
   const [absent, setAbsent] = useState(0);
   var markedDates = {};
 
 
+  const [val, setVal] = useState("")
 
 
-  
+
   const getCurrentLocation = async (val) => {
     setLoaderVisible(true)
-    Geolocation({ val });
+    Geolocation({ val, type: "dashboard" });
+    setVal(val)
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
-    loadingData(val)
     setLoaderVisible(false)
     // console.warn("punch in address", address)
   };
 
+  useEffect(() => {
+    if (val === " I" || val === "O") {
+      loadingData("V")
+    }
+  }, [val])
+
+
   const loadingData = async (val) => {
     // fetching data
+    setLoaderVisible(true)
+
+    console.log("hitFlag", val);
 
     let punchData = { operFlag: val, userId: userId }
 
@@ -75,20 +86,27 @@ const Home = props => {
       data = await data.json(),
       data = data.Result[0],
       // console.log("data", data),
-
+      setLoaderVisible(false)
+       console.log("data",data)
       data?.IN ? inTime = data?.IN?.trim() : inTime = "--:--",
       data?.DUR !== "" ? timeSpent = data?.DUR?.trim() : timeSpent = "--:--",
       data?.OUT ? outTime = data?.OUT?.trim() : outTime = "--:--",
 
       setPunchInTime(inTime),
-      (val === "O" && setPunchOutTime(outTime)),
-      setDuration(timeSpent),
-      setLoaderVisible(false)
+      // (val === "O" && setPunchOutTime(outTime)),
+      setPunchOutTime(outTime),
+      setDuration(timeSpent)
+
   }
 
   useEffect(() => {
     userId && getAttendance();
-    userId && loadingData("O");
+    loadingData("V");
+  }, []);
+
+  useEffect(() => {
+    userId && getAttendance();
+    loadingData("V");
   }, [userId]);
 
   // useEffect(() => {
@@ -175,7 +193,7 @@ const Home = props => {
       <ScrollView>
 
         {/* header */}
-        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor:COLORS.green }}>
+        <SafeAreaView style={{ height: 60, flexDirection: 'row', backgroundColor: COLORS.white, alignItems: 'center', width: '100%', elevation: 7, shadowColor: COLORS.green }}>
 
           <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.dispatch(DrawerActions.openDrawer())}>
             <Icons name="reorder-horizontal" color={COLORS.green} size={25} />
@@ -200,7 +218,7 @@ const Home = props => {
         {/* Main Content-Calendar */}
         <Calendar
           initialDate=''
-          style={{ marginBottom: 20, backgroundColor: '#fff',  justifyContent: 'center', marginTop: 10 }}
+          style={{ marginBottom: 20, backgroundColor: '#fff', justifyContent: 'center', marginTop: 10 }}
           theme={{ arrowColor: 'black', monthTextColor: 'black', textSectionTitleColor: 'black', }}
           markedDates={markedDate}
           onMonthChange={month => {
@@ -209,10 +227,10 @@ const Home = props => {
           }}
           dayComponent={({ date, state, marking }) => {
             return (
-              <TouchableOpacity 
-              // onLongPress={() => { setModalVisible(true)
+              <TouchableOpacity
+                // onLongPress={() => { setModalVisible(true)
                 // console.log('selected day', date.day)
-              //  }}
+                //  }}
                 style={{ alignItems: 'center', borderColor: COLORS.lightGray, paddingBottom: 8, borderBottomWidth: 0.5, width: '100%', }}>
                 <Text style={{ fontSize: 16, paddingBottom: marking ? 0 : 11, }}> {date.day} </Text>
                 {marking && marking.dotColor === 'orange' ? (
@@ -264,7 +282,7 @@ const Home = props => {
 
 
         {/* Punch In/Out Buttons */}
-
+        {/* <Text>{JSON.stringify(punchInTime)}</Text> */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginVertical: 10, }}>
           <View style={[styles.Elevation, styles.punchButton]}>
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
@@ -275,9 +293,10 @@ const Home = props => {
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchInTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.transparentVoilet, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
+
+            {/* <TouchableOpacity disabled={punchInTime !== "--:--" && punchInTime != null && punchInTime !== undefined && true} style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: (punchInTime !== "--:--" && punchInTime != null && punchInTime !== undefined ? COLORS.lightGray : COLORS.lightGreen), marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
               <Text style={{ color: COLORS.voilet }}> Punch in </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={[styles.Elevation, styles.punchButton]}>
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
@@ -288,9 +307,9 @@ const Home = props => {
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchOutTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.orange, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
+            {/* <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.orange, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
               <Text style={{ color: COLORS.white }}> Punch out </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -312,7 +331,7 @@ const Home = props => {
 
         {/* Other options */}
         <View style={styles.others}>
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation, { width: 120, marginHorizontal: 10}]} onPress={() => props.navigation.navigate('Pending Approval')}>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation, { width: 120, marginHorizontal: 10 }]} onPress={() => props.navigation.navigate('Pending Approval')}>
             <Icons name="timetable" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>

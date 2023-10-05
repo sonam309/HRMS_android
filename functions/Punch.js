@@ -4,36 +4,81 @@ import store from '../redux/store';
 import { API } from '../utility/services';
 import Toast from 'react-native-toast-message';
 
-const Punch = ({ val }) => {
+const Punch = ({ val, userId, password, type = "login" }) => {
     const state = store.getState();
-    let userId = state?.auth?.userId, userPassword = state?.auth?.userPassword
+    // let userId = state?.auth?.userId, userPassword = state?.auth?.userPassword
 
 
-    const userData = { loginId: userId, password: userPassword, oprFlag: 'L' };
+    const userData = type === "login" ? { loginId: userId, password: password, oprFlag: 'L' } : { loginId: state?.auth?.userId, password: state?.auth?.userPassword, oprFlag: 'L' }
+
+   
 
     let action = (val === 'I' ? "In" : "Out")
-    axios.post(`${API}/api/User/login`, userData).then((response) => {
-        const returnedData = response.data.Result;
-        let result = returnedData.map(a => a.FLAG);
-        result[0] === "S" ? (
-            fetch(`${API}/api/Admin/punchinOut`, {
-                method: "POST",
-                headers: { Accept: "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({ operFlag: val, userId: userId }),
-            })
-                .then((response) => response.json())
-                .then((responseData) => {
-                    Toast.show({
+
+    console.log("type",type);
+
+    if (type === "login") {
+
+        axios.post(`${API}/api/User/login`, userData).then((response) => {
+            const returnedData = response.data.Result;
+            let result = returnedData.map(a => a.FLAG);
+            result[0] === "S" ? (
+                console.log("ghdvfhdjvfbchjdbw",{operFlag: val, userId: userId}),
+                fetch(`${API}/api/Admin/punchinOut`, {
+                    method: "POST",
+                    headers: { Accept: "application/json", "Content-Type": "application/json" },
+                    body: JSON.stringify({ operFlag: val, userId: userId }),
+                })
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        console.log("butttonnn", responseData.Result[0])
+
+                        {
+                            responseData?.Result[0]?.FLAG !== undefined && responseData?.Result[0]?.FLAG === "S" ? Toast.show({
+                                type: 'success',
+                                text1: `Punched ${action} Successfully`
+                            }) : Toast.show({
+                                type: 'success',
+                                text1: `You have already Punched ${action}`
+                            })
+                        }
+                    }))
+                :
+                Toast.show({
+                    type: 'error',
+                    text1: "Please enter correct credentials"
+                })
+        })
+    } else {
+
+
+        fetch(`${API}/api/Admin/punchinOut`, {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ operFlag: val, userId: state?.auth?.userId }),
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+
+                // let responseData= response.json();
+                console.log("butttonnn", responseData.Result[0])
+                
+                {
+                    responseData?.Result[0]?.FLAG !== undefined && responseData?.Result[0]?.FLAG === "S" ? Toast.show({
                         type: 'success',
                         text1: `Punched ${action} Successfully`
+                    }) : Toast.show({
+                        type: 'success',
+                        text1: `You have already Punched ${action}`
                     })
-                }))
-            :
-            Toast.show({
-                type: 'error',
-                text1: "Please enter correct credentials"
+                }
             })
-    })
+
+
+
+    }
+
+
 }
 
 export default Punch
