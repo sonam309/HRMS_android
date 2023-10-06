@@ -21,8 +21,8 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('604');
-    const [password, setPassword] = useState('Test@123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -210,7 +210,7 @@ const Login = (props) => {
 
             {/* Bottom element */}
             <View style={{ backgroundColor: COLORS.white, height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.0</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.4</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
