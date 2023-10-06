@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 const PersonalBottomView = ({ onPress }) => {
+
     const userId = useSelector(state => state.candidateAuth.candidateId)
     const [filledDetails, setFilledDetails] = useState('');
 
@@ -247,6 +248,7 @@ const PersonalBottomView = ({ onPress }) => {
         }
 
     }
+    
     return (
         <View style={{ flex: 1 }} >
             <View style={{ flexDirection: 'row', marginBottom: 10, alignItems: 'center' }}>

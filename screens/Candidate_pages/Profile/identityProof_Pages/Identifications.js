@@ -483,11 +483,11 @@ const Identifications = (props) => {
                 <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Aadhar Details</Text>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Aadhar Number<Text style={{ color: COLORS.red, ...FONTS.body4 }}>*</Text></Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' maxLength={12} keyboardType="number-pad" onChangeText={setAadharNumber} value={aadharNumber} editable={false}/>
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5, color: "#000" }} placeholder='Number' maxLength={12} keyboardType="number-pad" onChangeText={setAadharNumber} value={aadharNumber} editable={false}/>
                 </View>
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Name As Per Aadhar<Text style={{ color: COLORS.red, ...FONTS.body4 }}>*</Text></Text>
-                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name'
+                  <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5, color: "#000" }} placeholder='Name'
                     onChangeText={setNameInAadhar} value={nameInAadhar} editable={false} />
                 </View>
               </View>

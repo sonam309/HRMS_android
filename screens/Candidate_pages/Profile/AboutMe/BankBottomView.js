@@ -179,10 +179,11 @@ const BankBottomView = ({ onPress }) => {
         setLoaderVisible(true);
         axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
 
-          // console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
+          console.log("responseBankkkkk",  response.data);
+
           setLoaderVisible(false)
-          setStatusCode(response.data.status_code);
-          setBanKValidateUserName(response.data.data.full_name);
+          setStatusCode(response?.data?.status_code);
+          setBanKValidateUserName(response?.data?.data?.full_name);
         })
       } else {
 
