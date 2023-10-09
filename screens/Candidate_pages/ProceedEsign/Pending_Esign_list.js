@@ -18,8 +18,8 @@ const Pending_Esifn_list = (props) => {
 
 
   const dispatch = useDispatch()
-
   const { candidateList, loading } = useSelector((state) => state.eSign)
+  const { candidateId} = useSelector(state => state.candidateAuth)
 
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Pending_Esifn_list = (props) => {
 
   const getEsignData = async () => {
     const data = {
-      user: 'TMP2140',
+      user: candidateId,
       flag: 'V'
     }
     dispatch(getCandidateList(data))
@@ -81,6 +81,9 @@ const Pending_Esifn_list = (props) => {
               backgroundColor: COLORS.white,
               marginTop: SIZES.radius,
               padding: SIZES.radius,
+              borderWidth:0.5,
+              borderColor:COLORS.orange,
+              elevation:4,
               borderRadius: SIZES.radius
             }} key={index}>
 
@@ -90,7 +93,7 @@ const Pending_Esifn_list = (props) => {
                 <View>
                   <Text style={{
                     ...FONTS.h4,
-                    color: COLORS.black
+                    color: COLORS.black,
                   }}>Registration No.</Text>
                   <Text style={{
                     ...FONTS.body4,
@@ -120,14 +123,18 @@ const Pending_Esifn_list = (props) => {
                   }}>Status</Text>
                   {item.ESSIGN_CNT === 0 ?
                     <Text style={{
-                      color: COLORS.green
+                      color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
                     }}>Candidate Esign Pending</Text>
 
-                    : item.ESSIGN_CNT < 2 ?
-                      <Text>First gauranter Esign Pending</Text>
+                    : item.ESSIGN_CNT === 1 ?
+                      <Text style={{
+                        color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
+                      }}>First gauranter Esign Pending</Text>
                       :
                       item.ESSIGN_CNT === 2 ?
-                        <Text>Second gauranter Esign Pending</Text> :
+                        <Text style={{
+                          color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
+                        }}>2nd gauranter Esign Pending</Text> :
                         item.KYC_FLAG && item.KYC_FLAG === "F" ?
                           <Text>VKYC Complete</Text>
                           :
@@ -140,21 +147,21 @@ const Pending_Esifn_list = (props) => {
                 marginBottom: 30
               }}>
 
-                <View>
-                  <Text style={{ ...FONTS.h4, color: COLORS.black }}>Post</Text>
-                  <Text style={{ ...FONTS.body4, fontWeight: "600" }}>{item?.POST}</Text>
+                <View >
+                  <Text style={{ ...FONTS.h4, color: COLORS.black,textAlign:'right',marginRight:10,marginTop:20, }}>Post</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600",textAlign:'right',marginRight:10, }}>{item?.POST}</Text>
                 </View>
 
                 <View style={{ marginTop: SIZES.radius }}>
-                  <Text style={{ ...FONTS.h4, color: COLORS.black }}>Mobile No.</Text>
-                  <Text style={{ ...FONTS.body4, fontWeight: "600" }}>{item?.CANDIDATE_MOB}</Text>
+                  <Text style={{ ...FONTS.h4, color: COLORS.black,textAlign:'right',marginRight:10, }}>Mobile No.</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600",textAlign:'right',marginRight:10, }}>{item?.CANDIDATE_MOB}</Text>
                 </View>
 
-                <View style={{ marginTop: SIZES.radius, }} >
+                <View style={{ marginTop: 10, }} >
                   <TextButton
                     onPress={() => props.navigation.navigate("Proceed_for_Esign")}
                     label={"Proceed for Esign"}
-                    buttonContainerStyle={{ padding: 8, paddingHorizontal: 12, borderRadius: SIZES.radius, }}
+                    buttonContainerStyle={{ padding: 7, paddingHorizontal: 10, borderRadius: SIZES.radius, }}
                     linearGradientStyle={{ borderRadius: SIZES.padding * 2 }}
                     labelStyle={{ lineHeight: 19 }}
                     elevation={6}

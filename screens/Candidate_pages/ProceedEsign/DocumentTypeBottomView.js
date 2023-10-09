@@ -11,6 +11,11 @@ import { getCoordinates } from '../../../redux/eSignSlice';
 
 const DocumentTypeBottomView = (props) => {
 
+    
+    const dispatch = useDispatch()
+
+    const { candidateList, loading, coordinatesList } = useSelector((state) => state.eSign)
+
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [documentName, setDocumentName] = useState('');
     const [numberOfPages, setNumberOfPages] = useState('');
@@ -18,29 +23,27 @@ const DocumentTypeBottomView = (props) => {
 
     useEffect(() => {
         // getCoordinates();
+        console.log("loanType",props.loanType);
         const data = { loanType: props.loanType }
         dispatch(getCoordinates(data))
 
     }, [])
 
-    useEffect(() => {
-        setData();
-    }, [coordinatesList])
+    // useEffect(() => {
+    //     setData();
+    // }, [coordinatesList])
 
 
-    const dispatch = useDispatch()
-
-    const { candidateList, loading, coordinatesList } = useSelector((state) => state.eSign)
 
 
-    const setData = () => {
+    // const setData = () => {
 
-        console.log("setData", coordinatesList);
-        setDocumentName(coordinatesList?.Document_name);
-        setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
+    //     console.log("setData", coordinatesList);
+    //     setDocumentName(coordinatesList?.Document_name);
+    //     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
         
 
-    }
+    // }
 
     return (
         <View>
@@ -59,12 +62,12 @@ const DocumentTypeBottomView = (props) => {
                             Document Name
                         </Text>
                         <Text style={{ color: COLORS.black, ...FONTS.h4 }}>
-                            {documentName}
+                            {coordinatesList?.Document_name}
                         </Text>
                     </View>
 
                     <Text style={{ justifyContent: 'center', backgroundColor: COLORS.white, elevation: 4, textAlign: 'center', verticalAlign: 'middle', borderRadius: 6, padding: 10, color: COLORS.black, ...FONTS.h5 }}>
-                        {numberOfPages}
+                        {coordinatesList?.NUMBER_OF_PAGES}
                     </Text>
                 </View>
             </TouchableOpacity>

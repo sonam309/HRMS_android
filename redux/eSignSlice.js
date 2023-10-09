@@ -35,7 +35,7 @@ const eSignSlice = createSlice({
           builder.addMatcher(
             isAnyOf(getCoordinates.fulfilled),
             (state, action) => {
-                // console.log("coordinates",action.payload.Result[0])
+                 console.log("coordinates",action.payload)
               state.coordinateLoading = false;
               state.coordinatesList = action.payload.Result[0];
             }
@@ -55,7 +55,8 @@ export default eSignSlice.reducer
 export const getCandidateList = createAsyncThunk(
     "mobile/getCandidate",
     async (payload, toolkit) => {
-        return await AxiosClient("POST", `/api/saveEsignDataMob`, payload, toolkit);
+        // return await AxiosClient("POST", `/api/saveEsignDataMob`, payload, toolkit);
+        return await AxiosClient("POST", `/api/saveEsignDataNew`, payload, toolkit);
     }
 );
 

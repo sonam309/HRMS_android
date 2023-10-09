@@ -21,7 +21,7 @@ import Toast from 'react-native-toast-message';
 const Login = (props) => {
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('604');
+    const [userId, setUserId] = useState('635');
     const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
@@ -87,7 +87,7 @@ const Login = (props) => {
         } else {
 
             setLoaderVisible(true)
-            // console.log(`${API}/api/User/candidateLogin`)
+            console.log(`${API}/api/User/candidateLogin`)
             axios.post(`${API}/api/User/candidateLogin`, userData).then((response) => {
                 const returnedData = response.data.Result[0];
                 let candidateName = returnedData.CANDIDATE_NAME
@@ -103,7 +103,7 @@ const Login = (props) => {
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
 
-                // console.log("response", returnedData, hiringLeadMail);
+                console.log("response", returnedData);
                 setLoaderVisible(false)
                 setLoginResponse(returnedData);
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
@@ -128,7 +128,7 @@ const Login = (props) => {
                     })
 
             }).catch((error) => {
-                // console.log(error)
+                console.log(error)
                 setLoaderVisible(false)
                 Toast.show({
                     type: 'error',

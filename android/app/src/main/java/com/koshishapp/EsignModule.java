@@ -116,9 +116,8 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 
         if (i == 10001) {
 
-                String result = intent.getStringExtra("signedResponse");
-                sendEvent(getReactApplicationContext(), "EventCount", result);
-
+            String result = intent.getStringExtra("signedResponse");
+            sendEvent(getReactApplicationContext(), "EventCount", result);
 //            Toast.makeText(activity, result, Toast.LENGTH_SHORT).show();
 
 
@@ -132,7 +131,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 
     @Override
     public void onNewIntent(Intent intent) {
-        sendEvent(context, "EventCount", "Start");
+//        sendEvent(context, "EventCount", "Start");
 //someActivityResultLauncher.launch(intent);
         startActivityForResult(getReactApplicationContext().getCurrentActivity(), intent, 10001, new Bundle());
     }

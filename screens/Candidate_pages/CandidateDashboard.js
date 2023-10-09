@@ -19,15 +19,6 @@ import axios from 'axios';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 
-const { EsignModule } = NativeModules;
-console.log("EsignModule", EsignModule)
-// EsignModule.createEsignEvent(res => console.log("esigndata", res));
-
-const eventEmitter = new NativeEventEmitter(EsignModule);
-
-console.log("eventEmiiiter", eventEmitter)
-
-
 const CandidateDashboard = (props) => {
     const dispatch = useDispatch();
     const current_Status = useSelector(state => state.candidateAuth.candidateStatus)
@@ -65,68 +56,68 @@ const CandidateDashboard = (props) => {
 
 
 
-    const EsignEvent = async () => {
-        const data = {
-            documentName: "Candidated Essign",
-            noOfPages: "16",
-            userId: "TMP2140",
-            docPath: "7aa8f0de-5a8a-4773-910a-bf1b62888f18.pdf",
-            status: "A",
-            eSignCount: "0",
-            appVersion: "2.5",
-            rawData: JSON.stringify({
-                "pdf_pre_uploaded": true,
-                "config": {
-                    "auth_mode": "1", "reason": "Candidated Essign",
-                    "positions": {
-                        "1": [{ "x": 100, "y": 35 }],
-                        "2": [{ "x": 40, "y": 20 }],
-                        "3": [{ "x": 50, "y": 300 }],
-                        "4": [{ "x": 70, "y": 140 }]
-                    },
-                    "skip_email": true, "name_match": { "match": true, "score": 55 }
-                },
-                "prefill_options": {
-                    "full_name": "Sonam kaushal",
-                    "mobile_number": "8858776799",
-                    "user_email": "systemadministrator@satyamicrocapital.com"
-                }
-            })
-        }
+    // const EsignEvent = async () => {
+    //     const data = {
+    //         documentName: "Candidated Essign",
+    //         noOfPages: "16",
+    //         userId: "TMP8336",
+    //         docPath: "7aa8f0de-5a8a-4773-910a-bf1b62888f18.pdf",
+    //         status: "A",
+    //         eSignCount: "0",
+    //         appVersion: "2.5",
+    //         rawData: JSON.stringify({
+    //             "pdf_pre_uploaded": true,
+    //             "config": {
+    //                 "auth_mode": "1", "reason": "Candidated Essign",
+    //                 "positions": {
+    //                     "1": [{ "x": 100, "y": 35 }],
+    //                     "2": [{ "x": 40, "y": 20 }],
+    //                     "3": [{ "x": 50, "y": 300 }],
+    //                     "4": [{ "x": 70, "y": 140 }]
+    //                 },
+    //                 "skip_email": true, "name_match": { "match": true, "score": 55 }
+    //             },
+    //             "prefill_options": {
+    //                 "full_name": "Sonam kaushal",
+    //                 "mobile_number": "8858776799",
+    //                 "user_email": "systemadministrator@satyamicrocapital.com"
+    //             }
+    //         })
+    //     }
 
-        console.log("DashboardEsignButton",data)
+    //     console.log("DashboardEsignButton", data)
 
-        axios.post(`${API}/api/Kyc/ProceedForEsign`,data)
-            .then(async (response) => {
+    //     axios.post(`${API}/api/Kyc/ProceedForEsign`, data)
+    //         .then(async (response) => {
 
-                const returnedData = response.data;
-                setTkenRes(returnedData?.data?.token);
-                var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
+    //             const returnedData = response.data;
+    //             setTkenRes(returnedData?.data?.token);
+    //             var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
 
-            }).catch((error) => {
-                Alert.alert('Alert Title', error, [
-                    {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                    },
-                    { text: 'OK', onPress: () => console.log('OK Pressed') },
-                ]);
+    //         }).catch((error) => {
+    //             Alert.alert('Alert Title', error, [
+    //                 {
+    //                     text: 'Cancel',
+    //                     onPress: () => console.log('Cancel Pressed'),
+    //                     style: 'cancel',
+    //                 },
+    //                 { text: 'OK', onPress: () => console.log('OK Pressed') },
+    //             ]);
 
-            })
-    }
+    //         })
+    // }
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        eventEmitter.addListener("EventCount", (eventCount) => {
-            // console.log("eventCount", eventCount);
-            setCount(eventCount)
-        });
-        return () => {
-            eventEmitter.removeAllListeners();
-        }
-    }, [])
+    //     eventEmitter.addListener("EventCount", (eventCount) => {
+    //         // console.log("eventCount", eventCount);
+    //         setCount(eventCount)
+    //     });
+    //     return () => {
+    //         eventEmitter.removeAllListeners();
+    //     }
+    // }, [])
 
     useEffect(() => {
 
@@ -139,11 +130,11 @@ const CandidateDashboard = (props) => {
     // getEsignData
     const getEsignData = async () => {
         const data = {
-            user: 'TMP2140',
+            user: candidateId,
             flag: 'V'
         }
 
-        axios.post(`${API}/api/saveEsignDataMob`, data).then((response) => {
+        axios.post(`${API}/api/saveEsignDataNew`, data).then((response) => {
 
             const result = response.data.Result;
             console.log("esignData", result[0]);
@@ -358,7 +349,7 @@ const CandidateDashboard = (props) => {
                         <View >
                             <View style={{ flexDirection: 'row', marginLeft: 12 }}>
                                 {
-                                    esignCount !== null && esignCount >= 0 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                    esignCount >= 0 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
                                 }
                                 <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
                                     -----------
@@ -372,7 +363,7 @@ const CandidateDashboard = (props) => {
                         <View >
                             <View style={{ flexDirection: 'row', marginLeft: -5 }}>
                                 {
-                                    esignCount !== null && esignCount > 0 && esignCount < 2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                   esignCount == 1 || esignCount>=1 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
                                 }
                                 <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
                                     --------------
@@ -385,7 +376,7 @@ const CandidateDashboard = (props) => {
                         <View >
                             <View style={{ flexDirection: 'row', marginLeft: -5 }}>
                                 {
-                                    esignCount !== null && esignCount == 2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                    esignCount == 2||esignCount>=2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
                                 }
                                 <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
                                     ---------------
@@ -415,8 +406,8 @@ const CandidateDashboard = (props) => {
                 </View>
 
 
-                <TouchableOpacity onPress={() => props.navigation.navigate("Pending_Esign_list")}>
-                    <View style={{ borderRadius: 12, backgroundColor: COLORS.white, width: '35%', justifyContent: 'center', padding: 15, marginLeft: 20, elevation: 4 }}>
+                <TouchableOpacity disabled={esignCount<=2?false:true} onPress={() => props.navigation.navigate("Pending_Esign_list")}>
+                    <View style={{ borderRadius: 12, backgroundColor:(esignCount<2? COLORS.white:'#d9d9d9'), width: '35%', justifyContent: 'center', padding: 15, marginLeft: 20,elevation:2}}>
 
                         <Image source={EsignD} style={{ width: 60, height: 60, marginTop: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 30 }} />
 
@@ -478,7 +469,9 @@ const CandidateDashboard = (props) => {
 
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-                    {/* <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter {JSON.stringify(tkenRes)} </Text> */}
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter
+                        {/* {JSON.stringify(tkenRes)} */}
+                    </Text>
                     <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
                         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
                             <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
@@ -491,7 +484,9 @@ const CandidateDashboard = (props) => {
 
                 {/* task view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
-                    {/* <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task1{JSON.stringify(count,"ggvbg")} </Text> */}
+                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task1
+                        {/* {JSON.stringify(count,"ggvbg")}  */}
+                    </Text>
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center', justifyContent: 'space-between', marginVertical: 6, elevation: 5 }}>
                         {/* profile view */}
                         <TouchableOpacity style={{ height: 160, width: "45%", borderColor: COLORS.orange, borderWidth: 0.5, backgroundColor: COLORS.disableOrange1, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12 }}
