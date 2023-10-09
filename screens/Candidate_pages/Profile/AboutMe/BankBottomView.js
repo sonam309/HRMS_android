@@ -135,6 +135,7 @@ const BankBottomView = ({ onPress }) => {
 
     return name
   }
+
   // For fetching details of AboutMe dropdown -> Personal, Contact and Bank details
   const fetchPersonalData = async () => {
     try {
@@ -179,7 +180,7 @@ const BankBottomView = ({ onPress }) => {
         setLoaderVisible(true);
         axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
 
-          console.log("responseBankkkkk",  response.data);
+          // console.log("responseBankkkkk",  response.data);
 
           setLoaderVisible(false)
           setStatusCode(response?.data?.status_code);
@@ -211,6 +212,8 @@ const BankBottomView = ({ onPress }) => {
       try {
         if (banKValidateUserName !== undefined && banKValidateUserName !== '') {
           let fileName = filingHandleName();
+
+          console.log(fileName)
 
           let bankData = {
             txnId: userId,
@@ -295,19 +298,7 @@ const BankBottomView = ({ onPress }) => {
     return day + month + year + hours + minutes + seconds;
   }
 
-  // for submitting file
-  const generateRandomString = () => {
-    const charset =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
-
-    for (let i = 0; i < 6; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      randomString += charset.charAt(randomIndex);
-    }
-
-    return randomString;
-  };
+  
 
 
   const selectDoc = async () => {
@@ -343,27 +334,6 @@ const BankBottomView = ({ onPress }) => {
     }
   };
 
-  const checkSelectedOperation = (value) => {
-    for (let index = 0; index < operation.length; index++) {
-      const element = operation[index];
-      if (element.PARAM_NAME === value) setSelectedOperationValue(element.PARAM_ID);
-    }
-  }
-
-  const checkSelectedAccountType = (value) => {
-    for (let index = 0; index < accountType.length; index++) {
-      const element = accountType[index];
-      if (element.PARAM_NAME === value) setSelectedAccountTypeValue(element.PARAM_ID);
-    }
-  }
-
-  const checkSelectedBank = (value) => {
-    for (let index = 0; index < bank.length; index++) {
-      const element = bank[index];
-      if (element.PARAM_NAME === value) setSelectedBankValue(element.PARAM_ID);
-    }
-  }
-
   const DisplayBankDocs = ({ doc, key }) => {
     return (
       <View key={key} style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
@@ -384,25 +354,6 @@ const BankBottomView = ({ onPress }) => {
     );
   };
 
-  const selectDropDownValue = (id) => {
-    if (id === "accountType") {
-      return selectedAccountTypeValue ? selectedAccountTypeValue : accountType?.map(a => a.PARAM_ID)[0];
-    }
-    else if (id === "bankName") {
-      return selectedBankValue ? selectedBankValue : bank?.map(a => a.PARAM_ID)[0];
-    }
-    else return selectedOperationValue ? selectedOperationValue : operation?.map(a => a.PARAM_ID)[0]
-  }
-
-  const selectDropDownText = (id) => {
-    if (id === "accountType") {
-      return selectedAccountType ? selectedAccountType : accountType?.map(a => a.PARAM_NAME)[0];
-    }
-    else if (id === "bankName") {
-      return selectedBank ? selectedBank : bank?.map(a => a.PARAM_NAME)[0];
-    }
-    else return selectedOperation ? selectedOperation : operation?.map(a => a.PARAM_NAME)[0]
-  }
 
   return (
 

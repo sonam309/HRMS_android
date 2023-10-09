@@ -272,11 +272,11 @@ const UAN_BottomView = (props) => {
         })
         .catch(error => {
 
-          console.log("sonnnnnnnnnnnnnnnnnnn", error)
+          console.log("sonnnnnnnnnnnnnnnnnnn", JSON.stringify(error))
           setLoaderVisible(false);
           Toast.show({
             type: 'error',
-            text1: error
+            text1: JSON.stringify(error)
           })
         });
 
@@ -394,7 +394,7 @@ const UAN_BottomView = (props) => {
             }}>
               <View style={{ height: 75, marginTop: 10 }}>
                 <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
-                <TextInput style={{ width: responsiveWidth(70), borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
+                <TextInput style={{ width: responsiveWidth(55), borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
               </View>
 
               <TouchableOpacity disabled={isUanValidated} onPress={() => validateUan()} >
@@ -402,7 +402,7 @@ const UAN_BottomView = (props) => {
                   colors={isUanValidated ? [COLORS.lightGray, COLORS.lightGray] : [COLORS.orange1, COLORS.disableOrange1]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 2, y: 0 }}
-                  style={{ height: 45, borderRadius: 12, padding: 8, marginTop: 20, width: responsiveWidth(20), alignSelf: "flex-end" }}>
+                  style={{ height: 45, borderRadius: 12, padding: 8, marginTop: 20, width: responsiveWidth(30), alignSelf: "flex-end" }}>
                   <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
                     Validate Uan </Text>
                 </LinearGradient>

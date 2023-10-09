@@ -13,6 +13,9 @@ const TextDropdown = ({
   defaultButtonText,
   captionStyle,
 }) => {
+
+
+
   const checkIdValue = value => {
     {
       for (let index = 0; index < data.length; index++) {
@@ -22,6 +25,7 @@ const TextDropdown = ({
     }
   };
 
+
   return (
     <View style={{marginVertical: SIZES.base,}}>
       <Text style={{...FONTS.h3, fontWeight: '500',...captionStyle}}>{caption}</Text>
@@ -29,10 +33,10 @@ const TextDropdown = ({
         dropdownStyle={{
           backgroundColor: COLORS.white,
           borderRadius: SIZES.radius,
-          height: 400,
-          marginTop:30,
+       
           paddingVertical: SIZES.padding,
           paddingHorizontal: SIZES.padding,
+          
         }}
         data={data?.map(a => a.PARAM_NAME)}
         buttonStyle={[styles.inputHolder]}
