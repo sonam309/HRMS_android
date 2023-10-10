@@ -27,7 +27,6 @@ const Offer_Letter = (props) => {
   }, [])
 
   const requestFilePermission = async () => {
-    // console.warn("Inside permisiion funct");
     try {
       isReadGranted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -64,7 +63,10 @@ const Offer_Letter = (props) => {
 
 
     } catch (err) {
-      console.warn(err);
+      Toast.show({
+        type:'error',
+        text1:JSON.stringify(err)
+      })
     }
   };
 
@@ -163,7 +165,6 @@ const Offer_Letter = (props) => {
         }
       })
       .catch(error => {
-        // console.log(error);
 
         Toast.show({
           type: 'error',
@@ -173,7 +174,6 @@ const Offer_Letter = (props) => {
   };
 
 
-  // { console.warn("offer letter", offerLetter) }
   return (
 
     <>

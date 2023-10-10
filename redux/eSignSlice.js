@@ -17,7 +17,6 @@ const eSignSlice = createSlice({
           builder.addMatcher(
             isAnyOf(getCandidateList.fulfilled),
             (state, action) => {
-                console.log(action)
               state.loading = false;
               state.candidateList = action.payload.Result;
             }
@@ -35,7 +34,6 @@ const eSignSlice = createSlice({
           builder.addMatcher(
             isAnyOf(getCoordinates.fulfilled),
             (state, action) => {
-                 console.log("coordinates",action.payload)
               state.coordinateLoading = false;
               state.coordinatesList = action.payload.Result[0];
             }

@@ -6,7 +6,6 @@ import ReverseGeocoding from './ReverseGeocoding';
 const Geolocation = async ({ val,userId,password, type }) => {
     let action = (val === "I" ? "In" : "Out")
 
-    console.log("userCredentials",userId,password)
     // Degree to radians 
     const deg2rad = (deg) => {
         return deg * (Math.PI / 180)
@@ -32,7 +31,6 @@ const Geolocation = async ({ val,userId,password, type }) => {
         timeout: 30000,
     })
         .then(location => {
-            // console.log(location);
             dist = getDistInKm(location.latitude, location.longitude, 28.54395, 77.33066);
             ReverseGeocoding(location.latitude, location.longitude)
             dist < 0.3 ? Punch({ val,userId,password,type }) : (Alert.alert(`Punch ${action} from your office`))

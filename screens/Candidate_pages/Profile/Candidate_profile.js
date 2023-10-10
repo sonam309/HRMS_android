@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, PermissionsAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../constants/theme'
 import { approveMark, rejectMark, user_profile } from '../../../assets'
@@ -26,8 +26,9 @@ import { useSelector } from 'react-redux';
 import Emp_HistoryBottomView from './EmployementHistory/Emp_HistoryBottomView';
 import { API } from '../../../utility/services';
 import GuarantorBottomView from './Guarantor/GuarantorBottomView';
-import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import { launchCamera } from 'react-native-image-picker';
+import axios from 'axios';
 
 
 
@@ -87,6 +88,7 @@ const Candidate_profile = () => {
   const [uanAppFlag, setUAnAppFlag] = useState('');
   const [employmentAppFlag, setEmployementAppFlag] = useState('');
   const [guarantorAppFlag, setGuarantorAppFlag] = useState('');
+  const [profilePic, setProfilePic] = useState('');
 
   const fetchPersonalData = async () => {
     try {
@@ -262,8 +264,8 @@ const Candidate_profile = () => {
       .catch(err => {
         // console.log(err);
         Toast.show({
-          type:'error',
-          text1:err
+          type: 'error',
+          text1: err
         })
 
       });
@@ -394,6 +396,249 @@ const Candidate_profile = () => {
     skillAndQualifView && fetchQualificationData()
   }, [skillAndQualifView, qualificationsView])
 
+
+
+
+  // for submitting file
+
+  function addLeadingZero(number) {
+
+    return number < 10 ? '0' + number : number;
+
+  }
+
+
+
+  // for submitting file
+
+  function getFormattedTimestamp() {
+
+    var date = new Date();
+
+
+
+    var day = addLeadingZero(date.getDate());
+
+    var month = addLeadingZero(date.getMonth() + 1); // Months are zero-based
+
+    var year = date.getFullYear();
+
+    var hours = addLeadingZero(date.getHours());
+
+    var minutes = addLeadingZero(date.getMinutes());
+
+    var seconds = addLeadingZero(date.getSeconds());
+
+
+
+    return day + month + year + hours + minutes + seconds;
+
+  }
+
+
+
+  const selectProfilePic = async () => {
+
+    const grantedcamera = await PermissionsAndroid.request(
+
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+
+      {
+
+        title: 'App Camera Permission',
+
+        message: 'App needs access to your camera ',
+
+        buttonNeutral: 'Ask Me Later',
+
+        buttonNegative: 'Cancel',
+
+        buttonPositive: 'OK',
+
+      },
+
+    );
+
+
+
+    if (
+
+      grantedcamera === PermissionsAndroid.RESULTS.GRANTED
+
+      // grantedstorage === PermissionsAndroid.RESULTS.GRANTED
+
+    ) {
+
+      console.log('Camera permission given');
+
+
+
+      var options = {
+
+        mediaType: 'photo', //to allow only photo to select ...no video
+
+        saveToPhotos: false, //to store captured photo via camera to photos or else it will be stored in temp folders and will get deleted on temp clear
+
+        includeBase64: false,
+        cameraType: "front"
+
+      };
+
+
+
+      launchCamera(options, res => {
+
+        if (res.didCancel) {
+
+          console.log('User cancelled image picker');
+
+        } else if (res.error) {
+
+          console.log('ImagePicker Error: ', res.error);
+
+        } else if (res.customButton) {
+
+          console.log('User tapped custom button: ', res.customButton);
+
+          alert(res.customButton);
+
+        } else {
+
+          // let source = res;
+
+          // var resourcePath1 = source.assets[0].uri;
+
+          console.log('Response = ', res);
+
+          const source = { uri: res.uri };
+
+
+
+          let profilePicData = {
+
+            candidateId: userId,
+
+            profillePic: res.assets[0].fileName,
+
+            operFlag: 'A',
+
+          };
+
+
+
+          var formData = new FormData();
+
+          formData.append('data', JSON.stringify(profilePicData));
+
+
+
+          formData.append('fileUpload', {
+
+            name: `profilePicDoc_${userId}_${getFormattedTimestamp()}.${res.assets[0].type.split('/')[1]
+
+              }`,
+
+            type: res.assets[0].type,
+
+            uri: res.assets[0].uri,
+
+          });
+
+          fetch(`${API}/api/hrms/profilePic`, {
+
+            method: 'POST',
+
+            body: formData,
+
+          })
+
+            .then(res => {
+
+              console.log(res);
+
+              if (res.status === 200) {
+
+                Toast.show({
+
+                  type: 'success',
+
+                  text1: 'Profile Picture Updated Successfully',
+
+                });
+
+                getProfilePic()
+
+              } else {
+
+                Toast.show({
+
+                  type: 'error',
+
+                  text1: 'Something went wrong, Please try again...',
+
+                });
+
+              }
+
+            })
+
+            .catch(error => {
+
+              console.log(error);
+
+
+
+            });
+
+        }
+
+      });
+
+    } else {
+
+      console.log('Camera permission denied');
+
+    }
+
+  };
+
+
+
+  const getProfilePic = () => {
+
+    let profilePicData = {
+      candidateId: userId,
+      operFlag: 'V',
+
+    };
+
+    var formData = new FormData();
+
+    formData.append('data', JSON.stringify(profilePicData));
+
+    axios
+      .post(`${API}api/hrms/profilePic`, formData)
+      .then(res => {
+        console.log("profilePic", res);
+        setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
+
+      })
+      .catch(error => {
+        console.log("profilepic",error);
+
+      });
+
+  };
+
+
+
+  useEffect(() => {
+
+    getProfilePic();
+
+  }, []);
+
+
   return (
     <View style={{
       flex: 1,
@@ -402,7 +647,14 @@ const Candidate_profile = () => {
       <ScrollView showsVerticalScrollIndicator={false} >
         {/* Name and User id of candidate */}
         <View style={[{ backgroundColor: COLORS.white, alignItems: 'center', margin: 10, padding: SIZES.radius, borderRadius: SIZES.base, borderWidth: 0.5, borderColor: COLORS.lightGray, marginTop: SIZES.padding, }]}>
-          <Image source={user_profile} style={{ height: 80, width: 80, borderRadius: 40 }} />
+          <TouchableOpacity onPress={selectProfilePic}>
+
+            <Image
+              source={profilePic ? { uri: `${API}/ProfilePic/${profilePic}` } : user_profile}
+              style={{ height: 80, width: 80, borderRadius: 40 }}
+            />
+
+          </TouchableOpacity>
           <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1, marginTop: 5 }}>Name: {userName}</Text>
           <Text style={{ fontWeight: 500, ...FONTS.body4, color: COLORS.orange1, marginTop: -5 }}>Candidate ID: {userId}</Text>
         </View>

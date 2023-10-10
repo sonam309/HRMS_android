@@ -20,7 +20,6 @@ const Entry_page = (props) => {
     }
     const getType = async () => {
         page = await AsyncStorage.getItem("type")
-        console.log("type", page)
 
         {
             page &&

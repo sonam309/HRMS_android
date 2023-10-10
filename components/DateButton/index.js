@@ -18,7 +18,6 @@ const DateButton = ({caption, required, date, setDate,captionStyle}) => {
         onConfirm={date => {
           let newDate = date.toDateString().split(' ');
           newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3];
-          // console.log(newDate)
           setShow(false);
           setDate(newDate);
         }}

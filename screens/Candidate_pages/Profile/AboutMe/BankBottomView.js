@@ -129,7 +129,6 @@ const BankBottomView = ({ onPress }) => {
     for (let index = 0; index < Object.keys(selectedDoc).length; index++) {
       if (index !== 0) name += ","
       const element = selectedDoc[index];
-      // console.warn(element);
       name += element.name;
     }
 
@@ -179,7 +178,7 @@ const BankBottomView = ({ onPress }) => {
         setLoaderVisible(true);
         axios.post(`${API}/api/Hrms/BanKValidate`, data).then((response) => {
 
-          console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
+          // console.log("responseBankkkkk", response.data.status_code, response.data.data.full_name);
           setLoaderVisible(false)
           setStatusCode(response.data.status_code);
           setBanKValidateUserName(response.data.data.full_name);

@@ -40,7 +40,6 @@ const PersonalBottomView = ({ onPress }) => {
         let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`)
         response = await response.json();
         const returnedData = response;
-        // console.warn(returnedData);
         if (P === 18) { setGender(returnedData) }
         else if (P === 30) { setMarital(returnedData) }
         else if (P === 31) { setBloodGroup(returnedData) }
@@ -145,9 +144,7 @@ const PersonalBottomView = ({ onPress }) => {
 
     // fetching previously filled Data
     const DisplayPreviousDetails = () => {
-        // console.warn("Inside details", filledDetails);
         filledDetails && (
-            // console.warn(filledDetails.FLAG),
             (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("P")),
             setSalutation(filledDetails?.SALUTATION),
             setFirstName(filledDetails?.FIRST_NAME),
@@ -191,7 +188,6 @@ const PersonalBottomView = ({ onPress }) => {
         setRecordOpen(false)
         let newDate = date.toDateString().split(' ')
         newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3]
-        // console.warn(newDate)
         setSelectedRecordBirthDate(newDate)
         setRecordBirthDate(date)
     }
@@ -211,18 +207,15 @@ const PersonalBottomView = ({ onPress }) => {
         if (ValidateForm()) {
             setLoaderVisible(true)
             try {
-                // console.warn(operFlag);
                 let PersonalData = { txnId: TXNID, salutation: salutation, firstName: firstName, middleName: middleName, lastName: lastName, fatherName: fatherName, caste: selectedCasteValue, actualBirthDate: selectedActualBirthDate, recordBirthDate: selectedRecordBirthDate, birthCountry: countryBirth, birthPlace: placeBirth, identificationMarks: identityMarks, gender: selectedGenderValue, maritalStatus: selectedMaritalValue, marriageDate: marriageDate, bloodGroup: selectedBloodGroupValue, preferredLocation: preferredLocation, currentLocation: currentLocation, resumeSource: resumeSource, refEmailId: refEmail, refContactNo: refContact, refName: refName, refOccupation: refOccupation, refAddress: refAddress, refEmailId1: refEmail1, refContactNo1: refContact1, refName1: refName1, refOccupation1: refOccupation1, refAddress1: refAddress1, operFlag: operFlag, candidateId: userId, userId: userId }
 
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(PersonalData))
-                // console.log(formData._parts)
                 let res = await fetch(`${API}/api/hrms/savePersonalDetails`, {
                     method: "POST",
                     body: formData
                 })
                 res = await res.json();
-                // console.warn(res);
                 res = await res?.Result[0]?.MSG
                 setLoaderVisible(false)
                 Toast.show({

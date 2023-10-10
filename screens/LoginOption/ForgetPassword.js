@@ -106,7 +106,6 @@ const ForgetPassword = (props) => {
       // reset flag=R, create mpin flag=M
       props.navigation.navigate("Employee_Login")
     } else {
-      console.warn("Quick Pin and Confirm Quick Pin should be same")
     }
   }
 

@@ -264,7 +264,6 @@ const PersonalAddressBottomView = ({ onPress }) => {
 
                 // console.warn(operFlag);
                 let AddressData = { txnId: userId, operFlag: operFlag, candidateId: userId, userId: userId, presentAddress: presentAddress, country: presentSelectedCountryValue, state: presentSelectedStateValue, city: presentCity, pincode: presentPinCode, district: presentDistrict, postOffice: presentPostOffice, subDivison: presentSubDivision, thana: presentThana, peramanentAddress: permanentAddress, permanentCountry: permanentSelectedCountryValue, permanentState: permanentSelectedStateValue, permanentcity: permanentCity, permanentPincode: permanentPinCode, permanentDistrict: permanentDistrict, permanentPostOffice: permanentPostOffice, permanentSubdivion: permanentSubDivision, permanentThana: permanentThana }
-                console.warn("address", AddressData);
                 let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
                     method: "POST",
                     headers: {

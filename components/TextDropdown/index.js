@@ -29,8 +29,8 @@ const TextDropdown = ({
         dropdownStyle={{
           backgroundColor: COLORS.white,
           borderRadius: SIZES.radius,
-          height: 400,
-          marginTop:30,
+          // height: 400,
+          // marginTop:30,
           paddingVertical: SIZES.padding,
           paddingHorizontal: SIZES.padding,
         }}

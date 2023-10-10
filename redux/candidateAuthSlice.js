@@ -37,7 +37,6 @@ const candidateAuthSlice = createSlice({
 
         },
         updateLogin(state, actions) {
-            console.log("staus111",actions.payload)
             state.candidateStatusId = actions.payload?.candidateStatusId
             state.candidateStatus=actions.payload?.candidateStatus
         },

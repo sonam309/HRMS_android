@@ -99,7 +99,6 @@ const Otp_Verification = (props) => {
             setLoaderVisible(false);
         } else {
             setLoaderVisible(false);
-            console.warn("Wrong OTP");
         }
     }
 

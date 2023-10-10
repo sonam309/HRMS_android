@@ -16,7 +16,6 @@ const EmployeeActionsTab = (props) => {
     const [isVisible, setIsVisible] = useState(false)
     const [notificationCat, setNotificationCat] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
-    // console.warn("Inside employee actions tab "+flag);
 
     const applyFilter = () => {
         setIsVisible(false);
@@ -136,7 +135,6 @@ const EmployeeActionsTab = (props) => {
                     {renderFilterModal()}
                 </BottomUpModal>
             )}
-            {/* {console.warn(notificationCat)} */}
         </>
     )
 }

@@ -18,6 +18,7 @@ import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import { showDevelopmetMode } from '../../functions/utils';
 
+
 const Home = props => {
   var m_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   let currentDate = new Date().toDateString().split(' ');
@@ -33,28 +34,38 @@ const Home = props => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [markedDate, setMarkedDate] = useState({});
-  const [loaderVisible, setLoaderVisible] = useState(true);
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   const [present, setPresent] = useState(0);
   const [absent, setAbsent] = useState(0);
   var markedDates = {};
 
 
+  const [val, setVal] = useState("")
 
 
 
   const getCurrentLocation = async (val) => {
     setLoaderVisible(true)
     Geolocation({ val, type: "dashboard" });
+    setVal(val)
     let loginPlace = await AsyncStorage.getItem("Address")
     setAddress(loginPlace)
-    loadingData(val)
     setLoaderVisible(false)
     // console.warn("punch in address", address)
   };
 
+  useEffect(() => {
+    if (val === " I" || val === "O") {
+      loadingData("V")
+    }
+  }, [val])
+
+
   const loadingData = async (val) => {
     // fetching data
+    setLoaderVisible(true)
+
 
     let punchData = { operFlag: val, userId: userId }
 
@@ -74,20 +85,26 @@ const Home = props => {
       data = await data.json(),
       data = data.Result[0],
       // console.log("data", data),
-
-      data?.IN ? inTime = data?.IN?.trim() : inTime = "--:--",
+      setLoaderVisible(false)
+    data?.IN ? inTime = data?.IN?.trim() : inTime = "--:--",
       data?.DUR !== "" ? timeSpent = data?.DUR?.trim() : timeSpent = "--:--",
       data?.OUT ? outTime = data?.OUT?.trim() : outTime = "--:--",
 
       setPunchInTime(inTime),
-      (val === "O" && setPunchOutTime(outTime)),
-      setDuration(timeSpent),
-      setLoaderVisible(false)
+      // (val === "O" && setPunchOutTime(outTime)),
+      setPunchOutTime(outTime),
+      setDuration(timeSpent)
+
   }
 
   useEffect(() => {
     userId && getAttendance();
-    userId && loadingData("O");
+    loadingData("V");
+  }, []);
+
+  useEffect(() => {
+    userId && getAttendance();
+    loadingData("V");
   }, [userId]);
 
   // useEffect(() => {
@@ -190,8 +207,8 @@ const Home = props => {
             </Text>}
           </View>
 
-          <TouchableOpacity style={{ position: 'absolute', right: 10 }} onPress={showDevelopmetMode}>
-            <Icons name="bell-ring-outline" color={COLORS.green} size={30} />
+          <TouchableOpacity style={{ position: 'absolute', right: 10 }} >
+            {/* <Icons name="bell-ring-outline" color={COLORS.green} size={30} /> */}
           </TouchableOpacity>
 
         </SafeAreaView>
@@ -263,7 +280,7 @@ const Home = props => {
 
 
         {/* Punch In/Out Buttons */}
-
+        {/* <Text>{JSON.stringify(punchInTime)}</Text> */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginVertical: 10, }}>
           <View style={[styles.Elevation, styles.punchButton]}>
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
@@ -274,9 +291,10 @@ const Home = props => {
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchInTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-            <TouchableOpacity disabled={punchInTime !== '' && punchInTime !== null ? false : true} style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: (punchInTime !== '' && punchInTime !== null ? COLORS.lightGreen : COLORS.lightGray), marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
+
+            {/* <TouchableOpacity disabled={punchInTime !== "--:--" && punchInTime != null && punchInTime !== undefined && true} style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: (punchInTime !== "--:--" && punchInTime != null && punchInTime !== undefined ? COLORS.lightGray : COLORS.lightGreen), marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('I') }} >
               <Text style={{ color: COLORS.voilet }}> Punch in </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={[styles.Elevation, styles.punchButton]}>
             <View style={[styles.Elevation, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 12, },]}>
@@ -287,13 +305,13 @@ const Home = props => {
               <Text style={{ color: COLORS.darkGray, fontSize: 24, fontWeight: '500', }}>{punchOutTime} </Text>
               <Text style={{ color: COLORS.darkGray }}> {currentDate[2]} {currentDate[1]}, {currentDate[3]}</Text>
             </View>
-            <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.orange, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
+            {/* <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.orange, marginTop: 12, borderRadius: 12, }} onPress={() => { getCurrentLocation('O') }}>
               <Text style={{ color: COLORS.white }}> Punch out </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+        {/* <View style={{ flexDirection: 'row', marginVertical: 10 }}>
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.green }]}>
             <Text style={styles.actionText}>Leave apply</Text>
           </TouchableOpacity>
@@ -305,18 +323,18 @@ const Home = props => {
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.attendanceButton, styles.Elevation, { backgroundColor: COLORS.lightBlue },]}>
             <Text style={styles.actionText}>Outdoor</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <Text style={styles.headerText}>Others</Text>
 
         {/* Other options */}
         <View style={styles.others}>
-          <TouchableOpacity style={[styles.otherOptions, styles.Elevation]} onPress={() => props.navigation.navigate('Pending Approval')}>
+          <TouchableOpacity style={[styles.otherOptions, styles.Elevation, { width: 120, marginHorizontal: 10 }]} onPress={() => props.navigation.navigate('Pending Approval')}>
             <Icons name="timetable" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3 }}>Pending Approval</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
+          {/* <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <Foundation name="megaphone" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Company Announcement</Text>
           </TouchableOpacity>
@@ -324,7 +342,7 @@ const Home = props => {
           <TouchableOpacity onPress={showDevelopmetMode} style={[styles.otherOptions, styles.Elevation]}>
             <FontAwesome5 name="birthday-cake" size={30} color={COLORS.orange} />
             <Text style={{ color: COLORS.voilet, textAlign: 'center', fontSize: 12, fontWeight: '500', padding: 3, }}>Birthday & Anniversary</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
       </ScrollView>
@@ -388,7 +406,7 @@ const styles = StyleSheet.create({
   },
   otherOptions: {
     height: 100,
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'white',
     borderRadius: 8,
     marginVertical: 12,

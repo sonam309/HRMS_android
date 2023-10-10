@@ -18,14 +18,11 @@ const Approval_actions = ({ navigation }) => {
                 <Text style={{ color: COLORS.black, fontSize: 18 }}>Approval</Text>
             </SafeAreaView>
 
-            {/* <View style={{ padding: 36, alignItems: 'center' }}>
-                <Text style={{fontSize:20}}>Select one action to proceed</Text>
-            </View> */}
 
             <View style={styles.mainWrap}>
-                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
+                {/* <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
                     <LinearGradient colors={['#40b3c2', '#87ecfa']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'A' })} style={[styles.cardWrap]}> */}
+
                         <TouchableOpacity onPress={() => Toast.show({
                             type: 'success',
                             text1: 'Work on Progress'
@@ -35,7 +32,7 @@ const Approval_actions = ({ navigation }) => {
                         </TouchableOpacity>
                     </LinearGradient>
                     <LinearGradient colors={['#FFD93D', 'rgb(255, 217, 61)']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'C' })} style={[styles.cardWrap]}> */}
+
                         <TouchableOpacity onPress={() => Toast.show({
                             type: 'success',
                             text1: 'Work on Progress'
@@ -44,10 +41,10 @@ const Approval_actions = ({ navigation }) => {
                             <Text style={[styles.cardHeading]}>Claim</Text>
                         </TouchableOpacity>
                     </LinearGradient>
-                </View>
+                </View> */}
                 <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
-                    <LinearGradient colors={['#f56788', '#ffabbe']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'E' })} style={[styles.cardWrap]}> */}
+                    {/* <LinearGradient colors={['#f56788', '#ffabbe']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.LinearGradient, styles.elevation]}>
+
                         <TouchableOpacity onPress={() => Toast.show({
                             type: 'success',
                             text1: 'Work on Progress'
@@ -55,7 +52,7 @@ const Approval_actions = ({ navigation }) => {
                             <MaterialCommunityIcons name="exit-run" size={60} color={COLORS.white} />
                             <Text style={styles.cardHeading}>E-Resign</Text>
                         </TouchableOpacity>
-                    </LinearGradient>
+                    </LinearGradient> */}
                     <LinearGradient colors={['#8696FE', 'rgb(196, 176, 255)']} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} style={[styles.LinearGradient, styles.elevation]}>
                         <TouchableOpacity onPress={() => navigation.navigate('EmployeeActionsTab', { flag: 'H' })} style={[styles.cardWrap]}>
                             <FontAwesome name="users" size={60} color={COLORS.white} />

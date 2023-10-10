@@ -86,7 +86,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     @ReactMethod
     public void addListener(String eventName) {
         Log.e("EventListner", "ok:" + eventName);
-        Toast.makeText(context, " " + eventName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, " " + eventName, Toast.LENGTH_SHORT).show();
 
     }
 

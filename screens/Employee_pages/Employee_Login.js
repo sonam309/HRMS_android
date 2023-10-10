@@ -27,7 +27,7 @@ const Employee_Login = (props) => {
 
 
     const getCurrentLocation = async (val) => {
-        Geolocation({ val,userId,password });
+        Geolocation({ val, userId, password });
     }
     // preventing going to entry page
     const navigation = useNavigation();
@@ -48,10 +48,10 @@ const Employee_Login = (props) => {
         try {
             const userData = { loginId: userId, password: password, oprFlag: 'L' };
             setLoaderVisible(true)
-            console.log(userData);
+            // console.log(userData);
             axios.post(`${API}/api/User/login`, userData).then((response) => {
                 const returnedData = response?.data?.Result[0];
-                console.log("resposne", returnedData, response?.data?.Result);
+                // console.log("resposne", returnedData,response?.data?.Result);
 
                 let result = response?.data?.Result.map(a => a.FLAG);
                 let userId = returnedData.USER_ID
@@ -209,7 +209,7 @@ const Employee_Login = (props) => {
             </View>
             {/* Bottom element */}
             <View style={{ height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.1</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.5</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>

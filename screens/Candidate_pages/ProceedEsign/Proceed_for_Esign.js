@@ -85,11 +85,9 @@ const Proceed_for_Esign = (props) => {
     }, [candidateList])
 
     const setPredefinedData = () => {
-        console.log("candidateList", candidateList);
 
         if (candidateList.length > 0) {
 
-            console.log("candidateName", candidateList[0]?.CANDIDATE_NAME)
             setCandidateName(candidateList[0]?.CANDIDATE_NAME);
             setJobTitle(candidateList[0]?.POST);
             setCandidateMobileNo(candidateList[0]?.CANDIDATE_MOB);
@@ -152,7 +150,6 @@ const Proceed_for_Esign = (props) => {
                 // console.log(location);
                 setLatitude(location.latitude);
                 setLongitude(location.longitude);
-                console.log("lat,lang", location.latitude, location.longitude)
 
             })
             .catch(error => { const { code, message } = error; Alert.alert(code, message); })) : (Alert.alert("Location permission not granted"))
@@ -162,26 +159,18 @@ const Proceed_for_Esign = (props) => {
     const checkConfigration = () => {
 
         if (fileName.includes('Appointment')) {
-            console.log("first", fileName);
             setLoanType("A");
         } else if (fileName.includes('JoiningKit')) {
-            console.log("2nd", fileName);
             setLoanType("J");
         } else {
-            console.log("3rd", fileName);
-
             if (esignCount !== null && esignCount == 0) {
-                console.log("4th", esignCount);
                 setLoanType("E");
             } else if (esignCount !== null && esignCount === 1) {
-                console.log("5th", esignCount);
                 setLoanType("F");
             } else if (esignCount !== null && esignCount === 2) {
-                console.log("6th", esignCount);
                 setLoanType("S");
 
             } else {
-                console.log("7th", esignCount);
                 setLoanType("K");
             }
 
@@ -189,13 +178,11 @@ const Proceed_for_Esign = (props) => {
 
         }
 
-        console.log("first,,,,,,", loanType)
 
     }
 
     useEffect(() => {
         if (loanType) {
-            console.log("loanType", loanType);
             setDocTypeView(true);
         }
     }, [loanType])
@@ -211,8 +198,6 @@ const Proceed_for_Esign = (props) => {
     }
 
     const getEsignDocument = async (clienid) => {
-
-
 
         const data = {
             preUpload: "true",
@@ -244,25 +229,33 @@ const Proceed_for_Esign = (props) => {
         axios.post(`${API}/api/Kyc/GetSignedDocument`, data)
             .then((response) => {
                 const returnedData = response;
-                console.log("getDocumentResponse", returnedData);
+                console.log("getDocumentResponse", returnedData?.data);
 
-                if (returnedData?.status == "200" || returnedData?.status === "200") {
-                    Toast({
-                        type: 'success',
-                        text: "Esign Done Successfully"
-                    })
+                if (returnedData && Object.keys(returnedData).length > 0) {
+
+                    if (returnedData?.data != "" && returnedData?.data !== null) {
+
+                        Alert.alert(returnedData.data);
+
+
+                    } else if (returnedData?.error !== null && returnedData?.error !== '') {
+
+                        Alert.alert(returnedData?.error);
+
+                    } else {
+
+                        Alert.alert('E-Sign Done Succesfully');
+                    }
 
                     props.navigation.navigate("CandidateDashboard")
 
-                }
-                // props.goBack();
 
-            }).catch((error) => {
-                console.log("response", JSON.stringify(error))
-                // Toast.show({
-                //     type: 'error',
-                //     text1: error
-                // })
+
+                    // Toast.show({
+                    //     type:'success',
+                    //     text1:`${returnedData.data}`
+                    // })
+                }
 
             })
 
@@ -356,17 +349,25 @@ const Proceed_for_Esign = (props) => {
                     // console.log("esignResponseData1", esignRes["status_code"]);
                     console.log("esignResponstatus", esignRes.status_code);
 
-                    if (esignRes.status_code == "200" || esignRes.status_code === "200") {
+                    if (esignRes?.status_code == "200" || esignRes?.status_code === "200") {
 
 
                         getEsignDocument(returnedData?.data?.client_id);
 
-                    } else {
+                    } else if (esignRes?.status_code == '433' || esignRes?.status_code === '433') {
 
+                        Toast.show({
+                            type: 'error',
+                            text1: esignRes?.message
+                        })
+
+                        props.navigation.goBack();
+                    }
+                    else {
 
                         Toast.show({
                             type: 'success',
-                            text1: esignRes.status_code
+                            text1: esignRes?.message
                         })
                     }
 

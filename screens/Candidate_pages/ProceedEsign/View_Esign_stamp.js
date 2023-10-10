@@ -48,22 +48,18 @@ const View_Esign_stamp = (props) => {
     if (candidateList[0]?.ESSIGN_CNT === 0) {
 
       setDocumentUrl("IndementyBond/" + candidateList[0]?.FILE_NAME)
-      console.log("documentFileNAme", "IndementyBond/" + candidateList[0]?.FILE_NAME);
 
     } else if (candidateList[0]?.ESSIGN_CNT === 1) {
 
       setDocumentUrl("CandidateSign/" + candidateList[0]?.FILE_NAME)
-      console.log("documentFileNAme", "CandidateSign/" + candidateList[0]?.FILE_NAME);
 
     } else if (candidateList[0]?.ESSIGN_CNT === 2) {
 
       setDocumentUrl("FirstGranterSign/" + candidateList[0]?.FILE_NAME)
-      console.log("documentFileNAme", "FirstGranterSign/" + candidateList[0]?.FILE_NAME);
 
     } else {
 
       setDocumentUrl("SignedDocument/" + candidateList[0]?.FILE_NAME)
-      console.log("documentFileNAme", "SignedDocument/" + candidateList[0]?.FILE_NAME);
 
     }
 

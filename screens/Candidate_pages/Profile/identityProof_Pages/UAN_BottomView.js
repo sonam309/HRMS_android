@@ -12,6 +12,7 @@ import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { showAlert, closeAlert } from "react-native-customisable-alert";
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 
 const UAN_BottomView = (props) => {
@@ -43,6 +44,16 @@ const UAN_BottomView = (props) => {
   const MemberEps1952 = ["YES", "NO"]
   const MemberEps1995 = ["YES", "NO"]
 
+  const [uanValidationMsg, setUanValidationMsg] = useState('');
+  const [validateUanUser, setValidateUanUser] = useState('');
+  const [uanStausCode, setUanStatusCode] = useState('');
+  const [uanData, setUanData] = useState({});
+
+
+  const [otp, setOtp] = useState("");
+  const [otpBox, setOtpBox] = useState(false);
+
+  const [isUanValidated, setIsUanValidated] = useState(false)
 
 
   useEffect(() => {
@@ -71,7 +82,14 @@ const UAN_BottomView = (props) => {
       }, 2000);
 
       return false;
-    } else {
+    } else if (!isUanValidated) {
+
+      Toast.show({
+        type: 'error',
+        text1: 'Please Validate UAN First'
+      })
+    }
+    else {
       setError('');
       return true;
     }
@@ -164,8 +182,8 @@ const UAN_BottomView = (props) => {
           setLoaderVisible(false)
           // console.log(err);
           Toast.show({
-            type:'error',
-            text1:err
+            type: 'error',
+            text1: err
           })
         });
     }
@@ -177,7 +195,143 @@ const UAN_BottomView = (props) => {
     }
   }
 
+  const getPassbookDetail = () => {
+    const body = {
+      candidateId: userId,
+      uanDetails: "",
+      userId: userId,
+      operFlag: "A",
+      raw: JSON.stringify({
+        "client_id": uanData?.client_id
+      })
+    }
+    // const body = JSON.stringify(value)
+    axios
+      .post(`${API}/api/Hrms/uanNoPassbook`, body)
+      .then(response => {
+        setLoaderVisible(false)
+        if (response.data.Result[0].FLAG === "S") {
+          setIsUanValidated(true);
+          setOtpBox(false);
+          Toast.show({
+            type: "success",
+            text1: "Uan validated and saved succesfully"
+          })
+          setLoaderVisible(false)
+        }
 
+      })
+      .catch(error => {
+        setLoaderVisible(false)
+      });
+  }
+
+  const validateUan = () => {
+
+    setUanValidationMsg('');
+    if (uanNumber !== "" && uanNumber !== undefined) {
+      const value = {
+        "id_number": uanNumber,
+      }
+      const data = {
+        raw: JSON.stringify(value)
+      }
+      setLoaderVisible(true)
+      axios
+        .post(`${API}/api/Hrms/uanNoOtpSend`, data)
+        .then(response => {
+
+          const returnedData = response.data;
+          setLoaderVisible(false);
+          // const msg = returnedData[0].MSG
+          // setUanValidationMsg(returnedData.status_code);
+          setUanStatusCode(returnedData.status_code)
+          // setUanValidationMsg(returnedData.data.full_name);
+
+          if ((returnedData.status_code) == "200") {
+            setUanData(response.data.data)
+            if (response.data.data.otp_sent) {
+              setOtpBox(true)
+            }
+            Toast.show({
+              type: 'success',
+              text1: "Uan Validate Successfully",
+            });
+
+
+          } else if ((returnedData.status_code) >= "400") {
+            Toast.show({
+              type: 'error',
+              text1: "Invalidate Uan"
+            });
+          } else {
+            Toast.show({
+              type: 'error',
+              text1: "Something went wrong, Please try again later..."
+            });
+
+          }
+
+        })
+        .catch(error => {
+
+          setLoaderVisible(false);
+          Toast.show({
+            type: 'error',
+            text1: JSON.stringify(error)
+          })
+        });
+
+    } else {
+      setLoaderVisible(false);
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter Pan Number'
+      })
+
+    }
+  }
+
+  const validateOtp = () => {
+    setLoaderVisible(true)
+    const value = {
+      "client_id": uanData?.client_id,
+      "otp": otp
+    }
+    const data = {
+      raw: JSON.stringify(value)
+    }
+    axios
+      .post(`${API}/api/Hrms/uanNoOtpVerfication`, data)
+      .then(response => {
+        if (response?.data?.data?.otp_validated) {
+          getPassbookDetail()
+        } else if (!response?.data.status) {
+          Toast.show({
+            type: "error",
+            text1: response?.data?.message
+          })
+          setLoaderVisible(false)
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Please enter correct otp"
+          })
+          setLoaderVisible(false)
+        }
+        setLoaderVisible(false)
+
+      })
+      .catch(error => {
+        setLoaderVisible(false)
+      });
+  }
+
+  useEffect(() => {
+    if (isUanValidated) {
+      setIsUanValidated(false)
+    }
+  }, [uanNumber])
 
   return (
 
@@ -185,7 +339,7 @@ const UAN_BottomView = (props) => {
 
       {/* close button */}
       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <Text style={{...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
+        <Text style={{ ...FONTS.h3, color: COLORS.orange }}>UAN Details</Text>
         {approvalFlag === "R" ? <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => {
           showAlert({
             title: approveRemark,
@@ -204,6 +358,7 @@ const UAN_BottomView = (props) => {
         </TouchableOpacity>
 
       </View>
+
       {loaderVisible ? <View style={{
         alignItems: "center",
         justifyContent: "center",
@@ -229,12 +384,76 @@ const UAN_BottomView = (props) => {
         >
           {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           <View>
-
+            {/* <Text>{JSON.stringify(uanData, isUanValidated)}</Text> */}
             {/* Uan number */}
-            <View style={{ height: 75, marginTop: 10 }}>
-              <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
-              <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}>
+              <View style={{ height: 75, marginTop: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.body4 }}>UAN Number</Text>
+                <TextInput style={{ width: responsiveWidth(55), borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Number' onChangeText={setUanNumber} value={uanNumber} keyboardType="number-pad" maxLength={15} />
+              </View>
+
+              <TouchableOpacity disabled={isUanValidated} onPress={() => validateUan()} >
+                <LinearGradient
+                  colors={isUanValidated ? [COLORS.lightGray, COLORS.lightGray] : [COLORS.orange1, COLORS.disableOrange1]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 2, y: 0 }}
+                  style={{ height: 45, borderRadius: 12, padding: 8, marginTop: 20, width: responsiveWidth(30), alignSelf: "flex-end" }}>
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                    Validate Uan </Text>
+                </LinearGradient>
+              </TouchableOpacity>
             </View>
+
+            {otpBox &&
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+
+              }}>
+                <TextInput
+                  placeholder='Enter otp'
+                  style={{
+                    borderColor: "#000",
+                    borderWidth: 1,
+                    borderRadius: 12,
+                    height: 45,
+                    width: responsiveWidth(55)
+                  }}
+                  value={otp}
+                  onChangeText={setOtp}
+                />
+                <TouchableOpacity
+                  onPress={() => validateOtp()}
+                  style={{
+                    width: responsiveWidth(30),
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                  }}>
+                  <LinearGradient
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 2, y: 0 }}
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    style={{
+                      width: "100%",
+                      height: 45,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 12
+                    }}
+                  >
+                    <Text style={{
+                      color: "#fff"
+                    }}>Submit Otp</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            }
 
             {/* Uan name */}
             <View style={{ height: 75, marginTop: 10 }}>
@@ -293,25 +512,40 @@ const UAN_BottomView = (props) => {
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setPriviousUan} value={periviousUan} keyboardType="number-pad" maxLength={15} />
             </View>
 
+
             {/* Scheme Certificate No.*/}
             {/* <View style={{ height: 75, marginTop: 10 }}>
               <Text style={{ color: COLORS.green, ...FONTS.body4 }}>Scheme Certificate No.</Text>
               <TextInput style={{ borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, height: 45, paddingLeft: 5 }} placeholder='Name' onChangeText={setCertificatesNum} value={certificateNum} keyboardType="number-pad" />
             </View> */}
             {/* save button */}
-            {approvalFlag !== "A" ?
-            <TouchableOpacity onPress={() => saveUANDetails()} >
+            {approvalFlag !== "A" &&
+              <TouchableOpacity onPress={() => saveUANDetails()} >
 
-              <LinearGradient
-                colors={[COLORS.orange1, COLORS.disableOrange1]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 2, y: 0 }}
-                style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
-                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
-                  {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
-              </LinearGradient>
+                <LinearGradient
+                  colors={[COLORS.orange1, COLORS.disableOrange1]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 2, y: 0 }}
+                  style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                    {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
+                </LinearGradient>
 
-            </TouchableOpacity>:""}
+              </TouchableOpacity>}
+
+            {/* {isUanValidated &&
+              <TouchableOpacity onPress={() => saveUANDetails()} >
+
+                <LinearGradient
+                  colors={[COLORS.orange1, COLORS.disableOrange1]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 2, y: 0 }}
+                  style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+                  <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                    {Object.keys(edit).length > 2 ? "Update" : "Save"} </Text>
+                </LinearGradient>
+
+              </TouchableOpacity>} */}
 
           </View>
 

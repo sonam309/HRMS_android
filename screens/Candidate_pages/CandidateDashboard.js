@@ -45,7 +45,6 @@ const CandidateDashboard = (props) => {
     useEffect(() => {
         // setShowAlert(true)
         if (candidateId) {
-            // console.log("insidee",candidateId);
             getCandidateOfferDetails()
         }
         // return () => { getCandidateOfferDetails() }
@@ -85,7 +84,6 @@ const CandidateDashboard = (props) => {
     //         })
     //     }
 
-    //     console.log("DashboardEsignButton", data)
 
     //     axios.post(`${API}/api/Kyc/ProceedForEsign`, data)
     //         .then(async (response) => {
@@ -337,135 +335,127 @@ const CandidateDashboard = (props) => {
             </View>
             <ScrollView>
                 <Loader loaderVisible={loaderVisible} />
-                {/* {
-                employeeCreateFlag!==''&& employeeCreateFlag!==null && employeeCreateFlag==='Y'?
-                : */}
+                {
+                    employeeCreateFlag !== '' && employeeCreateFlag !== null && employeeCreateFlag === 'Y' ?
+                        <>
 
 
-                <View style={{ flex: 1, marginHorizontal: 10, marginTop: 20, borderRadius: 12, padding: 15 }}>
+                            <View style={{ flex: 1, marginHorizontal: 10, marginTop: 20, borderRadius: 12, padding: 15 }}>
 
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <View >
-                            <View style={{ flexDirection: 'row', marginLeft: 12 }}>
-                                {
-                                    esignCount >= 0 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
-                                }
-                                <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
-                                    -----------
-                                </Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                    <View >
+                                        <View style={{ flexDirection: 'row', marginLeft: 12 }}>
+                                            {
+                                                esignCount >= 0 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                            }
+                                            <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
+                                                -----------
+                                            </Text>
+                                        </View>
+                                        <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
+                                            Candidate
+                                        </Text>
+                                    </View>
+
+                                    <View >
+                                        <View style={{ flexDirection: 'row', marginLeft: -5 }}>
+                                            {
+                                                esignCount == 1 || esignCount >= 1 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                            }
+                                            <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
+                                                --------------
+                                            </Text>
+                                        </View>
+                                        <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
+                                            1st Guarantor
+                                        </Text>
+                                    </View>
+                                    <View >
+                                        <View style={{ flexDirection: 'row', marginLeft: -5 }}>
+                                            {
+                                                esignCount == 2 || esignCount >= 2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                            }
+                                            <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
+                                                ---------------
+                                            </Text>
+                                        </View>
+                                        <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
+                                            2nd Guarantor
+                                        </Text>
+                                    </View>
+
+                                    <View >
+                                        <View style={{ flexDirection: 'row', marginLeft: -5 }}>
+                                            {
+                                                esignCount !== null && esignCount > 2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
+                                            }
+
+                                        </View>
+                                        <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
+                                            Complete
+                                        </Text>
+                                    </View>
+
+                                </View>
                             </View>
-                            <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
-                                Candidate
-                            </Text>
-                        </View>
 
-                        <View >
-                            <View style={{ flexDirection: 'row', marginLeft: -5 }}>
-                                {
-                                   esignCount == 1 || esignCount>=1 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
-                                }
-                                <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
-                                    --------------
-                                </Text>
-                            </View>
-                            <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
-                                1st Guarantor
-                            </Text>
-                        </View>
-                        <View >
-                            <View style={{ flexDirection: 'row', marginLeft: -5 }}>
-                                {
-                                    esignCount == 2||esignCount>=2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
-                                }
-                                <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
-                                    ---------------
-                                </Text>
-                            </View>
-                            <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
-                                2nd Guarantor
-                            </Text>
-                        </View>
+                            <TouchableOpacity disabled={esignCount <= 2 ? false : true} onPress={() => props.navigation.navigate("Pending_Esign_list")}>
+                                <View style={{ borderRadius: 12, backgroundColor: (esignCount < 2 ? COLORS.white : '#d9d9d9'), width: '35%', justifyContent: 'center', padding: 15, marginLeft: 20, elevation: 2 }}>
 
-                        <View >
-                            <View style={{ flexDirection: 'row', marginLeft: -5 }}>
-                                {
-                                    esignCount !== null && esignCount > 2 ? <Image source={circleFill} style={{ width: 40, height: 40, justifyContent: 'center' }} /> : <Image source={circleTranceparent} style={{ width: 40, height: 40, justifyContent: 'center' }} />
-                                }
-                                {/* <Text style={{ marginTop: 7, color: COLORS.orange1, justifyContent: 'center', ...FONTS.h5, marginLeft: -8 }}>
-                                        ---------------
-                                    </Text> */}
-                            </View>
-                            <Text style={{ color: COLORS.black, ...FONTS.h5, }}>
-                                Complete
-                            </Text>
-                        </View>
+                                    <Image source={EsignD} style={{ width: 60, height: 60, marginTop: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 30 }} />
 
+                                    <Text style={{ ...FONTS.h5, color: COLORS.black, alignSelf: 'center', marginTop: 5 }}>My Esign</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </>
+                        :
+                        // header view
+                        //  Status view  
+                        <View style={{ marginHorizontal: 10, }}>
+                            <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
+                                <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
+                                    <View>
+                                        {growingDays ? <PieChart
+                                            widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                            {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
+                                        </PieChart> : <PieChart
+                                            widthAndHeight={100} series={[0, 1]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
+                                            {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
+                                        </PieChart>}
 
-                    </View>
-                </View>
+                                        {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
 
+                                        {growingDays ? <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
+                                            <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
+                                            <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
+                                            >Days to</Text>
+                                            <Text style={{
+                                                ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700", lineHeight: 12
+                                            }}>Join</Text>
+                                        </View> : <Text style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 18, padding: 5, left: 30, ...FONTS.h1, color: COLORS.black }}>...</Text>}
+                                    </View>
+                                    <View>
+                                        <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
 
-                <TouchableOpacity disabled={esignCount<=2?false:true} onPress={() => props.navigation.navigate("Pending_Esign_list")}>
-                    <View style={{ borderRadius: 12, backgroundColor:(esignCount<2? COLORS.white:'#d9d9d9'), width: '35%', justifyContent: 'center', padding: 15, marginLeft: 20,elevation:2}}>
-
-                        <Image source={EsignD} style={{ width: 60, height: 60, marginTop: 10, justifyContent: 'center', alignItems: 'center', marginLeft: 30 }} />
-
-                        <Text style={{ ...FONTS.h5, color: COLORS.black, alignSelf: 'center', marginTop: 5 }}>My Esign</Text>
-
-                        {/* <Icons name="arrow-right" size={30} color={COLORS.green} style={{ alignSelf: 'center', marginLeft: 60 }} />  */}
-
-
-
-                    </View>
-                </TouchableOpacity>
-
-                {/* // header view
-                //  Status view  */}
-                <View style={{ marginHorizontal: 10, }}>
-                    <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
-                        <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
-                            <View>
-                                {growingDays ? <PieChart
-                                    widthAndHeight={100} series={[growingDays, totalDay - growingDays]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
-                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
-                                </PieChart> : <PieChart
-                                    widthAndHeight={100} series={[0, 1]} sliceColor={[COLORS.green, COLORS.white]} coverRadius={0.85} >
-                                    {/* {console.log("joining days", daysToJoin, totalDay, growingDays, (totalDay - growingDays))} */}
-                                </PieChart>}
-
-                                {/* series={[daysToJoin === null ? "1" : daysToJoin, totalDay === null ? "2" : totalDay - daysToJoin === null ? "1" : daysToJoin]} */}
-
-                                {growingDays ? <View style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 10, padding: 10, }}>
-                                    <Text style={{ ...FONTS.h2, color: COLORS.black, alignSelf: "center", fontWeight: "bold" }}>{daysToJoin === null ? "1" : daysToJoin}</Text>
-                                    <Text style={{ ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700" }}
-                                    >Days to</Text>
-                                    <Text style={{
-                                        ...FONTS.body5, color: COLORS.orange1, alignSelf: "center", fontWeight: "700", lineHeight: 12
-                                    }}>Join</Text>
-                                </View> : <Text style={{ position: "absolute", height: 80, width: 80, borderRadius: 45, alignItems: "center", justifyContent: "center", alignSelf: "center", top: 18, padding: 5, left: 30, ...FONTS.h1, color: COLORS.black }}>...</Text>}
-                            </View>
-                            <View>
-                                <Text style={{ color: COLORS.black, fontSize: 15, flexWrap: "wrap", textAlign: 'left' }}>Job Status Pending at </Text>
-
-                                <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
-                                <TouchableOpacity style={{
-                                    marginTop: 12
-                                }} onPress={() => getCandidateOfferDetails("track")}>
-                                    <LinearGradient
-                                        colors={[COLORS.orange1, COLORS.disableOrange1]}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 2, y: 0 }}
-                                        style={{ borderRadius: 8, padding: 8, }} >
-                                        <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Track job Status</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
+                                        <Text style={{ ...FONTS.body1, fontSize: 16, color: COLORS.green, textAlign: 'left', lineHeight: 22 }}> {current_Status}</Text>
+                                        <TouchableOpacity style={{
+                                            marginTop: 12
+                                        }} onPress={() => getCandidateOfferDetails("track")}>
+                                            <LinearGradient
+                                                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                                start={{ x: 0, y: 0 }}
+                                                end={{ x: 2, y: 0 }}
+                                                style={{ borderRadius: 8, padding: 8, }} >
+                                                <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Track job Status</Text>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </View>
-                {/* } */}
+                }
 
                 {/* offer Letter view */}
                 <View style={{ marginHorizontal: 12, marginVertical: 12 }}>

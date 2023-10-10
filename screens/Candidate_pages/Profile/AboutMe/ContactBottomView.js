@@ -86,7 +86,6 @@ const ContactBottomView = ({ onPress }) => {
         if (ValidateForm()) {
             setLoaderVisible(true)
             try {
-                // console.warn(TXNID);
                 let contactData = {
                     txnId: userId,
                     operFlag: operFlag,
@@ -98,7 +97,6 @@ const ContactBottomView = ({ onPress }) => {
                     alternatePhoneNo: alternatePhone,
                 };
 
-                // console.log("contcatrequestdata", contactData);
                 var formData = new FormData();
                 formData.append('data', JSON.stringify(contactData));
                 // console.log(formData._parts);
