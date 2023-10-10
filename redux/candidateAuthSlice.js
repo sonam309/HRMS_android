@@ -20,6 +20,7 @@ const candidateAuthSlice = createSlice({
     },
     reducers: {
         logIn(state, actions) {
+            console.log("gfhg",actions.payload);
             state.candidateId = actions.payload?.candidateId
             state.candidateName = actions.payload?.candidateName
             state.candidateStatusId = actions.payload?.candidateStatusId

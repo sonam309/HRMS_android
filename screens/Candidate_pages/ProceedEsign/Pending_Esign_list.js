@@ -19,12 +19,13 @@ const Pending_Esifn_list = (props) => {
 
   const dispatch = useDispatch()
   const { candidateList, loading } = useSelector((state) => state.eSign)
-  const { candidateId} = useSelector(state => state.candidateAuth)
+  const { candidateId } = useSelector(state => state.candidateAuth)
 
 
   useEffect(() => {
 
     getEsignData();
+
 
   }, [])
 
@@ -34,6 +35,7 @@ const Pending_Esifn_list = (props) => {
   const getEsignData = async () => {
     const data = {
       user: candidateId,
+      candidateId:candidateId,
       flag: 'V'
     }
     dispatch(getCandidateList(data))
@@ -71,6 +73,7 @@ const Pending_Esifn_list = (props) => {
         :
         (_.map(candidateList, (item, index) => {
           return (
+            <View key={index}>
             <View style={{
               width: responsiveWidth(90),
               flexDirection: "row",
@@ -81,9 +84,9 @@ const Pending_Esifn_list = (props) => {
               backgroundColor: COLORS.white,
               marginTop: SIZES.radius,
               padding: SIZES.radius,
-              borderWidth:0.5,
-              borderColor:COLORS.orange,
-              elevation:4,
+              borderWidth: 0.5,
+              borderColor: COLORS.orange,
+              elevation: 4,
               borderRadius: SIZES.radius
             }} key={index}>
 
@@ -123,17 +126,17 @@ const Pending_Esifn_list = (props) => {
                   }}>Status</Text>
                   {item.ESSIGN_CNT === 0 ?
                     <Text style={{
-                      color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
+                      color: COLORS.green, flexWrap: 'wrap', width: responsiveWidth(40),
                     }}>Candidate Esign Pending</Text>
 
                     : item.ESSIGN_CNT === 1 ?
                       <Text style={{
-                        color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
+                        color: COLORS.green, flexWrap: 'wrap', width: responsiveWidth(40),
                       }}>First gauranter Esign Pending</Text>
                       :
                       item.ESSIGN_CNT === 2 ?
                         <Text style={{
-                          color: COLORS.green,flexWrap:'wrap',width:responsiveWidth(40),
+                          color: COLORS.green, flexWrap: 'wrap', width: responsiveWidth(40),
                         }}>2nd gauranter Esign Pending</Text> :
                         item.KYC_FLAG && item.KYC_FLAG === "F" ?
                           <Text>VKYC Complete</Text>
@@ -148,13 +151,13 @@ const Pending_Esifn_list = (props) => {
               }}>
 
                 <View >
-                  <Text style={{ ...FONTS.h4, color: COLORS.black,textAlign:'right',marginRight:10,marginTop:20, }}>Post</Text>
-                  <Text style={{ ...FONTS.body4, fontWeight: "600",textAlign:'right',marginRight:10, }}>{item?.POST}</Text>
+                  <Text style={{ ...FONTS.h4, color: COLORS.black, textAlign: 'right', marginRight: 10, marginTop: 20, }}>Post</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600", textAlign: 'right', marginRight: 10, }}>{item?.POST}</Text>
                 </View>
 
                 <View style={{ marginTop: SIZES.radius }}>
-                  <Text style={{ ...FONTS.h4, color: COLORS.black,textAlign:'right',marginRight:10, }}>Mobile No.</Text>
-                  <Text style={{ ...FONTS.body4, fontWeight: "600",textAlign:'right',marginRight:10, }}>{item?.CANDIDATE_MOB}</Text>
+                  <Text style={{ ...FONTS.h4, color: COLORS.black, textAlign: 'right', marginRight: 10, }}>Mobile No.</Text>
+                  <Text style={{ ...FONTS.body4, fontWeight: "600", textAlign: 'right', marginRight: 10, }}>{item?.CANDIDATE_MOB}</Text>
                 </View>
 
                 <View style={{ marginTop: 10, }} >
@@ -166,16 +169,20 @@ const Pending_Esifn_list = (props) => {
                     labelStyle={{ lineHeight: 19 }}
                     elevation={6}
                   />
-                  
+
                 </View>
 
 
               </View>
-              <TouchableOpacity style={{ position: "absolute", bottom: 5, right: 20  }} onPress={()=>props.navigation.navigate("viewEsignStamp")} >
-                    <Icons name="eye" size={25} color={COLORS.green} />
-                  </TouchableOpacity>
+              <TouchableOpacity style={{ position: "absolute", bottom: 5, right: 20 }} onPress={() => props.navigation.navigate("viewEsignStamp")} >
+                <Icons name="eye" size={25} color={COLORS.green} />
+              </TouchableOpacity>
 
             </View>
+            {/* <Text>
+            {JSON.stringify(item?.ASSIGN_TO)}
+          </Text> */}
+          </View>
           )
         }))
       }

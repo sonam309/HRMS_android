@@ -612,19 +612,22 @@ const Candidate_profile = () => {
 
     };
 
+    console.log(profilePicData)
+
     var formData = new FormData();
 
     formData.append('data', JSON.stringify(profilePicData));
 
-    axios
-      .post(`${API}api/hrms/profilePic`, formData)
+    fetch(`${API}api/hrms/profilePic`, {
+      method: "POST",
+      body: formData})
       .then(res => {
         console.log("profilePic", res);
         setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
 
       })
       .catch(error => {
-        console.log("profilepic",error);
+        console.log("profilepic",JSON.stringify(error));
 
       });
 

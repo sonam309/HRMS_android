@@ -46,14 +46,10 @@ const CandidateDashboard = (props) => {
         // setShowAlert(true)
         if (candidateId) {
             getCandidateOfferDetails()
+
         }
         // return () => { getCandidateOfferDetails() }
     }, [candidateId])
-
-
-
-
-
 
     // const EsignEvent = async () => {
     //     const data = {
@@ -119,18 +115,31 @@ const CandidateDashboard = (props) => {
 
     useEffect(() => {
 
+        if(candidateId){
         getEsignData();
+        }
 
     }, [])
 
+
+    useEffect(() => {
+
+        if(candidateId){
+        getEsignData();
+        }
+
+    }, [candidateId])
 
 
     // getEsignData
     const getEsignData = async () => {
         const data = {
             user: candidateId,
+            candidateId:candidateId,
             flag: 'V'
         }
+
+        console.log("esigncanid", data);
 
         axios.post(`${API}/api/saveEsignDataNew`, data).then((response) => {
 
@@ -325,8 +334,7 @@ const CandidateDashboard = (props) => {
                         </Text>
                     </TouchableOpacity> */}
 
-
-
+                   
 
                     <TouchableOpacity style={{ justifyContent: 'flex-end', backgroundColor: COLORS.white }} onPress={() => { props.navigation.navigate("Candidate_Login"), dispatch(candidateAuthActions.logOut()) }}>
                         <Icons name='logout' size={30} style={{ color: COLORS.black, padding: 8 }} />
@@ -342,7 +350,7 @@ const CandidateDashboard = (props) => {
 
                             <View style={{ flex: 1, marginHorizontal: 10, marginTop: 20, borderRadius: 12, padding: 15 }}>
 
-
+                               
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                     <View >
                                         <View style={{ flexDirection: 'row', marginLeft: 12 }}>

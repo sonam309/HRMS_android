@@ -101,11 +101,13 @@ const Login = (props) => {
                 let growingDays = returnedData.GROWING_DAY
                 let totalDay = returnedData.TOTAL_DAY
                 let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL
+                let candidateId=returnedData.USER_ID
 
                 setLoaderVisible(false)
                 setLoginResponse(returnedData);
+                console.log("loginresp",returnedData.USER_ID);
                 returnedData.FLAG === "S" ? ((props.navigation.navigate("Candidate_page")), dispatch(candidateAuthActions.logIn({
-                    candidateId: userId,
+                    candidateId:returnedData.USER_ID,
                     candidateName,
                     candidateRole,
                     candidateStatus,

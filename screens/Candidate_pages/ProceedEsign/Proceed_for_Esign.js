@@ -192,6 +192,7 @@ const Proceed_for_Esign = (props) => {
     const getEsignData = async () => {
         const data = {
             user: candidateId,
+            candidateId:candidateId,
             flag: 'V'
         }
         dispatch(getCandidateList(data))
@@ -228,19 +229,19 @@ const Proceed_for_Esign = (props) => {
 
         axios.post(`${API}/api/Kyc/GetSignedDocument`, data)
             .then((response) => {
-                const returnedData = response;
-                console.log("getDocumentResponse", returnedData?.data);
+                
+                console.log("getDocumentResponse", response);
 
-                if (returnedData && Object.keys(returnedData).length > 0) {
+                if (response &&  Object.keys(response).length > 0) {
 
-                    if (returnedData?.data != "" && returnedData?.data !== null) {
+                    if (response?.data != "" && response?.data !== null) {
+                        console.log("1")
+                        Alert.alert(response.data);
 
-                        Alert.alert(returnedData.data);
 
-
-                    } else if (returnedData?.error !== null && returnedData?.error !== '') {
-
-                        Alert.alert(returnedData?.error);
+                    } else if (response?.error && response?.error !== null && response?.error !== '') {
+                             console.log("2")
+                        Alert.alert(response?.error);
 
                     } else {
 
