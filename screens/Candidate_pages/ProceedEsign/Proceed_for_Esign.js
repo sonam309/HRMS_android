@@ -14,6 +14,7 @@ import { API } from '../../../utility/services';
 import GetLocation from 'react-native-get-location'
 import Loader from '../../../components/Loader';
 import axios from 'axios';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 
 
@@ -54,7 +55,7 @@ const Proceed_for_Esign = (props) => {
     const [tkenRes, setTkenRes] = useState();
     const [input, setInput] = useState("");
     const [count, setCount] = useState("");
-    const [authMode, setAuthMode] = useState('1');
+    const [authMode, setAuthMode] = useState('2');
     const [esignStatusCode, setEsignStatusCode] = useState('');
     const [clientId, setClientId] = useState('');
     const [name, setName] = useState('');
@@ -192,7 +193,7 @@ const Proceed_for_Esign = (props) => {
     const getEsignData = async () => {
         const data = {
             user: candidateId,
-            candidateId:candidateId,
+            candidateId: candidateId,
             flag: 'V'
         }
         dispatch(getCandidateList(data))
@@ -229,19 +230,19 @@ const Proceed_for_Esign = (props) => {
 
         axios.post(`${API}/api/Kyc/GetSignedDocument`, data)
             .then((response) => {
-                
+
                 console.log("getDocumentResponse", response);
 
-                if (response &&  Object.keys(response).length > 0) {
+                if (response && Object.keys(response).length > 0) {
 
                     if (response?.data != "" && response?.data !== null) {
                         console.log("1")
-                        Alert.alert(response.data);
+                        { response.data && Alert.alert(response?.data); }
 
 
                     } else if (response?.error && response?.error !== null && response?.error !== '') {
-                             console.log("2")
-                        Alert.alert(response?.error);
+                        console.log("2")
+                        { response?.error && Alert.alert(response?.error); }
 
                     } else {
 
@@ -296,8 +297,6 @@ const Proceed_for_Esign = (props) => {
             setAuthMode('1');
         } else if (isBiometric) {
             setAuthMode('2');
-        } else {
-            setAuthMode('');
         }
 
         const data = {
@@ -346,30 +345,33 @@ const Proceed_for_Esign = (props) => {
 
                     // esignResponseData=eventCount;
                     const esignRes = JSON.parse(eventCount);
-                    console.log("esignResponseData", esignRes);
+                    // console.log("esignResponseData", esignRes);
                     // console.log("esignResponseData1", esignRes["status_code"]);
-                    console.log("esignResponstatus", esignRes.status_code);
+                    // console.log("esignResponstatus", esignRes.status_code);
 
                     if (esignRes?.status_code == "200" || esignRes?.status_code === "200") {
 
-
                         getEsignDocument(returnedData?.data?.client_id);
 
-                    } else if (esignRes?.status_code == '433' || esignRes?.status_code === '433') {
+                    } else if (esignRes?.status_code == "433" || esignRes?.status_code === "433") {
 
-                        Toast.show({
-                            type: 'error',
-                            text1: esignRes?.message
-                        })
-
+                        {
+                            Toast.show({
+                                type: 'error',
+                                text1: JSON.stringify(esignRes?.message)
+                            })
+                        }
                         props.navigation.goBack();
                     }
                     else {
-
-                        Toast.show({
-                            type: 'success',
-                            text1: esignRes?.message
-                        })
+                        console.log("errrrr", JSON.stringify(esignRes?.message))
+                        {
+                            Toast.show({
+                                type: 'success',
+                                text1: JSON.stringify(esignRes?.message)
+                            })
+                        }
+                        props.navigation.goBack();
                     }
 
 
@@ -543,8 +545,8 @@ const Proceed_for_Esign = (props) => {
                                 colors={[COLORS.orange1, COLORS.disableOrange1]}
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 2, y: 0 }}
-                                style={{ borderRadius: 8, padding: 10, marginTop: 20 }} >
-                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, }}>
+                                style={{ borderRadius: 8, padding: 10, position: 'absolute', bottom: 0, marginBottom: 10, justifyContent: 'center', flex: 1, width: responsiveWidth(90), justifyContent: 'space-evenly' }} >
+                                <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, marginLeft: 20, marginRight: 20 }}>
                                     Submit
                                 </Text>
                             </LinearGradient>
