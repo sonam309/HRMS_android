@@ -16,7 +16,8 @@ const CustomInput = ({
     isPasswordInput,
     returnKeyType="default",
     maxlength,
-    textInputStyle
+    textInputStyle,
+    editable
 }) => {
     return (
         <>
@@ -45,11 +46,13 @@ const CustomInput = ({
                             // padding: SIZES.radius * 1.3,
                             height: 45,
                             borderRadius: SIZES.base,
-
+                            ...textInputStyle
                         }}
                         keyboardType={keyboardType}
                         secureTextEntry={secureTextEntry}
                         maxLength={maxlength}
+                        editable={editable}
+
                     />
                     {icon}
                 </View>

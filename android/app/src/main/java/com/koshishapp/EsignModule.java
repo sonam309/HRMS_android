@@ -25,7 +25,12 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.google.gson.JsonObject;
 import com.surepass.surepassesign.InitSDK;
+
+import org.json.JSONException;
+
+import java.util.Objects;
 
 public class EsignModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
@@ -100,7 +105,9 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     public void GetToken(String Token) {
 //        Toast.makeText(context, "" + Token, Toast.LENGTH_SHORT).show();
 
+//        Toast.makeText(reactContext, data.toString(), Toast.LENGTH_LONG).show();
 
+//        Toast.makeText(reactContext, Token, Toast.LENGTH_LONG).show();
         reactContext.addActivityEventListener(this);
         Intent intent = new Intent(context, InitSDK.class);
         intent.putExtra("token", Token);
@@ -116,10 +123,12 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 
         if (i == 10001) {
 
-            String result = intent.getStringExtra("signedResponse");
+            String result = null;
+            if (intent != null) {
+                result = intent.getStringExtra("signedResponse");
+            }
             sendEvent(getReactApplicationContext(), "EventCount", result);
-//            Toast.makeText(activity, result, Toast.LENGTH_SHORT).show();
-
+//            Toast.makeText(activity, result, Toast.LENGTH_LONG).show();
 
         } else {
             sendEvent(getReactApplicationContext(), "EventCount", "EventCount4");
@@ -133,7 +142,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     public void onNewIntent(Intent intent) {
 //        sendEvent(context, "EventCount", "Start");
 //someActivityResultLauncher.launch(intent);
-        startActivityForResult(getReactApplicationContext().getCurrentActivity(), intent, 10001, new Bundle());
+        startActivityForResult(Objects.requireNonNull(getReactApplicationContext().getCurrentActivity()), intent, 10001, new Bundle());
     }
 
 

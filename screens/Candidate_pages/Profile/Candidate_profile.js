@@ -494,13 +494,13 @@ const Candidate_profile = () => {
 
         } else if (res.error) {
 
-          console.log('ImagePicker Error: ', res.error);
+          console.log('ImagePicker Error: ', res?.error);
 
         } else if (res.customButton) {
 
-          console.log('User tapped custom button: ', res.customButton);
+          console.log('User tapped custom button: ', res?.customButton);
 
-          alert(res.customButton);
+      
 
         } else {
 
@@ -510,7 +510,6 @@ const Candidate_profile = () => {
 
           console.log('Response = ', res);
 
-          const source = { uri: res.uri };
 
 
 
@@ -518,7 +517,7 @@ const Candidate_profile = () => {
 
             candidateId: userId,
 
-            profillePic: res.assets[0].fileName,
+            profillePic: res.assets[0]?.fileName,
 
             operFlag: 'A',
 
@@ -534,13 +533,13 @@ const Candidate_profile = () => {
 
           formData.append('fileUpload', {
 
-            name: `profilePicDoc_${userId}_${getFormattedTimestamp()}.${res.assets[0].type.split('/')[1]
+            name: `profilePicDoc_${userId}_${getFormattedTimestamp()}.${res?.assets[0]?.type?.split('/')[1]
 
               }`,
 
-            type: res.assets[0].type,
+            type: res.assets[0]?.type,
 
-            uri: res.assets[0].uri,
+            uri: res.assets[0]?.uri,
 
           });
 
@@ -556,7 +555,7 @@ const Candidate_profile = () => {
 
               console.log(res);
 
-              if (res.status === 200) {
+              if (res?.status === 200) {
 
                 Toast.show({
 
@@ -607,22 +606,23 @@ const Candidate_profile = () => {
   const getProfilePic = () => {
 
     let profilePicData = {
-      candidateId: userId,
+      candidateId: `${userId}`,
       operFlag: 'V',
 
     };
 
-    console.log(profilePicData)
 
     var formData = new FormData();
 
     formData.append('data', JSON.stringify(profilePicData));
 
-    fetch(`${API}api/hrms/profilePic`, {
-      method: "POST",
-      body: formData})
+
+
+    axios.post(`${API}api/hrms/profilePic`,
+       formData,  {
+       headers: { "Content-Type": "multipart/form-data" },
+      })
       .then(res => {
-        console.log("profilePic", res);
         setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
 
       })
