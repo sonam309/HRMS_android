@@ -55,7 +55,7 @@ const Proceed_for_Esign = (props) => {
     const [tkenRes, setTkenRes] = useState();
     const [input, setInput] = useState("");
     const [count, setCount] = useState("");
-    const [authMode, setAuthMode] = useState('2');
+    const [authMode, setAuthMode] = useState('1');
     const [esignStatusCode, setEsignStatusCode] = useState('');
     const [clientId, setClientId] = useState('');
     const [name, setName] = useState('');
@@ -237,16 +237,20 @@ const Proceed_for_Esign = (props) => {
 
                     if (response?.data != "" && response?.data !== null) {
                         console.log("1")
-                        { response.data && Alert.alert("E-sign alert!",response?.data); }
+                        { response?.data && Alert.alert("E-sign alert!", response?.data); }
 
 
                     } else if (response?.error && response?.error !== null && response?.error !== '') {
                         console.log("2")
-                        { response?.error && Alert.alert("E-sign error!",response?.error,); }
+                        { response?.error && Alert.alert("E-sign error!", response?.error,); }
 
                     } else {
 
-                        Alert.alert('E-Sign Done Succesfully');
+                        // Alert.alert('E-Sign Done Succesfully');
+                        Toast.show({
+                            type:'success',
+                            text1:"E-Sign Done Succesfully"
+                        })
                     }
 
                     props.navigation.navigate("CandidateDashboard")
@@ -298,7 +302,7 @@ const Proceed_for_Esign = (props) => {
         if (isMobileOtp) {
             setAuthMode('1');
         } else if (isBiometric) {
-            setAuthMode('2');
+            setAuthMode('1');
         }
 
         const prefillOption = await generateEsignJson()
@@ -313,7 +317,7 @@ const Proceed_for_Esign = (props) => {
             appVersion: "2.5",
             rawData: JSON.stringify({
                 "pdf_pre_uploaded": true, "config": {
-                    "auth_mode": "2",
+                    "auth_mode": authMode,
                     "reason": documentName,
                     "positions": JSON.parse(XYAXIS),
                     "skip_email": true,
@@ -547,13 +551,13 @@ const Proceed_for_Esign = (props) => {
                         </View>
                     </View>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 15, marginTop: 20 }}>
-                        <View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginHorizontal: 25, marginTop: 10 }}>
+                        <View style={{width:responsiveWidth(35)}}>
                             <Text style={{ color: COLORS.gray, fontSize: 11 }}>
                                 Document Type
                             </Text>
-                            <Text style={{ color: COLORS.black, ...FONTS.h4 }}>
-                                Select Configure
+                            <Text style={{ color: COLORS.black, ...FONTS.h4, }}>
+                                {documentName !== null && documentName !== '' ? documentName : "Select Configure"}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => checkConfigration()}>
@@ -588,7 +592,7 @@ const Proceed_for_Esign = (props) => {
                     }}>
                         {loaderVisible ? <Text>Loading...</Text> :
                             <Pressable style={{
-                                backgroundColor:XYAXIS !== '' && XYAXIS != null ? COLORS.orange1 : COLORS.lightGray,
+                                backgroundColor: XYAXIS !== '' && XYAXIS != null ? COLORS.orange1 : COLORS.lightGray,
                                 width: responsiveWidth(90),
                                 borderRadius: 8,
                                 padding: 10,
@@ -604,7 +608,7 @@ const Proceed_for_Esign = (props) => {
                                     end={{ x: 2, y: 0 }}
                                     style={{ borderRadius: 8, padding: 10, position: 'absolute', bottom: 0, marginBottom: 10, justifyContent: 'center', flex: 1, width: responsiveWidth(90), justifyContent: 'space-evenly' }} > */}
                                 <Text style={{ color: COLORS.white, textAlign: 'center', ...FONTS.body3, marginLeft: 20, marginRight: 20 }}>
-                                    {XYAXIS !== '' && XYAXIS != null ? "Submit" : "Loading co-ordinates..."}
+                                    {XYAXIS !== '' && XYAXIS != null ? "Submit" : "Select Configration..."}
                                 </Text>
                                 {/* </LinearGradient> */}
                             </Pressable>}

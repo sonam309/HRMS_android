@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { View, Text, TouchableOpacity, ScrollView, Linking, Image, BackHandler, Alert, NativeModules, NativeEventEmitter } from 'react-native'
 import { FONTS, SIZES } from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
-import { EsignD, circleFill, circleGreen, circleTranceparent, company_logo_2, esignIcon, esignViewIcon, expernallinkImage } from '../../assets';
+import { EsignD, circleFill, circleGreen, circleTranceparent, company_logo_2, esignIcon, esignViewIcon, expernallinkImage, test } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -16,7 +16,9 @@ import { API, API2 } from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import CustomAlert from '../../components/CustomAlert/index';
 import axios from 'axios';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import { useIsFocused } from '@react-navigation/native';
+import { WebView } from 'react-native-webview';
 
 
 const CandidateDashboard = (props) => {
@@ -33,122 +35,77 @@ const CandidateDashboard = (props) => {
     const [offerLetterAlert, setOfferLetterAlert] = useState(false);
     const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
     const [esignCount, setEsignCount] = useState();
+    const [todoList, setTodoList] = useState('');
 
 
     const [error, setError] = useState(false)
     const [tkenRes, setTkenRes] = useState();
     const [input, setInput] = useState("");
     const [count, setCount] = useState("");
+    const [pendingTest, setPendingTest] = useState('');
 
+    const isFocused = useIsFocused();
 
 
     useEffect(() => {
-        // setShowAlert(true)
-        if (candidateId) {
-            getCandidateOfferDetails()
+        if (isFocused) {
+            console.log("testttttttttttttt")
+            if (candidateId) {
+                getCandidateOfferDetails()
 
+            }
         }
-        // return () => { getCandidateOfferDetails() }
-    }, [candidateId])
-
-    // const EsignEvent = async () => {
-    //     const data = {
-    //         documentName: "Candidated Essign",
-    //         noOfPages: "16",
-    //         userId: "TMP8336",
-    //         docPath: "7aa8f0de-5a8a-4773-910a-bf1b62888f18.pdf",
-    //         status: "A",
-    //         eSignCount: "0",
-    //         appVersion: "2.5",
-    //         rawData: JSON.stringify({
-    //             "pdf_pre_uploaded": true,
-    //             "config": {
-    //                 "auth_mode": "1", "reason": "Candidated Essign",
-    //                 "positions": {
-    //                     "1": [{ "x": 100, "y": 35 }],
-    //                     "2": [{ "x": 40, "y": 20 }],
-    //                     "3": [{ "x": 50, "y": 300 }],
-    //                     "4": [{ "x": 70, "y": 140 }]
-    //                 },
-    //                 "skip_email": true, "name_match": { "match": true, "score": 55 }
-    //             },
-    //             "prefill_options": {
-    //                 "full_name": "Sonam kaushal",
-    //                 "mobile_number": "8858776799",
-    //                 "user_email": "systemadministrator@satyamicrocapital.com"
-    //             }
-    //         })
-    //     }
-
-
-    //     axios.post(`${API}/api/Kyc/ProceedForEsign`, data)
-    //         .then(async (response) => {
-
-    //             const returnedData = response.data;
-    //             setTkenRes(returnedData?.data?.token);
-    //             var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
-
-    //         }).catch((error) => {
-    //             Alert.alert('Alert Title', error, [
-    //                 {
-    //                     text: 'Cancel',
-    //                     onPress: () => console.log('Cancel Pressed'),
-    //                     style: 'cancel',
-    //                 },
-    //                 { text: 'OK', onPress: () => console.log('OK Pressed') },
-    //             ]);
-
-    //         })
-    // }
-
-
-    // useEffect(() => {
-
-    //     eventEmitter.addListener("EventCount", (eventCount) => {
-    //         // console.log("eventCount", eventCount);
-    //         setCount(eventCount)
-    //     });
-    //     return () => {
-    //         eventEmitter.removeAllListeners();
-    //     }
-    // }, [])
-
-    useEffect(() => {
-
-        if(candidateId){
-        getEsignData();
-        }
-
-    }, [])
+    }, [props, isFocused, candidateId])
 
 
     useEffect(() => {
 
-        if(candidateId){
-        getEsignData();
+        if (isFocused) {
+            if (candidateId) {
+                getEsignData();
+            }
         }
 
-    }, [candidateId])
+    }, [props, isFocused])
+
+
+    useEffect(() => {
+
+        if (isFocused) {
+            if (candidateId) {
+                getEsignData();
+            }
+
+        }
+    }, [props, isFocused, candidateId])
 
 
     // getEsignData
     const getEsignData = async () => {
+
+        setLoaderVisible(true);
         const data = {
             user: candidateId,
-            candidateId:candidateId,
+            candidateId: candidateId,
             flag: 'V'
         }
 
-        console.log("esigncanid", data);
+        // console.log("esigncanid", data);
 
         axios.post(`${API}/api/saveEsignDataNew`, data).then((response) => {
 
             const result = response.data.Result;
             console.log("esignData", result[0]);
             setEsignCount(result[0]?.ESSIGN_CNT);
+            setLoaderVisible(false);
 
         }).catch((error) => {
 
+            setLoaderVisible(false)
+            Toast.show({
+                type: 'error',
+                text1: JSON.stringify(error)
+            })
         })
 
     }
@@ -162,20 +119,19 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
             const resultData = response.data;
-            // console.log("candOfferDetails", resultData?.Result[0]);
+
+            console.log("candidateOfferCheck", resultData);
             setLoaderVisible(false);
             dispatch(candidateAuthActions.updateLogin({
                 candidateStatusId: resultData?.Result[0]?.STATUS,
                 candidateStatus: resultData?.Result[0]?.CANDIDATE_STATUS
             }))
 
-            // console.log("employeeCreateFlag", resultData?.Result[0]?.EMP_CREATION_FLAG);
 
             setEmployeeCreateFlag(resultData?.Result[0]?.EMP_CREATION_FLAG);
+            setTodoList(resultData?.Result[0]?.DOC_REQ);
+            setPendingTest(resultData?.Result[0]?.PENDING_TEST);
 
-            // console.log("profile", resultData.Result[0]?.OFER_ACPT_FLAG,resultData.Result[0]?.OFFER_LETTER,resultData.Result[0]?.DOC_REQ);
-
-            // console.Alert(resultData);
             if (type === "offer") {
                 resultData?.Result[0]?.OFFER_LETTER !== null && resultData?.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer Letter") : setOfferLetterAlert(true)
             }
@@ -184,7 +140,6 @@ const CandidateDashboard = (props) => {
 
                 resultData?.Result[0]?.DOC_REQ !== 0 && resultData?.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
                     setShowAlert(true)
-                //Alert.alert("Document need to be submit after offer letter acceptance")
             }
             if (type === "profile") {
                 resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate profile") : setProfileAlert(true)
@@ -193,11 +148,7 @@ const CandidateDashboard = (props) => {
 
                 resultData?.Result[0]?.CANDIDATE_STATUS && props.navigation.navigate("Status view page")
             }
-            // if(type==="experince"){
 
-            //     resultData?.Result[0]?.PO_EXPERIENCE_TYPE==="NO"?console.log("NO"):console.log("yes");
-
-            // }
 
         }).catch((error) => {
             // console.log(error)
@@ -252,48 +203,10 @@ const CandidateDashboard = (props) => {
     }
 
 
-    // const getDocData = async () => {
-    //     try {
-    //         let PersonalData = { operFlag: "V", candidateId: candidateId, candidateStatus: candidateStatusId, src: "M" }
-    //         let formData = new FormData();
-    //         formData.append('data', JSON.stringify(PersonalData))
-    //         setLoaderVisible(true)
-    //         let res = await fetch(`${API}/api/hrms/assesmentSave`, {
-    //             method: "POST",
-    //             body: formData
-    //         })
-    //         res = await res.json()
-    //         setLoaderVisible(false);
-    //         // console.log("CheckDocCount", res.PO_DOC_REQ)
-
-    //         {
-    //             res.PO_DOC_REQ != null && res.PO_DOC_REQ !== "0" && res.PO_DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
-    //                 setShowAlert(true) //Alert.alert("Document need to be submit after offer letter acceptance")
-    //         }
-    //     } catch (error) {
-
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: error
-    //         })
-    //     }
-    // }
-
     useEffect(() => {
         // for handling back button in android
         const backAction = () => {
             if (props.navigation.isFocused()) {
-                // Alert.alert('Wait', 'Are you sure, you want to exit the App?', [
-                //     {
-                //         text: 'No',
-                //         onPress: () => null,
-                //     },
-                //     {
-                //         text: 'Yes',
-                //         onPress: () => BackHandler.exitApp(),
-                //     },
-                // ]);
-                // return true;
                 setExitAlert(true)
             }
         };
@@ -320,21 +233,12 @@ const CandidateDashboard = (props) => {
                 <CustomAlert messageStyle={{ color: COLORS.black, ...FONTS.h3 }} showCancel={false} showConfirm={true} confirmButtonColor={COLORS.green} confirmTxt='Ok' show={showAlert} setShow={setShowAlert} message={"Document need to be submit after offer letter acceptance"} />
                 <CustomAlert show={exitAlert} setShow={setExitAlert} title={"Wait"} message={"Are you sure, you want to exit the App?"} onConfirmPressed={() => BackHandler.exitApp()} />
 
-                <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text>
-                <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                {/* <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text> */}
+                <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: 20 }}>
                     <View style={{ flexDirection: 'row', width: '45%', paddingHorizontal: 4, alignItems: 'center', flex: 1 }}>
                         <FontAwesomeIcon name="user-circle-o" size={25} color={COLORS.black} />
                         <Text style={{ ...FONTS.h3, color: COLORS.black, marginLeft: 8 }}>{candidateName}</Text>
                     </View>
-
-
-                    {/* <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, padding: 4, borderColor: COLORS.orange1, borderRadius: 6, borderWidth: 1, marginRight: 10 }} onPress={() => EsignEvent()} >
-                        <Text style={{ color: COLORS.orange1, height: 30, textAlignVertical: 'center' }}>
-                            Proceed Esign
-                        </Text>
-                    </TouchableOpacity> */}
-
-                   
 
                     <TouchableOpacity style={{ justifyContent: 'flex-end', backgroundColor: COLORS.white }} onPress={() => { props.navigation.navigate("Candidate_Login"), dispatch(candidateAuthActions.logOut()) }}>
                         <Icons name='logout' size={30} style={{ color: COLORS.black, padding: 8 }} />
@@ -346,11 +250,8 @@ const CandidateDashboard = (props) => {
                 {
                     employeeCreateFlag !== '' && employeeCreateFlag !== null && employeeCreateFlag === 'Y' ?
                         <>
-
-
                             <View style={{ flex: 1, marginHorizontal: 10, marginTop: 20, borderRadius: 12, padding: 15 }}>
 
-                               
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                                     <View >
                                         <View style={{ flexDirection: 'row', marginLeft: 12 }}>
@@ -421,6 +322,11 @@ const CandidateDashboard = (props) => {
                         // header view
                         //  Status view  
                         <View style={{ marginHorizontal: 10, }}>
+
+                            {/* <Text style={{ ...FONTS.h1, padding: 10, flex: 1, width: '100%', alignSelf: 'center', flexDirection: 'row',textAlign:'center',margin:20 ,color:COLORS.orange1}}>Welcome {candidateName}</Text> */}
+
+
+
                             <View style={{ backgroundColor: COLORS.disableOrange1, borderColor: COLORS.green, paddingVertical: 8, borderRadius: 12, marginVertical: 8, marginTop: 30 }}>
                                 <Text style={{ ...FONTS.h3, color: COLORS.black, marginHorizontal: 15 }}>You are applied for {Job_Title}</Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', gap: 20, marginTop: 15 }}>
@@ -465,8 +371,34 @@ const CandidateDashboard = (props) => {
                         </View>
                 }
 
+
+                {pendingTest &&
+                    <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
+                        <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> To Do's</Text>
+
+                        <TouchableOpacity onPress={()=>props.navigation.navigate("TestScreen")}>
+                            <View style={{ flex: 1, flexDirection: 'row', height: responsiveHeight(10), borderRadius: SIZES.radius, backgroundColor: COLORS.disableOrange1, marginTop: 10, justifyContent: 'space-between' }}>
+
+                                <Text style={{
+                                    textAlignVertical: 'center',
+                                    padding: 10,
+                                    ...FONTS.h5,
+                                    fontSize: 16,
+                                    color: COLORS.orange1,
+                                    marginLeft: 10
+                                }}>
+                                    Proceed for Test...
+                                </Text>
+                                <Image source={test} style={{ height: 50, width: 50, alignSelf: 'center', marginEnd: 20 }} />
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                }
+
                 {/* offer Letter view */}
-                <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
+
+                {candidateOfferLetter && <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter
                         {/* {JSON.stringify(tkenRes)} */}
                     </Text>
@@ -477,11 +409,12 @@ const CandidateDashboard = (props) => {
                         </View>
 
                     </TouchableOpacity>
-                </View>
+                </View>}
 
 
                 {/* task view */}
-                <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
+
+                {todoList !== '' && todoList !== 0 && <View style={{ marginHorizontal: 12, marginVertical: 6 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Task1
                         {/* {JSON.stringify(count,"ggvbg")}  */}
                     </Text>
@@ -500,44 +433,39 @@ const CandidateDashboard = (props) => {
                             <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View>}
                 {/* final submittion view */}
-                <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
-                    {console.log("curreeenttttetetete", candidateStatusId)}
 
+                {todoList !== '' && todoList !== 0 &&
+                    <View style={{ marginHorizontal: 12, marginVertical: 6, width: '100%' }}>
 
-                    {candidateStatusId <= "166" && <TouchableOpacity style={{
-                        marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
-                    }}
-                        onPress={() => finalSubmit()}>
-                        {/* Toast.show({
-                        type: 'warning',
-                        text1: 'Done'
-                    })} */}
-                        <LinearGradient
-                            colors={[COLORS.orange1, COLORS.disableOrange1]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 2, y: 0 }}
-                            style={{ borderRadius: 8, padding: 8, }} >
+                        {candidateStatusId <= "166" && <TouchableOpacity style={{
+                            marginTop: 12, justifyContent: 'flex-end', width: responsiveWidth(35), alignSelf: 'flex-end', marginRight: 25, marginTop: -5
+                        }}
+                            onPress={() => finalSubmit()}>
 
-                            <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>}
+                            <LinearGradient
+                                colors={[COLORS.orange1, COLORS.disableOrange1]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 2, y: 0 }}
+                                style={{ borderRadius: 8, padding: 8, }} >
 
-                </View>
+                                <Text style={{ color: COLORS.white, ...FONTS.h4, textAlign: 'center' }}>Final submittion</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>}
+
+                    </View>}
 
                 {/* about satya */}
-                <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100 }}>
+                <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100, marginTop: 20 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
                     <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
-                        style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: 110, borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
-                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', zIndex: 1000, top: 5, right: 5, borderWidth: 1, borderColor: COLORS.lightGray, borderRadius: SIZES.base / 2, padding: SIZES.base / 4, }}>
-                            <Image source={expernallinkImage}
-                                style={{ height: 20, width: 20, }} />
-                            <Text style={{ marginLeft: SIZES.base, ...FONTS.body5}}>satyamicrocapital.com</Text> 
-                        </View> */}
-                        <View style={{ height: 100, width: 200, }}>
-                            <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} />
+                        style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: responsiveHeight(55), borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
+
+                        <View style={{ height: '95%', width: '95%', justifyContent: 'center' }}>
+                            {/* <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} /> */}
+
+                            <WebView source={{ uri: 'https://satyamicrocapital.com/' }} />
                         </View>
                     </TouchableOpacity>
                 </View>

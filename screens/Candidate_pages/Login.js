@@ -22,8 +22,8 @@ const Login = (props) => {
 
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('');
+    const [userId, setUserId] = useState('650');
+    const [password, setPassword] = useState('Test@123');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -60,7 +60,7 @@ const Login = (props) => {
     const forgetPasswordApi = () => {
         setLoaderVisible(true);
         let otp = RandomNumber("6")
-        // console.log("msg", otp + " $ " + userId + operFlag);
+        console.log("msg", otp + " $ " + userId + operFlag);
         axios.get(`${API}/api/GetMobileNo`, { params: { loginId: userId, operFlag: operFlag, message: otp + " Is the OTP for your mobile verfication on Satya One." } })
             .then((response) => {
                 const returnedData = response.data.Result;
