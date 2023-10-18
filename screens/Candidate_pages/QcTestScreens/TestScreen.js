@@ -4,10 +4,8 @@ import { SIZES, FONTS } from '../../../constants/font_size'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState, useMemo } from 'react'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import TestOptions from '../../../components/QuestionTest/TestOptions';
-import NextButton from '../../../components/QuestionTest/NextButton.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { getQuestions } from '../../../redux/eSignSlice';
+import { getQuestions, saveAttemptTest } from '../../../redux/eSignSlice';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from "lodash"
@@ -18,12 +16,14 @@ import QuestionItem from './QuestionItem';
 const TestScreen = (props) => {
 
   const dispatch = useDispatch();
+  const { candidateId } = useSelector(state => state.candidateAuth)
 
-  const { questionList } = useSelector(state => state.eSign)
+  const { questionList,saveTestResult } = useSelector(state => state.eSign)
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [allQuestions, setAllQuestions] = useState([]);
-  const currentQuestion = questionList[currentIndex];
+  const currentQuestion = allQuestions[currentIndex];
+
 
 
   useEffect(() => {
@@ -31,35 +31,62 @@ const TestScreen = (props) => {
     console.log("hit question data")
     const data = {
       operFlag: "Q",
-      candidateId: "650",
+      candidateId: candidateId,
       txnId: ''
     }
 
     dispatch(getQuestions(data))
 
-
-
   }, [])
+
+
+  useMemo(() =>{
+
+    if(saveTestResult?.FLAG==="S"){
+      Toast.show({
+        type:'success',
+        text1:saveTestResult?.MSG
+      })
+    }
+
+  },
+    [saveTestResult])
+
 
   useMemo(() => {
     if (questionList && questionList?.length > 0) {
+
       const InitalItems = questionList;
+
+
       setAllQuestions(
-        _.map(InitalItems,(evvv)=>({
+        _.map(InitalItems, (evvv) => ({
           ...evvv,
           selectedAnswer: "",
         }))
+
+
       );
+
     }
 
   }, [questionList]);
 
   const onNext = () => {
+    if (currentQuestion.selectedAnswer !== "") {
       setCurrentIndex(currentIndex + 1);
+    } else {
+
+      Toast.show({
+        type: 'error',
+        text1: 'Please select an option'
+      })
+
+    }
   }
 
   const onPrrvious = () => {
-      setCurrentIndex(currentIndex - 1);
+    setCurrentIndex(currentIndex - 1);
   }
 
   // NEXT QUESTION BUTTON
@@ -142,10 +169,33 @@ const TestScreen = (props) => {
 
   const onSubmitTest = () => {
 
-    Toast.show({
-      type: 'success',
-      text1: 'Test save and Submit sucessfully.'
+    let finalData = '';
+
+    _.map(allQuestions, (item, index) => {
+      if (index + 1 === allQuestions.length) {
+        finalData += `${item.QUES_NO},${item.selectedAnswer}`
+      } else {
+        finalData += `${item.QUES_NO},${item.selectedAnswer}$`
+      }
     })
+
+
+    const saveData = {
+      txnId: '',
+      userId: candidateId,
+      candidateId:candidateId,
+      param: finalData,
+      operFlag: 'A'
+    }
+
+    // console.log("saveData",saveData);
+
+    dispatch(saveAttemptTest(saveData))
+    
+
+
+    // console.log("finalDataSubmit", finalData);
+
 
   }
 
@@ -178,6 +228,8 @@ const TestScreen = (props) => {
           <View style={{
             flex: 1,
           }}>
+{/* <Text>{JSON.stringify(saveTestResult)}</Text> */}
+
             {/* <ScrollView style={{
               flex: 1,
               width: responsiveWidth(90),
@@ -229,15 +281,15 @@ const TestScreen = (props) => {
 
 
             </ScrollView> */}
-          {currentQuestion && <QuestionItem 
-             item={currentQuestion}
-             currentIndex={currentIndex}
-             allQuestions={allQuestions}
-             setAllQuestions={setAllQuestions}
+            {currentQuestion && <QuestionItem
+              item={currentQuestion}
+              currentIndex={currentIndex}
+              allQuestions={allQuestions}
+              setAllQuestions={setAllQuestions}
             />}
           </View>
 
-          
+
           <View
             style={{
               flexDirection: "row",

@@ -32,6 +32,22 @@ const QuestionItem = ({
         }
     }, [currentIndex]);
 
+
+    // useEffect(() => {
+
+    // console.log("QuetionData",JSON.stringify(item));
+
+    //     if (item?.selectedAnswer === "") {
+    //         setSelectAnswer(null);
+    //     } else {
+    //         _.map(options, (opt, index) => {
+    //             if (item.selectedAnswer == OPTIONS[index]) setSelectAnswer(index);
+    //         });
+    //     }
+    // }, [currentIndex])
+
+
+
     const onSubmitSelectedData = (index) => {
         const prevAllQuestions = [...allQuestions];
         prevAllQuestions[currentIndex] = {
@@ -103,12 +119,12 @@ const QuestionItem = ({
                     >
                         <View style={{ width: responsiveWidth(75), }}>
                             {item?.QUESTIONS && (
-                                <Text style={{ paddingLeft: 10, paddingRight: 10, marginLeft: 10, color: COLORS.black, marginTop: 20 }}>{item?.QUESTIONS}</Text>
+                                <Text style={{ paddingLeft: 10, paddingRight: 10,  color: COLORS.black, }}>{item?.QUESTIONS}</Text>
                             )}
                         </View>
                     </View>
                 </View>
-                <Text>{JSON.stringify(item)}</Text>
+                {/* <Text>{JSON.stringify(item)}</Text> */}
                 <View
                     style={{
                         marginTop: 20,

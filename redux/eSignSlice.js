@@ -7,6 +7,8 @@ const eSignSlice = createSlice({
         candidateList: [],
         coordinatesList:{},
         questionList:[],
+        saveTestResult:{},
+        testResultLoading:false,
         questionLoading:false,
         coordinateLoading:false,
         loading: false,
@@ -67,6 +69,29 @@ const eSignSlice = createSlice({
             }
           );
 
+
+
+          builder.addMatcher(isAnyOf(saveAttemptTest.pending), (state) => {
+            state.testResultLoading = true;
+
+          });
+          builder.addMatcher(
+            isAnyOf(saveAttemptTest.fulfilled),
+            (state, action) => {
+              state.testResultLoading = false;
+              state.saveTestResult = action.payload;
+            }
+          );
+          builder.addMatcher(
+            isAnyOf(saveAttemptTest.rejected),
+            (state, action) => {
+              state.testResultLoading = false;
+            }
+          );
+
+
+
+
     }
 })
 
@@ -92,5 +117,13 @@ export const getQuestions = createAsyncThunk(
   "mobile/getQuestions",
   async (payload, toolkit) => {
       return await AxiosClient("POST", `/api/getQuestions`, payload, toolkit);
+  }
+);
+
+
+export const saveAttemptTest = createAsyncThunk(
+  "mobile/saveAttemptTest",
+  async (payload, toolkit) => {
+      return await AxiosClient("POST", `/api/getTestResult`, payload, toolkit);
   }
 );
