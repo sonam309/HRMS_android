@@ -11,6 +11,7 @@ import PendigEsignList from '../../screens/Candidate_pages/ProceedEsign/Pending_
 import ProceedforEsign from '../../screens/Candidate_pages/ProceedEsign/Proceed_for_Esign';
 import View_Esign_stamp from '../../screens/Candidate_pages/ProceedEsign/View_Esign_stamp';
 import TestScreen from '../../screens/Candidate_pages/QcTestScreens/TestScreen';
+import TestResult from '../../screens/Candidate_pages/QcTestScreens/TestResult';
 
 
 const Stack = createNativeStackNavigator();
@@ -28,7 +29,7 @@ const CandidateStack = () => {
             <Stack.Screen name='Proceed_for_Esign' options={{headerShown:false, orientation: 'portrait' }} component={ProceedforEsign} />
             <Stack.Screen name='viewEsignStamp' options={{headerShown:false, orientation: 'portrait' }} component={View_Esign_stamp} />
             <Stack.Screen name='TestScreen' options={{headerShown:false, orientation: 'portrait' }} component={TestScreen} />
-
+            <Stack.Screen name='TestResult' options={{headerShown:false, orientation: 'portrait' }} component={TestResult} />
                       
         </Stack.Navigator>
     )

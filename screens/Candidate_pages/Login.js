@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import { Pinlock, company_logo_2, loginIcon, company_logo } from '../../assets';
+import { Pinlock, company_logo_2, loginIcon, company_logo, company_icon } from '../../assets';
 import { useDispatch } from 'react-redux'
 import Loader from '../../components/Loader';
 import { candidateAuthActions } from '../../redux/candidateAuthSlice';
 import COLORS from '../../constants/theme';
 import { FONTS, SIZES } from '../../constants/font_size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API } from '../../utility/services';
+import { API, VERSIONS } from '../../utility/services';
 import { loginBanner } from '../../assets';
 import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
@@ -22,8 +22,8 @@ const Login = (props) => {
 
     let page = null
     const [showVisibility, setShowVisibility] = useState(true);
-    const [userId, setUserId] = useState('650');
-    const [password, setPassword] = useState('Test@123');
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
     const [loaderVisible, setLoaderVisible] = useState(false);
     const dispatch = useDispatch();
     const [operFlag, setOperFlag] = useState('');
@@ -145,8 +145,12 @@ const Login = (props) => {
                 barStyle="dark-content" />
             <Loader loaderVisible={loaderVisible} />
             {/* Company Logo */}
-            <View style={{ flex: 1, alignItems: 'flex-start', }}>
-                <Image source={company_logo} style={{ width: "40%", height: '40%', }} />
+            <View style={{ flex: 1, alignItems: 'flex-start', flexDirection:'row' }}>
+                <Image source={company_icon} style={{ width: "15%", height: '15%',resizeMode:'center',marginLeft:10,marginTop:10 }} />
+
+                <Text style={{color:COLORS.orange1,...FONTS.h3,fontSize:20,marginTop:20,marginLeft:-10}}>
+                    Satya Sathi
+                </Text>
             </View>
 
             <View style={{ width: responsiveWidth(100), height: 100, marginTop: -170, flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -213,7 +217,7 @@ const Login = (props) => {
 
             {/* Bottom element */}
             <View style={{ backgroundColor: COLORS.white, height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.5</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:{VERSIONS?.android}</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>

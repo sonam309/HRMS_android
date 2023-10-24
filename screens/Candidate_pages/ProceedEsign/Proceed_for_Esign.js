@@ -190,7 +190,7 @@ const Proceed_for_Esign = (props) => {
 
 
 
-    const getEsignData = async () => {
+    const getEsignData = () => {
         const data = {
             user: candidateId,
             candidateId: candidateId,
@@ -199,7 +199,7 @@ const Proceed_for_Esign = (props) => {
         dispatch(getCandidateList(data))
     }
 
-    const getEsignDocument = async (clienid) => {
+    const getEsignDocument = (clienid) => {
 
         const data = {
             preUpload: "true",
@@ -252,7 +252,8 @@ const Proceed_for_Esign = (props) => {
                             text1:"E-Sign Done Succesfully"
                         })
                     }
-
+                    // eventEmitter.reremoveListeners
+                    // eventEmitter.reremoveListeners("EventCount")
                     props.navigation.navigate("CandidateDashboard")
 
 
@@ -263,6 +264,8 @@ const Proceed_for_Esign = (props) => {
                     // })
                 }
 
+            }).catch((error)=> {
+                console.log("getSignedDoc", JSON.stringify(error))
             })
 
     }
@@ -295,7 +298,7 @@ const Proceed_for_Esign = (props) => {
 
 
 
-    const EsignEvent = async () => {
+    const EsignEvent = () => {
 
         setLoaderVisible(true)
 
@@ -305,7 +308,7 @@ const Proceed_for_Esign = (props) => {
             setAuthMode('1');
         }
 
-        const prefillOption = await generateEsignJson()
+        const prefillOption = generateEsignJson()
 
         const data = {
             documentName: documentName,
@@ -330,35 +333,42 @@ const Proceed_for_Esign = (props) => {
             })
         }
 
-        console.log("esignProddatatatattat", data);
 
 
         axios.post(`${API}/api/Kyc/ProceedForEsign`, data)
-            .then(async (response) => {
+            .then((response) => {
 
                 const returnedData = response.data;
                 console.log("proceesEsignResponse", returnedData);
                 setTkenRes(returnedData?.data?.token);
                 setClientId(returnedData?.data?.client_id);
-                var tokenRes = await EsignModule.GetToken(returnedData?.data?.token);
+                var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
 
 
                 let esignResponseData = {}
                 setLoaderVisible(false)
 
                 //get Esign data from nsdl
-                eventEmitter.addListener("EventCount", (eventCount) => {
+                let eventListener =   eventEmitter.addListener("EventCount", (eventCount) => {
                     setCount(eventCount)
 
                     // esignResponseData=eventCount;
                     const esignRes = JSON.parse(eventCount);
-                    console.log("esignResponseData", esignRes);
+                    // console.log("esignResponseData", esignRes);
                     // console.log("esignResponseData1", esignRes["status_code"]);
-                    // console.log("esignResponstatus", esignRes.status_code);
+                    eventListener.remove();
+
+
+                    console.log("listnercount",eventCount);
+
+
+                    console.log("esignResponstatus",eventCount, esignRes,esignRes?.status_code );
+
 
                     if (esignRes?.status_code == "200" || esignRes?.status_code === "200") {
 
                         getEsignDocument(returnedData?.data?.client_id);
+
 
                     } else if (esignRes?.status_code == "433" || esignRes?.status_code === "433") {
 
@@ -601,7 +611,7 @@ const Proceed_for_Esign = (props) => {
                                 marginBottom: 10,
                                 alignSelf: "center"
                             }} disabled={XYAXIS !== '' && XYAXIS != null ? false : true}
-                                onPress={EsignEvent}>
+                                onPress={()=>EsignEvent()}>
                                 {/* <LinearGradient
                                     colors={XYAXIS !== '' && XYAXIS != null ? [COLORS.orange1, COLORS.disableOrange1] : [COLORS.gray, COLORS.lightGray]}
                                     start={{ x: 0, y: 0 }}

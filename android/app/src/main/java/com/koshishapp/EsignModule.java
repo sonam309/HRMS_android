@@ -98,6 +98,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
     @ReactMethod
     public void removeListeners(Integer count) {
 
+
     }
 
     //
@@ -108,6 +109,7 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 //        Toast.makeText(reactContext, data.toString(), Toast.LENGTH_LONG).show();
 
 //        Toast.makeText(reactContext, Token, Toast.LENGTH_LONG).show();
+        Log.e("GetToeknK","1");
         reactContext.addActivityEventListener(this);
         Intent intent = new Intent(context, InitSDK.class);
         intent.putExtra("token", Token);
@@ -122,6 +124,8 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 
 
         if (i == 10001) {
+
+            Log.e("onActivityResult","1");
 
             String result = null;
             if (intent != null) {

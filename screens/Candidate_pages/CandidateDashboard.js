@@ -17,7 +17,7 @@ import Toast from 'react-native-toast-message';
 import CustomAlert from '../../components/CustomAlert/index';
 import axios from 'axios';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { WebView } from 'react-native-webview';
 
 
@@ -99,13 +99,6 @@ const CandidateDashboard = (props) => {
             setEsignCount(result[0]?.ESSIGN_CNT);
             setLoaderVisible(false);
 
-        }).catch((error) => {
-
-            setLoaderVisible(false)
-            Toast.show({
-                type: 'error',
-                text1: JSON.stringify(error)
-            })
         })
 
     }
@@ -219,6 +212,13 @@ const CandidateDashboard = (props) => {
             backPressHandler.remove();
         };
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+            getEsignData()
+        }, [])
+    );
 
 
     return (
@@ -371,12 +371,11 @@ const CandidateDashboard = (props) => {
                         </View>
                 }
 
-
                 {pendingTest &&
                     <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-                        <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> To Do's</Text>
+                        <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> {pendingTest === "C" ? "Complete Task" : "To Do's"}</Text>
 
-                        <TouchableOpacity onPress={()=>props.navigation.navigate("TestScreen")}>
+                        <TouchableOpacity onPress={() => { pendingTest === "C" ? props.navigation.navigate("TestResult") : props.navigation.navigate("TestScreen") }}>
                             <View style={{ flex: 1, flexDirection: 'row', height: responsiveHeight(10), borderRadius: SIZES.radius, backgroundColor: COLORS.disableOrange1, marginTop: 10, justifyContent: 'space-between' }}>
 
                                 <Text style={{
@@ -387,7 +386,7 @@ const CandidateDashboard = (props) => {
                                     color: COLORS.orange1,
                                     marginLeft: 10
                                 }}>
-                                    Proceed for Test...
+                                    {pendingTest === "C" ? "Complete Test..." : "Proceed for Test..."}
                                 </Text>
                                 <Image source={test} style={{ height: 50, width: 50, alignSelf: 'center', marginEnd: 20 }} />
                             </View>

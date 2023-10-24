@@ -18,7 +18,7 @@ const TestScreen = (props) => {
   const dispatch = useDispatch();
   const { candidateId } = useSelector(state => state.candidateAuth)
 
-  const { questionList,saveTestResult } = useSelector(state => state.eSign)
+  const { questionList, saveTestResult,testResultLoading } = useSelector(state => state.eSign)
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [allQuestions, setAllQuestions] = useState([]);
@@ -40,15 +40,23 @@ const TestScreen = (props) => {
   }, [])
 
 
-  useMemo(() =>{
+  useMemo(() => {
 
-    if(saveTestResult?.FLAG==="S"){
+    if (saveTestResult?.FLAG === "S" && saveTestResult?.MSG !== "") {
       Toast.show({
-        type:'success',
-        text1:saveTestResult?.MSG
+        type: 'success',
+        text1: saveTestResult?.MSG
       })
-    }
+      props.navigation.navigate("TestResult")
 
+    } else if (saveTestResult?.FLAG === "F" && saveTestResult?.MSG !== "")
+
+      Toast.show({
+        type: 'error',
+        text1: saveTestResult?.MSG
+      })
+
+    // props.navigation.navigate("TestResult")4
   },
     [saveTestResult])
 
@@ -152,7 +160,11 @@ const TestScreen = (props) => {
           colors={[COLORS.orange1, COLORS.disableOrange1]}
           style={styles.prevButtonWrapper}
         >
-          <Text
+         {testResultLoading ? 
+         <ActivityIndicator color={COLORS.white} />
+         : 
+         <>
+         <Text
             style={{
               // fontFamily: fontFamily.Medium,
               fontSize: 15,
@@ -162,6 +174,8 @@ const TestScreen = (props) => {
             Submit
           </Text>
           <Icons name="arrow-right" size={24} color={COLORS.white} />
+          </>
+          }
         </LinearGradient>
       </TouchableOpacity>
     );
@@ -183,7 +197,7 @@ const TestScreen = (props) => {
     const saveData = {
       txnId: '',
       userId: candidateId,
-      candidateId:candidateId,
+      candidateId: candidateId,
       param: finalData,
       operFlag: 'A'
     }
@@ -191,7 +205,7 @@ const TestScreen = (props) => {
     // console.log("saveData",saveData);
 
     dispatch(saveAttemptTest(saveData))
-    
+
 
 
     // console.log("finalDataSubmit", finalData);
@@ -228,7 +242,7 @@ const TestScreen = (props) => {
           <View style={{
             flex: 1,
           }}>
-{/* <Text>{JSON.stringify(saveTestResult)}</Text> */}
+            {/* <Text>{JSON.stringify(saveTestResult)}</Text> */}
 
             {/* <ScrollView style={{
               flex: 1,

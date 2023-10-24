@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
-import { Pinlock, company_logo, employeeLoginBanner } from '../../assets';
+import { Pinlock, company_icon, company_logo, employeeLoginBanner } from '../../assets';
 import Geolocation from '../../functions/Geolocation';
 import Loader from '../../components/Loader';
 import { useDispatch } from 'react-redux'
 import { authActions } from '../../redux/authSlice';
 import COLORS from '../../constants/theme';
 import { FONTS, SIZES } from '../../constants/font_size';
-import { API } from '../../utility/services';
+import { API, VERSIONS } from '../../utility/services';
 import CustomInput from '../../components/CustomInput';
 import TextButton from '../../components/TextButton';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
@@ -128,8 +128,11 @@ const Employee_Login = (props) => {
             <Loader loaderVisible={loaderVisible} />
 
             {/* Company Logo */}
-            <View style={{ flex: 1, alignItems: 'flex-start', }}>
-                <Image source={company_logo} style={{ width: "40%", height: '40%', }} />
+            <View style={{ flex: 1, alignItems: 'flex-start',flexDirection:'row' }}>
+                <Image source={company_icon} style={{ width: "15%", height: '15%',resizeMode:'center',marginLeft:10,marginTop:10  }} />
+                <Text style={{color:COLORS.orange1,...FONTS.h3,fontSize:20,marginTop:20,marginLeft:-10}}>
+                    Satya Sathi
+                </Text>
             </View>
 
             <View style={{
@@ -209,7 +212,7 @@ const Employee_Login = (props) => {
             </View>
             {/* Bottom element */}
             <View style={{ height: 30 }}>
-                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:1.5</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.gray, ...FONTS.h5, fontWeight: '400', padding: 5 }}>Version:{VERSIONS?.android}</Text>
             </View>
             {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
                 <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
