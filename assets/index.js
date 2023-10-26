@@ -23,6 +23,34 @@ import esignViewIcon from './images/ic_esgin.png'
 import circleGreen from './images/fill_circle_green.png'
 import EsignD from './images/d_esign.png'
 import test from './images/test.png'
+import profileIC from './images/profile_ic.png'
 
 
-export { company_logo_2, company_logo, create_mpin, Entry_logo, mobile_otp, new_mpin, Pinlock, security_pin_icon, user_profile, candidateIcon, company_icon, expernallinkImage, loginBanner, tag, loginIcon, employeeLoginBanner, approveMark, rejectMark, esignIcon, circleTranceparent, circleFill, esignViewIcon ,circleGreen,EsignD,test}
+export {
+    company_logo_2,
+    company_logo,
+    create_mpin,
+    Entry_logo,
+    mobile_otp,
+    new_mpin,
+    Pinlock,
+    security_pin_icon,
+    user_profile,
+    candidateIcon,
+    company_icon,
+    expernallinkImage,
+    loginBanner,
+    tag,
+    loginIcon,
+    employeeLoginBanner,
+    approveMark,
+    rejectMark,
+    esignIcon,
+    circleTranceparent,
+    circleFill,
+    esignViewIcon,
+    circleGreen,
+    EsignD,
+    test,
+    profileIC
+}

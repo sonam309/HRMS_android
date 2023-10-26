@@ -23,7 +23,7 @@ const Rejected = (props) => {
                 // console.log("Reject",returnedData);
                 setRejectedData(returnedData);
                 setLoading(false)
-            }).catch((error)=>{
+            }).catch((error) => {
                 // console.log(error)
                 setLoading(false)
             })
@@ -61,7 +61,17 @@ const Rejected = (props) => {
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
 
-                {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.red, fontWeight: '400' }}>Rejected by {approver}</Text>) : null}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 10 }}>
+
+                    {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.red, fontWeight: '400' }}>Rejected by {approver}</Text>) : null}
+                    {candidate_ID && <Text style={{ color: COLORS.orange1 }}>
+                        Candidate ID- ({candidate_ID})
+                    </Text>}
+
+
+                </View>
+
+
             </TouchableOpacity>
         )
     }

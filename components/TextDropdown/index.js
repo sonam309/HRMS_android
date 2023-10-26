@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: SIZES.base * 1.3,
+    paddingHorizontal: SIZES.base * 1,
     marginTop: SIZES.base,
     backgroundColor: COLORS.white,
   },

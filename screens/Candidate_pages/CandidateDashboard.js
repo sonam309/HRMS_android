@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import COLORS from '../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { View, Text, TouchableOpacity, ScrollView, Linking, Image, BackHandler, Alert, NativeModules, NativeEventEmitter } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Linking, Image, BackHandler, Alert, NativeModules, NativeEventEmitter, Modal, StyleSheet, PermissionsAndroid } from 'react-native'
 import { FONTS, SIZES } from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
-import { EsignD, circleFill, circleGreen, circleTranceparent, company_logo_2, esignIcon, esignViewIcon, expernallinkImage, test } from '../../assets';
+import { EsignD, circleFill, circleGreen, circleTranceparent, company_icon, company_logo_2, esignIcon, esignViewIcon, expernallinkImage, profileIC, test } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useSelector, useDispatch } from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -17,8 +17,9 @@ import Toast from 'react-native-toast-message';
 import CustomAlert from '../../components/CustomAlert/index';
 import axios from 'axios';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
-import { WebView } from 'react-native-webview';
+// import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';/
+// import { useNavigation  } from '@react-navigation/native';
+import { launchCamera } from 'react-native-image-picker';
 
 
 const CandidateDashboard = (props) => {
@@ -43,47 +44,50 @@ const CandidateDashboard = (props) => {
     const [input, setInput] = useState("");
     const [count, setCount] = useState("");
     const [pendingTest, setPendingTest] = useState('');
+    const [profilePic, setProfilePic] = useState(null);
 
-    const isFocused = useIsFocused();
+    const [showPicModal, setShowPicModal] = useState(false)
+
+    const isFocused = true
 
 
     useEffect(() => {
-        if (isFocused) {
+        // if (isFocused) {
+        if (candidateId) {
             console.log("testttttttttttttt")
-            if (candidateId) {
-                getCandidateOfferDetails()
 
-            }
+            getCandidateOfferDetails()
+
         }
-    }, [props, isFocused, candidateId])
+        // }
+    }, [candidateId])
 
 
     useEffect(() => {
 
-        if (isFocused) {
-            if (candidateId) {
-                getEsignData();
-            }
+
+        if (employeeCreateFlag === 'Y') {
+            getEsignData();
         }
 
-    }, [props, isFocused])
+    }, [employeeCreateFlag])
 
 
-    useEffect(() => {
+    //     useEffect(() => {
 
-        if (isFocused) {
-            if (candidateId) {
-                getEsignData();
-            }
-
-        }
-    }, [props, isFocused, candidateId])
+    //         // if (isFocused) {
+    //             if (candidateId) {
+    //                 getEsignData();
+    //             }
+    // // 
+    //         }
+    //     }, [candidateId])
 
 
     // getEsignData
     const getEsignData = async () => {
 
-        setLoaderVisible(true);
+        // setLoaderVisible(true);
         const data = {
             user: candidateId,
             candidateId: candidateId,
@@ -95,9 +99,9 @@ const CandidateDashboard = (props) => {
         axios.post(`${API}/api/saveEsignDataNew`, data).then((response) => {
 
             const result = response.data.Result;
-            console.log("esignData", result[0]);
+            // console.log("esignData", result[0]);
             setEsignCount(result[0]?.ESSIGN_CNT);
-            setLoaderVisible(false);
+            // setLoaderVisible(false);
 
         })
 
@@ -108,13 +112,13 @@ const CandidateDashboard = (props) => {
     const getCandidateOfferDetails = async (type) => {
 
         const userData = { loginId: candidateId }
-        setLoaderVisible(true);
+        // setLoaderVisible(true);
         axios.post(`${API}/api/hrms/candidateOfferCheck`, userData).then((response) => {
 
-            const resultData = response.data;
+            const resultData = response?.data;
 
             console.log("candidateOfferCheck", resultData);
-            setLoaderVisible(false);
+            // setLoaderVisible(false);
             dispatch(candidateAuthActions.updateLogin({
                 candidateStatusId: resultData?.Result[0]?.STATUS,
                 candidateStatus: resultData?.Result[0]?.CANDIDATE_STATUS
@@ -124,28 +128,35 @@ const CandidateDashboard = (props) => {
             setEmployeeCreateFlag(resultData?.Result[0]?.EMP_CREATION_FLAG);
             setTodoList(resultData?.Result[0]?.DOC_REQ);
             setPendingTest(resultData?.Result[0]?.PENDING_TEST);
+            setProfilePic(resultData?.Result[0]?.PROFILE_PIC);
+            if (!resultData?.Result[0]?.PROFILE_PIC) {
+                setShowPicModal(true)
+            }
 
-            if (type === "offer") {
+
+            if (type !== '' && type === "offer") {
                 resultData?.Result[0]?.OFFER_LETTER !== null && resultData?.Result[0]?.OFFER_LETTER !== "" ? props.navigation.navigate("Offer Letter") : setOfferLetterAlert(true)
             }
 
-            if (type === "Document") {
+            if (type !== '' && type === "Document") {
 
                 resultData?.Result[0]?.DOC_REQ !== 0 && resultData?.Result[0]?.DOC_REQ !== "" ? props.navigation.navigate("Candidate_Document") :
                     setShowAlert(true)
             }
-            if (type === "profile") {
+            if (type !== '' && type === "profile") {
                 resultData?.Result[0]?.OFER_ACPT_FLAG == "A" ? props.navigation.navigate("Candidate profile") : setProfileAlert(true)
             }
-            if (type === "track") {
+            if (type !== '' && type === "track") {
 
                 resultData?.Result[0]?.CANDIDATE_STATUS && props.navigation.navigate("Status view page")
             }
 
 
+
+
         }).catch((error) => {
             // console.log(error)
-            setLoaderVisible(false)
+            // setLoaderVisible(false)
 
             Toast.show({
                 type: 'error',
@@ -156,6 +167,208 @@ const CandidateDashboard = (props) => {
 
 
     }
+
+
+
+
+    // for submitting file
+
+    function addLeadingZero(number) {
+
+        return number < 10 ? '0' + number : number;
+
+    }
+
+    // for submitting file
+
+    function getFormattedTimestamp() {
+
+        var date = new Date();
+
+
+
+        var day = addLeadingZero(date.getDate());
+
+        var month = addLeadingZero(date.getMonth() + 1); // Months are zero-based
+
+        var year = date.getFullYear();
+
+        var hours = addLeadingZero(date.getHours());
+
+        var minutes = addLeadingZero(date.getMinutes());
+
+        var seconds = addLeadingZero(date.getSeconds());
+
+
+
+        return day + month + year + hours + minutes + seconds;
+
+    }
+
+
+    const selectProfilePic = async () => {
+
+        const grantedcamera = await PermissionsAndroid.request(
+
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+
+            {
+
+                title: 'App Camera Permission',
+
+                message: 'App needs access to your camera ',
+
+                buttonNeutral: 'Ask Me Later',
+
+                buttonNegative: 'Cancel',
+
+                buttonPositive: 'OK',
+
+            },
+
+        );
+
+
+
+        if (
+
+            grantedcamera === PermissionsAndroid.RESULTS.GRANTED
+
+            // grantedstorage === PermissionsAndroid.RESULTS.GRANTED
+
+        ) {
+
+            console.log('Camera permission given');
+
+
+
+            var options = {
+
+                mediaType: 'photo', //to allow only photo to select ...no video
+
+                saveToPhotos: false, //to store captured photo via camera to photos or else it will be stored in temp folders and will get deleted on temp clear
+
+                includeBase64: false,
+                cameraType: "front"
+
+            };
+
+
+
+            launchCamera(options, res => {
+
+                if (res.didCancel) {
+
+                    console.log('User cancelled image picker');
+
+                } else if (res.error) {
+
+                    console.log('ImagePicker Error: ', res?.error);
+
+                } else if (res.customButton) {
+
+                    console.log('User tapped custom button: ', res?.customButton);
+
+
+
+                } else {
+
+                    // let source = res;
+
+                    // var resourcePath1 = source.assets[0].uri;
+
+                    console.log('Response = ', res);
+
+
+
+
+                    let profilePicData = {
+
+                        candidateId: candidateId,
+
+                        profillePic: res.assets[0]?.fileName,
+
+                        operFlag: 'A',
+
+                    };
+
+
+
+                    var formData = new FormData();
+
+                    formData.append('data', JSON.stringify(profilePicData));
+
+
+
+                    formData.append('fileUpload', {
+
+                        name: `profilePicDoc_${candidateId}_${getFormattedTimestamp()}.${res?.assets[0]?.type?.split('/')[1]
+
+                            }`,
+
+                        type: res.assets[0]?.type,
+
+                        uri: res.assets[0]?.uri,
+
+                    });
+
+                    fetch(`${API}/api/hrms/profilePic`, {
+
+                        method: 'POST',
+
+                        body: formData,
+
+                    })
+
+                        .then(res => {
+
+                            console.log(res);
+
+                            if (res?.status === 200) {
+
+                                Toast.show({
+
+                                    type: 'success',
+
+                                    text1: 'Profile Picture Updated Successfully',
+
+                                });
+
+                                setShowPicModal(false);
+
+                            } else {
+
+                                Toast.show({
+
+                                    type: 'error',
+
+                                    text1: 'Something went wrong, Please try again...',
+
+                                });
+
+                            }
+
+                        })
+
+                        .catch(error => {
+
+                            console.log(error);
+
+
+
+                        });
+
+                }
+
+            });
+
+        } else {
+
+            console.log('Camera permission denied');
+
+        }
+
+    };
 
 
     const finalSubmit = async () => {
@@ -198,31 +411,35 @@ const CandidateDashboard = (props) => {
 
     useEffect(() => {
         // for handling back button in android
-        const backAction = () => {
-            if (props.navigation.isFocused()) {
-                setExitAlert(true)
-            }
-        };
 
-        const backPressHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            backAction,
-        );
+            const backAction = () => {
+                if (props.navigation.isFocused()) {
+                    setExitAlert(true)
+                }
+            };
+
+            const backPressHandler = BackHandler.addEventListener(
+                'hardwareBackPress',
+                backAction,
+            );
         return () => {
             backPressHandler.remove();
         };
+
     }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            // Do something when the screen is focused
-            getEsignData()
-        }, [])
-    );
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         // Do something when the screen is focused
+    //         getEsignData()
+    //     }, [])
+    // );
 
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
+
+
 
             <View style={{
                 backgroundColor: COLORS.white, paddingHorizontal: 12, paddingBottom: 8, shadowColor: COLORS.orange1,
@@ -245,7 +462,11 @@ const CandidateDashboard = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <ScrollView>
+
+
+
+
+            <ScrollView style={{ flex: 1 }}>
                 <Loader loaderVisible={loaderVisible} />
                 {
                     employeeCreateFlag !== '' && employeeCreateFlag !== null && employeeCreateFlag === 'Y' ?
@@ -371,11 +592,12 @@ const CandidateDashboard = (props) => {
                         </View>
                 }
 
+
                 {pendingTest &&
                     <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
                         <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> {pendingTest === "C" ? "Complete Task" : "To Do's"}</Text>
 
-                        <TouchableOpacity onPress={() => { pendingTest === "C" ? props.navigation.navigate("TestResult") : props.navigation.navigate("TestScreen") }}>
+                        <TouchableOpacity onPress={() => { pendingTest === "C" ? props.navigation.navigate('TestResult') : props.navigation.navigate("TestScreen") }}>
                             <View style={{ flex: 1, flexDirection: 'row', height: responsiveHeight(10), borderRadius: SIZES.radius, backgroundColor: COLORS.disableOrange1, marginTop: 10, justifyContent: 'space-between' }}>
 
                                 <Text style={{
@@ -401,7 +623,7 @@ const CandidateDashboard = (props) => {
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}> Offer Letter
                         {/* {JSON.stringify(tkenRes)} */}
                     </Text>
-                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { [getCandidateOfferDetails("offer")] }}>
+                    <TouchableOpacity style={{ backgroundColor: COLORS.disableOrange1, paddingVertical: 20, borderRadius: 12, width: "100%", marginVertical: 12, borderColor: COLORS.orange1, borderWidth: 0.5, }} onPress={() => { getCandidateOfferDetails("offer") }}>
                         <View style={{ flexDirection: 'row', flex: 1, width: '100%', justifyContent: 'space-between' }}>
                             <SimpleLineIcons name="envelope-letter" size={30} color={COLORS.orange} style={{ marginHorizontal: 30 }} />
                             <Text style={{ fontWeight: 500, fontSize: 14, color: COLORS.orange, marginRight: 30, textAlignVertical: 'center' }}>View Offer Letter{">"}</Text>
@@ -426,7 +648,7 @@ const CandidateDashboard = (props) => {
                         </TouchableOpacity>
                         {/* document view */}
 
-                        <TouchableOpacity onPress={() => { [getCandidateOfferDetails("Document")] }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
+                        <TouchableOpacity onPress={() => { getCandidateOfferDetails("Document") }} style={{ borderColor: COLORS.green, borderWidth: 0.5, height: 160, backgroundColor: COLORS.disableGreen, padding: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 12, width: "45%", }}>
 
                             <Icons name="file-document-outline" size={44} color={COLORS.green} />
                             <Text style={{ color: COLORS.green, fontWeight: 500, fontSize: 16, marginTop: 12 }}>  Documents  </Text>
@@ -459,19 +681,124 @@ const CandidateDashboard = (props) => {
                 <View style={{ marginHorizontal: SIZES.radius, marginBottom: 100, marginTop: 20 }}>
                     <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black, }}>About Satya </Text>
                     <TouchableOpacity onPress={() => Linking.openURL('https://satyamicrocapital.com/')}
-                        style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: responsiveHeight(55), borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
+                        style={{ marginTop: 10, marginBottom: 10, backgroundColor: COLORS.white, height: responsiveHeight(25), borderRadius: SIZES.radius, alignItems: 'center', justifyContent: 'center', borderWidth: 0.5, borderColor: COLORS.lightGray, }}>
 
-                        <View style={{ height: '95%', width: '95%', justifyContent: 'center' }}>
-                            {/* <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} /> */}
+                        <View style={{ width: '95%', justifyContent: 'center' }}>
+                            <Image source={company_logo_2} style={{ height: '100%', width: '100%', }} />
 
-                            <WebView source={{ uri: 'https://satyamicrocapital.com/' }} />
+                            {/* <WebView source={{ uri: 'https://satyamicrocapital.com/' }} style={{opacity:0.99}} /> */}
                         </View>
                     </TouchableOpacity>
+
                 </View>
+
             </ScrollView>
+
+            {!profilePic && <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showPicModal}
+                onRequestClose={() => {
+                    // setShowPicModal(!showPicModal);
+                    console.log("closeee")
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        {/* <Text style={styles.modalText}>Hello World!</Text>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setShowPicModal(!showPicModal)}>
+                            <Text style={styles.textStyle}>Upload Profile</Text>
+                        </Pressable> */}
+                        <View style={{ flexDirection: 'column', height: '100%' }}>
+
+                            <Text style={{ color: COLORS.black, ...FONTS.h3, lineHeight: 20 }}>
+                                Attach Profile Image
+                            </Text>
+
+                            <Text style={{ color: COLORS.gray, ...FONTS.body5, lineHeight: 15 }}>
+                                Please Upload Profile Picture!
+                            </Text>
+
+                            <TouchableOpacity style={{
+                                borderWidth: 1,
+                                borderColor: COLORS.gray,
+                                height: 150,
+                                width: 250,
+                                borderRadius: 4,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderStyle: 'dashed',
+                                marginTop: 25
+                            }}
+
+                                onPress={selectProfilePic}
+                            >
+
+                                <Image source={profileIC} style={{ height: 50, width: 50 }} />
+                            </TouchableOpacity>
+
+
+                        </View>
+
+
+
+                    </View>
+                </View>
+            </Modal>}
+
         </View >
+
+
     )
 }
 
 
 export default CandidateDashboard
+
+const styles = StyleSheet.create({
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        height: 300,
+        width: responsiveWidth(80)
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+});

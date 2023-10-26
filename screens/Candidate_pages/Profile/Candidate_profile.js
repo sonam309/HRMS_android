@@ -32,7 +32,7 @@ import axios from 'axios';
 
 
 
-const Candidate_profile = () => {
+const Candidate_profile = (props) => {
 
   const userId = useSelector(state => state.candidateAuth.candidateId)
   const userName = useSelector(state => state.candidateAuth.candidateName)

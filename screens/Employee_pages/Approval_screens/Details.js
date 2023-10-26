@@ -130,7 +130,7 @@ const Details = (props) => {
 
 
     // Variables to be updated for salary allocation
-    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
+    let fullName, contactPersonMob, contactPersonName, baseSalary, employerPF, grossAmount, fuelAllowance, dvrAllowance, specialAllowance, bonusPay, conveyanceAllowance, bikeMaintenaceAllowance, foodAllowance, HRA, yearbaseVariable,yearlybasectc, YearHRA, YearfoodAllowance, YearbikeMaintenaceAllowance, YearconveyanceAllowance, YearbonusPay, YearspecialAllowance, YeardvrAllowance, YearfuelAllowance, YeargrossAmount, YearemployerPF, YeartotalSalValue, MonthtotalSalValue, JobTitle, candidateDep
         //V_2.2 sk
         , distanceAllowance, yearlyDistanceAllowance, fieldAllowance, YearlyFieldAllowance, inchargeAllowance, yearlyInchargeAllowance, performanceAllowance, yearlyPerformanceAllowance, protfolioQualityAllowance, yearlyPortfolioQualityAllowance, leaveTravelAllowance,
         yearlyLTAllowance, otherReimbursement, yearlyOtherReimbursement, fuelReimbursement, yearFuelReimbursement, employeeESIC, yearlyEmployeeEsic,
@@ -330,7 +330,7 @@ const Details = (props) => {
 
     // Setting the variables data coming for Salary Allocation
     const updating = () => {
-        // console.warn(data);
+        console.log("htmldataaaaa",data);
         fullName = data.Table1[0]?.FULL_NAME
         JobTitle = data?.Table[0]?.DESIGNATION
         contactPersonMob = data.Table1[0]?.CONTACT_PERSON
@@ -359,6 +359,7 @@ const Details = (props) => {
         FoodCoupon = data.Table[0]?.FOOD_COUPON//V_2.2 sk
         gratuity = data.Table[0]?.GRATUITY_AMT//V_2.2 sk
         nps = data.Table[0]?.EMPLOYE_NPS//V_2.2 sk
+        ctc=data.Table[0]?.BRKP_CTC
 
         yearlyNps = Number(nps) * 12//V_2.2 sk
         yearlyGratuity = Number(gratuity) * 12//V_2.2 sk
@@ -373,6 +374,7 @@ const Details = (props) => {
         yearlyDistanceAllowance = Number(distanceAllowance) * 12//V_2.2 sk
         YearlyFieldAllowance = Number(fieldAllowance) * 12//V_2.2 sk
         yearbaseVariable = Number(baseSalary) * 12
+        yearlybasectc=Number(ctc)*12
         YearHRA = Number(HRA) * 12
         YearfoodAllowance = Number(foodAllowance) * 12
         YearbikeMaintenaceAllowance = Number(bikeMaintenaceAllowance) * 12
@@ -385,16 +387,22 @@ const Details = (props) => {
         YearemployerPF = Number(employerPF) * 12
 
         // Monthly value
-        MonthtotalSalValue = Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
-            //V_2.2 sk
-            + Number(distanceAllowance) + Number(fieldAllowance) + Number(inchargeAllowance) + Number(performanceAllowance) + Number(protfolioQualityAllowance) + Number(leaveTravelAllowance) + Number(otherReimbursement) + Number(fuelReimbursement) + Number(employeeESIC) + Number(FoodCoupon) + Number(gratuity) + Number(nps)
+        MonthtotalSalValue = Number(ctc)
+        // Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
+        //     //V_2.2 sk
+        //     + Number(distanceAllowance) + Number(fieldAllowance) + Number(inchargeAllowance) + Number(performanceAllowance) + Number(protfolioQualityAllowance) + Number(leaveTravelAllowance) + Number(otherReimbursement) + Number(fuelReimbursement) + Number(employeeESIC) + Number(FoodCoupon) + Number(gratuity) + Number(nps)
 
 
         //Total Year Value
-        YeartotalSalValue = Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
-            //V_2.2 sk
-            + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
+        YeartotalSalValue = Number(yearlybasectc)
+        // Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
+        //     //V_2.2 sk
+        //     + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
+
+        console.log("ctttctctct",data.Table[0]?.BRKP_CTC)
     }
+
+    
 
     // Updating the HTML data for Salary Allocation
     const updateHTML = () => {
@@ -403,7 +411,7 @@ const Details = (props) => {
             data && HTMLdata ?
                 (
                     // console.warn(fullName),
-                    // console.warn(HTMLdata),
+                    
                     HTMLdata
                         .replace("NameVariable", fullName ? fullName : "fullName")
                         .replaceAll("DesignationVariable", JobTitle === "" ? "DesignationVariable" : JobTitle)
@@ -521,13 +529,13 @@ const Details = (props) => {
                     </View>
 
                     {/* Position */}
-                    <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobOpeningData?.JOB_TITLE}</Text>
+                    <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: '500', fontSize: 20, color: COLORS.voilet }}>{jobOpeningData?.JOB_TITLE}</Text>
 
                     {/* Location & Job type */}
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobOpeningData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobOpeningData?.CITY}<Text style={{ fontWeight: '700' }}>  ∙</Text></Text>
 
-                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobOpeningData?.DEPARTMENT_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                        <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobOpeningData?.DEPARTMENT_NAME}<Text style={{ fontWeight: '700' }}>  ∙</Text></Text>
 
                         <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 16 }}> <MaterialIcons name='pending-actions' color={COLORS.pink} size={20} /> {jobOpeningData?.JOB_STATUS}</Text>
 
@@ -540,19 +548,19 @@ const Details = (props) => {
                         <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <Icons name='briefcase' size={25} color={COLORS.purple} />
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Opening</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.NO_OF_POSITIONS}</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Opening</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}>{jobOpeningData?.NO_OF_POSITIONS}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Type</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.E_TYPE}</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Job Type</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}>{jobOpeningData?.E_TYPE}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icons name='rupee' size={25} />
                                 </View>
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Compensation</Text>
                                 {/* <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>Rs. {jobOpeningData?.COMPENSATION}</Text> */}
                                 <TextInput defaultValue={compensationAmount} onChangeText={(value) => n = value} onEndEditing={() => setCompensationAmount(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 40, marginTop: 5, borderRadius: 8, paddingHorizontal: 8 }} keyboardType='number-pad' maxLength={10} />
                             </View>
@@ -561,20 +569,20 @@ const Details = (props) => {
                         <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialCommunityIcons name='cash-check' color={COLORS.red} size={30} />
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Budget</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.BUDGET}</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Budget</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}>{jobOpeningData?.BUDGET}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <MaterialIcons name='pending-actions' color={COLORS.pink} size={30} />
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Status</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobOpeningData?.JOB_STATUS1}</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Job Status</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}>{jobOpeningData?.JOB_STATUS1}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
                                 <View style={{ backgroundColor: COLORS.lightGreen, width: 30, borderRadius: 15, height: 30, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                                     <MaterialCommunityIcons name='apache-kafka' size={28} />
                                 </View>
-                                <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Experience</Text>
-                                <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}> {jobOpeningData?.EXPERIENCE} years</Text>
+                                <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Experience</Text>
+                                <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}> {jobOpeningData?.EXPERIENCE} years</Text>
                             </View>
                         </View>
 
@@ -583,7 +591,7 @@ const Details = (props) => {
                     {/* More details -> Posted by, Location, experience, Date Posted */}
                     <View style={{ paddingVertical: 15, paddingHorizontal: 10, marginVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.lightGray }}>
 
-                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Hiring Lead</Text>
+                        <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Hiring Lead</Text>
                         {/* <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.HIRING_LEAD_NAME}</Text> */}
                         <TextDropdown
                             caption={'Hiring Lead'}
@@ -595,10 +603,10 @@ const Details = (props) => {
                         />
 
 
-                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Address</Text>
-                        <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.CITY}, {jobOpeningData?.PROVINCE_NAME}, {jobOpeningData?.COUNTRY_NAME}</Text>
+                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: '500' }}>Address</Text>
+                        <Text style={{ color: COLORS.black, fontWeight: '500', paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobOpeningData?.CITY}, {jobOpeningData?.PROVINCE_NAME}, {jobOpeningData?.COUNTRY_NAME}</Text>
 
-                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Job Remarks</Text>
+                        <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: '500' }}>Job Remarks</Text>
                         {/* <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobOpeningData?.JOB_DESC}</Text> */}
                         <RenderHTML 
                         source={{html: jobOpeningData?.JOB_DESC}}
@@ -633,13 +641,13 @@ const Details = (props) => {
                 {jobRequestData && setLoaderVisible(false)}
 
                 {/* Position */}
-                <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: 500, fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
+                <Text style={{ paddingVertical: 10, textAlign: 'center', fontWeight: '500', fontSize: 20, color: COLORS.voilet }}>{jobRequestData?.DESIGNATION_NAME}</Text>
 
                 {/* Location & Job type */}
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                    <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialIcons name='location-pin' size={20} color={COLORS.lightBlue} /> {jobRequestData?.CITY}<Text style={{ fontWeight: '700' }}>  ∙</Text></Text>
 
-                    <Text style={{ paddingHorizontal: 1, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: 700 }}>  ∙</Text></Text>
+                    <Text style={{ paddingHorizontal: 1, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='office-building-outline' size={20} color={COLORS.red} /> {jobRequestData?.DPET_NAME}<Text style={{ fontWeight: '700' }}>  ∙</Text></Text>
 
                     <Text style={{ paddingHorizontal: 2, textAlignVertical: 'center', fontSize: 17 }}> <MaterialCommunityIcons name='clock' size={20} color={COLORS.lightOrange} /> {jobRequestData?.JOB_STATUS}</Text>
 
@@ -651,11 +659,11 @@ const Details = (props) => {
 
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Icons name='briefcase' size={25} color={COLORS.purple} />
-                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>No. of Positions</Text>
+                        <Text style={{ paddingVertical: 5, fontWeight: '500' }}>No. of Positions</Text>
 
                         
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
-                            <Text style={{ fontWeight: 400, color: COLORS.black }}>Rs.</Text>
+                            <Text style={{ fontWeight: '400', color: COLORS.black }}>Rs.</Text>
                             <TextInput defaultValue={numOfPosition} onChangeText={(value) => n = value} onEndEditing={() => setNumOfPosition(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 35,width:'30%',textAlign:'center', marginTop: 5, borderRadius: 8,  }} keyboardType='number-pad' maxLength={10} />
                         </View>
 
@@ -664,16 +672,16 @@ const Details = (props) => {
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <MaterialCommunityIcons name='clock' size={25} color={COLORS.lightOrange} />
-                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Job Type</Text>
-                        <Text style={{ paddingTop: 5, fontWeight: 500, color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
+                        <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Job Type</Text>
+                        <Text style={{ paddingTop: 5, fontWeight: '500', color: COLORS.black }}>{jobRequestData?.EMPLOYMENT_TYPE}</Text>
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <View style={{ backgroundColor: COLORS.lightGreen, width: 25, borderRadius: 12.5, height: 25, padding: 2, justifyContent: 'center', alignItems: 'center' }}>
                             <Icons name='rupee' size={25} />
                         </View>
-                        <Text style={{ paddingVertical: 5, fontWeight: 500 }}>Compensation/M</Text>
+                        <Text style={{ paddingVertical: 5, fontWeight: '500' }}>Compensation/M</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
-                            <Text style={{ fontWeight: 500, color: COLORS.black }}>Rs.</Text>
+                            <Text style={{ fontWeight: '500', color: COLORS.black }}>Rs.</Text>
                             <TextInput defaultValue={compensationAmount} onChangeText={(value) => n = value} onEndEditing={() => setCompensationAmount(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 40, marginTop: 5, borderRadius: 8, paddingHorizontal: 8 }} keyboardType='number-pad' maxLength={10} />
                         </View>
                     </View>
@@ -707,23 +715,23 @@ const Details = (props) => {
                     {/* </View> */}
 
 
-                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Minimum Experience </Text>
-                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.MIN_EXP} years</Text>
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: '500' }}>Minimum Experience </Text>
+                    <Text style={{ color: COLORS.black, fontWeight: '500', paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.MIN_EXP} years</Text>
 
-                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Location</Text>
-                    <Text style={{ color: COLORS.black, fontWeight: 500, paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.CITY}, {jobRequestData?.STATE_NAME}, {jobRequestData?.POSTAL_CODE}</Text>
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: '500' }}>Location</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: '500', paddingVertical: 5, borderBottomWidth: 1, borderColor: COLORS.lightGray }}>{jobRequestData?.CITY}, {jobRequestData?.STATE_NAME}, {jobRequestData?.POSTAL_CODE}</Text>
 
-                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: 500 }}>Date Posted:</Text>
-                    <Text style={{ color: COLORS.black, fontWeight: 500 }}>{jobRequestData?.CREATED_DATE}</Text>
+                    <Text style={{ marginTop: 10, paddingVertical: 5, fontWeight: '500' }}>Date Posted:</Text>
+                    <Text style={{ color: COLORS.black, fontWeight: '500' }}>{jobRequestData?.CREATED_DATE}</Text>
                 </View>
 
                 {/* More about the job */}
-                <Text style={{ fontWeight: 600, fontSize: 20, color: COLORS.black }}>Job Remarks</Text>
+                <Text style={{ fontWeight: '600', fontSize: 20, color: COLORS.black }}>Job Remarks</Text>
                 <Text>{jobRequestData?.JOB_DESCRIPTION}</Text>
 
                 {/* Job desciption */}
                 <View style={{ marginVertical: 10 }}>
-                    <Text style={{ fontWeight: 500, fontSize: 16, color: COLORS.black }}>Job Description</Text>
+                    <Text style={{ fontWeight: '500', fontSize: 16, color: COLORS.black }}>Job Description</Text>
                     <TouchableOpacity style={{ backgroundColor: COLORS.lightGreen, height: 50, borderRadius: 12, padding: 10, marginVertical: 5, justifyContent: 'center' }} onPress={() => props.navigation.navigate('Job Desc', { JD })}>
                         <Text >{jobRequestData?.UPLOAD_JD_DOC} </Text>
                     </TouchableOpacity>
@@ -804,7 +812,7 @@ const styles = StyleSheet.create({
     },
     headers: {
         marginVertical: 5,
-        fontWeight: 500,
+        fontWeight: '500',
         color: COLORS.black,
         fontSize: 17
     },

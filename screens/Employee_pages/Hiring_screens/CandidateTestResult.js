@@ -10,28 +10,24 @@ import _ from "lodash"
 import LinearGradient from 'react-native-linear-gradient';
 
 const OPTIONS = ["A", "B", "C", "D"];
+const CandidateTestResult = ({navigation,route}) => {
 
-
-const TestResult = (props) => {
 
     const dispatch = useDispatch();
-    const { candidateId, candidateName, candidateRole } = useSelector(state => state.candidateAuth)
     const { testResultLoading, saveTestResult } = useSelector(state => state.eSign)
 
-    // const options = useMemo(() => {
-    //     return OPTIONS.map((i) => item[i]);
-    // }, [currentIndex]);
-
+    const { candidateId,name ,designation} = route.params
+  
 
 
     useEffect(() => {
 
-        console.log("Result",saveTestResult)
+        console.log("Result",candidateId)
 
         const saveData = {
             txnId: '',
             userId: candidateId,
-            candidateId: candidateId,
+            candidateId:candidateId,
             param: '',
             operFlag: 'V'
         }
@@ -42,7 +38,7 @@ const TestResult = (props) => {
 
     useEffect(() => {
         const backAction = () => {
-            props.navigation?.navigate("CandidateDashboard");
+            navigation?.goBack();
             return true;
         };
         const backHandler = BackHandler.addEventListener(
@@ -60,7 +56,7 @@ const TestResult = (props) => {
 
             {/* Top headerView */}
             <View style={{ width: '100%', flexDirection: 'row', elevation: 6, backgroundColor: COLORS.white, padding: 15 }}>
-                <TouchableOpacity onPress={() => props.navigation.navigate("CandidateDashboard")} >
+                <TouchableOpacity onPress={() => navigation.goBack()} >
                     <Icons name="arrow-left" size={28} color={COLORS.black} style={{ alignSelf: 'center', }} verticalAlign={'center'} />
                 </TouchableOpacity>
                 <Text style={{ ...FONTS.body3, fontSize: 17, color: COLORS.black, verticalAlign: 'middle', marginLeft: 20 }}>Result</Text>
@@ -87,10 +83,10 @@ const TestResult = (props) => {
                             </Text>
 
                             <Text style={{ color: COLORS.black, ...FONTS.h4 }}>
-                                Name:- {candidateName}
+                                Name:- {name}
                             </Text>
                             <Text style={{ color: COLORS.black, ...FONTS.h4, marginRight: 10 }}>
-                                Post:- {candidateRole}
+                                Post:- {designation}
                             </Text>
 
                         </View>
@@ -198,4 +194,4 @@ const TestResult = (props) => {
     )
 }
 
-export default TestResult
+export default CandidateTestResult

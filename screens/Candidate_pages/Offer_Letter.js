@@ -64,8 +64,8 @@ const Offer_Letter = (props) => {
 
     } catch (err) {
       Toast.show({
-        type:'error',
-        text1:JSON.stringify(err)
+        type: 'error',
+        text1: JSON.stringify(err)
       })
     }
   };
@@ -234,8 +234,8 @@ const Offer_Letter = (props) => {
             // borderWidth: 1,
             borderRadius: 30,
             borderWidth: 1,
-            marginRight:30,
-            marginBottom:5,
+            marginRight: 30,
+            marginBottom: 5,
             borderColor: btnVisibility ? COLORS.green : COLORS.lightGray,
             alignItems: 'center',
             justifyContent: 'center',

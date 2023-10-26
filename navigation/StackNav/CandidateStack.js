@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 
 const CandidateStack = () => {
     return (
-        <Stack.Navigator initialRouteName='Home' >
+        <Stack.Navigator initialRouteName='CandidateDashboard' >
             <Stack.Screen name='CandidateDashboard' options={{ headerShown: false, orientation:'portrait' }} component={CandidateDashboard} />
             <Stack.Screen name='Candidate profile' options={{ orientation: 'portrait' }} component={Candidate_profile} />
             <Stack.Screen name='Candidate_Document' options={{ orientation: 'portrait', headerShown: false }} component={Candidate_Document} />

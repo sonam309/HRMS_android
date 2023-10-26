@@ -1,33 +1,35 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import COLORS from '../../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { candidateIcon } from '../../../assets'
+import { candidateIcon, test } from '../../../assets'
 import BottomUpModal from '../../../components/BottomUpModal'
 import Entypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios'
 import PieChart from 'react-native-pie-chart'
-import { FONTS ,SIZES} from '../../../constants/font_size'
+import { FONTS, SIZES } from '../../../constants/font_size'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { API } from '../../../utility/services'
 import { useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import Toast from 'react-native-toast-message';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view' 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions'
 
 
 const Candidate_details = (props) => {
-  const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail } = props.route.params
+  const { resume, name, designation, interviewStartTime, interviewEndTime, date, status, candidateId, interviewId, interviewType, interviewMail, profilePic } = props.route.params
   const dispatch = useDispatch();
-    const route = useRoute();
+  const route = useRoute();
   const [isVisible, setIsVisible] = useState(false)
   const [obtainedTechScoreValue, setObtainedTechScoreValue] = useState("");
   const [obtainedSpeakScoreValue, setObtainedSpeakScoreValue] = useState("");
   const [yourRemarks, setYourRemarks] = useState("");
   const [error, setError] = useState(false);
   const [feedback, setFeedback] = useState("")
-  const {userId}=useSelector(state=>state.auth);
-  
+  // const [profilePic, setProfilePic] = useState('');
+  const { userId } = useSelector(state => state.auth);
+
 
   // console.log("candidateId", candidateId);
   // console.log("interviewId", interviewId);
@@ -65,7 +67,7 @@ const Candidate_details = (props) => {
     if (validateForm()) {
 
       let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
-      // let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
+        // let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -75,23 +77,27 @@ const Candidate_details = (props) => {
           interviewId: theInterviewId,
           interviewType: theInterviewType,
           operFlag: operFlag,
-          interviewEmpCode:userId,
+          interviewEmpCode: userId,
           param: `Technical~5~${obtainedTechScoreValue}$Speaking~5~${obtainedSpeakScoreValue}`,
           remark: yourRemarks
         }),
-        
+
       })
       // console.log("dfghj",theInterviewType);
 
       res = await res.json()
-      res = res.Result[0]
-      
+      res = res?.Result[0]
+
+      console.log("feedbackkkk", res)
+
       Toast.show({
-        type:'success',
-        text1:res.MSG
+        type: 'success',
+        text1: res?.MSG
       })
-      if(res.FLAG === "S"){
+      if (res.FLAG === "S") {
         props.navigation.navigate("Interview_status")
+
+        setProfilePic(res?.PROFILE_PIC)
       }
       // console.log("response", res)
 
@@ -114,151 +120,151 @@ const Candidate_details = (props) => {
         </View>
 
         <KeyboardAwareScrollView
-                // extraScrollHeight={120}
-                behavior={'padding'}
-                enableAutomaticScroll={true}
-                keyboardShouldPersistTaps={'always'}
-                style={{marginBottom: 150 }}
-                contentContainerStyle={{
-                    paddingBottom: 10
-                }}
+          // extraScrollHeight={120}
+          behavior={'padding'}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps={'always'}
+          style={{ marginBottom: 150 }}
+          contentContainerStyle={{
+            paddingBottom: 10
+          }}
 
-                showsVerticalScrollIndicator={false}
-            >
-        <View style={{ marginVertical: 12, }}>
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={{ marginVertical: 12, }}>
 
-          <View style={{}}>
+            <View style={{}}>
 
-            {/* Error */}
-            {error && <Text style={styles.errorText}> All fields are required! </Text>}
-            {/* Heading */}
-            <Text style={{ ...FONTS.h4, color: COLORS.green, fontSize: 16 }}>Candidate Rating</Text>
+              {/* Error */}
+              {error && <Text style={styles.errorText}> All fields are required! </Text>}
+              {/* Heading */}
+              <Text style={{ ...FONTS.h4, color: COLORS.green, fontSize: 16 }}>Candidate Rating</Text>
 
-          </View>
-
-          {/* Feedback starts */}
-          <View style={{ paddingVertical: 12 }}>
-
-            <View style={styles.headers}>
-              {/* <Text style={{ color: COLORS.black }}>Your Rating</Text> */}
             </View>
 
-            {/* Headers */}
-            <View style={[styles.markingArea, { paddingVertical: 12, borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
-              <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Category</Text>
-              <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Maximum Score</Text>
-              <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Obtained Score</Text>
-            </View>
+            {/* Feedback starts */}
+            <View style={{ paddingVertical: 12 }}>
 
-            {/* Technical Marking area */}
-            <View style={styles.markingArea}>
+              <View style={styles.headers}>
+                {/* <Text style={{ color: COLORS.black }}>Your Rating</Text> */}
+              </View>
 
-              <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Technical</Text>
-              <Text>5</Text>
+              {/* Headers */}
+              <View style={[styles.markingArea, { paddingVertical: 12, borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
+                <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Category</Text>
+                <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Maximum Score</Text>
+                <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Obtained Score</Text>
+              </View>
 
-              {/* Technical Marks */}
+              {/* Technical Marking area */}
               <View style={styles.markingArea}>
 
-                <TouchableOpacity onPress={() => setObtainedTechScoreValue(1)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 1 ? COLORS.green : COLORS.white, },]}>
+                <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Technical</Text>
+                <Text>5</Text>
 
-                  <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 1 ? COLORS.white : COLORS.black, }}>1</Text>
+                {/* Technical Marks */}
+                <View style={styles.markingArea}>
 
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setObtainedTechScoreValue(1)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 1 ? COLORS.green : COLORS.white, },]}>
 
-                <TouchableOpacity onPress={() => setObtainedTechScoreValue(2)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 2 ? COLORS.green : COLORS.white, },]}>
+                    <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 1 ? COLORS.white : COLORS.black, }}>1</Text>
 
-                  <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 2 ? COLORS.white : COLORS.black, }}>2</Text>
+                  </TouchableOpacity>
 
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setObtainedTechScoreValue(2)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 2 ? COLORS.green : COLORS.white, },]}>
 
-                <TouchableOpacity onPress={() => setObtainedTechScoreValue(3)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 3 ? COLORS.green : COLORS.white, },]}>
+                    <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 2 ? COLORS.white : COLORS.black, }}>2</Text>
 
-                  <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 3 ? COLORS.white : COLORS.black, }}>3</Text>
+                  </TouchableOpacity>
 
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setObtainedTechScoreValue(3)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 3 ? COLORS.green : COLORS.white, },]}>
 
-                <TouchableOpacity onPress={() => setObtainedTechScoreValue(4)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 4 ? COLORS.green : COLORS.white, },]}>
+                    <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 3 ? COLORS.white : COLORS.black, }}>3</Text>
 
-                  <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 4 ? COLORS.white : COLORS.black, }}>4</Text>
+                  </TouchableOpacity>
 
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setObtainedTechScoreValue(4)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 4 ? COLORS.green : COLORS.white, },]}>
 
-                <TouchableOpacity onPress={() => setObtainedTechScoreValue(5)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 5 ? COLORS.green : COLORS.white, },]}>
+                    <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 4 ? COLORS.white : COLORS.black, }}>4</Text>
 
-                  <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 5 ? COLORS.white : COLORS.black, }}>5</Text>
+                  </TouchableOpacity>
 
-                </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setObtainedTechScoreValue(5)} style={[{ borderRadius: 10, backgroundColor: obtainedTechScoreValue === 5 ? COLORS.green : COLORS.white, },]}>
 
-              </View>
+                    <Text style={{ paddingHorizontal: 7, color: obtainedTechScoreValue === 5 ? COLORS.white : COLORS.black, }}>5</Text>
 
-            </View>
+                  </TouchableOpacity>
 
-            {/* Speaking Marking Area */}
-            <View style={[styles.markingArea, { borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
-
-              <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Speaking</Text>
-              <Text>5</Text>
-
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(1)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 1 ? COLORS.green : COLORS.white }]}>
-
-                  <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 1 ? COLORS.white : COLORS.black, }}>1</Text>
-
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(2)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 2 ? COLORS.green : COLORS.white, },]}>
-
-                  <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 2 ? COLORS.white : COLORS.black, }}>2</Text>
-
-                </TouchableOpacity>
-
-
-                <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(3)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 3 ? COLORS.green : COLORS.white, },]}>
-
-                  <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 3 ? COLORS.white : COLORS.black, }}>3</Text>
-
-                </TouchableOpacity>
-
-
-                <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(4)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 4 ? COLORS.green : COLORS.white, },]}>
-
-                  <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 4 ? COLORS.white : COLORS.black, }}>4</Text>
-
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(5)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 5 ? COLORS.green : COLORS.white, },]}>
-
-                  <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 5 ? COLORS.white : COLORS.black, }}>5</Text>
-
-                </TouchableOpacity>
+                </View>
 
               </View>
 
+              {/* Speaking Marking Area */}
+              <View style={[styles.markingArea, { borderBottomWidth: 0.5, borderColor: COLORS.lightGray }]}>
+
+                <Text style={{ ...FONTS.h4, color: Colors.darkGray2 }}>Speaking</Text>
+                <Text>5</Text>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                  <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(1)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 1 ? COLORS.green : COLORS.white }]}>
+
+                    <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 1 ? COLORS.white : COLORS.black, }}>1</Text>
+
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(2)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 2 ? COLORS.green : COLORS.white, },]}>
+
+                    <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 2 ? COLORS.white : COLORS.black, }}>2</Text>
+
+                  </TouchableOpacity>
+
+
+                  <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(3)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 3 ? COLORS.green : COLORS.white, },]}>
+
+                    <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 3 ? COLORS.white : COLORS.black, }}>3</Text>
+
+                  </TouchableOpacity>
+
+
+                  <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(4)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 4 ? COLORS.green : COLORS.white, },]}>
+
+                    <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 4 ? COLORS.white : COLORS.black, }}>4</Text>
+
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => setObtainedSpeakScoreValue(5)} style={[{ borderRadius: 10, backgroundColor: obtainedSpeakScoreValue === 5 ? COLORS.green : COLORS.white, },]}>
+
+                    <Text style={{ paddingHorizontal: 7, color: obtainedSpeakScoreValue === 5 ? COLORS.white : COLORS.black, }}>5</Text>
+
+                  </TouchableOpacity>
+
+                </View>
+
+              </View>
+
+              {/* Student Feedback */}
+              <View style={{ marginVertical: 12 }}>
+                <Text style={{ color: COLORS.black, ...FONTS.h4, }}>Remarks</Text>
+
+                <TextInput value={yourRemarks} onChangeText={text => setYourRemarks(text)} multiline placeholder="Your Feedback" style={{ marginVertical: 12, height: 70, paddingLeft: 24, borderWidth: 0.5, borderColor: COLORS.lightGray, borderRadius: 12, }} />
+
+              </View>
+
+              {/* Submit Buttons */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
+
+                <TouchableOpacity onPress={() => { onSelectPress('A') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5 }]}>
+                  <Text style={{ color: COLORS.green, fontSize: 18, fontWeight: 600 }}>Select</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => { onSelectPress('R') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableOrange1, borderColor: COLORS.orange1, borderWidth: 0.5 }]}>
+                  <Text style={{ color: COLORS.orange, fontSize: 18, fontWeight: 600 }}>Reject</Text>
+                </TouchableOpacity>
+              </View>
+
             </View>
-
-            {/* Student Feedback */}
-            <View style={{ marginVertical: 12 }}>
-              <Text style={{ color: COLORS.black, ...FONTS.h4, }}>Remarks</Text>
-
-              <TextInput value={yourRemarks} onChangeText={text => setYourRemarks(text)} multiline placeholder="Your Feedback" style={{ marginVertical: 12, height: 70, paddingLeft: 24, borderWidth: 0.5, borderColor: COLORS.lightGray, borderRadius: 12, }} />
-
-            </View>
-
-            {/* Submit Buttons */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
-
-              <TouchableOpacity onPress={() => { onSelectPress('A') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableGreen, borderColor: COLORS.green, borderWidth: 0.5 }]}>
-                <Text style={{ color: COLORS.green, fontSize: 18, fontWeight: 600 }}>Select</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { onSelectPress('R') }} style={[styles.Elevation, styles.acceptanceButton, { backgroundColor: COLORS.disableOrange1, borderColor: COLORS.orange1, borderWidth: 0.5 }]}>
-                <Text style={{ color: COLORS.orange, fontSize: 18, fontWeight: 600 }}>Reject</Text>
-              </TouchableOpacity>
-            </View>
-
           </View>
-        </View>
         </KeyboardAwareScrollView>
       </View>
     );
@@ -324,68 +330,103 @@ const Candidate_details = (props) => {
   // Main component to return
   return (
 
-    <View style={{ flex: 1, margin: 10, paddingHorizontal: 10, justifyContent: 'center' }}>
+    <ScrollView style={{flex:1}}>
+      <View style={{ flex: 1, margin: 10, paddingHorizontal: 10, justifyContent: 'space-between' }}>
 
-      {/* top icons */}
-      <View style={styles.topIcon}>
+        <View>
+
+          {/* top icons */}
+
+          <View >
+            <Image resizeMode='contain' source={{ uri: `${API}/ProfilePic/${profilePic}` }} style={{ height: 200, width: 200, marginTop: 20, justifyContent: 'center', alignSelf: 'center', borderRadius: 100, borderWidth: 4, borderColor: COLORS.white, }} />
+          </View>
+
+          {/* <View style={styles.topIcon}>
 
         <View style={[{ backgroundColor: COLORS.lightBlue, justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30 }]}>
           <Icons name='phone-in-talk-outline' color={COLORS.white} size={30} />
         </View>
 
-      </View>
+      </View> */}
 
-      <Text style={{ textAlign: 'center', ...FONTS.h4, fontSize: 15, marginVertical: 5, marginTop: 10 }}>Interview Schedule</Text>
+          <Text style={{ textAlign: 'center', ...FONTS.h4, fontSize: 15, marginVertical: 5, marginTop: 10 }}>Interview Schedule</Text>
 
-      {/* Minor details for candidate */}
-      <View style={{ borderBottomWidth: 1, borderTopWidth: 1, marginTop: 10, borderColor: COLORS.lightGray, paddingVertical: 10 }}>
+          {/* Minor details for candidate */}
+          <View style={{ borderTopWidth: 1, marginTop: 10, borderColor: COLORS.lightGray, paddingVertical: 10 }}>
 
-        {/* Image and name */}
-        <View style={{ flexDirection: 'row' }}>
+            {/* Image and name */}
+            <View style={{ flexDirection: 'row' }}>
 
-          <View>
-            <Image source={candidateIcon} style={{ height: 60, width: 60, borderRadius: 30 }} />
+              <View>
+                <Image
+                  source={candidateIcon}
+                  // source={{uri:`${API}/ProfilePic/${profilePic}`}}
+                  style={{ height: 60, width: 60, borderRadius: 30 }} />
+              </View>
+
+              <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
+                <Text style={{ color: COLORS.green, ...FONTS.h5, fontSize: 17 }}>{name}</Text>
+                <Text style={{ ...FONTS.h4 }}>{designation}</Text>
+              </View>
+
+            </View>
+
+
+            {/* Interview Timings */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8, marginHorizontal: 15 }}>
+              <Icons name='calendar-month-outline' color={COLORS.darkGray2} size={30} />
+              <Text style={{ marginHorizontal: 6, color: COLORS.darkGray2, ...FONTS.h5 }}>{date}</Text>
+              <Icons name='timetable' color={COLORS.darkGray2} size={25} />
+              <Text style={{ marginHorizontal: 10 }}>{interviewStartTime} - {interviewEndTime}</Text>
+            </View>
+
+
+            <View style={{ backgroundColor: COLORS.white, borderRadius: 6, marginTop: 30, width: responsiveWidth(88), alignSelf: 'center' }}>
+
+              {/* Candidate Resume */}
+              <TouchableOpacity style={styles.resumeArea} onPress={() => props.navigation.navigate('Candidate_Resume', { resume })}>
+                <Icons name='file-document-outline' color={COLORS.orange} size={25} />
+                <Text style={{ color: COLORS.darkGray2, marginHorizontal: 8, ...FONTS.h4 }}>{resume}</Text>
+              </TouchableOpacity>
+
+              <View style={{ height: 1, width: '95%', backgroundColor: COLORS.lightGray, alignSelf: 'center' }} />
+
+              {/* candidate TestResult */}
+              <TouchableOpacity style={[styles.resumeArea,]} onPress={() => props.navigation.navigate('CandidateTestResult', { candidateId, name, designation })}>
+                <Image source={test} style={{ width: 35, height: 35 }} />
+                <Text style={{ color: COLORS.darkGray2, marginHorizontal: 8, ...FONTS.h4 }}>Apptitude Test Result</Text>
+              </TouchableOpacity>
+
+            </View>
+
           </View>
-
-          <View style={{ justifyContent: 'center', marginHorizontal: 10 }}>
-            <Text style={{ color: COLORS.green, ...FONTS.h5, fontSize: 17 }}>{name}</Text>
-            <Text style={{ ...FONTS.h4 }}>{designation}</Text>
-          </View>
-
         </View>
 
 
-        {/* Interview Timings */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8, marginHorizontal: 15 }}>
-          <Icons name='calendar-month-outline' color={COLORS.darkGray2} size={30} />
-          <Text style={{ marginHorizontal: 6, color: COLORS.darkGray2, ...FONTS.h5 }}>{date}</Text>
-          <Icons name='timetable' color={COLORS.darkGray2} size={25} />
-          <Text style={{ marginHorizontal: 10 }}>{interviewStartTime} - {interviewEndTime}</Text>
+        <View style={{justifyContent:'flex-end', }}>
+
+
+          {/* button for feedback */}
+          {status === 'P' ? <TouchableOpacity onPress={() => setIsVisible(true)}>
+            <Text style={styles.ButtonStyle}>Feedback</Text>
+          </TouchableOpacity> : <Remarks />}
+
+          {status === 'P' && isVisible && (
+            <BottomUpModal
+              isVisible={isVisible}
+              onClose={() => {
+                setIsVisible(false);
+              }}
+              visibleHeight={500}>
+              {renderFeedbackModal()}
+            </BottomUpModal>
+          )}
+
+
         </View>
 
-        {/* Candidate Resume */}
-        <TouchableOpacity style={styles.resumeArea} onPress={() => props.navigation.navigate('Candidate_Resume', { resume })}>
-          <Icons name='file-document-outline' color={COLORS.orange} size={25} />
-          <Text style={{ color: COLORS.darkGray2, marginHorizontal: 8, ...FONTS.h4 }}>{resume}</Text>
-        </TouchableOpacity>
       </View>
-
-      {/* button for feedback */}
-      {status === 'P' ? <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Text style={styles.ButtonStyle}>Feedback</Text>
-      </TouchableOpacity> : <Remarks />}
-
-      {status === 'P' && isVisible && (
-        <BottomUpModal
-          isVisible={isVisible}
-          onClose={() => {
-            setIsVisible(false);
-          }}
-          visibleHeight={500}>
-          {renderFeedbackModal()}
-        </BottomUpModal>
-      )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -394,11 +435,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: COLORS.green,
     color: COLORS.white,
-    padding: 10,
-    marginHorizontal: 40,
-    marginTop: 25,
+    padding: 12,
+    alignSelf: 'center',
     fontSize: 15,
-    borderRadius: 20,
+    marginTop:80,
+    width: responsiveWidth(88),
+    borderRadius: 6,
   },
   acceptanceButton: {
     height: 45,
@@ -417,12 +459,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
     alignItems: 'center',
-    backgroundColor: COLORS.lightGray,
-    padding: 20,
-    height: 100,
-    marginBottom: 20,
-    marginTop: 20,
-    borderRadius: 20
+    padding: 10,
+    height: 80,
+    marginRight: 20,
+    marginLeft: 10
   },
   topIcon: {
     backgroundColor: COLORS.skyBlue,

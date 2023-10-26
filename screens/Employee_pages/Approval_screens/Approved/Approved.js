@@ -20,7 +20,7 @@ const Approved = (props) => {
         axios.post(`${API}/api/hrms/getMailnotification`, { userId: userId, operFlag: 'Y', notificationCat: notificationCat })
             .then(response => {
                 const returnedData = response?.data?.Result;
-                // console.log("approvals", returnedData);
+                console.log("approvals", returnedData);
                 setApprovedData(returnedData);
                 setLoading(false)
             }).catch((error) => {
@@ -63,7 +63,15 @@ const Approved = (props) => {
                 </View>
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
-                {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.green, fontWeight: '400' }}>Approved by {approver}</Text>) : null}
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginRight:10}}>
+
+                    {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.green, fontWeight: '400' }}>Approved by {approver}</Text>) : null}
+                   {candidate_ID && <Text style={{color:COLORS.orange1}}>
+                        Candidate ID- ({candidate_ID})
+                    </Text>}
+
+
+                </View>
             </TouchableOpacity>
         )
     }

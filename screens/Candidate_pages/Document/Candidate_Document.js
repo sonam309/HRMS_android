@@ -63,7 +63,7 @@ const Candidate_Document = (props) => {
             })
 
             res = await res.json()
-            // console.log("documentdata", res)
+            console.log("documentdata", res)
             setLoaderVisible(false)
             let pendingCount = (res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded);
             setPendingDocumentCount(pendingCount);

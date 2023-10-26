@@ -25,16 +25,16 @@ const Pending = (props) => {
                 // console.log("pending",returnedData);
                 setPendingData(returnedData);
                 setLoaderVisible(false)
-            }).catch((error)=> {
+            }).catch((error) => {
                 // console.log(error)
                 setLoaderVisible(false)
             })
     };
 
-    
+
 
     useEffect(() => {
-        
+
         getData();
         // console.log("Hello from pending")
     }, [notificationCat])
@@ -73,7 +73,17 @@ const Pending = (props) => {
 
                 <Text style={{ fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey, }}>{mail_body}</Text>
 
-                {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.orange, fontWeight: '400' }}>Pending by {approver}</Text>) : null}
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 10 }}>
+
+                    {approver != '-' ? (<Text style={{ fontSize: 14, color: COLORS.orange, fontWeight: '400' }}>Pending by {approver}</Text>) : null}
+                    {candidate_ID && <Text style={{ color: COLORS.orange1 }}>
+                        Candidate ID- ({candidate_ID})
+                    </Text>}
+
+
+                </View>
+
+
             </TouchableOpacity>
         )
     }
@@ -82,7 +92,7 @@ const Pending = (props) => {
         return (
             <>
                 <Loader loaderVisible={loaderVisible} />
-                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList refreshing={loaderVisible} onRefresh={() => getData()}  style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
+                {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? <FlatList refreshing={loaderVisible} onRefresh={() => getData()} style={{ marginVertical: 10 }} data={pendingData} renderItem={({ item }) => <ListItems applyDate={item.CREATED_DATE} mail={item.MAIL_BODY} pending_by={item.APPROVE_BY} id={item.CANDIDATE_ID} jobId={item.JOB_ID} cat={item.NOTIFICATION_CAT} />} /> : <Text style={{ textAlign: 'center', marginVertical: 20 }}>No Data found</Text>}
             </>
 
         )

@@ -213,6 +213,8 @@ const UAN_BottomView = (props) => {
         if (response.data.Result[0].FLAG === "S") {
           setIsUanValidated(true);
           setOtpBox(false);
+
+          console.log("uranPassbook", response.data.Result[0])
           Toast.show({
             type: "success",
             text1: "Uan validated and saved succesfully"
@@ -243,6 +245,8 @@ const UAN_BottomView = (props) => {
 
           const returnedData = response.data;
           setLoaderVisible(false);
+
+          console.log("uanValidation",returnedData )
           // const msg = returnedData[0].MSG
           // setUanValidationMsg(returnedData.status_code);
           setUanStatusCode(returnedData.status_code)
@@ -255,7 +259,7 @@ const UAN_BottomView = (props) => {
             }
             Toast.show({
               type: 'success',
-              text1: "Uan Validate Successfully",
+              text1: "Otp Sent Successfully",
             });
 
 
@@ -304,6 +308,9 @@ const UAN_BottomView = (props) => {
     axios
       .post(`${API}/api/Hrms/uanNoOtpVerfication`, data)
       .then(response => {
+
+        console.log("otp validation", response?.data?.data)
+
         if (response?.data?.data?.otp_validated) {
           getPassbookDetail()
         } else if (!response?.data.status) {

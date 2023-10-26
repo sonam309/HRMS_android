@@ -59,12 +59,12 @@ const Interview_status = (props) => {
     // candidate icons 
     function CandidateList(props) {
 
-        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id, interviewMail = props.mail, interviewType = props.interviewType
+        const interviewId = props.id, name = props.name, designation = props.designation, interviewStartTime = props.startTime, interviewEndTime = props.endTime, date = props.date, resume = props.resume, candidateId = props.cand_Id, interviewMail = props.mail, interviewType = props.interviewType,profilePic=props.profilePic
 
 
 
         return (
-            <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail })}>
+            <TouchableOpacity key={interviewId} style={{ padding: 4 }} onPress={() => navigation.navigate('Candidate_details', { resume, name, designation, date, interviewEndTime, interviewStartTime, status, candidateId, interviewId, interviewType, interviewMail,profilePic })}>
                 {/* {console.log("TYpe", interviewType)} */}
 
                 <View style={{ borderRadius: 15, backgroundColor: COLORS.white, flexDirection: 'row', height: 80, alignItems: 'center', elevation: 6, paddingHorizontal: 5, marginTop: 15, borderWidth: 0.5, borderColor: COLORS.gray }}>
@@ -127,7 +127,7 @@ const Interview_status = (props) => {
                     {interViewDetail[0]?.TXN_ID!==undefined&& interViewDetail[0]?.TXN_ID!==null?<ScrollView >
                        
                         {/* {console.log("sonnammmmmm",interViewDetail[0]?.TXN_ID)} */}
-                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={item.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} />)}
+                        {interViewDetail?.filter((item) => item.STATUS === status).map((item) => <CandidateList key={item.TXN_ID} id={item.INTERVIEW_ID} cand_Id={item.CANDIDATE_ID} name={item.CANDIDATE_NAME} designation={item.JOB_TITLE} resume={item.RESUME} mail={item.INTERVIEW_MAIL} interviewType={item.INTERVIEW_TYPE} startTime={item.SCHEDULE_TIME_FROM} endTime={item.SCHEDULE_TIME_TO} date={item.SCHEDULED_DATE} image={item.image} profilePic={item.PROFILE_PIC} />)}
                     </ScrollView>:
                     <View style={{justifyContent:'center',alignItems:'center',width:'100%'}} >
                         <Text style={{color:COLORS.black,textAlign:'center',...FONTS.h2,marginTop:240,marginBottom:240}}>

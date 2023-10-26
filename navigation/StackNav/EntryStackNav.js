@@ -11,6 +11,7 @@ import CreateMpin from '../../screens/LoginOption/CreateMpin';
 import Candidate_page from '../../screens/Candidate_pages/Candidate_page';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CandidateTestResult from '../../screens/Employee_pages/Hiring_screens/CandidateTestResult';
 const Stack = createNativeStackNavigator();
 
 const EntryStackNav = () => {
@@ -24,7 +25,8 @@ const EntryStackNav = () => {
             <Stack.Screen name='ForgetPassword' options={{ orientation: 'portrait' }} component={ForgetPassword} />
             <Stack.Screen name='QuickPin' options={{ orientation: 'portrait' }} component={QuickPin} />
             <Stack.Screen name='CreateMpin' options={{ orientation: 'portrait' }} component={CreateMpin} />
-            <Stack.Screen name='Candidate_page' options={{ orientation: 'portrait' }} component={Candidate_page} />            
+            <Stack.Screen name='Candidate_page' options={{ orientation: 'portrait' }} component={Candidate_page} />  
+            <Stack.Screen name='CandidateTestResult' options={{ orientation: 'portrait' }} component={CandidateTestResult} />  
         </Stack.Navigator>
     )
 }

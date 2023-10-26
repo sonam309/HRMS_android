@@ -18,6 +18,7 @@ const HiringStackNav = () => {
             <Stack.Screen name='Job_Description' options={{title:'Job Description'}} component={Job_Description} />
             <Stack.Screen name='Candidate_details' options={{title:'Candidate Feedback'}} component={Candidate_details} />
             <Stack.Screen name='Candidate_Resume' options={{title:'Candidate Resume'}} component={Candidate_Resume} />
+            
         </Stack.Navigator>
     )
 

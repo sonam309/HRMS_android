@@ -51,7 +51,7 @@ const Employee_Login = (props) => {
             // console.log(userData);
             axios.post(`${API}/api/User/login`, userData).then((response) => {
                 const returnedData = response?.data?.Result[0];
-                // console.log("resposne", returnedData,response?.data?.Result);
+                console.log("resposne", returnedData);
 
                 let result = response?.data?.Result.map(a => a.FLAG);
                 let userId = returnedData.USER_ID
