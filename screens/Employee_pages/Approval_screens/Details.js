@@ -344,7 +344,7 @@ const Details = (props) => {
         bonusPay = data.Table[0]?.BONUS_PAY
         specialAllowance = data.Table[0]?.SPECIAL_ALLOWANCE
         dvrAllowance = data.Table[0]?.DRIVER_ALLOWANCE
-        fuelAllowance = data.Table[0]?.FUEL_REMBURSEMENT
+        fuelAllowance = data.Table[0]?.FUEL_ALLOWANCE
         grossAmount = data.Table[0]?.GROSS_AMOUNT
         employerPF = data.Table[0]?.EMPLOPYER_PF
         distanceAllowance = data.Table[0]?.DISTANCE_ALLOWANCE//V_2.2 sk
@@ -487,11 +487,11 @@ const Details = (props) => {
         res = await res?.json()
         // console.log("after", res)
         res = await res?.Table[0]
-        // console.log("responsedataJobb req",res)
+        console.log("responsedataJobb req",res)
         setJobRequestData(res)
         setCompensationAmount(res?.COMPENSATION)
         setSelectedHiringLead(res?.HIRING_LEAD_NAME)
-        setNumOfPosition(jobRequestData?.NO_OF_POSITION);
+        setNumOfPosition(res?.NO_OF_POSITION);
         setSelectedHiringLeadValue(res?.HIRING_LEAD_ID)
         // console.log("jobrequestsssssssssssssssss", res?.COMPENSATION);
     }
@@ -663,8 +663,8 @@ const Details = (props) => {
 
                         
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
-                            <Text style={{ fontWeight: '400', color: COLORS.black }}>Rs.</Text>
-                            <TextInput defaultValue={numOfPosition} onChangeText={(value) => n = value} onEndEditing={() => setNumOfPosition(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 35,width:'30%',textAlign:'center', marginTop: 5, borderRadius: 8,  }} keyboardType='number-pad' maxLength={10} />
+                            {/* <Text style={{ fontWeight: '400', color: COLORS.black }}>Rs.</Text> */}
+                            <TextInput defaultValue={numOfPosition} onChangeText={(value) => n = value} onEndEditing={() => setNumOfPosition(n)} style={{ borderWidth: 0.5, borderColor: COLORS.lightGray, height: 40,width:'30%',textAlign:'center', marginTop: 5, borderRadius: 8,  }} keyboardType='number-pad' maxLength={10} />
                         </View>
 
 
@@ -703,7 +703,7 @@ const Details = (props) => {
                           onSelect={(value) => { setSelectedHiringLead(value), checkHiringLeadValue(value) }}
                            defaultButtonText={selectedDropDownText("hiringLead")}
                             defaultValueByIndex={selectDropDownValue("hiringLead")} buttonTextStyle={{ fontSize: 15, color: COLORS.black }} /> */}
-                    {/* <Text>{compensationAmount}</Text> */}
+                    {/* <Text>{JSON.stringify(hirningLead)}</Text> */}
                     <TextDropdown
                         caption={'Hiring Lead'}
                         data={hirningLead}

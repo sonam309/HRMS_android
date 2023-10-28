@@ -305,7 +305,7 @@ const Proceed_for_Esign = (props) => {
         if (isMobileOtp) {
             setAuthMode('1');
         } else if (isBiometric) {
-            setAuthMode('1');
+            setAuthMode('2');
         }
 
         const prefillOption = generateEsignJson()

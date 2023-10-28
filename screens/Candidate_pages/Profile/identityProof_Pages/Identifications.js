@@ -507,7 +507,7 @@ const Identifications = (props) => {
               </View>
               {/* Driver's view */}
               <View style={{ borderRadius: 10, borderColor: COLORS.lightGray, borderWidth: 1, padding: 10, elevation: 4, backgroundColor: COLORS.white, marginTop: 20 }}>
-                <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Driver's Details</Text>
+                <Text style={{ color: COLORS.black, ...FONTS.h4 }}> Driver's Licence Details</Text>
 
                 <View style={{ height: 75, marginTop: 10 }}>
                   <Text style={{ color: COLORS.green, ...FONTS.body4 }}> Number <Text style={{ color: 'red', fontWeight: 500, paddingLeft: 10 }}>*</Text></Text>

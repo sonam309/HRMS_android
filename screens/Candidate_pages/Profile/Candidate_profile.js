@@ -1021,7 +1021,7 @@ const Candidate_profile = (props) => {
                     </TouchableOpacity>
                     {employmentAppFlag &&
                       <Image source={employmentAppFlag === "A" ? approveMark : (employmentAppFlag === "R" && rejectMark)}
-                        style={{ height: 20, width: 20, alignItems: 'center', justifyContent: 'center' }} />
+                        style={{ height: 20, width: 20, alignItems: 'center', justifyContent: 'center', marginLeft:25 }} />
                     }
                   </View>
                 </View>
