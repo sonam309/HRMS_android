@@ -30,7 +30,7 @@ const Proceed_for_Esign = (props) => {
     const dispatch = useDispatch()
 
     const { candidateList, loading, coordinatesList } = useSelector((state) => state.eSign)
-    const { candidateId } = useSelector(state => state.candidateAuth)
+    const { candidateId,satyaSathiVersion } = useSelector(state => state.candidateAuth)
 
     const [isMobileOtp, setIsMobileOtp] = useState(false);
     const [isBiometric, setIsBiometric] = useState(true);
@@ -317,7 +317,7 @@ const Proceed_for_Esign = (props) => {
             docPath: fileName,
             status: "A",
             eSignCount: esignCount,
-            appVersion: "2.5",
+            appVersion: satyaSathiVersion,
             rawData: JSON.stringify({
                 "pdf_pre_uploaded": true, "config": {
                     "auth_mode": authMode,

@@ -58,7 +58,8 @@ const QualificationBottomView = ({
   const [institute, setInstitute] = useState('');
   const [city, setCity] = useState('');
   const [fromYear, setFromYear] = useState('');
-  const [passYear, setPassingYear] = useState('');
+  const [passYear, setPassingYear] = useState();
+  const [rollNum, setRollNum] = useState('');
 
   const [isHighestQualification, setIsHighestQualification] = useState(false);
   const [grade, setGrade] = useState('');
@@ -140,10 +141,10 @@ const QualificationBottomView = ({
       body: JSON.stringify(qualficationData),
     });
     res = await res.json();
-    res = await res?.Result;
-    // console.log("qualficationDataaaaaa", res);
-    setApproveRemarks(res[0].DOC_REJ_REMARK);
-    setApprovalFlag(res[0].APPROVAL_FLAG);
+    // res = await res?.Result;
+    console.log('qualficationDataaaaaa', res);
+    setApproveRemarks(res[0]?.DOC_REJ_REMARK);
+    setApprovalFlag(res[0]?.APPROVAL_FLAG);
   };
 
   const updateQualification = item => {
@@ -168,12 +169,13 @@ const QualificationBottomView = ({
     setSelectedQualiModeValue(item?.QUALIFICATION_MODE_ID);
 
     setselectCountry(item?.COUNTRY);
-    setSelecetCountryValue(item?.COUNTRY_ID);
+    // setSelecetCountryValue(item?.COUNTRY_ID);
 
     setSelectedState(item?.STATE_NAME);
     setSelectedStateValue(item?.STATE_ID);
     setTXNID(item?.TXN_ID);
-    setGrade(item.PER_GRADE);
+    setGrade(item?.PER_GRADE);
+    // setRollNum(item?.ROLL_NO);
 
     setShowForm(true);
 
@@ -193,7 +195,7 @@ const QualificationBottomView = ({
           university: University,
           institute: institute,
           qualificatinMode: selectedQualiModeValue,
-          country: "India",
+          country: 'India',
           state: selectedStateValue,
           city: city,
           fromYear: fromYear,
@@ -202,6 +204,7 @@ const QualificationBottomView = ({
           userId: userId,
           operFlag: operFlag,
           percentage: grade,
+          rollNo: rollNum,
         };
 
         // console.log("request", qualificationData);
@@ -401,6 +404,9 @@ const QualificationBottomView = ({
           Stream:- <Text style={{fontWeight: 400}}>{item.STREAM}</Text>
         </Text>
         <Text style={{fontWeight: 600}}>
+          Roll No:- <Text style={{fontWeight: 400}}>{item.ROLL_NO}</Text>
+        </Text>
+        <Text style={{fontWeight: 600}}>
           University:- <Text style={{fontWeight: 400}}>{item.UNIVERSITY}</Text>
         </Text>
         <Text style={{fontWeight: 600}}>
@@ -433,7 +439,7 @@ const QualificationBottomView = ({
           Qualifications
         </Text>
 
-        {approvalFlag === 'R' ? (
+        {approvalFlag !== null && approvalFlag === 'R' ? (
           <TouchableOpacity
             style={{marginLeft: 10}}
             onPress={() => {
@@ -494,7 +500,10 @@ const QualificationBottomView = ({
           showsVerticalScrollIndicator={false}>
           {/* <ScrollView showsVerticalScrollIndicator={false}> */}
           {/* Qualifications dropdown */}
+
+          {/* <Text>{JSON.stringify(qualification)}</Text> */}
           {!showForm &&
+          qualification &&
           qualification[0]?.QUALIFICATIONS_NAME &&
           qualification.length > 0 ? (
             <QualificationDetails />
@@ -545,6 +554,24 @@ const QualificationBottomView = ({
                   placeholder=""
                   onChangeText={setSpecilization}
                   value={specilization}
+                />
+              </View>
+
+              <View style={{height: 75, marginTop: 10}}>
+                <Text style={{color: COLORS.green, ...FONTS.body4}}>
+                  Roll Number
+                </Text>
+                <TextInput
+                  style={{
+                    borderWidth: 1,
+                    borderColor: COLORS.black,
+                    borderRadius: 12,
+                    height: 45,
+                    paddingLeft: 5,
+                  }}
+                  placeholder=""
+                  onChangeText={setRollNum}
+                  value={rollNum}
                 />
               </View>
 
@@ -774,7 +801,7 @@ const QualificationBottomView = ({
               </View>
 
               {/* save button */}
-              {approvalFlag !== 'A' ? (
+              {approvalFlag !== null && approvalFlag !== 'A' ? (
                 <TouchableOpacity onPress={() => saveQualificationDetails()}>
                   <LinearGradient
                     colors={[COLORS.orange1, COLORS.disableOrange1]}

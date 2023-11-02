@@ -195,6 +195,8 @@ const PersonalBottomView = ({ onPress }) => {
                 setSelectedGenderValue(filledDetails?.GENDER_ID),
                 setTXNID(filledDetails?.TXN_ID),
                 setCanMotherName(filledDetails?.MOTHER_NAME),
+                setRefEmpCode1(filledDetails?.REF_EMP_CODE_1),
+                setRefEmpCode2(filledDetails?.REF_EMP_CODE_2),
                 setLoaderVisible(false));
     };
 
@@ -722,6 +724,7 @@ const PersonalBottomView = ({ onPress }) => {
                                 value={refEmpCode1}
                                 onChangeText={val => setRefEmpCode1(val)}
                                 maxLength={50}
+                                editable={true}
                             />
                         </View>
 
@@ -828,6 +831,7 @@ const PersonalBottomView = ({ onPress }) => {
                                 value={refEmpCode2}
                                 onChangeText={val => setRefEmpCode2(val)}
                                 maxLength={50}
+                                editable={true}
                             />
                         </View>
 

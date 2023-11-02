@@ -40,8 +40,8 @@ import Toast from 'react-native-toast-message';
 const Login = props => {
   let page = null;
   const [showVisibility, setShowVisibility] = useState(true);
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
+  const [userId, setUserId] = useState('713');
+  const [password, setPassword] = useState('Test@123');
   const [loaderVisible, setLoaderVisible] = useState(false);
   const dispatch = useDispatch();
   const [operFlag, setOperFlag] = useState('');
@@ -145,6 +145,7 @@ const Login = props => {
           let totalDay = returnedData.TOTAL_DAY;
           let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL;
           let candidateId = returnedData.USER_ID;
+          let satyaSathiVersion=returnedData.SATHI_VERSION;
 
           setLoaderVisible(false);
           setLoginResponse(returnedData);
@@ -175,6 +176,7 @@ const Login = props => {
                     growingDays,
                     totalDay,
                     hiringLeadMail,
+                    satyaSathiVersion,
                   }),
                 ))
             }

@@ -22,7 +22,7 @@ const CandidateTestResult = ({navigation,route}) => {
 
     useEffect(() => {
 
-        console.log("Result",candidateId)
+        console.log("Result",saveTestResult)
 
         const saveData = {
             txnId: '',
