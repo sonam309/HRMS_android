@@ -443,11 +443,11 @@ const PersonalBottomView = ({ onPress }) => {
                                 style={styles.inputHolder}
                                 value={canMotherName}
                                 onChangeText={val => setCanMotherName(val)}
-                                editable={true}
+                                editable={false}
                             />
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                         <View>
                             <View style={{ margin: 3 }}>
                                 <Text style={{ color: COLORS.green, ...FONTS.h5 }}>
