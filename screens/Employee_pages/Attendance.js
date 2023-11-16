@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import donut_chart from '../../assets/images/donut_chart.png'
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
+import Toast from 'react-native-toast-message';
 
 const Attendance = (props) => {
 

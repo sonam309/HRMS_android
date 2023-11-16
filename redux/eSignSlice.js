@@ -8,10 +8,12 @@ const eSignSlice = createSlice({
         coordinatesList:{},
         questionList:[],
         saveTestResult:{},
+        joiningKitList:{},
         testResultLoading:false,
         questionLoading:false,
         coordinateLoading:false,
         loading: false,
+        joingkitLoading:false,
         error: ""
     },
     extraReducers: (builder)=>{
@@ -91,6 +93,27 @@ const eSignSlice = createSlice({
 
 
 
+          builder.addMatcher(isAnyOf(getJoingkitDetails.pending), (state) => {
+            state.joingkitLoading = true;
+
+          });
+          builder.addMatcher(
+            isAnyOf(getJoingkitDetails.fulfilled),
+            (state, action) => {
+              state.joingkitLoading = false;
+              state.joiningKitList = action.payload;
+
+            }
+          );
+          builder.addMatcher(
+            isAnyOf(getJoingkitDetails.rejected),
+            (state, action) => {
+              state.joingkitLoading = false;
+            }
+          );
+
+
+
 
     }
 })
@@ -125,5 +148,12 @@ export const saveAttemptTest = createAsyncThunk(
   "mobile/saveAttemptTest",
   async (payload, toolkit) => {
       return await AxiosClient("POST", `/api/getTestResult`, payload, toolkit);
+  }
+);
+
+export const getJoingkitDetails = createAsyncThunk(
+  "mobile/getJoingkitDetails",
+  async (payload, toolkit) => {
+      return await AxiosClient("POST", `api/Kyc/JoiningKitProceedForEsign`, payload, toolkit);
   }
 );

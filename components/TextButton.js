@@ -22,7 +22,7 @@ import {
   }) => {
     return (
       <LinearGradient
-        colors={[color1, color2]}
+        colors={!disabled?[color1, color2]:[COLORS.gray,COLORS.lightGray]}
         start={{x: 0, y: 0}}
         end={{x: 2, y: 0}}
         style={{

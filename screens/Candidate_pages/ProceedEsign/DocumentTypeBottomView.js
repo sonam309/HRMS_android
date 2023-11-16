@@ -29,21 +29,7 @@ const DocumentTypeBottomView = (props) => {
 
     }, [])
 
-    // useEffect(() => {
-    //     setData();
-    // }, [coordinatesList])
-
-
-
-
-    // const setData = () => {
-
-    //     console.log("setData", coordinatesList);
-    //     setDocumentName(coordinatesList?.Document_name);
-    //     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
-        
-
-    // }
+   
 
     return (
         <View>
