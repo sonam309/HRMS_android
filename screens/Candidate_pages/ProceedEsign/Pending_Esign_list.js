@@ -27,6 +27,12 @@ const Pending_Esifn_list = props => {
     console.log('EsignListtData', candidateList);
   }, [candidateId]);
 
+  useEffect(() => {
+    getEsignData();
+
+    console.log('EsignListtData', candidateList);
+  }, []);
+
   const getEsignData = async () => {
     const data = {
       user: candidateId,

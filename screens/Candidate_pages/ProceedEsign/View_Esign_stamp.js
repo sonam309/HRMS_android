@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity,BackHandler} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FONTS, SIZES} from '../../../constants/font_size';
 import COLORS from '../../../constants/theme';
@@ -24,6 +24,21 @@ const View_Esign_stamp = props => {
     getEsignData();
     setDocument();
   }, []);
+
+
+
+  useEffect(() => {
+    const backAction = () => {
+        props.navigation?.navigate("CandidateDashboard");
+        return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+    );
+    return () => backHandler.remove();
+}, []);
+
 
   const getEsignData = async () => {
     const data = {
@@ -79,7 +94,10 @@ const View_Esign_stamp = props => {
         <TouchableOpacity
           onPress={
             () => props.navigation.navigate('CandidateDashboard')
-            //  props.navigation.goBack()
+            // {
+            // props.navigation.goBack();
+            // getEsignData();
+            // }
           }>
           <Icons
             name="arrow-left"
