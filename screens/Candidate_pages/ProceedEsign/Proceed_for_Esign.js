@@ -70,7 +70,7 @@ const Proceed_for_Esign = props => {
   const [tkenRes, setTkenRes] = useState();
   const [input, setInput] = useState('');
   const [count, setCount] = useState('');
-  const [authMode, setAuthMode] = useState('1');
+  const [authMode, setAuthMode] = useState('2');
   const [esignStatusCode, setEsignStatusCode] = useState('');
   const [clientId, setClientId] = useState('');
   const [name, setName] = useState('');

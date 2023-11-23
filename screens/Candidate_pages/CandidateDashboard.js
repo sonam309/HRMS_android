@@ -93,6 +93,7 @@ const CandidateDashboard = props => {
   useEffect(() => {
     if (employeeCreateFlag === 'Y') {
       getEsignData();
+
     }
   }, [employeeCreateFlag]);
 
@@ -129,7 +130,7 @@ const CandidateDashboard = props => {
 
     axios.post(`${API}/api/saveEsignDataNew`, data).then(response => {
       const result = response.data.Result;
-      // console.log("esignData", result[0]);
+      console.log("esignDatasssss", result[0]);
       setEsignCount(result[0]?.ESSIGN_CNT);
       // setLoaderVisible(false);
     });

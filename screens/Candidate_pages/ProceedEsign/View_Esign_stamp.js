@@ -68,11 +68,11 @@ const View_Esign_stamp = props => {
       candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT' &&
       candidateList[index]?.ESSIGN_CNT === 0
     ) {
-      setDocumentUrl('joiningKitDoc/' + candidateList[index]?.FILE_NAME);
+      setDocumentUrl('AllMergeDoc/' + candidateList[index]?.FILE_NAME);
     } else {
       if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
         setDocumentUrl(
-          'JoiningKitSignedDocument/' + candidateList[index]?.FILE_NAME,
+          'AllMergeDocSigned/' + candidateList[index]?.FILE_NAME,
         );
       } else {
         setDocumentUrl('SignedDocument/' + candidateList[index]?.FILE_NAME);
