@@ -2,10 +2,14 @@ import {combineReducers} from "@reduxjs/toolkit"
 import authSlice from "./authSlice"
 import candidateAuthSlice from "./candidateAuthSlice"
 import eSignSlice from "./eSignSlice"
+import punchDetailSlice from "./punchDetailSlice"
+import attendaceDetailSlice from "./attendaceDetailSlice"
 
 
 export const rootReducer = combineReducers({
     auth: authSlice.reducer,
     candidateAuth : candidateAuthSlice.reducer,
-     eSign: eSignSlice,
+    eSign: eSignSlice,
+    punchDetail: punchDetailSlice,
+    attendaceDetail:attendaceDetailSlice,
 })

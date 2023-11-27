@@ -22,7 +22,7 @@ import {
 } from '../../assets';
 import Geolocation from '../../functions/Geolocation';
 import Loader from '../../components/Loader';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {authActions} from '../../redux/authSlice';
 import COLORS from '../../constants/theme';
 import {FONTS, SIZES} from '../../constants/font_size';
@@ -35,13 +35,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Employee_Login = props => {
   const [showVisibility, setShowVisibility] = useState(true);
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
+  const [userId, setUserId] = useState('17321');
+  const [password, setPassword] = useState('Test@123');
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
   const dispatch = useDispatch();
+
+  const {loading} = useSelector(state => state.punchDetail);
 
   const getCurrentLocation = async val => {
     Geolocation({val, userId, password});
@@ -289,7 +291,7 @@ const Employee_Login = props => {
               {backgroundColor: '#D5F5E3'},
             ]}>
             <Text style={[styles.loginButtonText, {color: COLORS.darkGreen}]}>
-              Punch In
+              {loading ? 'loading...' : 'Punch In'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -300,7 +302,7 @@ const Employee_Login = props => {
               {backgroundColor: '#FAE5D3'},
             ]}>
             <Text style={[styles.loginButtonText, {color: COLORS.orange1}]}>
-              Punch Out
+              {loading ? 'loading...' : 'Punch Out'}
             </Text>
           </TouchableOpacity>
         </View>

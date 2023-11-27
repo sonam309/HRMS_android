@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import COLORS from '../../../../constants/theme'
 import DatePicker from 'react-native-date-picker'
-import { FONTS } from '../../../../constants/font_size'
+import { FONTS,SIZES } from '../../../../constants/font_size'
 import { useSelector } from 'react-redux'
 import { API } from '../../../../utility/services'
 import Toast from 'react-native-toast-message'
@@ -80,12 +80,12 @@ const MedicalBottomView = ({ medicalPolicy, onPress, fetchMedicalData }) => {
 
         setOperFlag("E")
 
-        setTxnId(item.TXN_ID)
-        setPolicyName(item.MEDICAL_POLICY_NAME)
-        setPolicyNumber(item.MEDICAL_POLICY_NUMBER)
-        setMembershipNumber(item.MEDICAL_MEMBERSHIP_NUMBER)
-        setPolicyCategory(item.MEDICAL_POLICY_CATEGORY)
-        setSelectedExpiryDate(item.MEDICAL_POLICY_EXPIRY)
+        setTxnId(item?.TXN_ID)
+        setPolicyName(item?.MEDICAL_POLICY_NAME)
+        setPolicyNumber(item?.MEDICAL_POLICY_NUMBER)
+        setMembershipNumber(item?.MEDICAL_MEMBERSHIP_NUMBER)
+        setPolicyCategory(item?.MEDICAL_POLICY_CATEGORY)
+        setSelectedExpiryDate(item?.MEDICAL_POLICY_EXPIRY)
 
         setShowForm(true)
     }
@@ -199,14 +199,14 @@ const MedicalBottomView = ({ medicalPolicy, onPress, fetchMedicalData }) => {
             <View key={item.TXN_ID} style={{ backgroundColor: COLORS.disableOrange1, padding: 6, borderRadius: 12, marginVertical: 4 }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item.MEDICAL_POLICY_NAME} </Text>
+                    <Text style={{ color: COLORS.orange1, fontWeight: 500 }}>{item?.MEDICAL_POLICY_NAME} </Text>
                     {/* <Icon position='absolute' onPress={() => DeletePolicy({ txnID: item.TXN_ID })} right={0} name='trash-can-outline' color={COLORS.green} size={20} />
                     <Icon position='absolute' onPress={() => UpdatePolicy(item)} right={20} name='square-edit-outline' color={COLORS.green} size={20} /> */}
                     <TouchableOpacity style={{
                         position: 'absolute',
                         right: 0,
                         padding: 5
-                    }} onPress={() => DeletePolicy({ txnID: item.TXN_ID })}>
+                    }} onPress={() => DeletePolicy({ txnID: item?.TXN_ID })}>
                         <Icon name='trash-can-outline' color={COLORS.green} size={20} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
@@ -216,10 +216,10 @@ const MedicalBottomView = ({ medicalPolicy, onPress, fetchMedicalData }) => {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={{ fontWeight: 600 }}>Medical Policy Number:- <Text style={{ fontWeight: 400 }}>{item.MEDICAL_POLICY_NUMBER}</Text></Text>
-                <Text style={{ fontWeight: 600 }}>Medical Membership Number:- <Text style={{ fontWeight: 400 }}>{item.MEDICAL_MEMBERSHIP_NUMBER}</Text></Text>
-                <Text style={{ fontWeight: 600 }}>Medical Policy Category:- <Text style={{ fontWeight: 400 }}>{item.MEDICAL_POLICY_CATEGORY}</Text></Text>
-                <Text style={{ fontWeight: 600 }}>Medical Policy Expiry:- <Text style={{ fontWeight: 400 }}>{item.MEDICAL_POLICY_EXPIRY}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Medical Policy Number:- <Text style={{ fontWeight: 400 }}>{item?.MEDICAL_POLICY_NUMBER}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Medical Membership Number:- <Text style={{ fontWeight: 400 }}>{item?.MEDICAL_MEMBERSHIP_NUMBER}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Medical Policy Category:- <Text style={{ fontWeight: 400 }}>{item?.MEDICAL_POLICY_CATEGORY}</Text></Text>
+                <Text style={{ fontWeight: 600 }}>Medical Policy Expiry:- <Text style={{ fontWeight: 400 }}>{item?.MEDICAL_POLICY_EXPIRY}</Text></Text>
             </View>
         )
     }
@@ -269,7 +269,7 @@ const MedicalBottomView = ({ medicalPolicy, onPress, fetchMedicalData }) => {
                     {/* <ScrollView style={{ height: '100%' }} showsVerticalScrollIndicator={false}> */}
                     {
                         // Display form or Fill form
-                        !showForm && medicalPolicy[0].MEDICAL_POLICY_NUMBER && medicalPolicy.length >= 0 ? <PolicyDetails /> : (
+                        !showForm && medicalPolicy[0]?.MEDICAL_POLICY_NUMBER && medicalPolicy.length >= 0 ? <PolicyDetails /> : (
                             <View>
 
                                 {/* Policy Name */}
