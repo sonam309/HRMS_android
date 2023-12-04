@@ -146,8 +146,8 @@ const PersonalBottomView = ({ onPress }) => {
             console.log('candidate profile', res);
             setLoaderVisible(false);
             setFilledDetails(res);
-            setApprovalFlag(res.PERSON_APP_FLAG);
-            setApproveRemark(res.PERSON_APP_RMK);
+            setApprovalFlag(res?.PERSON_APP_FLAG);
+            setApproveRemark(res?.PERSON_APP_RMK);
         } catch (error) {
             setLoaderVisible(false);
             Toast.show({
@@ -167,7 +167,7 @@ const PersonalBottomView = ({ onPress }) => {
                 setLastName(filledDetails?.LAST_NAME),
                 setFatherName(filledDetails?.FATHER_NAME),
                 setSelectedActualBirthDate(filledDetails?.ACTUAL_BIRTH_DATE),
-                setSelectedRecordBirthDate(filledDetails.RECORD_BIRTH_DATE),
+                setSelectedRecordBirthDate(filledDetails?.RECORD_BIRTH_DATE),
                 setCountryBirth(filledDetails?.BIRTH_COUNTRY),
                 setPlaceBirth(filledDetails?.BIRTH_PLACE),
                 setIdentityMarks(filledDetails?.IDENTIFICATION_MARKS),

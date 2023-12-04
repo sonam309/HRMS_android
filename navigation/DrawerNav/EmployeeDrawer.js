@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { authActions } from '../../redux/authSlice';
 import COLORS from '../../constants/theme';
 import { FONTS } from '../../constants/font_size';
+import AttendanceStack from '../StackNav/AttendanceStack';
 
 const EmployeeDrawer = (props) => {
     const Drawer = createDrawerNavigator();
@@ -63,7 +64,7 @@ const EmployeeDrawer = (props) => {
         )
     }
     return (
-        <Drawer.Navigator initialRouteName='DashBoard' screenOptions={{ drawerStyle: { backgroundColor: COLORS.white } }} drawerContent={() => <CustomDrawer {...props} />}>
+        <Drawer.Navigator backBehavior="history" initialRouteName='DashBoard'screenOptions={{swipeEnabled: false, drawerStyle: { backgroundColor: COLORS.white } }} drawerContent={() => <CustomDrawer {...props} />}>
 
             <Drawer.Screen name="DashBoard" component={DashBoard} options={{ headerShown: false }} />
             <Drawer.Screen name="Attendance" component={Attendance} />
@@ -74,6 +75,7 @@ const EmployeeDrawer = (props) => {
             <Drawer.Screen name="E-Resign" component={E_Resign} />
             <Drawer.Screen name="Jobs" component={Jobs} />
             <Drawer.Screen name="Hiring" component={Hiring} options={{ headerShown: false }} />
+            <Drawer.Screen name="AttendanceStack" backBehavior="history" component={AttendanceStack} options={{ headerShown: false }} />
             <Drawer.Screen name="Help Desk" component={Help_desk} />
         </Drawer.Navigator>
     )

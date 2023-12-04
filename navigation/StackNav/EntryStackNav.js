@@ -10,9 +10,9 @@ import QuickPin from '../../screens/LoginOption/QuickPin';
 import CreateMpin from '../../screens/LoginOption/CreateMpin';
 import Candidate_page from '../../screens/Candidate_pages/Candidate_page';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import CandidateTestResult from '../../screens/Employee_pages/Hiring_screens/CandidateTestResult';
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const EntryStackNav = () => {
     return (

@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   inputHolder: {
     borderWidth: 1,
     borderColor: COLORS.black,
-    flex: 1,
+    // flex: 1,
     borderRadius: SIZES.base,
     paddingVertical: SIZES.base,
     height: 40,

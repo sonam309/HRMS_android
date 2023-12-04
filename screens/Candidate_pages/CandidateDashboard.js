@@ -281,17 +281,18 @@ const CandidateDashboard = props => {
             }`,
 
             type: res.assets[0]?.type,
-
             uri: res.assets[0]?.uri,
           });
 
+          setLoaderVisible(true);
+
           fetch(`${API}/api/hrms/profilePic`, {
             method: 'POST',
-
             body: formData,
           })
             .then(res => {
               console.log(res);
+              setLoaderVisible(false);
 
               if (res?.status === 200) {
                 Toast.show({
@@ -310,6 +311,11 @@ const CandidateDashboard = props => {
 
             .catch(error => {
               console.log(error);
+              setLoaderVisible(false);
+              Toast.show({
+                type:'error',
+                text1:error
+              })
             });
         }
       });

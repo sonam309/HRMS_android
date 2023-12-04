@@ -28,7 +28,7 @@ import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import {showDevelopmetMode} from '../../functions/utils';
 import {updatePunchTime} from '../../redux/punchDetailSlice';
-import { getAttendanceDetails } from '../../redux/attendaceDetailSlice';
+import {getAttendanceDailyDetails} from '../../redux/attendaceDetailSlice';
 
 const Home = props => {
   var m_names = [
@@ -51,7 +51,7 @@ const Home = props => {
     state => state.punchDetail,
   );
 
-  const {attendanceDetailList} = useSelector(state => state.attendaceDetail);
+  const {attendanceDailyDataList} = useSelector(state => state.attendaceDetail);
 
   const dispatch = useDispatch();
 
@@ -82,19 +82,19 @@ const Home = props => {
   const modalData = [
     {
       heading: 'Shift',
-      caption: '9:30 to 6:30',
+      caption: attendanceDailyDataList?.SHIFTTIME,
     },
     {
       heading: 'Actual',
-      caption: 'none',
+      caption: attendanceDailyDataList?.ACTUAL,
     },
     {
       heading: 'Regularised',
-      caption: 'none',
+      caption: attendanceDailyDataList?.Regularised,
     },
     {
       heading: 'Hours',
-      caption: '00:0 Hours',
+      caption: attendanceDailyDataList?.DURATION,
     },
     {
       heading: 'Deficit',
@@ -106,30 +106,31 @@ const Home = props => {
     },
     {
       heading: 'Reason',
-      caption: 'none',
+      caption: attendanceDailyDataList?.Reason,
     },
     {
       heading: 'Application',
-      caption: 'none',
+      caption: attendanceDailyDataList?.Application,
     },
     {
       heading: 'Raw Swipes',
-      caption: 'none',
+      caption: attendanceDailyDataList?.Rawwipe,
     },
   ];
 
-  useEffect(() => {
+  const getDailyAttenceDetails = async date =>{
 
+    console.log("datettette",val)
     const data = {
       userId: userId,
-      monthYear: "11",
+      day: date.day,
+      monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
     };
 
-    dispatch(getAttendanceDetails(data))
+    dispatch(getAttendanceDailyDetails(data));
+  }
 
-    console.log("attencedata", attendanceDetailList);
 
-  }, []);
 
   const getCurrentLocation = async val => {
     setLoaderVisible(true);
@@ -252,9 +253,9 @@ const Home = props => {
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
                   }}>
-                  {modalData.map(data => {
+                  {modalData.map((data,index) => {
                     return (
-                      <View style={styles.modalWrap}>
+                      <View style={styles.modalWrap}  key={index}>
                         <Text style={styles.modalTextHeading}>
                           {data.heading}
                         </Text>
@@ -340,7 +341,7 @@ const Home = props => {
             return (
               <TouchableOpacity
                 onLongPress={() => {
-                  
+                  getDailyAttenceDetails(date)
                   setModalVisible(true);
                   console.log('selected day', date.day);
                 }}

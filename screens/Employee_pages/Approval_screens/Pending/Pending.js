@@ -48,12 +48,12 @@ const Pending = props => {
   );
 
   function ListItems(props) {
-    const date = props.applyDate,
-      mail_body = props.mail,
-      approver = props.pending_by,
-      candidate_ID = props.id,
-      category = props.cat,
-      jobId = props.jobId;
+    const date = props?.applyDate,
+      mail_body = props?.mail,
+      approver = props?.pending_by,
+      candidate_ID = props?.id,
+      category = props?.cat,
+      jobId = props?.jobId;
 
     switch (category) {
       case 'New Job Opening':
@@ -134,7 +134,7 @@ const Pending = props => {
     return (
       <>
         <Loader loaderVisible={loaderVisible} />
-        {pendingData && (pendingData[0] ? pendingData[0].APPROVER_ID : null) ? (
+        {pendingData && (pendingData[0] ? pendingData[0]?.APPROVER_ID : null) ? (
           <FlatList
             refreshing={loaderVisible}
             onRefresh={() => getData()}
@@ -142,12 +142,12 @@ const Pending = props => {
             data={pendingData}
             renderItem={({item}) => (
               <ListItems
-                applyDate={item.CREATED_DATE}
-                mail={item.MAIL_BODY}
-                pending_by={item.APPROVE_BY}
-                id={item.CANDIDATE_ID}
-                jobId={item.JOB_ID}
-                cat={item.NOTIFICATION_CAT}
+                applyDate={item?.CREATED_DATE}
+                mail={item?.MAIL_BODY}
+                pending_by={item?.APPROVE_BY}
+                id={item?.CANDIDATE_ID}
+                jobId={item?.JOB_ID}
+                cat={item?.NOTIFICATION_CAT}
               />
             )}
           />

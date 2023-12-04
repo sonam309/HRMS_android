@@ -31,6 +31,7 @@ const CustomInput = ({
                             marginVertical: SIZES.base / 2,
                             ...FONTS.h4,
                             color:COLORS.black,
+                            ...textInputStyle,
                         }}>
                         {caption} {required && <Text style={{ color: COLORS.red }}>*</Text>}
                     </Text>
