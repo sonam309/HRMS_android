@@ -459,7 +459,7 @@ const CandidateDashboard = props => {
           <TouchableOpacity
             style={{justifyContent: 'flex-end', backgroundColor: COLORS.white}}
             onPress={() => {
-              props.navigation.navigate('Candidate_Login'),
+              // props.navigation.navigate('Candidate_Login'),
                 dispatch(candidateAuthActions.logOut());
             }}>
             <Icons

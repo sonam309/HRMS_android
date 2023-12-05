@@ -1,30 +1,38 @@
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
-import { Linking, PermissionsAndroid, SafeAreaView, View, TouchableOpacity, Text, Platform } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {
+  Linking,
+  PermissionsAndroid,
+  SafeAreaView,
+  View,
+  TouchableOpacity,
+  Text,
+  Platform,
+} from 'react-native';
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
 import RNFetchBlob from 'rn-fetch-blob';
 import COLORS from '../../constants/theme';
-import { SIZES, FONTS } from '../../constants/font_size';
+import {SIZES, FONTS} from '../../constants/font_size';
 import axios from 'axios';
 import WebView from 'react-native-webview';
-import { API } from '../../utility/services';
+import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import Header from '../../components/Header';
 
-const Offer_Letter = (props) => {
-  const userId = useSelector(state => state.candidateAuth.candidateId)
-  const [offerLetter, setOfferLetter] = useState('')
+const Offer_Letter = props => {
+  const userId = useSelector(state => state.candidateAuth.candidateId);
+  const [offerLetter, setOfferLetter] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [btnVisibility, setBtnVisibility] = useState(true);
 
   const [error, setError] = useState(false);
   const [offerLetterUrl, setOfferLetterUrl] = useState('');
 
-
   useEffect(() => {
-    getOfferLetter()
-  }, [])
+    getOfferLetter();
+  }, []);
 
   const requestFilePermission = async () => {
     try {
@@ -35,8 +43,7 @@ const Offer_Letter = (props) => {
         PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
         {
           title: 'File Permission',
-          message:
-            'Satya HRMS needs access to your storage',
+          message: 'Satya HRMS needs access to your storage',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
@@ -52,26 +59,22 @@ const Offer_Letter = (props) => {
         //   type: 'error',
         //   text1: 'Storage access denied'
         // })
-
-      }
-      else {
+      } else {
         Toast.show({
           type: 'error',
-          text1: 'Storage access denied'
-        })
+          text1: 'Storage access denied',
+        });
       }
-
-
     } catch (err) {
       Toast.show({
         type: 'error',
-        text1: JSON.stringify(err)
-      })
+        text1: JSON.stringify(err),
+      });
     }
   };
 
   const downloadFile = () => {
-    const { config, fs } = RNFetchBlob;
+    const {config, fs} = RNFetchBlob;
     const fileDir = fs.dirs.DownloadDir;
 
     config({
@@ -81,67 +84,69 @@ const Offer_Letter = (props) => {
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
-        description: "Downloading File",
-        path: fileDir + "/download_" + ".pdf"
-      }
+        description: 'Downloading File',
+        path: fileDir + '/download_' + '.pdf',
+      },
     })
       // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
       .fetch('GET', `${API}/OfferLetter/${offerLetter}`, {
         //some headers ..
       })
-      .then((res) => {
+      .then(res => {
         // the temp file path
         // console.log('The file saved to ', res.path())
         Toast.show({
           type: 'success',
-          text1: "File saved Successfully to" + res.path()
-        })
-      })
-  }
+          text1: 'File saved Successfully to' + res.path(),
+        });
+      });
+  };
 
   // Fetching salary allocation template
   const getOfferLetter = async () => {
-
     const data = {
-      candidateId: userId, operFlag: "V"
-    }
+      candidateId: userId,
+      operFlag: 'V',
+    };
 
     let totalData = await fetch(`${API}/api/hrms/OfferAceptance`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
-    })
+      body: JSON.stringify(data),
+    });
 
-    totalData = await totalData.json()
-    totalData = totalData.Result[0]
+    totalData = await totalData.json();
+    totalData = totalData.Result[0];
     // console.log("totaldata", totalData);
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
       Toast.show({
         type: 'error',
-        text1: 'No Offer letter is Present'
-      })
+        text1: 'No Offer letter is Present',
+      });
     }
-    if (totalData?.FLAG === "S" && (totalData?.OFER_ACPT_FLAG === "R" || totalData?.OFER_ACPT_FLAG === "A")) {
+    if (
+      totalData?.FLAG === 'S' &&
+      (totalData?.OFER_ACPT_FLAG === 'R' || totalData?.OFER_ACPT_FLAG === 'A')
+    ) {
       setBtnVisibility(false);
     } else {
-      setBtnVisibility(true)
+      setBtnVisibility(true);
     }
-
 
     //  else if (totalData?.FLAG == 'S' && totalData?.STATUS == 124) {
     //   setBtnVisibility(true);
-    // } 
+    // }
     // else {
     //   setBtnVisibility(false);
     //   {console.log("flagggg3",totalData?.OFER_ACPT_FLAG)}
     // }
-    setOfferLetter(totalData.OFFER_LETTER)
-  }
+    setOfferLetter(totalData.OFFER_LETTER);
+  };
 
   const approveOffer = operFlag => {
     const data = {
@@ -159,97 +164,130 @@ const Offer_Letter = (props) => {
         if (res?.data?.Result[0]?.FLAG == 'S') {
           Toast.show({
             type: 'success',
-            text1: JSON.stringify(res?.data?.Result[0]?.MSG)
-          })
+            text1: JSON.stringify(res?.data?.Result[0]?.MSG),
+          });
           props.navigation.goBack();
         }
       })
       .catch(error => {
-
         Toast.show({
           type: 'error',
-          text1: JSON.stringify(error)
-        })
+          text1: JSON.stringify(error),
+        });
       });
   };
 
-
   return (
+    <View
+      style={{
+        flex: 1,
+      }}>
+      <Header title={'Offer letter'} />
 
-    <>
-      <View style={{ flexDirection: 'row', paddingVertical: 20, alignItems: 'center', marginTop: 5, marginBottom: 20 }}>
-        {offerLetter &&
-          <Icons name='file-download' onPress={() => requestFilePermission()} color={COLORS.black} size={30} style={{ position: 'absolute', right: 20 }} />}
-
-        {typeof offerLetter === 'undefined' || offerLetter === null &&
-          <View style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            marginVertical: "60%"
-          }}>
-            <Text style={{ textAlign: "center", color: COLORS.red, ...FONTS.h2 }}>Offer Letter not</Text>
-          </View>
-        }
-
-      </View>
-      {offerLetter && offerLetter != "" ? (
-        <Pdf
-          trustAllCerts={false}
-          source={{ uri: `${API}/OfferLetter/${offerLetter}` }}
-          renderActivityIndicator={() =>
-            <Loader loaderVisible={loaderVisible} />}
-          minScale={0.5}
-          spacing={15}
-          style={{ flex: 1, width: '100%' }}
-          onLoadComplete={() => setLoaderVisible(false)}
-          onError={(error) => {
-            // console.log(`${API}/OfferLetter/${offerLetter}`, error)
-            setError(true)
-          }} onPressLink={(link) => Linking.openURL(link)} />
-      )
-        : ""
-      }
-
-      {error && (<Text style={{ flex: 1, textAlign: "center", color: COLORS.red, ...FONTS.h2 }}>File or directory not found</Text>)}
-
-
-      {offerLetter && !error && (<View
+      <View
         style={{
           flexDirection: 'row',
+          paddingVertical: 20,
           alignItems: 'center',
-          justifyContent: 'flex-end',
-          gap: 20,
-          backgroundColor: COLORS.white,
-          paddingVertical: SIZES.base,
-          paddingHorizontal: 10,
+          marginTop: 5,
+          marginBottom: 20,
         }}>
-        <TouchableOpacity
-          disabled={!btnVisibility}
-          onPress={() => approveOffer('A')}
-          style={{
-            backgroundColor: COLORS.white,
-            padding: SIZES.base,
-            paddingHorizontal: SIZES.radius,
-            // borderWidth: 1,
-            borderRadius: 30,
-            borderWidth: 1,
-            marginRight: 30,
-            marginBottom: 5,
-            borderColor: btnVisibility ? COLORS.green : COLORS.lightGray,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              ...FONTS.h3,
-              color: btnVisibility ? COLORS.green : COLORS.lightGray,
-            }}>
-            Accept
-          </Text>
-        </TouchableOpacity>
+        {offerLetter && (
+          <Icons
+            name="file-download"
+            onPress={() => requestFilePermission()}
+            color={COLORS.black}
+            size={30}
+            style={{position: 'absolute', right: 20}}
+          />
+        )}
 
-        {/* <TouchableOpacity
+        {typeof offerLetter === 'undefined' ||
+          (offerLetter === null && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginVertical: '60%',
+              }}>
+              <Text
+                style={{textAlign: 'center', color: COLORS.red, ...FONTS.h2}}>
+                Offer Letter not
+              </Text>
+            </View>
+          ))}
+      </View>
+      {offerLetter && offerLetter != '' ? (
+        <Pdf
+          trustAllCerts={false}
+          source={{uri: `${API}/OfferLetter/${offerLetter}`}}
+          renderActivityIndicator={() => (
+            <Loader loaderVisible={loaderVisible} />
+          )}
+          minScale={0.5}
+          spacing={15}
+          style={{flex: 1, width: '100%'}}
+          onLoadComplete={() => setLoaderVisible(false)}
+          onError={error => {
+            // console.log(`${API}/OfferLetter/${offerLetter}`, error)
+            setError(true);
+          }}
+          onPressLink={link => Linking.openURL(link)}
+        />
+      ) : (
+        ''
+      )}
+
+      {error && (
+        <Text
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            color: COLORS.red,
+            ...FONTS.h2,
+          }}>
+          File or directory not found
+        </Text>
+      )}
+
+      {offerLetter && !error && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: 20,
+            backgroundColor: COLORS.white,
+            paddingVertical: SIZES.base,
+            paddingHorizontal: 10,
+          }}>
+          <TouchableOpacity
+            disabled={!btnVisibility}
+            onPress={() => approveOffer('A')}
+            style={{
+              backgroundColor: COLORS.white,
+              padding: SIZES.base,
+              paddingHorizontal: SIZES.radius,
+              // borderWidth: 1,
+              borderRadius: 30,
+              borderWidth: 1,
+              marginRight: 30,
+              marginBottom: 5,
+              borderColor: btnVisibility ? COLORS.green : COLORS.lightGray,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: btnVisibility ? COLORS.green : COLORS.lightGray,
+              }}>
+              Accept
+            </Text>
+          </TouchableOpacity>
+
+          {/* <TouchableOpacity
           disabled={!btnVisibility}
           onPress={() => approveOffer('R')}
           style={{
@@ -271,9 +309,10 @@ const Offer_Letter = (props) => {
             Reject
           </Text>
         </TouchableOpacity> */}
-      </View>)}
-    </>
-  )
-}
+        </View>
+      )}
+    </View>
+  );
+};
 
-export default Offer_Letter
+export default Offer_Letter;

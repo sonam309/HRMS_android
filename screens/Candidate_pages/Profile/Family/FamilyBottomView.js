@@ -558,7 +558,7 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
                 />
                 <DatePicker
                   modal
-                  theme="light"
+                  theme="auto"
                   open={calendarOpen}
                   mode="date"
                   date={birthDate}

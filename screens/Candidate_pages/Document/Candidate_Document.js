@@ -591,7 +591,7 @@ const Candidate_Document = props => {
                   size={24}
                   color={COLORS.green}
                   onPress={() => {
-                    props.navigation.navigate('View_Doc', {file: item.name});
+                    props.navigation.navigate('View_Doc', {file: item.name, });
                   }}
                 />
               )}

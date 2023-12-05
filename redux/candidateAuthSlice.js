@@ -17,7 +17,8 @@ const candidateAuthSlice = createSlice({
         growingDays: null,
         totalDay: null,
         hiringLeadMail: null,
-        satyaSathiVersion:null
+        satyaSathiVersion:null,
+        candidateAuthenticated: false
     },
     reducers: {
         logIn(state, actions) {
@@ -36,7 +37,7 @@ const candidateAuthSlice = createSlice({
             state.totalDay = actions.payload?.totalDay
             state.hiringLeadMail = actions.payload?.hiringLeadMail
             state.satyaSathiVersion = actions.payload?.satyaSathiVersion
-
+            state.candidateAuthenticated = actions.payload?.candidateAuthenticated
 
         },
         updateLogin(state, actions) {
@@ -58,6 +59,7 @@ const candidateAuthSlice = createSlice({
                 state.totalDay = null,
                 state.hiringLeadMail = null
                 state.satyaSathiVersion = null
+                state.candidateAuthenticated = false
         }
     }
 })
