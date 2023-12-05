@@ -25,8 +25,6 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.google.gson.JsonObject;
-import com.surepass.surepassesign.InitSDK;
 
 import org.json.JSONException;
 
@@ -111,10 +109,10 @@ public class EsignModule extends ReactContextBaseJavaModule implements ActivityE
 //        Toast.makeText(reactContext, Token, Toast.LENGTH_LONG).show();
         Log.e("GetToeknK","1");
         reactContext.addActivityEventListener(this);
-        Intent intent = new Intent(context, InitSDK.class);
-        intent.putExtra("token", Token);
-        intent.putExtra("env", "PROD"); // are you using sandbox or prod. ?ithing prod now try..
-        onNewIntent(intent);
+//        Intent intent = new Intent(context, InitSDK.class);
+//        intent.putExtra("token", Token);
+//        intent.putExtra("env", "PROD"); // are you using sandbox or prod. ?ithing prod now try..
+//        onNewIntent(intent);
     }
 
 

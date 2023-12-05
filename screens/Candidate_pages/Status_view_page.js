@@ -4,6 +4,7 @@ import { FONTS } from '../../constants/font_size'
 import COLORS from '../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
+import Header from '../../components/Header';
 
 
 
@@ -13,6 +14,11 @@ const Status_view_page = () => {
   // console.log("candidateStausviewwww",status_ID);
 
   return (
+    <View style={{
+      flex: 1,
+      backgroundColor: COLORS.white
+    }}>
+    <Header title={"Track Status"} />
     <ScrollView>
 
       <View style={{ marginLeft: 20, marginTop: 5 }}>
@@ -138,6 +144,7 @@ const Status_view_page = () => {
       </View>
 
     </ScrollView>
+    </View>
   )
 }
 

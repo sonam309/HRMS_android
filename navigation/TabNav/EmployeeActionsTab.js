@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView, TouchableOpacity, View, Text, StyleSheet, Pressable } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Approved from '../../screens/Employee_pages/Approval_screens/Approved/Approved';
-import Pending from '../../screens/Employee_pages/Approval_screens/Pending/Pending';
-import Rejected from '../../screens/Employee_pages/Approval_screens/Rejected/Rejected';
+import Approved from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Approved/Approved';
+import Pending from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Pending/Pending';
+import Rejected from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Rejected/Rejected';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BottomUpModal from '../../components/BottomUpModal';
 import COLORS from '../../constants/theme';

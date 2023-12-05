@@ -93,7 +93,6 @@ const CandidateDashboard = props => {
   useEffect(() => {
     if (employeeCreateFlag === 'Y') {
       getEsignData();
-
     }
   }, [employeeCreateFlag]);
 
@@ -130,7 +129,7 @@ const CandidateDashboard = props => {
 
     axios.post(`${API}/api/saveEsignDataNew`, data).then(response => {
       const result = response.data.Result;
-      console.log("esignDatasssss", result[0]);
+      console.log('esignDatasssss', result[0]);
       setEsignCount(result[0]?.ESSIGN_CNT);
       // setLoaderVisible(false);
     });
@@ -313,9 +312,9 @@ const CandidateDashboard = props => {
               console.log(error);
               setLoaderVisible(false);
               Toast.show({
-                type:'error',
-                text1:error
-              })
+                type: 'error',
+                text1: error,
+              });
             });
         }
       });
@@ -459,8 +458,9 @@ const CandidateDashboard = props => {
           <TouchableOpacity
             style={{justifyContent: 'flex-end', backgroundColor: COLORS.white}}
             onPress={() => {
-              props.navigation.navigate('Candidate_Login'),
-                dispatch(candidateAuthActions.logOut());
+              // props.navigation.navigate('Candidate_Login'),
+              dispatch(candidateAuthActions.logOut());
+              
             }}>
             <Icons
               name="logout"
@@ -484,7 +484,7 @@ const CandidateDashboard = props => {
         employeeCreateFlag !== null &&
         employeeCreateFlag === 'Y' ? (
           <>
-            <View
+            {/* <View
               style={{
                 flex: 1,
                 marginHorizontal: 10,
@@ -667,7 +667,7 @@ const CandidateDashboard = props => {
                   My Esign
                 </Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </>
         ) : (
           // header view

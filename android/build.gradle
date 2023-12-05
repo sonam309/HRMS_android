@@ -34,7 +34,7 @@ allprojects {
           url "https://maven.pkg.github.com/surepassio/aadhaar-esign-android-sdk-sample-app"
           credentials {
               username = "sonam309"
-              password = "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"//GITHUB PERSONAL TOKEN
+              password = "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"//GITHUB PERSONAL TOKEN
           }
       }
   }
