@@ -6,7 +6,7 @@ const attendanceDetailSlice = createSlice({
   initialState: {
     attendanceDetailList: [],
     attendanceDailyDataList: {},
-    regularizationList: {},
+    regularizationRes: {},
     attendanceLoading: false,
     calanderloading: false,
     regulizationLoding: false,
@@ -54,13 +54,21 @@ const attendanceDetailSlice = createSlice({
     });
     builder.addMatcher(isAnyOf(saveRegulization.fulfilled), (state, action) => {
       state.regulizationLoding = false;
-      state.regularizationList = action.payload.Result[0];
+      state.regularizationRes = action.payload;
     });
     builder.addMatcher(isAnyOf(saveRegulization.rejected), (state, action) => {
       state.regulizationLoding = false;
     });
   },
+
+  reducers: {
+    emptyRegularizationRes: (state, action) => {
+      state.regularizationRes = {};
+    },
+  },
 });
+
+export const {emptyRegularizationRes} = attendanceDetailSlice.actions;
 
 export default attendanceDetailSlice.reducer;
 

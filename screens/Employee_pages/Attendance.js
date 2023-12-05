@@ -26,7 +26,7 @@ import moment from 'moment';
 import {API} from '../../utility/services';
 import {updatePunchTime} from '../../redux/punchDetailSlice';
 import Loader from '../../components/Loader';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Attendance = props => {
   var m_names = [
@@ -104,8 +104,7 @@ const Attendance = props => {
     },
   ];
 
-  const getDailyAttenceDetails = async date => {
-    console.log('datettette', val);
+  const getDailyAttendanceDetails = async date => {
     const data = {
       userId: userId,
       day: date.day,
@@ -114,12 +113,6 @@ const Attendance = props => {
 
     dispatch(getAttendanceDailyDetails(data));
   };
-
-  useEffect(() => {
-    if (val === ' I' || val === 'O') {
-      loadingData('V');
-    }
-  }, [val]);
 
   const loadingData = async val => {
     // fetching data
@@ -144,42 +137,39 @@ const Attendance = props => {
   };
 
   useEffect(() => {
-    userId && getAttendance();
-    loadingData('V');
-  
-  }, []);
+    if (val === ' I' || val === 'O') {
+      loadingData('V');
+    }
+  }, [val]);
 
   useEffect(() => {
     userId && getAttendance();
     loadingData('V');
   }, [userId]);
 
-  useEffect(() => {
-    count = 0;
-    presentDays = 0;
-    absentDays = 0;
-    getAttendance();
-  }, [selectedMonth]);
-
   const getAttendance = () => {
     setLoaderVisible(true);
+
     axios
       .post(`${API}/api/Admin/Attendance`, {
         userId: userId,
-        monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
+        monthYear: `${
+          m_names[selectedMonth?.getMonth()]
+        }${selectedMonth?.getFullYear()}`,
       })
       .then(response => {
         setLoaderVisible(false);
         const returnedData = response?.data?.Result;
+        let markedDates = {};
+        let count = 0;
+        let presentDays = 0;
+        let absentDays = 0;
 
-        // Create the final object
-        returnedData.map(obj => {
-          // Extract the date from the DATED field
+        returnedData.forEach(obj => {
           const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
             'YYYY-MM-DD',
           );
 
-          // Determine markedDotColor based on ATTENDANCE_FLAG
           let markedDotColor = '';
           if (obj.ATTENDANCE_FLAG === 'A') {
             markedDotColor = 'red';
@@ -192,14 +182,16 @@ const Attendance = props => {
           } else {
             markedDotColor = '#fff';
           }
-          // Add the date as a key to the final object
+
           markedDates[date] = {marked: true, dotColor: markedDotColor};
+
           if (count < 1) {
             markedDates[date].dotColor === 'red' && (absentDays += 1);
             markedDates[date].dotColor === ('orange' || '#33AA54') &&
               (presentDays += 1);
           }
         });
+
         setMarkedDate(markedDates);
         count = 1;
         setPresent(presentDays);
@@ -207,13 +199,15 @@ const Attendance = props => {
       });
   };
 
+  useEffect(() => {
+    getAttendance();
+  }, [userId, selectedMonth]);
+
   useFocusEffect(
     React.useCallback(() => {
-
-      return () => setSelectedDate({})
-    }, [])
+      return () => setSelectedDate({});
+    }, []),
   );
-  
 
   return (
     <View style={styles.container}>
@@ -261,6 +255,7 @@ const Attendance = props => {
         </View>
         <View>
           {/* Main Content-Calendar */}
+
           <Calendar
             initialDate=""
             style={{
@@ -268,48 +263,48 @@ const Attendance = props => {
               backgroundColor: COLORS.white,
               justifyContent: 'center',
               marginTop: 10,
+              borderWidth: 1,
+              marginHorizontal: 10,
+              borderColor: COLORS.lightGray,
+              borderRadius: 10,
             }}
             theme={{
               arrowColor: COLORS.black,
               monthTextColor: COLORS.black,
-              textSectionTitleColor: COLORS.black,
+              textSectionTitleColor: COLORS.darkGray2,
+
             }}
             markedDates={markedDate}
             onMonthChange={month => {
-              setSelectedYear(month.year);
               setSelectedMonth(new Date(month?.dateString));
             }}
-            dayComponent={({date, state, marking}) => {
-              const isSelectedDate = selectedDate.dateString == date.dateString
+         
+
+            dayComponent={({date, marking}) => {
+              const isSelectedDate = selectedDate.dateString == date.dateString;
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    console.log(date.dateString);
                     setSelectedDate(date);
                   }}
                   onLongPress={() => {
-                    getDailyAttenceDetails(date);
+                    getDailyAttendanceDetails(date);
                     setModalVisible(true);
-                    console.log('selected day', date.day);
                   }}
                   style={{
                     alignItems: 'center',
-                    padding: 8,
-                    // borderBottomWidth: 0.5,
-                    borderRadius:
-                      selectedDate.dateString == date.dateString ? 50 : 0,
-                    width: 50,
-                    backgroundColor:
-                      selectedDate.dateString == date.dateString
-                        ? COLORS.lightBlue
-                        : '#fff',
+                    borderRadius: isSelectedDate ? 20 : 0,
+                    height: 40,
+                    width: 40,
+                    justifyContent: 'center',
+                    backgroundColor: isSelectedDate ? COLORS.lightBlue : '#fff',
                   }}>
                   <Text
                     style={{
                       fontSize: 16,
                       paddingBottom: marking ? 0 : 11,
-                      color:
-                        selectedDate.dateString == date.dateString && '#fff',
+                      color: isSelectedDate ? '#fff' : COLORS.darkGray2,
+                      fontWeight: '400',
                     }}>
                     {' '}
                     {date.day}{' '}
@@ -317,8 +312,8 @@ const Attendance = props => {
                   {marking && marking.dotColor === 'orange' ? (
                     <View
                       style={{
-                        height: 10,
-                        width: 10,
+                        height: 5,
+                        width: 5,
                         borderRadius: 5,
                         overflow: 'hidden',
                         transform: [{rotate: '90deg'}],
@@ -328,15 +323,15 @@ const Attendance = props => {
                       <View
                         style={{
                           backgroundColor: '#DDE6ED',
-                          height: 5,
-                          width: 10,
+                          height: 2.5,
+                          width: 5,
                         }}
                       />
                       <View
                         style={{
                           backgroundColor: '#88C385',
-                          height: 5,
-                          width: 10,
+                          height: 2.5,
+                          width: 5,
                         }}
                       />
                     </View>
@@ -344,8 +339,8 @@ const Attendance = props => {
                     marking && (
                       <View
                         style={{
-                          height: 10,
-                          width: 10,
+                          height: 5,
+                          width: 5,
                           backgroundColor: marking?.dotColor
                             ? marking.dotColor
                             : '#87CEEB',
@@ -447,12 +442,14 @@ const Attendance = props => {
             <View
               style={{
                 flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 5,
+                justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
                 // disabled={Object.keys(selectedDate).length > 0 ? false : true}
+                style={[
+                  styles.regilizationBtn,
+                  {backgroundColor: '#28B463', borderColor: '#239B56'},
+                ]}
                 onPress={() => {
                   Object.keys(selectedDate).length > 0
                     ? props.navigation.navigate('AttendanceStack', {
@@ -467,36 +464,26 @@ const Attendance = props => {
                         text1: 'Select a date to Regularize',
                       });
                 }}>
-                <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#28B463', borderColor: '#239B56'},
-                  ]}>
-                  Regulization
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#EB984E', borderColor: '#E67E22'},
-                  ]}>
-                  Outdoor
-                </Text>
+                <Text style={styles.regilizationTxt}>Regulization</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                style={[
+                  styles.regilizationBtn,
+                  {backgroundColor: '#EB984E', borderColor: '#E67E22'},
+                ]}>
+                <Text style={styles.regilizationTxt}>Outdoor</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.regilizationBtn,
+                  {backgroundColor: '#5DADE2', borderColor: '#3498DB'},
+                ]}
                 onPress={() =>
                   props.navigation.navigate('AttendanceStack', {
                     screen: 'Leave',
                   })
                 }>
-                <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#5DADE2', borderColor: '#3498DB'},
-                  ]}>
-                  Leave
-                </Text>
+                <Text style={styles.regilizationTxt}>Leave</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -600,12 +587,12 @@ const styles = StyleSheet.create({
   regilizationBtn: {
     paddingLeft: 8,
     paddingRight: 8,
-    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 6,
     color: 'white',
     width: responsiveWidth(30),
     flex: 1,
-    textAlign: 'center',
     marginHorizontal: 5,
     borderRadius: 20,
     borderWidth: 1,
@@ -613,6 +600,9 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     fontSize: 14,
     fontWeight: 500,
+  },
+  regilizationTxt: {
+    color: '#fff',
   },
   modalWrap: {
     minWidth: 100,
@@ -675,6 +665,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     borderRadius: 0,
+    backgroundColor: '#fff',
   },
   actionText: {
     color: 'white',
