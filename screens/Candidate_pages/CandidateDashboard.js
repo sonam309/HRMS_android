@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import COLORS from '../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -14,6 +14,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import {FONTS, SIZES} from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
@@ -62,7 +63,6 @@ const CandidateDashboard = props => {
   } = useSelector(state => state.candidateAuth);
 
   const [showAlert, setShowAlert] = useState(false);
-  const [exitAlert, setExitAlert] = useState(false);
   const [profileAlert, setProfileAlert] = useState(false);
   const [offerLetterAlert, setOfferLetterAlert] = useState(false);
   const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
@@ -106,15 +106,6 @@ const CandidateDashboard = props => {
     }
   }, []);
 
-  //     useEffect(() => {
-
-  //         // if (isFocused) {
-  //             if (candidateId) {
-  //                 getEsignData();
-  //             }
-  // //
-  //         }
-  //     }, [candidateId])
 
   // getEsignData
   const getEsignData = async () => {
@@ -354,22 +345,25 @@ const CandidateDashboard = props => {
       });
   };
 
-  useEffect(() => {
-    // for handling back button in android
-
-    const backAction = () => {
-      if (props.navigation.isFocused()) {
-        setExitAlert(true);
-      }
-    };
-
-    const backPressHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-    return () => {
-      backPressHandler.remove();
-    };
+ 
+  useMemo(() => {
+    if (props.navigation.isFocused) {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
+            {
+              text: "Cancel",
+              onPress: () => null,
+              style: "cancel",
+            },
+            { text: "YES", onPress: () => BackHandler.exitApp() },
+          ]);
+          return true;
+        }
+      );
+      return () => backHandler.remove();
+    }
   }, []);
 
   // useFocusEffect(
@@ -421,13 +415,7 @@ const CandidateDashboard = props => {
           setShow={setShowAlert}
           message={'Document need to be submit after offer letter acceptance'}
         />
-        <CustomAlert
-          show={exitAlert}
-          setShow={setExitAlert}
-          title={'Wait'}
-          message={'Are you sure, you want to exit the App?'}
-          onConfirmPressed={() => BackHandler.exitApp()}
-        />
+       
 
         {/* <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text> */}
         <View

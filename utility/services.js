@@ -8,8 +8,8 @@ exports.API = `http://192.168.1.146:7038/`   //local
 export const API2 = `http://192.168.2.35:7038/`
 
 export const VERSIONS = {
-    android: "2.2",
+    android: "2.3",
     olderVersion:"2.1"
 }
 
-export const AxiosLog = true;
+export const AxiosLog = false;

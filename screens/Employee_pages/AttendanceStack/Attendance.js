@@ -26,7 +26,7 @@ import {updatePunchTime} from '../../../redux/punchDetailSlice';
 import Loader from '../../../components/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import DashBoardHeader from '../../../components/DashboardHeader';
-import Donut_chart from "../../../assets/images/donut_chart.png"
+import Donut_chart from '../../../assets/images/donut_chart.png';
 
 const Attendance = props => {
   var m_names = [
@@ -65,6 +65,7 @@ const Attendance = props => {
 
   const [val, setVal] = useState('');
 
+  const isDateSelected = Object.keys(selectedDate).length > 0 ? true : false
   const modalData = [
     {
       heading: 'Shift',
@@ -264,7 +265,6 @@ const Attendance = props => {
             initialDate=""
             style={{
               marginBottom: 20,
-              backgroundColor: COLORS.white,
               justifyContent: 'center',
               marginTop: 10,
             }}
@@ -442,16 +442,16 @@ const Attendance = props => {
 
           {/* Regulization */}
 
-          <View style={{marginTop: 20, marginBottom: 30}}>
+          <View style={{paddingTop: 20, marginBottom: 30, }}>
             <View
               style={{
+                flex: 1,
                 flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 5,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+              
               }}>
               <TouchableOpacity
-                // disabled={Object.keys(selectedDate).length > 0 ? false : true}
                 onPress={() => {
                   if (!Object.keys(selectedDate).length > 0) {
                     Toast.show({
@@ -467,35 +467,121 @@ const Attendance = props => {
                       },
                     });
                   }
+                }}
+                style={{
+                  backgroundColor:
+                    Object.keys(selectedDate).length > 0
+                      ? COLORS.disableOrange1
+                      : "#F1F1F1",
+                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
+                 
                 }}>
+                <View
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected ? COLORS.disableOrange1 : COLORS.lightGray,
+                    borderRadius: 100,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/leave.png')}
+                    style={{
+                      height: 60,
+                      width: 60,
+                    }}
+                  />
+                </View>
                 <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#28B463', borderColor: '#239B56'},
-                  ]}>
-                  Regulization
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
+                  Regularize
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor:
+                  Object.keys(selectedDate).length > 0
+                    ? COLORS.disableOrange1
+                    : "#F1F1F1",                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
+                }}>
+                <Image
+                  source={require('../../../assets/images/briefcase.png')}
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected ? COLORS.disableOrange1 : COLORS.lightGray,
+                    borderRadius: 100,
+                  }}
+                />
                 <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#EB984E', borderColor: '#E67E22'},
-                  ]}>
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
                   Outdoor
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={() =>
                   props.navigation.navigate('Attendance', {
                     screen: 'Leave',
                   })
-                }>
+                }
+                style={{
+                  backgroundColor:
+                  Object.keys(selectedDate).length > 0
+                    ? COLORS.disableOrange1
+                    : "#F1F1F1",                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
+                }}>
+                  <View
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected ? COLORS.disableOrange1 : COLORS.lightGray,
+                    borderRadius: 100,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}>
+                <Image
+                  source={require('../../../assets/images/outdoor.png')}
+                  style={{
+                    height: 60,
+                    width: 60,
+                  }}
+                />
+                </View>
                 <Text
-                  style={[
-                    styles.regilizationBtn,
-                    {backgroundColor: '#5DADE2', borderColor: '#3498DB'},
-                  ]}>
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
                   Leave
                 </Text>
               </TouchableOpacity>
@@ -676,6 +762,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     borderRadius: 0,
+    backgroundColor: "#fff"
   },
   actionText: {
     color: 'white',
