@@ -6,8 +6,7 @@ import Pending from '../../screens/Employee_pages/PendingApprovalStack/Approval_
 import Rejected from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Rejected/Rejected';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BottomUpModal from '../../components/BottomUpModal';
-import COLORS from '../../constants/theme';
-import { FONTS } from '../../constants/font_size';
+import { COLORS, FONTS } from '../../constants';
 
 const Tab = createMaterialTopTabNavigator();
 

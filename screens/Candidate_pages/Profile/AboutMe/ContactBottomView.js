@@ -2,8 +2,7 @@ import { View, Text, ScrollView, TextInput, StyleSheet, TouchableOpacity, Activi
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { FONTS, SIZES } from '../../../../constants/font_size'
-import COLORS from '../../../../constants/theme'
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient'
 import { API } from '../../../../utility/services'

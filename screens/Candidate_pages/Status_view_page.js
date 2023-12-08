@@ -1,10 +1,9 @@
 import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
-import { FONTS } from '../../constants/font_size'
-import COLORS from '../../constants/theme'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
+import { COLORS, FONTS } from '../../constants';
 
 
 

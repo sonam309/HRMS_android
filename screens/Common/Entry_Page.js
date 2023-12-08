@@ -9,9 +9,8 @@ import {
 import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Entry_logo, company_logo} from '../../assets';
-import COLORS from '../../constants/theme';
-import {FONTS} from '../../constants/font_size';
 import {useSelector} from 'react-redux';
+import { COLORS, FONTS } from '../../constants';
 
 const Entry_page = props => {
   const {userId, userName} = useSelector(state => state.auth);

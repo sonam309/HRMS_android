@@ -1,12 +1,11 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { FONTS, SIZES } from '../../../constants/font_size'
-import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import { API } from '../../../utility/services';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCoordinates } from '../../../redux/eSignSlice';
+import { COLORS, FONTS } from '../../../constants';
 
 
 const DocumentTypeBottomView = (props) => {

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   BackHandler,
 } from 'react-native';
-import COLORS from '../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
@@ -17,6 +16,7 @@ import {useSelector} from 'react-redux';
 import Loader from '../../../components/Loader';
 import {API} from '../../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../../constants';
 
 const CreateNewJobOpening = props => {
   // for getting and setting data from API

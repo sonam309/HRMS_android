@@ -2,9 +2,9 @@ import { Linking, Text } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useState } from 'react';
 import Loader from '../../../components/Loader'
-import COLORS from '../../../constants/theme';
-import { FONTS } from '../../../constants/font_size';
+
 import { API } from '../../../utility/services';
+import { COLORS, FONTS } from '../../../constants';
 
 const Job_Description = (props) => {
     const { Job_Desc } = props.route.params;

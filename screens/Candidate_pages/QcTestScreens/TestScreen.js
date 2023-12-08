@@ -1,6 +1,4 @@
 import { View, Text, ActivityIndicator, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
-import COLORS from '../../../constants/theme'
-import { SIZES, FONTS } from '../../../constants/font_size'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useEffect, useState, useMemo } from 'react'
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
@@ -10,6 +8,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import _ from "lodash"
 import QuestionItem from './QuestionItem';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 
 
 

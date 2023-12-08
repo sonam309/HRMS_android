@@ -1,8 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import COLORS from '../../../../constants/theme';
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 import SelectDropdown from 'react-native-select-dropdown'
-import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';

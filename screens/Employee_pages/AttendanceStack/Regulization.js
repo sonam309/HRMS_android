@@ -11,8 +11,6 @@ import {
   responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import COLORS from '../../../constants/theme';
-import {FONTS} from '../../../constants/font_size';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   getAttendanceDailyDetails,
@@ -26,6 +24,7 @@ import Toast from 'react-native-toast-message';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CustomIconInput from '../../../components/CustomIconInput';
+import { COLORS, FONTS } from '../../../constants';
 
 const Regulization = ({navigation, route}) => {
   const selectDate = route.params.selectedDate;

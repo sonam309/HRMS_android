@@ -11,10 +11,8 @@ import {
 import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
-import COLORS from '../../../../constants/theme';
 import { useSelector } from 'react-redux';
 import SelectDropdown from 'react-native-select-dropdown';
-import { FONTS, SIZES } from '../../../../constants/font_size';
 import { API } from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,6 +28,7 @@ import { showAlert, closeAlert } from 'react-native-customisable-alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 
 const BankBottomView = ({ onPress }) => {
   const userId = useSelector(state => state.candidateAuth.candidateId);

@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-native-date-picker';
-import COLORS from '../../../../constants/theme';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Loader from '../../../../components/Loader';
-import { FONTS, SIZES } from '../../../../constants/font_size';
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 import { API } from '../../../../utility/services';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';

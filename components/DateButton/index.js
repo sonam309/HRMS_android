@@ -1,8 +1,7 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import DatePicker from 'react-native-date-picker';
-import COLORS from '../../constants/theme';
-import { SIZES,FONTS } from '../../constants/font_size';
+import { COLORS, FONTS, SIZES } from '../../constants';
 
 const DateButton = ({caption, required, date, setDate,captionStyle}) => {
   const [show, setShow] = useState(false);

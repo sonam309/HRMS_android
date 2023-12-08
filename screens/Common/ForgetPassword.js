@@ -7,10 +7,10 @@ import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { new_mpin } from '../../assets';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import COLORS from '../../constants/theme';
 import Loader from '../../components/Loader';
 import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../constants';
 
 const ForgetPassword = (props) => {
 

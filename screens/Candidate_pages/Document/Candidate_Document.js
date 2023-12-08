@@ -1,7 +1,5 @@
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import COLORS from '../../../constants/theme';
-import {FONTS, SIZES} from '../../../constants/font_size';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
@@ -12,6 +10,7 @@ import {API} from '../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 
 const Candidate_Document = props => {
   // Candidate ID & Status

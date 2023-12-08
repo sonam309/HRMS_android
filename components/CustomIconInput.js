@@ -1,8 +1,8 @@
 import {View, Text, TextInput} from 'react-native';
 import React from 'react';
-import COLORS from '../constants/theme';
-import {SIZES, FONTS} from '../constants/font_size';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { COLORS, FONTS, SIZES } from '../constants';
 
 const CustomIconInput = ({
   required,

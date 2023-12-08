@@ -2,8 +2,8 @@ import { Linking, Text } from 'react-native';
 import Pdf from 'react-native-pdf';
 import { useState } from 'react';
 import Loader from '../../../components/Loader';
-import COLORS from '../../../constants/theme';
 import { API } from '../../../utility/services';
+import { COLORS } from '../../../constants';
 
 const Candidate_Resume = (props) => {
     const { resume } = props.route.params;

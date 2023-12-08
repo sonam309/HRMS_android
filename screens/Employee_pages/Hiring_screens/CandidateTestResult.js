@@ -2,12 +2,11 @@ import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, BackHandle
 import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { saveAttemptTest } from '../../../redux/eSignSlice';
-import COLORS from '../../../constants/theme';
-import { FONTS, SIZES } from '../../../constants/font_size';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import _ from "lodash"
 import LinearGradient from 'react-native-linear-gradient';
+import { COLORS, FONTS } from '../../../constants';
 
 const OPTIONS = ["A", "B", "C", "D"];
 const CandidateTestResult = ({navigation,route}) => {

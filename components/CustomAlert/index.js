@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import COLORS from '../../constants/theme';
+import {COLORS, FONTS, SIZES} from '../../constants/theme';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { FONTS, SIZES } from '../../constants/font_size';
+
 
 const CustomAlert = ({messageStyle, titleStyle,showCancel=true, showConfirm=true, cancelButtonColor = COLORS.orange1, confirmButtonColor = COLORS.green, show, setShow, title, message, cancelTxt = "Cancel", confirmTxt = "Yes", onConfirmPressed = () => {
 

@@ -2,8 +2,8 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import {FONTS} from '../../constants/font_size';
-import COLORS from '../../constants/theme';
+import { COLORS, FONTS } from '../../constants';
+
 
 const Header = ({title}) => {
   const navigation = useNavigation();

@@ -1,6 +1,6 @@
 import React,{ useEffect} from 'react';
 import { Text ,View, BackHandler} from 'react-native';
-import COLORS from '../../../constants/theme';
+import { COLORS } from '../../../constants';
 
 
 const Apply_Leave=({navigation})=>{

@@ -2,9 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { security_pin_icon } from '../../assets';
 import { useSelector } from 'react-redux';
-import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../constants';
 
 
 const QuickPin = (props) => {

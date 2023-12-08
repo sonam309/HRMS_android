@@ -25,6 +25,9 @@ import EsignD from './images/d_esign.png'
 import test from './images/test.png'
 import profileIC from './images/profile_ic.png'
 
+//icons form icons folder
+
+
 
 export {
     company_logo_2,

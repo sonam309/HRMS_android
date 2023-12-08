@@ -14,8 +14,6 @@ import {
   Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FONTS, SIZES} from '../../../constants/font_size';
-import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomInput from '../../../components/CustomInput';
 import {useDispatch, useSelector} from 'react-redux';
@@ -29,6 +27,7 @@ import GetLocation from 'react-native-get-location';
 import Loader from '../../../components/Loader';
 import axios from 'axios';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 
 const {EsignModule} = NativeModules;
 const eventEmitter = new NativeEventEmitter(EsignModule);

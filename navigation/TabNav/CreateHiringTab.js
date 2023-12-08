@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import New_hiring from '../../screens/Employee_pages/Hiring_screens/New_hiring';
 import Interview_status from '../../screens/Employee_pages/Hiring_screens/Interview_status';
-import COLORS from '../../constants/theme';
 import { DrawerActions } from '@react-navigation/native';
 import { Text, SafeAreaView, TouchableOpacity, StyleSheet, View, Pressable } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BottomUpModal from '../../components/BottomUpModal';
-import { FONTS } from '../../constants/font_size';
+import { COLORS, FONTS } from '../../constants';
 
 
 const Tab = createMaterialTopTabNavigator();

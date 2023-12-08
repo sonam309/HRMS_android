@@ -5,9 +5,9 @@ import axios from 'axios';
 import moment from 'moment';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useSelector } from 'react-redux';
-import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../constants';
 
 const Holiday_list = () => {
   const userId = useSelector(state => state.auth.userId)

@@ -2,8 +2,8 @@ import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import COLORS from '../../constants/theme';
-import { SIZES,FONTS } from '../../constants/font_size';
+import { COLORS, FONTS, SIZES } from '../../constants';
+
 
 const TextDropdown = ({
   caption,

@@ -3,8 +3,8 @@ import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
 import { responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
 import _ from "lodash";
 import { useDispatch } from "react-redux";
-import COLORS from '../../../constants/theme'
-import { SIZES, FONTS } from '../../../constants/font_size'
+import { COLORS, FONTS, SIZES } from "../../../constants";
+
 
 const OPTIONS = ["A", "B", "C", "D"];
 

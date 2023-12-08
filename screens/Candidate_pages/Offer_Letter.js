@@ -13,13 +13,12 @@ import {
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
 import RNFetchBlob from 'rn-fetch-blob';
-import COLORS from '../../constants/theme';
-import {SIZES, FONTS} from '../../constants/font_size';
 import axios from 'axios';
 import WebView from 'react-native-webview';
 import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import Header from '../../components/Header';
+import { COLORS, FONTS, SIZES } from '../../constants';
 
 const Offer_Letter = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);

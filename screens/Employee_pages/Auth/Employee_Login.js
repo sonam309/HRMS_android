@@ -24,24 +24,45 @@ import Geolocation from '../../../functions/Geolocation';
 import Loader from '../../../components/Loader';
 import {useDispatch, useSelector} from 'react-redux';
 import {authActions} from '../../../redux/authSlice';
-import COLORS from '../../../constants/theme';
-import {FONTS, SIZES} from '../../../constants/font_size';
 import {API, VERSIONS} from '../../../utility/services';
 import CustomInput from '../../../components/CustomInput';
 import TextButton from '../../../components/TextButton';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import FormInput from '../../../components/FormInput';
+import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 
 const Employee_Login = props => {
   const [showVisibility, setShowVisibility] = useState(true);
-  const [userId, setUserId] = useState('17321');
-  const [password, setPassword] = useState('Test@123');
+  // const [userId, setUserId] = useState('17321');
+  // const [password, setPassword] = useState('Test@123');
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
   const dispatch = useDispatch();
+
+  const userInfo = {
+    userId: '',
+    password: '',
+  };
+
+  const validationSchema = Yup.object({
+    userId: Yup.string()
+      .trim()
+      .required('UserId is required')
+      .matches(/^[a-zA-Z0-9]+$/, 'Invalid user id'),
+    password: Yup.string()
+      .trim()
+      .required('Password is required')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+      ),
+  });
 
   const {loading} = useSelector(state => state.punchDetail);
 
@@ -63,9 +84,14 @@ const Employee_Login = props => {
     setShowVisibility(!showVisibility);
   };
   // logging in function
-  const submit = () => {
+  const submit = values => {
+    console.log(values);
     try {
-      const userData = {loginId: userId, password: password, oprFlag: 'L'};
+      const userData = {
+        loginId: values.userId,
+        password: values.password,
+        oprFlag: 'L',
+      };
       setLoaderVisible(true);
       // console.log(userData);
       axios.post(`${API}/api/User/login`, userData).then(response => {
@@ -94,7 +120,7 @@ const Employee_Login = props => {
                 userDeptId,
                 userDept,
                 userEmail,
-                userPassword: password,
+                userPassword: values.password,
                 authenticated: true,
               }),
             );
@@ -105,8 +131,8 @@ const Employee_Login = props => {
             text1: 'Please enter correct credentials',
           });
         }
-        setUserId('');
-        setPassword('');
+        // setUserId('');
+        // setPassword('');
       });
     } catch (error) {
       setLoaderVisible(false);
@@ -131,7 +157,7 @@ const Employee_Login = props => {
     );
   };
 
-  const forgetPasswordApi = () => {
+  const forgetPasswordApi = (userId) => {
     try {
       setLoaderVisible(true);
       let otp = RandomNumber('6');
@@ -219,135 +245,231 @@ const Employee_Login = props => {
           resizeMode="stretch"
         />
       </View>
-      <View
-        style={{
-          justifyContent: 'center',
-          flex: 1.5,
-          borderRadius: 20,
-          backgroundColor: COLORS.white,
-          paddingHorizontal: 25,
+      <Formik
+        initialValues={userInfo}
+        validationSchema={validationSchema}
+        onSubmit={(values, formikActions, touched, isValid) => {
+          // onLogin(values, formikActions, touched, isValid);
+          submit(values,  formikActions, touched, isValid);
         }}>
-        <Text style={styles.header}>Employee Login</Text>
-        {/* user credentials -username */}
-        <View style={[styles.textInputBox]}>
-          <CustomInput
-            placeholder={'User Id'}
-            caption={'User ID'}
-            value={userId}
-            required
-            onChangeText={id => (
-              setUserId(id),
-              dispatch(authActions.logIn({userId: id, userPassword: password}))
-            )}
-          />
-        </View>
-        {/* Password */}
-        <View style={[styles.textInputBox]}>
-          <CustomInput
-            placeholder={'Password'}
-            caption={'Password'}
-            value={password}
-            onChangeText={security => setPassword(security)}
-            required
-            secureTextEntry={showVisibility}
-            isPasswordInput
-            textInputStyle={{
-              width: responsiveWidth(70),
-            }}
-            icon={
-              <Pressable onPress={changeVisibility}>
-                <AntDesign name="eye" size={22} />
-              </Pressable>
-            }
-          />
-        </View>
-        {/* Quick Pin Option */}
-        {/* <View style={styles.loginOption}>
+        {({
+          values,
+          errors,
+          handleChange,
+          touched,
+          handleBlur,
+          handleSubmit,
+          isValid,
+          dirty,
+          isSubmitting,
+        }) => {
+          const {userId, password} = values;
+          return (
+            <View
+              style={{
+                justifyContent: 'center',
+                flex: 1.5,
+                borderRadius: 20,
+                backgroundColor: COLORS.white,
+                paddingHorizontal: 25,
+              }}>
+              <Text style={styles.header}>Employee Login</Text>
+              {/* user credentials -username */}
+              <View style={[styles.textInputBox]}>
+                {/* <CustomInput
+                  placeholder={'User Id'}
+                  caption={`User ID ${JSON.stringify(errors.userId)}`}
+                  // value={}
+                  required
+                  // onChangeText={id => (
+                  //   // setUserId(id),
+                  //   userInfo = {...userInfo,userId: id},
+                  //   dispatch(
+                  //     authActions.logIn({userId: id, userPassword: password}),
+                  //   )
+                  // )}
+                  onChange={handleChange("userId")}
+                /> */}
+                <FormInput
+                  label="User Id"
+                  placeholder={'User Id'}
+                  // keyboardType="email-address"
+                  // autoCompleteType="email"
+                  onChange={handleChange('userId')}
+                  errorMsg={errors.userId}
+                  onBlur={handleBlur('userId')}
+                  labelColor={COLORS.black}
+                  appendComponent={
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                      }}>
+                      <Image
+                        source={
+                          userId == '' ||
+                          (userId != '' && errors.userId == null)
+                            ? icons.correct
+                            : icons.cross
+                        }
+                        style={{
+                          height: 20,
+                          width: 20,
+                          tintColor:
+                            userId == ''
+                              ? COLORS.gray
+                              : userId != '' && errors.userId == null
+                              ? COLORS.green
+                              : COLORS.red,
+                        }}
+                      />
+                    </View>
+                  }
+                  value={values.userId}
+                />
+              </View>
+              {/* Password */}
+              <View style={[styles.textInputBox]}>
+                {/* <CustomInput
+                  placeholder={'Password'}
+                  caption={'Password'}
+                  value={password}
+                  onChangeText={security => setPassword(security)}
+                  required
+                  secureTextEntry={showVisibility}
+                  isPasswordInput
+                  textInputStyle={{
+                    width: responsiveWidth(70),
+                  }}
+                  icon={
+                    <Pressable onPress={changeVisibility}>
+                      <AntDesign name="eye" size={22} />
+                    </Pressable>
+                  }
+                /> */}
+                <FormInput
+                  label="Password"
+                  placeholder={'Password'}
+                  autoCompleteType="password"
+                  secureTextEntry={showVisibility}
+                  onChange={handleChange('password')}
+                  errorMsg={errors.password}
+                  // onBlur={handleBlur('password')}
+                  labelColor={COLORS.black}
+                  value={values.password}
+                  appendComponent={
+                    <TouchableOpacity
+                      style={{
+                        width: 40,
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                      }}
+                      onPress={() => setShowVisibility(!showVisibility)}>
+                      <Image
+                        source={showVisibility ? icons.eye_close : icons.eye}
+                        style={{
+                          height: 20,
+                          width: 20,
+                          tintColor: COLORS.gray,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  }
+                />
+              </View>
+              {/* Quick Pin Option */}
+              {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 28, height: 28, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View> */}
-        <TextButton
-          color1={COLORS.green}
-          color2={'#9ADD00'}
-          linearGradientStyle={{
-            marginTop: SIZES.font,
-            marginBottom: SIZES.radius,
-            borderRadius: SIZES.base,
-          }}
-          buttonContainerStyle={{width: responsiveWidth(90), height: 45}}
-          label={'Log In'}
-          labelStyle={{color: COLORS.white}}
-          onPress={() => submit()}
-        />
-        {/* Punching Option */}
-        <View style={styles.punchArea}>
-          <TouchableOpacity
-            onPress={() => getCurrentLocation('I')}
-            style={[
-              styles.punchButton,
-              styles.elevation,
-              {backgroundColor: '#D5F5E3'},
-            ]}>
-            <Text style={[styles.loginButtonText, {color: COLORS.darkGreen}]}>
-              {loading ? 'loading...' : 'Punch In'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => getCurrentLocation('O')}
-            style={[
-              styles.punchButton,
-              styles.elevation,
-              {backgroundColor: '#FAE5D3'},
-            ]}>
-            <Text style={[styles.loginButtonText, {color: COLORS.orange1}]}>
-              {loading ? 'loading...' : 'Punch Out'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <TextButton
+                color1={COLORS.green}
+                color2={'#9ADD00'}
+                linearGradientStyle={{
+                  marginTop: SIZES.font,
+                  marginBottom: SIZES.radius,
+                  borderRadius: SIZES.base,
+                }}
+                buttonContainerStyle={{width: responsiveWidth(90), height: 45}}
+                label={'Log In'}
+                labelStyle={{color: COLORS.white}}
+                onPress={handleSubmit}
+              />
+              {/* Punching Option */}
+              <View style={styles.punchArea}>
+                <TouchableOpacity
+                  onPress={() => getCurrentLocation('I')}
+                  style={[
+                    styles.punchButton,
+                    styles.elevation,
+                    {backgroundColor: '#D5F5E3'},
+                  ]}>
+                  <Text
+                    style={[styles.loginButtonText, {color: COLORS.darkGreen}]}>
+                    {loading ? 'loading...' : 'Punch In'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => getCurrentLocation('O')}
+                  style={[
+                    styles.punchButton,
+                    styles.elevation,
+                    {backgroundColor: '#FAE5D3'},
+                  ]}>
+                  <Text
+                    style={[styles.loginButtonText, {color: COLORS.orange1}]}>
+                    {loading ? 'loading...' : 'Punch Out'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 15,
-          }}>
-          {/* signIn for Employee */}
-          <TouchableOpacity
-            onPress={async () => {
-              props.navigation.push('CandidateTab', {screen: 'CandidateLogin'});
-              await AsyncStorage.setItem('type', 'candidate');
-            }}>
-            <Text
-              style={{
-                color: COLORS.hyperlinkBlue,
-                ...FONTS.h5,
-                fontSize: 14,
-                marginBottom: 100,
-                verticalAlign: 'middle',
-                textDecorationLine: 'underline',
-              }}>
-              Sign In as Candidate
-            </Text>
-          </TouchableOpacity>
-          {/* Forgot Password */}
-          <TouchableOpacity>
-            <Text
-              style={styles.forgotPassword}
-              onPress={() =>
-                userId !== ''
-                  ? forgetPasswordApi()
-                  : Toast.show({
-                      type: 'error',
-                      text1: 'Please enter User id',
-                    })
-              }>
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 15,
+                }}>
+                {/* signIn for Employee */}
+                <TouchableOpacity
+                  onPress={async () => {
+                    props.navigation.push('CandidateTab', {
+                      screen: 'CandidateLogin',
+                    });
+                    await AsyncStorage.setItem('type', 'candidate');
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.hyperlinkBlue,
+                      ...FONTS.h5,
+                      fontSize: 14,
+                      marginBottom: 100,
+                      verticalAlign: 'middle',
+                      textDecorationLine: 'underline',
+                    }}>
+                    Sign In as Candidate
+                  </Text>
+                </TouchableOpacity>
+                {/* Forgot Password */}
+                <TouchableOpacity>
+                  <Text
+                    style={styles.forgotPassword}
+                    onPress={() =>
+                      values.userId !== ''
+                        ? forgetPasswordApi(values.userId)
+                        : Toast.show({
+                            type: 'error',
+                            text1: 'Please enter User id',
+                          })
+                    }>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }}
+      </Formik>
       {/* Bottom element */}
       <View style={{height: 30}}>
         <Text

@@ -8,9 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, isValidElement} from 'react';
-import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown';
-import {FONTS, SIZES} from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -21,6 +19,7 @@ import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {showAlert, closeAlert} from 'react-native-customisable-alert';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { COLORS, FONTS } from '../../../../constants';
 
 const UAN_BottomView = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);

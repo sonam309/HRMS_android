@@ -11,11 +11,11 @@ import axios from 'axios';
 import BoldText from '../../utility/BoldText';
 import {mobile_otp} from '../../assets';
 import {useSelector} from 'react-redux';
-import COLORS from '../../constants/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../components/Loader';
 import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../constants';
 
 const Otp_Verification = props => {
   const {contact, otp, type, userId} = props.route.params;

@@ -7,9 +7,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import { create_mpin } from '../../assets';
-import COLORS from '../../constants/theme';
 import { API } from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import { COLORS } from '../../constants';
 
 const CreateMpin = (props) => {
 

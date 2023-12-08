@@ -1,7 +1,5 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FONTS, SIZES} from '../../../constants/font_size';
-import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import {API} from '../../../utility/services';
@@ -14,6 +12,7 @@ import TextButton from '../../../components/TextButton';
 import Toast from 'react-native-toast-message';
 import {color} from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 
 const Pending_Esifn_list = props => {
   const dispatch = useDispatch();

@@ -2,8 +2,7 @@ import { View, Text,TouchableOpacity } from 'react-native'
 import React from 'react'
 import { responsiveWidth } from 'react-native-responsive-dimensions'
 import LinearGradient from 'react-native-linear-gradient'
-import COLORS from '../../../constants/theme'
-import { SIZES,FONTS } from '../../../constants/font_size'
+import { COLORS } from '../../../constants'
 
 const NextButton = ({ mainWrapStyle, textValue, gradientColor1=COLORS.leafGreen, gradientColor2=COLORS.disableGreen,onClick }) => {
 

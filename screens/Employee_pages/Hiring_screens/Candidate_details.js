@@ -8,14 +8,12 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {candidateIcon, test} from '../../../assets';
 import BottomUpModal from '../../../components/BottomUpModal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import axios from 'axios';
 import PieChart from 'react-native-pie-chart';
-import {FONTS, SIZES} from '../../../constants/font_size';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {API} from '../../../utility/services';
 import {useRoute} from '@react-navigation/native';
@@ -27,6 +25,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {saveAttemptTest} from '../../../redux/eSignSlice';
+import { COLORS, FONTS } from '../../../constants';
 
 const Candidate_details = props => {
   const {

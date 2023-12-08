@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import COLORS from '../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
@@ -16,7 +15,6 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
-import {FONTS, SIZES} from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   EsignD,
@@ -43,6 +41,8 @@ import {
 // import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';/
 // import { useNavigation  } from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
+import {COLORS, FONTS, SIZES} from '../../constants';
+import {useFocusEffect} from '@react-navigation/native';
 
 const CandidateDashboard = props => {
   const dispatch = useDispatch();
@@ -105,7 +105,6 @@ const CandidateDashboard = props => {
       getEsignData();
     }
   }, []);
-
 
   // getEsignData
   const getEsignData = async () => {
@@ -345,33 +344,25 @@ const CandidateDashboard = props => {
       });
   };
 
- 
-  useMemo(() => {
-    if (props.navigation.isFocused) {
+  useFocusEffect(
+    React.useCallback(() => {
       const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
+        'hardwareBackPress',
         () => {
-          Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
+          Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
             {
-              text: "Cancel",
+              text: 'Cancel',
               onPress: () => null,
-              style: "cancel",
+              style: 'cancel',
             },
-            { text: "YES", onPress: () => BackHandler.exitApp() },
+            {text: 'YES', onPress: () => BackHandler.exitApp()},
           ]);
           return true;
-        }
+        },
       );
       return () => backHandler.remove();
-    }
-  }, []);
-
-  // useFocusEffect(
-  //     React.useCallback(() => {
-  //         // Do something when the screen is focused
-  //         getEsignData()
-  //     }, [])
-  // );
+    }, []),
+  );
 
   return (
     <View style={{flex: 1}}>
@@ -415,7 +406,6 @@ const CandidateDashboard = props => {
           setShow={setShowAlert}
           message={'Document need to be submit after offer letter acceptance'}
         />
-       
 
         {/* <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text> */}
         <View
@@ -448,7 +438,6 @@ const CandidateDashboard = props => {
             onPress={() => {
               // props.navigation.navigate('Candidate_Login'),
               dispatch(candidateAuthActions.logOut());
-              
             }}>
             <Icons
               name="logout"

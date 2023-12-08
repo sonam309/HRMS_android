@@ -1,13 +1,12 @@
 import {View, Text, TouchableOpacity,BackHandler} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FONTS, SIZES} from '../../../constants/font_size';
-import COLORS from '../../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCandidateList} from '../../../redux/eSignSlice';
 import Pdf from 'react-native-pdf';
 import {API} from '../../../utility/services';
 import Loader from '../../../components/Loader';
+import { COLORS, FONTS } from '../../../constants';
 
 const View_Esign_stamp = props => {
   const dispatch = useDispatch();

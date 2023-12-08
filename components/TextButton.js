@@ -6,8 +6,8 @@ import {
   } from 'react-native';
   import React from 'react';
   import LinearGradient from 'react-native-linear-gradient';
-  import COLORS from '../constants/theme';
-  import { SIZES,FONTS } from '../constants/font_size';
+import { COLORS, FONTS } from '../constants';
+
   
   const TextButton = ({
     buttonContainerStyle,

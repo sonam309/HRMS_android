@@ -2,7 +2,6 @@ import { ScrollView, useWindowDimensions, View, Text, TouchableOpacity, StyleShe
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import RenderHtml, { RenderHTML } from 'react-native-render-html';
-import COLORS from '../../../../constants/theme';
 import Icons from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -15,6 +14,7 @@ import { removeElement, isTag } from 'domutils';
 import TextDropdown from '../../../../components/TextDropdown';
 import { TextInput } from 'react-native-gesture-handler';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { COLORS } from '../../../../constants';
 
 
 

@@ -21,7 +21,6 @@ import moment from 'moment';
 import Geolocation from '../../../functions/Geolocation';
 import {DrawerActions} from '@react-navigation/native';
 import Loader from '../../../components/Loader';
-import COLORS from '../../../constants/theme';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API} from '../../../utility/services';
@@ -29,6 +28,7 @@ import Toast from 'react-native-toast-message';
 import {showDevelopmetMode} from '../../../functions/utils';
 import {updatePunchTime} from '../../../redux/punchDetailSlice';
 import {getAttendanceDailyDetails} from '../../../redux/attendaceDetailSlice';
+import { COLORS } from '../../../constants';
 
 const Home = props => {
   var m_names = [

@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import { DrawerActions } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import COLORS from '../../../../constants/theme';
+import { COLORS } from '../../../../constants';
 
 const Approval_actions = ({ navigation }) => {
 

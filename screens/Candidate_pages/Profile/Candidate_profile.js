@@ -8,7 +8,6 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import COLORS from '../../../constants/theme';
 import {approveMark, rejectMark, user_profile} from '../../../assets';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -17,7 +16,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomUpModal from '../../../components/BottomUpModal';
 import QualificationBottomView from './qualificationPages/QualificationBottomView';
-import {FONTS, SIZES} from '../../../constants/font_size';
 import SkillsBottomView from './qualificationPages/SkillsBottomView';
 import LanguageBottomView from './qualificationPages/LanguageBottomView';
 import BankBottomView from './AboutMe/BankBottomView';
@@ -38,6 +36,7 @@ import Toast from 'react-native-toast-message';
 import {launchCamera} from 'react-native-image-picker';
 import axios from 'axios';
 import Header from '../../../components/Header';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 
 const Candidate_profile = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);

@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, editable, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown'
-import { FONTS, SIZES } from '../../../../constants/font_size';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker'
@@ -14,6 +12,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { showAlert, closeAlert } from "react-native-customisable-alert";
 import { responsiveWidth } from 'react-native-responsive-dimensions';
 import { bootstrapAnalyticsAsync } from 'expo-cli';
+import { COLORS, FONTS } from '../../../../constants';
 
 
 const Identifications = (props) => {

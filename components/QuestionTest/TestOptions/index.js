@@ -1,8 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState, useMemo } from 'react'
-import COLORS from '../../../constants/theme'
-import { SIZES } from '../../../constants/font_size'
 import { responsiveHeight } from 'react-native-responsive-dimensions'
+import { COLORS, SIZES } from '../../../constants';
 
 const TestOptions = ({
     key,

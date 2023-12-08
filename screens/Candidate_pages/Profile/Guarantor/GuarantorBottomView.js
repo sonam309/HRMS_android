@@ -1,7 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { FONTS, SIZES } from '../../../../constants/font_size'
-import COLORS from '../../../../constants/theme'
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';

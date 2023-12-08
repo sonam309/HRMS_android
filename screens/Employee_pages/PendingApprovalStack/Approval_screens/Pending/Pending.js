@@ -1,11 +1,11 @@
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
-import COLORS from '../../../../../constants/theme';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../../../../../components/Loader';
 import {API} from '../../../../../utility/services';
+import { COLORS } from '../../../../../constants';
 
 const Pending = props => {
   const {navigation, flag, notificationCat, name} = props;

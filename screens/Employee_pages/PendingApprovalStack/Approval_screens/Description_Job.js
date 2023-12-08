@@ -2,8 +2,8 @@ import Pdf from 'react-native-pdf';
 import { useState } from 'react';
 import Loader from '../../../../components/Loader';
 import { Linking,Text } from 'react-native';
-import COLORS from '../../../../constants/theme';
 import { API } from '../../../../utility/services';
+import { COLORS } from '../../../../constants';
 
 const Description_Job = (props) => {
     const { JD } = props.route.params;

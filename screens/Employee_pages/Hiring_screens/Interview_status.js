@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useCallback, ActivityIndicator } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
-import COLORS from '../../../constants/theme'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import candidateIcon from '../../../assets/images/candidateIcon.png'
 import { useSelector } from 'react-redux'
-import { FONTS } from '../../../constants/font_size'
 import { useFocusEffect } from '@react-navigation/native';
 import { API } from '../../../utility/services'
 import Toast from 'react-native-toast-message';
 import Loader from '../../../components/Loader'
+import { COLORS, FONTS } from '../../../constants'
 
 
 const Interview_status = (props) => {
