@@ -35,8 +35,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Employee_Login = props => {
   const [showVisibility, setShowVisibility] = useState(true);
-  const [userId, setUserId] = useState('17321');
-  const [password, setPassword] = useState('Test@123');
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);

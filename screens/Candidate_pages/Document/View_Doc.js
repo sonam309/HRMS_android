@@ -14,9 +14,11 @@ const View_Doc = (props) => {
     const [loaderVisible, setLoaderVisible] = useState(true);
     const [error, setError] = useState(null)
 
-    // console.log("extention", file);
+    console.log("file", file, error,`${API}/AssesmentDoc/${file}`);
     return (
         // <WebView source={{ uri: `https://econnectsatya.com:7033/AssesmentDoc/${file}` }} style={{ flex: 1 }} />
+
+        
 
         <View style={{
             flex:1 

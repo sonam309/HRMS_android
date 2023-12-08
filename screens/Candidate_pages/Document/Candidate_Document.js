@@ -72,7 +72,7 @@ const Candidate_Document = props => {
       });
 
       res = await res.json();
-      console.log('documentdata', res);
+      // console.log('documentdata', res);
       setLoaderVisible(false);
       let pendingCount = res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded;
       setPendingDocumentCount(pendingCount);
@@ -131,6 +131,7 @@ const Candidate_Document = props => {
         }
       });
     } catch (error) {
+      setLoaderVisible(false);
       Toast.show({
         type: 'error',
         text1: error,
@@ -179,7 +180,7 @@ const Candidate_Document = props => {
         ],
         // allowMultiSelection: true
       });
-      // console.log(type);
+      console.log('type', type);
       if (type == 'Aadhar Card') {
         setFileUpload(current => [
           ...current,
@@ -192,6 +193,7 @@ const Candidate_Document = props => {
             txnId: '',
           },
         ]);
+        console.log('t5635656735763676376783', name);
       } else {
         setFileUpload(current => [
           ...current,
@@ -274,11 +276,15 @@ const Candidate_Document = props => {
     let names = '';
 
     for (let index = 0; index < aadharCard.length; index++) {
-      // console.log("aadhar card", aadharCard[index].uri);
+      console.log('aadhar card', aadharCard[index].uri);
 
       if (aadharCard[index].uri) {
         const element = aadharCard[index];
         names += document[0]?.PARAM_ID + '~' + element.name + ',';
+        console.log(
+          'aadharnameee',
+          (names += document[0]?.PARAM_ID + '~' + element.name + ','),
+        );
       }
     }
 
@@ -438,7 +444,7 @@ const Candidate_Document = props => {
 
         candidateData.attachment = FileAttachment();
 
-        // console.log("candidateDatarwuq", candidateData);
+        console.log('candidateDatarwu2345678q', candidateData);
 
         formData.append('data', JSON.stringify(candidateData));
 
@@ -455,7 +461,7 @@ const Candidate_Document = props => {
         });
 
         res = await res.json();
-        // console.log("SaveImages", res);
+        console.log('SaveImages', res);
         setLoaderVisible(false);
         Toast.show({
           type: 'success',
@@ -463,12 +469,14 @@ const Candidate_Document = props => {
         });
         props.navigation.goBack();
       } else {
+        setLoaderVisible(false);
         Toast.show({
           type: 'error',
           text1: 'Upload Mandatory Documents',
         });
       }
     } catch (error) {
+      console.log('SaveImages', 'error');
       loaderVisible(false);
 
       Toast.show({
@@ -552,7 +560,10 @@ const Candidate_Document = props => {
               </Text>
             )}
 
+           
+
           {file.length < number && (
+          
             <TouchableOpacity onPress={() => selectDoc(setFile, type)}>
               <Ionicons
                 name="add-circle-outline"
@@ -578,7 +589,12 @@ const Candidate_Document = props => {
             {/* {
                                 console.log("dfghjkhvcxsdfcgvbhvcdxcfgvhb",item?.name)
                             } */}
-            <Text style={{width: responsiveWidth(70)}}>{item?.name}</Text>
+            <Text
+              style={{width: responsiveWidth(70)}}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {item?.name}
+            </Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -591,7 +607,7 @@ const Candidate_Document = props => {
                   size={24}
                   color={COLORS.green}
                   onPress={() => {
-                    props.navigation.navigate('View_Doc', {file: item.name, });
+                    props.navigation.navigate('View_Doc', {file: item.name});
                   }}
                 />
               )}
@@ -623,8 +639,6 @@ const Candidate_Document = props => {
 
   // for display other files in front end
   const otherFilesUploader = (file, setFile, type, index, Mandatory) => {
-    console.log('image details', type, index);
-
     return (
       <TouchableOpacity
         style={{
@@ -703,7 +717,13 @@ const Candidate_Document = props => {
               },
             ]}
             key={index}>
-            <Text>{file[index]?.name}</Text>
+            <Text
+              style={{width: responsiveWidth(70)}}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {file[index]?.name}
+            </Text>
+
             <View
               style={{
                 flexDirection: 'row',
@@ -1027,7 +1047,13 @@ const Candidate_Document = props => {
                 'imp',
               )}
               {DocumentUploader(panCard, setPanCard, 1, document[1], 'imp')}
-              {DocumentUploader(salarySlip, setSalarySlip, 1, document[2])}
+              {DocumentUploader(
+                salarySlip,
+                setSalarySlip,
+                1,
+                document[2],
+                experience === 'Yes' && 'imp',
+              )}
 
               {otherFilesUploader(
                 otherFiles,
@@ -1104,7 +1130,7 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[13],
                 10,
-                experience === 'No' && 'imp',
+                // experience === 'No' && 'imp',
               )}
               {otherFilesUploader(
                 otherFiles,

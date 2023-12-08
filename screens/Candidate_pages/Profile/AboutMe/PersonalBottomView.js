@@ -143,7 +143,7 @@ const PersonalBottomView = ({ onPress }) => {
             });
             res = await res.json();
             res = await res?.Result[0];
-            console.log('candidate profile', res);
+            console.log('candidateprofilesssss', res);
             setLoaderVisible(false);
             setFilledDetails(res);
             setApprovalFlag(res?.PERSON_APP_FLAG);

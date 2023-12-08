@@ -330,7 +330,7 @@ const CandidateDashboard = props => {
       .post(`${API}/api/User/completeCanProfile`, userData)
       .then(response => {
         const resultData = response.data;
-        // console.log("finalSubmit", resultData.FLAG);
+        console.log("finalSubmit", resultData);
 
         if (resultData.FLAG === 'S') {
           Toast.show({
