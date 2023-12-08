@@ -33,7 +33,7 @@ const Drawer = createDrawerNavigator();
 function AttendanceStackScreen({navigation}) {
   return (
     <Stack.Navigator initialRouteName={'AttendanceHome'}>
-      {/* <Stack.Screen
+      <Stack.Screen
         name="AttendanceHome"
         component={Attendance}
         headerMode="none"
@@ -41,7 +41,7 @@ function AttendanceStackScreen({navigation}) {
           headerMode: 'none',
           mode: 'none',
         }}
-      /> */}
+      />
       <Stack.Screen
         name="Regulization"
         component={Regulization}
@@ -257,7 +257,7 @@ const EmployeeDrawer = props => {
           ),
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Attendance"
         component={AttendanceStackScreen}
         options={{
@@ -265,7 +265,7 @@ const EmployeeDrawer = props => {
             <Ionicons name="calendar-outline" size={22} color={color} />
           ),
         }}
-      /> */}
+      />
       {/* <Drawer.Screen
         name="Holiday List"
         component={Holiday_list}

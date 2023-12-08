@@ -25,9 +25,8 @@ import {API} from '../../../utility/services';
 import {updatePunchTime} from '../../../redux/punchDetailSlice';
 import Loader from '../../../components/Loader';
 import {useFocusEffect} from '@react-navigation/native';
-import Donut_chart from "../../../assets/images/donut_chart.png"
 import DashBoardHeader from '../../../components/DashBoardHeader';
-
+import Donut_chart from '../../../assets/images/donut_chart.png';
 
 const Attendance = props => {
   var m_names = [
@@ -66,6 +65,7 @@ const Attendance = props => {
 
   const [val, setVal] = useState('');
 
+  const isDateSelected = Object.keys(selectedDate).length > 0 ? true : false;
   const modalData = [
     {
       heading: 'Shift',
@@ -105,7 +105,8 @@ const Attendance = props => {
     },
   ];
 
-  const getDailyAttendanceDetails = async date => {
+  const getDailyAttenceDetails = async date => {
+    console.log('datettette', val);
     const data = {
       userId: userId,
       day: date.day,
@@ -114,6 +115,12 @@ const Attendance = props => {
 
     dispatch(getAttendanceDailyDetails(data));
   };
+
+  useEffect(() => {
+    if (val === ' I' || val === 'O') {
+      loadingData('V');
+    }
+  }, [val]);
 
   const loadingData = async val => {
     // fetching data
@@ -138,39 +145,41 @@ const Attendance = props => {
   };
 
   useEffect(() => {
-    if (val === ' I' || val === 'O') {
-      loadingData('V');
-    }
-  }, [val]);
+    userId && getAttendance();
+    loadingData('V');
+  }, []);
 
   useEffect(() => {
     userId && getAttendance();
     loadingData('V');
   }, [userId]);
 
+  useEffect(() => {
+    count = 0;
+    presentDays = 0;
+    absentDays = 0;
+    getAttendance();
+  }, [selectedMonth]);
+
   const getAttendance = () => {
     setLoaderVisible(true);
-
     axios
       .post(`${API}/api/Admin/Attendance`, {
         userId: userId,
-        monthYear: `${
-          m_names[selectedMonth?.getMonth()]
-        }${selectedMonth?.getFullYear()}`,
+        monthYear: `${m_names[selectedMonth?.getMonth()]}${selectedYear}`,
       })
       .then(response => {
         setLoaderVisible(false);
         const returnedData = response?.data?.Result;
-        let markedDates = {};
-        let count = 0;
-        let presentDays = 0;
-        let absentDays = 0;
 
-        returnedData.forEach(obj => {
+        // Create the final object
+        returnedData.map(obj => {
+          // Extract the date from the DATED field
           const date = moment(obj.DATED, 'MMM DD YYYY hh:mmA').format(
             'YYYY-MM-DD',
           );
 
+          // Determine markedDotColor based on ATTENDANCE_FLAG
           let markedDotColor = '';
           if (obj.ATTENDANCE_FLAG === 'A') {
             markedDotColor = 'red';
@@ -183,26 +192,20 @@ const Attendance = props => {
           } else {
             markedDotColor = '#fff';
           }
-
+          // Add the date as a key to the final object
           markedDates[date] = {marked: true, dotColor: markedDotColor};
-
           if (count < 1) {
             markedDates[date].dotColor === 'red' && (absentDays += 1);
             markedDates[date].dotColor === ('orange' || '#33AA54') &&
               (presentDays += 1);
           }
         });
-
         setMarkedDate(markedDates);
         count = 1;
         setPresent(presentDays);
         setAbsent(absentDays);
       });
   };
-
-  useEffect(() => {
-    getAttendance();
-  }, [userId, selectedMonth]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -214,6 +217,7 @@ const Attendance = props => {
     <View style={styles.container}>
       <DashBoardHeader />
       <Loader loaderVisible={loaderVisible} />
+
       <ScrollView>
         <View style={styles.centeredView}>
           <Modal
@@ -257,53 +261,54 @@ const Attendance = props => {
         </View>
         <View>
           {/* Main Content-Calendar */}
-
           <Calendar
             initialDate=""
             style={{
               marginBottom: 20,
-              backgroundColor: COLORS.white,
               justifyContent: 'center',
               marginTop: 10,
-              borderWidth: 1,
-              marginHorizontal: 10,
-              borderColor: COLORS.lightGray,
-              borderRadius: 10,
             }}
             theme={{
               arrowColor: COLORS.black,
               monthTextColor: COLORS.black,
-              textSectionTitleColor: COLORS.darkGray2,
+              textSectionTitleColor: COLORS.black,
             }}
             markedDates={markedDate}
             onMonthChange={month => {
+              setSelectedYear(month.year);
               setSelectedMonth(new Date(month?.dateString));
             }}
-            dayComponent={({date, marking}) => {
+            dayComponent={({date, state, marking}) => {
               const isSelectedDate = selectedDate.dateString == date.dateString;
               return (
                 <TouchableOpacity
                   onPress={() => {
+                    console.log(date.dateString);
                     setSelectedDate(date);
                   }}
                   onLongPress={() => {
-                    getDailyAttendanceDetails(date);
+                    getDailyAttenceDetails(date);
                     setModalVisible(true);
+                    console.log('selected day', date.day);
                   }}
                   style={{
                     alignItems: 'center',
-                    borderRadius: isSelectedDate ? 20 : 0,
-                    height: 40,
-                    width: 40,
-                    justifyContent: 'center',
-                    backgroundColor: isSelectedDate ? COLORS.lightBlue : '#fff',
+                    padding: 8,
+                    // borderBottomWidth: 0.5,
+                    borderRadius:
+                      selectedDate.dateString == date.dateString ? 50 : 0,
+                    width: 50,
+                    backgroundColor:
+                      selectedDate.dateString == date.dateString
+                        ? COLORS.lightBlue
+                        : '#fff',
                   }}>
                   <Text
                     style={{
                       fontSize: 16,
                       paddingBottom: marking ? 0 : 11,
-                      color: isSelectedDate ? '#fff' : COLORS.darkGray2,
-                      fontWeight: '400',
+                      color:
+                        selectedDate.dateString == date.dateString && '#fff',
                     }}>
                     {' '}
                     {date.day}{' '}
@@ -311,8 +316,8 @@ const Attendance = props => {
                   {marking && marking.dotColor === 'orange' ? (
                     <View
                       style={{
-                        height: 5,
-                        width: 5,
+                        height: 10,
+                        width: 10,
                         borderRadius: 5,
                         overflow: 'hidden',
                         transform: [{rotate: '90deg'}],
@@ -322,15 +327,15 @@ const Attendance = props => {
                       <View
                         style={{
                           backgroundColor: '#DDE6ED',
-                          height: 2.5,
-                          width: 5,
+                          height: 5,
+                          width: 10,
                         }}
                       />
                       <View
                         style={{
                           backgroundColor: '#88C385',
-                          height: 2.5,
-                          width: 5,
+                          height: 5,
+                          width: 10,
                         }}
                       />
                     </View>
@@ -338,8 +343,8 @@ const Attendance = props => {
                     marking && (
                       <View
                         style={{
-                          height: 5,
-                          width: 5,
+                          height: 10,
+                          width: 10,
                           backgroundColor: marking?.dotColor
                             ? marking.dotColor
                             : '#87CEEB',
@@ -437,18 +442,15 @@ const Attendance = props => {
 
           {/* Regulization */}
 
-          <View style={{marginTop: 20, marginBottom: 30}}>
+          <View style={{paddingTop: 20, marginBottom: 30}}>
             <View
               style={{
+                flex: 1,
                 flexDirection: 'row',
+                alignItems: 'center',
                 justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
-                // disabled={Object.keys(selectedDate).length > 0 ? false : true}
-                style={[
-                  styles.regilizationBtn,
-                  {backgroundColor: '#28B463', borderColor: '#239B56'},
-                ]}
                 onPress={() => {
                   if (!Object.keys(selectedDate).length > 0) {
                     Toast.show({
@@ -464,27 +466,130 @@ const Attendance = props => {
                       },
                     });
                   }
+                }}
+                style={{
+                  backgroundColor:
+                    Object.keys(selectedDate).length > 0
+                      ? COLORS.disableOrange1
+                      : '#F1F1F1',
+                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
                 }}>
-                <Text style={styles.regilizationTxt}>Regulization</Text>
+                <View
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected
+                      ? COLORS.disableOrange1
+                      : COLORS.lightGray,
+                    borderRadius: 100,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/leave.png')}
+                    style={{
+                      height: 60,
+                      width: 60,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
+                  Regularize
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={[
-                  styles.regilizationBtn,
-                  {backgroundColor: '#EB984E', borderColor: '#E67E22'},
-                ]}>
-                <Text style={styles.regilizationTxt}>Outdoor</Text>
+                style={{
+                  backgroundColor:
+                    Object.keys(selectedDate).length > 0
+                      ? COLORS.disableOrange1
+                      : '#F1F1F1',
+                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
+                }}>
+                <Image
+                  source={require('../../../assets/images/briefcase.png')}
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected
+                      ? COLORS.disableOrange1
+                      : COLORS.lightGray,
+                    borderRadius: 100,
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
+                  Outdoor
+                </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={[
-                  styles.regilizationBtn,
-                  {backgroundColor: '#5DADE2', borderColor: '#3498DB'},
-                ]}
                 onPress={() =>
                   props.navigation.navigate('Attendance', {
                     screen: 'Leave',
                   })
-                }>
-                <Text style={styles.regilizationTxt}>Leave</Text>
+                }
+                style={{
+                  backgroundColor:
+                    Object.keys(selectedDate).length > 0
+                      ? COLORS.disableOrange1
+                      : '#F1F1F1',
+                  borderRadius: 10,
+                  padding: 10,
+                  width: responsiveWidth(90) / 3.5,
+                  height: 100,
+                }}>
+                <View
+                  style={{
+                    height: 60,
+                    width: 60,
+                    position: 'absolute',
+                    top: -20,
+                    backgroundColor: isDateSelected
+                      ? COLORS.disableOrange1
+                      : COLORS.lightGray,
+                    borderRadius: 100,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/outdoor.png')}
+                    style={{
+                      height: 60,
+                      width: 60,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    marginTop: 20,
+                    ...FONTS.h3,
+                    color: isDateSelected ? COLORS.black : COLORS.gray,
+                    marginTop: 60,
+                  }}>
+                  Leave
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -588,12 +693,12 @@ const styles = StyleSheet.create({
   regilizationBtn: {
     paddingLeft: 8,
     paddingRight: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: 'center',
     elevation: 6,
     color: 'white',
     width: responsiveWidth(30),
     flex: 1,
+    textAlign: 'center',
     marginHorizontal: 5,
     borderRadius: 20,
     borderWidth: 1,
@@ -601,9 +706,6 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     fontSize: 14,
     fontWeight: 500,
-  },
-  regilizationTxt: {
-    color: '#fff',
   },
   modalWrap: {
     minWidth: 100,

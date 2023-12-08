@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import COLORS from '../../constants/theme';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -14,6 +14,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import {FONTS, SIZES} from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,6 +25,7 @@ import {
   company_logo_2,
   profileIC,
   test,
+  user_profile,
 } from '../../assets';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useSelector, useDispatch} from 'react-redux';
@@ -62,7 +64,6 @@ const CandidateDashboard = props => {
   } = useSelector(state => state.candidateAuth);
 
   const [showAlert, setShowAlert] = useState(false);
-  const [exitAlert, setExitAlert] = useState(false);
   const [profileAlert, setProfileAlert] = useState(false);
   const [offerLetterAlert, setOfferLetterAlert] = useState(false);
   const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
@@ -93,7 +94,6 @@ const CandidateDashboard = props => {
   useEffect(() => {
     if (employeeCreateFlag === 'Y') {
       getEsignData();
-
     }
   }, [employeeCreateFlag]);
 
@@ -107,17 +107,6 @@ const CandidateDashboard = props => {
     }
   }, []);
 
-  //     useEffect(() => {
-
-  //         // if (isFocused) {
-  //             if (candidateId) {
-  //                 getEsignData();
-  //             }
-  // //
-  //         }
-  //     }, [candidateId])
-
-  // getEsignData
   const getEsignData = async () => {
     // setLoaderVisible(true);
     const data = {
@@ -130,10 +119,32 @@ const CandidateDashboard = props => {
 
     axios.post(`${API}/api/saveEsignDataNew`, data).then(response => {
       const result = response.data.Result;
-      console.log("esignDatasssss", result[0]);
+      console.log('esignDatasssss', result[0]);
       setEsignCount(result[0]?.ESSIGN_CNT);
       // setLoaderVisible(false);
     });
+  };
+
+  const getProfilePic = () => {
+    let profilePicData = {
+      candidateId: `${userId}`,
+      operFlag: 'V',
+    };
+
+    var formData = new FormData();
+
+    formData.append('data', JSON.stringify(profilePicData));
+
+    axios
+      .post(`${API}api/hrms/profilePic`, formData, {
+        headers: {'Content-Type': 'multipart/form-data'},
+      })
+      .then(res => {
+        setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
+      })
+      .catch(error => {
+        console.log('profilepic', JSON.stringify(error));
+      });
   };
 
   const getCandidateOfferDetails = async type => {
@@ -313,9 +324,9 @@ const CandidateDashboard = props => {
               console.log(error);
               setLoaderVisible(false);
               Toast.show({
-                type:'error',
-                text1:error
-              })
+                type: 'error',
+                text1: error,
+              });
             });
         }
       });
@@ -330,7 +341,7 @@ const CandidateDashboard = props => {
       .post(`${API}/api/User/completeCanProfile`, userData)
       .then(response => {
         const resultData = response.data;
-        console.log("finalSubmit", resultData);
+        console.log('finalSubmit', resultData);
 
         if (resultData.FLAG === 'S') {
           Toast.show({
@@ -355,22 +366,24 @@ const CandidateDashboard = props => {
       });
   };
 
-  useEffect(() => {
-    // for handling back button in android
-
-    const backAction = () => {
-      if (props.navigation.isFocused()) {
-        setExitAlert(true);
-      }
-    };
-
-    const backPressHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-    return () => {
-      backPressHandler.remove();
-    };
+  useMemo(() => {
+    if (props.navigation.isFocused) {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {text: 'YES', onPress: () => BackHandler.exitApp()},
+          ]);
+          return true;
+        },
+      );
+      return () => backHandler.remove();
+    }
   }, []);
 
   // useFocusEffect(
@@ -422,13 +435,13 @@ const CandidateDashboard = props => {
           setShow={setShowAlert}
           message={'Document need to be submit after offer letter acceptance'}
         />
-        <CustomAlert
+        {/* <CustomAlert
           show={exitAlert}
           setShow={setExitAlert}
           title={'Wait'}
           message={'Are you sure, you want to exit the App?'}
           onConfirmPressed={() => BackHandler.exitApp()}
-        />
+        /> */}
 
         {/* <Text style={{ ...FONTS.h2, color: COLORS.orange1, textAlignVertical: 'center', marginTop: 10 }}>Welcome</Text> */}
         <View
@@ -446,12 +459,32 @@ const CandidateDashboard = props => {
               alignItems: 'center',
               flex: 1,
             }}>
-            <FontAwesomeIcon
+            {/* <FontAwesomeIcon
               name="user-circle-o"
               size={25}
               color={COLORS.black}
+            /> */}
+            {console.log("ProflileImage",`${API}/ProfilePic/${profilePic}`)}
+
+            <Image
+              source={
+                profilePic
+                  ? {uri: `${API}/ProfilePic/${profilePic}`}
+                  : user_profile
+              }
+              resizeMode='contain'
+              style={{
+                width: 35,
+                height: 35,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderWidth:0.5,
+                borderColor:COLORS.green,
+                borderRadius:50,
+              }}
             />
-            <Text style={{...FONTS.h3, color: COLORS.black, marginLeft: 8}}>
+
+            <Text style={{...FONTS.h3, color: COLORS.black, marginLeft: 8, justifyContent:'center',}}>
               {candidateName}
             </Text>
           </View>
@@ -460,7 +493,7 @@ const CandidateDashboard = props => {
             style={{justifyContent: 'flex-end', backgroundColor: COLORS.white}}
             onPress={() => {
               // props.navigation.navigate('Candidate_Login'),
-                dispatch(candidateAuthActions.logOut());
+              dispatch(candidateAuthActions.logOut());
             }}>
             <Icons
               name="logout"
@@ -646,6 +679,11 @@ const CandidateDashboard = props => {
                   elevation: 2,
                 }}>
                 <Image
+                  // source={
+                  //   profilePic
+                  //     ? {uri: `${API}/ProfilePic/${profilePic}`}
+                  //     : EsignD
+                  // }
                   source={EsignD}
                   style={{
                     width: 60,

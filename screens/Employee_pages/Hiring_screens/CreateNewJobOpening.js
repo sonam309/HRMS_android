@@ -171,7 +171,7 @@ const CreateNewJobOpening = props => {
     if (
       selectedTitleValue === '' ||
       selectedTitleValue === '0' ||
-      selectedTitle === '--Select State--' ||
+      selectedTitle === '--Select Post--' ||
       selectedStateValue === '' ||
       selectedStateValue === '0' ||
       selectedState === '--Select State--' ||

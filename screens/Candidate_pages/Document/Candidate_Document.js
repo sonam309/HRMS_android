@@ -72,7 +72,7 @@ const Candidate_Document = props => {
       });
 
       res = await res.json();
-      // console.log('documentdata', res);
+      console.log('documentdata', res);
       setLoaderVisible(false);
       let pendingCount = res?.Table1[0]?.Pending - res?.Table1[0]?.Uploaded;
       setPendingDocumentCount(pendingCount);
@@ -180,7 +180,7 @@ const Candidate_Document = props => {
         ],
         // allowMultiSelection: true
       });
-      console.log('type', type);
+      // console.log(type);
       if (type == 'Aadhar Card') {
         setFileUpload(current => [
           ...current,
@@ -240,7 +240,7 @@ const Candidate_Document = props => {
         type: imgType,
       });
 
-      // console.log(doc);
+      console.log("docsize",doc);
 
       setOtherFiles([
         ...otherFiles.slice(0, index),
@@ -276,15 +276,11 @@ const Candidate_Document = props => {
     let names = '';
 
     for (let index = 0; index < aadharCard.length; index++) {
-      console.log('aadhar card', aadharCard[index].uri);
+      // console.log("aadhar card", aadharCard[index].uri);
 
       if (aadharCard[index].uri) {
         const element = aadharCard[index];
         names += document[0]?.PARAM_ID + '~' + element.name + ',';
-        console.log(
-          'aadharnameee',
-          (names += document[0]?.PARAM_ID + '~' + element.name + ','),
-        );
       }
     }
 
@@ -444,7 +440,7 @@ const Candidate_Document = props => {
 
         candidateData.attachment = FileAttachment();
 
-        console.log('candidateDatarwu2345678q', candidateData);
+        // console.log("candidateDatarwuq", candidateData);
 
         formData.append('data', JSON.stringify(candidateData));
 
@@ -461,7 +457,7 @@ const Candidate_Document = props => {
         });
 
         res = await res.json();
-        console.log('SaveImages', res);
+        // console.log("SaveImages", res);
         setLoaderVisible(false);
         Toast.show({
           type: 'success',
@@ -476,7 +472,6 @@ const Candidate_Document = props => {
         });
       }
     } catch (error) {
-      console.log('SaveImages', 'error');
       loaderVisible(false);
 
       Toast.show({
@@ -560,10 +555,7 @@ const Candidate_Document = props => {
               </Text>
             )}
 
-           
-
           {file.length < number && (
-          
             <TouchableOpacity onPress={() => selectDoc(setFile, type)}>
               <Ionicons
                 name="add-circle-outline"
