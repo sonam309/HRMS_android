@@ -11,11 +11,11 @@ import axios from 'axios';
 import BoldText from '../../utility/BoldText';
 import {mobile_otp} from '../../assets';
 import {useSelector} from 'react-redux';
-import COLORS from '../../constants/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../components/Loader';
 import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
+import {COLORS} from '../../constants';
 
 const Otp_Verification = props => {
   const {contact, otp, type, userId} = props.route.params;
@@ -68,16 +68,9 @@ const Otp_Verification = props => {
 
   //forgetPassword api Call
   const forgetPasswordApi = () => {
-    setF1('');
-    setF2('');
-    setF3('');
-    setF4('');
-    setF5('');
-    setF6('');
-
     setLoaderVisible(true);
     let otp = RandomNumber('6');
-    console.log('otpppppp', otp + ' $ ' + userId + ' ' + operFlag);
+    // console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
     axios
       .get(`${API}/api/GetMobileNo`, {
         params: {
@@ -90,7 +83,7 @@ const Otp_Verification = props => {
       .then(response => {
         const returnedData = response.data.Result;
         setLoaderVisible(false);
-        console.log(returnedData);
+        // console.log(returnedData);
         let result = returnedData.map(a => a.FLAG);
         let contact = returnedData.map(b => b.MSG);
         setsendOtp(otp);
@@ -98,12 +91,12 @@ const Otp_Verification = props => {
         if (result[0] == 'S') {
           Toast.show({
             type: 'success',
-            text1: 'OTP has been sent Successfully',
+            text1: 'success',
           });
         } else {
           Toast.show({
             type: 'error',
-            text1: 'Please try again!',
+            text1: 'error',
           });
         }
       });
@@ -119,10 +112,6 @@ const Otp_Verification = props => {
       props.navigation.navigate('ForgetPassword', {type, userId});
       setLoaderVisible(false);
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Please Enter valid OTP',
-      });
       setLoaderVisible(false);
     }
   };

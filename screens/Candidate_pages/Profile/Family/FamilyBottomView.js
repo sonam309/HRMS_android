@@ -9,8 +9,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import COLORS from '../../../../constants/theme';
-import {FONTS, SIZES} from '../../../../constants/font_size';
+import { COLORS, FONTS, SIZES } from '../../../../constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
 import {useSelector} from 'react-redux';

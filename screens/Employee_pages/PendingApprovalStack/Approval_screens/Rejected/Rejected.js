@@ -1,9 +1,9 @@
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import COLORS from '../../../../../constants/theme';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {API} from '../../../../../utility/services';
+import {COLORS} from '../../../../../constants';
 
 const Rejected = props => {
   const {navigation, flag, notificationCat, name} = props;

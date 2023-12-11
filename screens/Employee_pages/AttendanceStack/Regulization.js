@@ -6,14 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState} from 'react';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import COLORS from '../../../constants/theme';
-import {FONTS} from '../../../constants/font_size';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  emptyRegularizationRes,
   getAttendanceDailyDetails,
   saveRegulization,
 } from '../../../redux/attendaceDetailSlice';
@@ -25,19 +22,14 @@ import Toast from 'react-native-toast-message';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CustomIconInput from '../../../components/CustomIconInput';
-import Loader from '../../../components/Loader';
+import {COLORS, FONTS} from '../../../constants';
 
 const Regulization = ({navigation, route}) => {
   const selectDate = route.params.selectedDate;
   const dispatch = useDispatch();
   const {userId, userName} = useSelector(state => state.auth);
-  const {
-    attendanceDailyDataList,
-    attendanceLoading,
-    calanderloading,
-    regulizationLoding,
-    regularizationRes,
-  } = useSelector(state => state.attendaceDetail);
+  const {attendanceDailyDataList, attendanceLoading, calanderloading} =
+    useSelector(state => state.attendaceDetail);
 
   const [reason, setReason] = useState([]);
   const [selectReason, setSelectReason] = useState('');
@@ -68,46 +60,19 @@ const Regulization = ({navigation, route}) => {
   }, []);
 
   const saveRegulizationDetails = async => {
-    if (!selectReason) {
-      Toast.show({
-        type: 'error',
-        text1: 'Please enter Valid Reason',
-      });
-    } else if (!selectDate) {
-      Toast.show({
-        type: 'error',
-        text1: 'Please select valid date',
-      });
-    } else if (reguInTime === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'Please select valid In time',
-      });
-    } else if (reguOutTime === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'Please select valid Out time',
-      });
-    } else if (descriptionStr === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'Please enter valid description',
-      });
-    } else {
-      const data = {
-        txnId: '',
-        userId: userId,
-        action: '',
-        reason: selectReason,
-        regulizeDate: selectDate,
-        inTime: reguInTime,
-        outTime: reguOutTime,
-        description: descriptionStr,
-        operFlag: 'A',
-      };
+    const data = {
+      txnId: '',
+      userId: userId,
+      action: '',
+      reason: selectReason,
+      regulizeDate: selectDate,
+      inTime: reguInTime,
+      outTime: reguOutTime,
+      description: '',
+      operFlag: 'A',
+    };
 
-      dispatch(saveRegulization(data));
-    }
+    dispatch(saveRegulization(data));
   };
 
   const getDailyAttenceDetails = async => {
@@ -163,17 +128,6 @@ const Regulization = ({navigation, route}) => {
     setReguOutTime(moment(timestamp).format('hh:mm a'));
   };
 
-  useMemo(() => {
-    if (regularizationRes?.FLAG === 'S') {
-      Toast.show({
-        type: 'success',
-        text1: regularizationRes?.MSG,
-      });
-      dispatch(emptyRegularizationRes());
-      navigation.goBack();
-    }
-  }, [regularizationRes]);
-
   return (
     <View
       style={{
@@ -201,7 +155,7 @@ const Regulization = ({navigation, route}) => {
           {selectDate.year}
         </Text>
       </View>
-      <Loader loaderVisible={regulizationLoding} />
+
       {/* shift Information details for regularization */}
 
       <View
@@ -221,7 +175,7 @@ const Regulization = ({navigation, route}) => {
             }}>
             <View>
               <Text style={[styles.titleText, {color: COLORS.darkGray2}]}>
-                Scheduled 
+                Scheduled
               </Text>
               <Text style={[styles.titleText, {marginTop: -5}]}>
                 {attendanceDailyDataList.SHIFTTIME}
@@ -445,7 +399,7 @@ const Regulization = ({navigation, route}) => {
           flexDirection: 'row',
         }}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => Toast.show({type: 'error', text1: 'Cancel'})}
           style={{
             backgroundColor: COLORS.red,
             width: '45%',
@@ -472,7 +426,7 @@ const Regulization = ({navigation, route}) => {
           }}>
           <Text
             style={{color: COLORS.white, ...FONTS.body4, textAlign: 'center'}}>
-            {regulizationLoding ? 'Loading...' : 'APPLY'}
+            APPLY
           </Text>
         </TouchableOpacity>
       </View>

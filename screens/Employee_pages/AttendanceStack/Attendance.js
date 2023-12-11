@@ -13,8 +13,6 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LeaveBalanceList from '../../../data/LeaveBalanceList';
 import LinearGradient from 'react-native-linear-gradient';
-import COLORS from '../../../constants/theme';
-import {FONTS} from '../../../constants/font_size';
 import Toast from 'react-native-toast-message';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {getAttendanceDailyDetails} from '../../../redux/attendaceDetailSlice';
@@ -27,6 +25,7 @@ import Loader from '../../../components/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import DashBoardHeader from '../../../components/DashBoardHeader';
 import Donut_chart from '../../../assets/images/donut_chart.png';
+import {COLORS, FONTS} from '../../../constants';
 
 const Attendance = props => {
   var m_names = [

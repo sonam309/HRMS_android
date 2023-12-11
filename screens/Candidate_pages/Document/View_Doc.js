@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { WebView } from 'react-native-webview';
 import Pdf from 'react-native-pdf';
 import Loader from '../../../components/Loader'
-import COLORS from '../../../constants/theme';
-import { FONTS } from '../../../constants/font_size';
+import { COLORS, FONTS } from '../../../constants';
 import { Text } from 'react-native';
 import { API } from '../../../utility/services';
 import { View } from 'react-native';

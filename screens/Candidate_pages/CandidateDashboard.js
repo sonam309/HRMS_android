@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import COLORS from '../../constants/theme';
+import {COLORS, FONTS, SIZES} from '../../constants';
+import {useFocusEffect} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
@@ -16,7 +17,6 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
-import {FONTS, SIZES} from '../../constants/font_size';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   EsignD,
@@ -366,8 +366,8 @@ const CandidateDashboard = props => {
       });
   };
 
-  useMemo(() => {
-    if (props.navigation.isFocused) {
+  useFocusEffect(
+    React.useCallback(() => {
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         () => {
@@ -383,15 +383,8 @@ const CandidateDashboard = props => {
         },
       );
       return () => backHandler.remove();
-    }
-  }, []);
-
-  // useFocusEffect(
-  //     React.useCallback(() => {
-  //         // Do something when the screen is focused
-  //         getEsignData()
-  //     }, [])
-  // );
+    }, []),
+  );
 
   return (
     <View style={{flex: 1}}>
@@ -464,7 +457,7 @@ const CandidateDashboard = props => {
               size={25}
               color={COLORS.black}
             /> */}
-            {console.log("ProflileImage",`${API}/ProfilePic/${profilePic}`)}
+            {console.log('ProflileImage', `${API}/ProfilePic/${profilePic}`)}
 
             <Image
               source={
@@ -472,19 +465,25 @@ const CandidateDashboard = props => {
                   ? {uri: `${API}/ProfilePic/${profilePic}`}
                   : user_profile
               }
-              resizeMode='contain'
+              resizeMode="contain"
               style={{
                 width: 35,
                 height: 35,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderWidth:0.5,
-                borderColor:COLORS.green,
-                borderRadius:50,
+                borderWidth: 0.5,
+                borderColor: COLORS.green,
+                borderRadius: 50,
               }}
             />
 
-            <Text style={{...FONTS.h3, color: COLORS.black, marginLeft: 8, justifyContent:'center',}}>
+            <Text
+              style={{
+                ...FONTS.h3,
+                color: COLORS.black,
+                marginLeft: 8,
+                justifyContent: 'center',
+              }}>
               {candidateName}
             </Text>
           </View>

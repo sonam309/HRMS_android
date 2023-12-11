@@ -2,8 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import COLORS from '../../constants/theme';
-import { SIZES,FONTS } from '../../constants/font_size';
+import {COLORS, FONTS, SIZES} from '../../constants';
 
 const TextDropdown = ({
   caption,
@@ -23,8 +22,10 @@ const TextDropdown = ({
   };
 
   return (
-    <View style={{marginVertical: SIZES.base,}}>
-      <Text style={{...FONTS.h3, fontWeight: '500',...captionStyle}}>{caption}</Text>
+    <View style={{marginVertical: SIZES.base}}>
+      <Text style={{...FONTS.h3, fontWeight: '500', ...captionStyle}}>
+        {caption} 
+      </Text>
       <SelectDropdown
         dropdownStyle={{
           backgroundColor: COLORS.white,

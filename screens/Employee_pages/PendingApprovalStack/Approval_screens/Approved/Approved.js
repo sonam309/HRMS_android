@@ -1,10 +1,9 @@
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import COLORS from '../../../../../constants/theme';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {API} from '../../../../../utility/services';
-import {FONTS} from '../../../../../constants/font_size';
+import {COLORS, FONTS} from '../../../../../constants';
 
 const Approved = props => {
   const {navigation, flag, notificationCat, name} = props;

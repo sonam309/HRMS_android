@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import COLORS from '../../../../constants/theme';
-import {FONTS, SIZES} from '../../../../constants/font_size';
+import {COLORS, FONTS, SIZES} from '../../../../constants';
 import {useSelector} from 'react-redux';
 import Loader from '../../../../components/Loader';
 import {API} from '../../../../utility/services';

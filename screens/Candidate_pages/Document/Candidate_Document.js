@@ -1,7 +1,6 @@
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import COLORS from '../../../constants/theme';
-import {FONTS, SIZES} from '../../../constants/font_size';
+import { COLORS, FONTS, SIZES } from '../../../constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';

@@ -8,14 +8,13 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
-import COLORS from '../../../../constants/theme';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import SelectDropdown from 'react-native-select-dropdown';
-import { FONTS, SIZES } from '../../../../constants/font_size';
-import { API } from '../../../../utility/services';
+import {COLORS, FONTS, SIZES} from '../../../../constants';
+import {API} from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import WebView from 'react-native-webview';
@@ -26,12 +25,12 @@ import {
 } from 'react-native-responsive-dimensions';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Pdf from 'react-native-pdf';
-import { showAlert, closeAlert } from 'react-native-customisable-alert';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {showAlert, closeAlert} from 'react-native-customisable-alert';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 
-const BankBottomView = ({ onPress }) => {
+const BankBottomView = ({onPress}) => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
 
   const [filledDetails, setFilledDetails] = useState();
@@ -88,20 +87,20 @@ const BankBottomView = ({ onPress }) => {
     filledDetails &&
       // (filledDetails.ACCOUNT_NO ? setOperFlag("G") : setOperFlag("B")),
       (setAccountHolder(filledDetails?.ACCOUNT_HOLDER_NAME),
-        setAccountNo(filledDetails?.ACCOUNT_NO),
-        setCAccountNo(filledDetails?.ACCOUNT_NO),
-        setBranchName(filledDetails?.BRANCH_NAME),
-        setIFSCCode(filledDetails?.IFSC_CODE),
-        setSelectedBank(filledDetails?.BANK_NAME),
-        setSelectedAccountType(filledDetails?.ACCOUNT_TYPE),
-        setSelectedOperation(filledDetails?.OPERATION_TYPE),
-        setSelectedBankValue(filledDetails?.BANK_NAME_ID),
-        setSelectedAccountTypeValue(filledDetails?.ACCOUNT_TYPE_ID),
-        setSelectedOperationValue(filledDetails?.OPERATION_ID));
+      setAccountNo(filledDetails?.ACCOUNT_NO),
+      setCAccountNo(filledDetails?.ACCOUNT_NO),
+      setBranchName(filledDetails?.BRANCH_NAME),
+      setIFSCCode(filledDetails?.IFSC_CODE),
+      setSelectedBank(filledDetails?.BANK_NAME),
+      setSelectedAccountType(filledDetails?.ACCOUNT_TYPE),
+      setSelectedOperation(filledDetails?.OPERATION_TYPE),
+      setSelectedBankValue(filledDetails?.BANK_NAME_ID),
+      setSelectedAccountTypeValue(filledDetails?.ACCOUNT_TYPE_ID),
+      setSelectedOperationValue(filledDetails?.OPERATION_ID));
 
     if (filledDetails?.FILE_ATTACHMENT !== null) {
       filledDetails?.FILE_ATTACHMENT?.split(',').map(file => {
-        setSelectedDoc(prevState => [...prevState, { name: file }]);
+        setSelectedDoc(prevState => [...prevState, {name: file}]);
       });
     }
   };
@@ -126,7 +125,6 @@ const BankBottomView = ({ onPress }) => {
       selectedOperationValue === '' ||
       selectedBankValue === '' ||
       selectedAccountTypeValue === '' ||
-      
       selectedDoc.length < 1
     ) {
       return false;
@@ -148,7 +146,7 @@ const BankBottomView = ({ onPress }) => {
   const fetchPersonalData = async () => {
     try {
       setLoaderVisible(true);
-      let PersonalData = { operFlag: 'V', candidateId: userId };
+      let PersonalData = {operFlag: 'V', candidateId: userId};
       var formData = new FormData();
       // console.log(PersonalData);
       formData.append('data', JSON.stringify(PersonalData));
@@ -214,11 +212,8 @@ const BankBottomView = ({ onPress }) => {
   const saveBankDetails = async operFlag => {
     if (ValidateForm()) {
       try {
-        if (
-          banKValidateUserName !== undefined &&
-          banKValidateUserName !== ''
-        ) {
-          let fileName = filingHandleName()
+        if (banKValidateUserName !== undefined && banKValidateUserName !== '') {
+          let fileName = filingHandleName();
           let bankData = {
             txnId: userId,
             operFlag: operFlag,
@@ -259,8 +254,7 @@ const BankBottomView = ({ onPress }) => {
             type: 'success',
             text1: res,
           });
-        }
-        else {
+        } else {
           setLoaderVisible(false);
           Toast.show({
             type: 'error',
@@ -332,8 +326,9 @@ const BankBottomView = ({ onPress }) => {
         setSelectedDoc(current => [
           ...current,
           {
-            name: `bankDoc_${userId}_${getFormattedTimestamp()}.${doc[0].type.split('/')[1]
-              }`,
+            name: `bankDoc_${userId}_${getFormattedTimestamp()}.${
+              doc[0].type.split('/')[1]
+            }`,
             type: doc[0].type,
             uri: doc[0].uri,
           },
@@ -372,10 +367,10 @@ const BankBottomView = ({ onPress }) => {
     }
   };
 
-  const DisplayBankDocs = ({ doc, key }) => {
+  const DisplayBankDocs = ({doc, key}) => {
     return (
-      <View key={key} style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
-        <Text style={{ flex: 1, flexWrap: 'wrap' }}>
+      <View key={key} style={{flexDirection: 'row', paddingHorizontal: 5}}>
+        <Text style={{flex: 1, flexWrap: 'wrap'}}>
           {doc?.name?.slice(0, 27)}
         </Text>
         {/* <TouchableOpacity onPress={() => DeleteDocs(doc)} style={{flex: 0.09}}>
@@ -385,7 +380,7 @@ const BankBottomView = ({ onPress }) => {
           onPress={() => {
             setShowDoc(doc?.name);
           }}
-          style={{ flex: 0.09 }}>
+          style={{flex: 0.09}}>
           <Icon name="eye" size={16} color={COLORS.orange1} />
         </TouchableOpacity>
       </View>
@@ -421,7 +416,7 @@ const BankBottomView = ({ onPress }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <View
         style={{
           flexDirection: 'row',
@@ -429,8 +424,8 @@ const BankBottomView = ({ onPress }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...FONTS.h3, fontSize: 20, color: COLORS.orange }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={{...FONTS.h3, fontSize: 20, color: COLORS.orange}}>
             Bank Detials
           </Text>
           {approvalFlag === 'R' ? (
@@ -449,7 +444,7 @@ const BankBottomView = ({ onPress }) => {
                 name="alert-circle-outline"
                 size={25}
                 color={COLORS.red}
-                style={{ marginLeft: 10 }}
+                style={{marginLeft: 10}}
               />
             </TouchableOpacity>
           ) : (
@@ -461,7 +456,7 @@ const BankBottomView = ({ onPress }) => {
         </TouchableOpacity>
       </View>
       {loaderVisible ? (
-        <View style={{ alignItems: 'center', marginTop: '30%' }}>
+        <View style={{alignItems: 'center', marginTop: '30%'}}>
           <ActivityIndicator color={COLORS.orange1} />
           <Text
             style={{
@@ -516,17 +511,17 @@ const BankBottomView = ({ onPress }) => {
                 {showDoc.split('.')[1] == 'pdf' ? (
                   <Pdf
                     trustAllCerts={false}
-                    source={{ uri: `${API}/BankDoc/${showDoc}` }}
+                    source={{uri: `${API}/BankDoc/${showDoc}`}}
                     minScale={0.5}
                     spacing={15}
-                    style={{ flex: 1, width: '100%' }}
+                    style={{flex: 1, width: '100%'}}
                   />
                 ) : (
                   <WebView
                     source={{
                       uri: `${API}/BankDoc/${showDoc}`,
                     }}
-                  // style={{height: '100%', width: '100%'}}
+                    // style={{height: '100%', width: '100%'}}
                   />
                 )}
               </View>
@@ -537,7 +532,7 @@ const BankBottomView = ({ onPress }) => {
               behavior={'padding'}
               enableAutomaticScroll={true}
               keyboardShouldPersistTaps={'always'}
-              style={{ flex: 1, marginBottom: 170 }}
+              style={{flex: 1, marginBottom: 170}}
               contentContainerStyle={{
                 paddingBottom: 170,
               }}
@@ -548,7 +543,7 @@ const BankBottomView = ({ onPress }) => {
                 setData={setSelectedAccountType}
                 setIdvalue={setSelectedAccountTypeValue}
                 defaultButtonText={selectedAccountType}
-                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                captionStyle={{color: COLORS.green, ...FONTS.h4}}
               />
 
               {/* <Text>
@@ -561,12 +556,12 @@ const BankBottomView = ({ onPress }) => {
                 setData={setSelectedBank}
                 setIdvalue={setSelectedBankValue}
                 defaultButtonText={selectedBank}
-                captionStyle={{ color: COLORS.green, ...FONTS.h4 }}
+                captionStyle={{color: COLORS.green, ...FONTS.h4}}
               />
 
               <Text style={styles.inputHeader}>Branch Name</Text>
               <TextInput
-                style={[styles.inputHolder, { height: branchHeight }]}
+                style={[styles.inputHolder, {height: branchHeight}]}
                 multiline={true}
                 onContentSizeChange={event => {
                   setBranchHeight(event.nativeEvent.contentSize.height);
@@ -604,7 +599,7 @@ const BankBottomView = ({ onPress }) => {
               />
               {checkAccountError && cAccountNo != accountNo && (
                 <Text
-                  style={{ color: 'red', paddingHorizontal: 10, fontSize: 12 }}>
+                  style={{color: 'red', paddingHorizontal: 10, fontSize: 12}}>
                   Account No. Fields don't match
                 </Text>
               )}
@@ -686,9 +681,9 @@ const BankBottomView = ({ onPress }) => {
                   onPress={() => validateBank()}>
                   <LinearGradient
                     colors={[COLORS.orange1, COLORS.disableOrange1]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 2, y: 0 }}
-                    style={{ borderRadius: 8, padding: 8, marginTop: 20 }}>
+                    start={{x: 0, y: 0}}
+                    end={{x: 2, y: 0}}
+                    style={{borderRadius: 8, padding: 8, marginTop: 20}}>
                     <Text
                       style={{
                         color: COLORS.white,
@@ -723,9 +718,9 @@ const BankBottomView = ({ onPress }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Text style={{ color: 'white' }}>{selectedDoc.length}</Text>
+                  <Text style={{color: 'white'}}>{selectedDoc.length}</Text>
                 </View>
-                <Text style={{ paddingHorizontal: 5, marginRight: 5 }}>
+                <Text style={{paddingHorizontal: 5, marginRight: 5}}>
                   Upload Bank Documents
                 </Text>
                 <View
@@ -735,12 +730,12 @@ const BankBottomView = ({ onPress }) => {
                     flexDirection: 'row',
                   }}>
                   <TouchableOpacity
-                    style={{ paddingHorizontal: 3 }}
+                    style={{paddingHorizontal: 3}}
                     onPress={() => selectDoc()}>
                     <Icon name="plus" color={COLORS.orange} size={20} />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={{ paddingHorizontal: 5 }}
+                    style={{paddingHorizontal: 5}}
                     onPress={() => setDisplayDocs(!displayDocs)}>
                     <Icon
                       name={displayDocs ? 'chevron-up' : 'chevron-down'}
@@ -761,7 +756,7 @@ const BankBottomView = ({ onPress }) => {
                     borderColor: COLORS.orange1,
                     borderRadius: 12,
                   }}>
-                  <Text style={[FONTS.h4, { color: COLORS.green }]}>
+                  <Text style={[FONTS.h4, {color: COLORS.green}]}>
                     Selected Documents
                   </Text>
                   {Object.keys(selectedDoc).length > 0 ? (
@@ -769,7 +764,7 @@ const BankBottomView = ({ onPress }) => {
                       <DisplayBankDocs key={index} doc={doc} />
                     ))
                   ) : (
-                    <Text style={[FONTS.h6, { paddingHorizontal: 5 }]}>
+                    <Text style={[FONTS.h6, {paddingHorizontal: 5}]}>
                       No Document Selected
                     </Text>
                   )}
@@ -785,9 +780,9 @@ const BankBottomView = ({ onPress }) => {
                   }>
                   <LinearGradient
                     colors={[COLORS.orange1, COLORS.disableOrange1]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 2, y: 0 }}
-                    style={{ borderRadius: 8, padding: 10, marginTop: 20 }}>
+                    start={{x: 0, y: 0}}
+                    end={{x: 2, y: 0}}
+                    style={{borderRadius: 8, padding: 10, marginTop: 20}}>
                     <Text
                       style={{
                         color: COLORS.white,

@@ -14,8 +14,7 @@ import {
   Pressable,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FONTS, SIZES} from '../../../constants/font_size';
-import COLORS from '../../../constants/theme';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomInput from '../../../components/CustomInput';
 import {useDispatch, useSelector} from 'react-redux';

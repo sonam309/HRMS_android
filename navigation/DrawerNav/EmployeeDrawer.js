@@ -10,8 +10,6 @@ import {
 import {user_profile} from '../../assets';
 import {useDispatch, useSelector} from 'react-redux';
 import {authActions} from '../../redux/authSlice';
-import COLORS from '../../constants/theme';
-import {FONTS} from '../../constants/font_size';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Regulization from '../../screens/Employee_pages/AttendanceStack/Regulization';
 import Apply_Leave from '../../screens/Employee_pages/AttendanceStack/Apply_Leave';
@@ -26,6 +24,7 @@ import EmployeeActionsTab from '../TabNav/EmployeeActionsTab';
 import Details from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Details';
 import Description_Job from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Description_Job';
 import CandidateTestResult from '../../screens/Employee_pages/Hiring_screens/CandidateTestResult';
+import {COLORS, FONTS, SIZES, icons} from '../../constants';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -197,7 +196,12 @@ const EmployeeDrawer = props => {
           <ScrollView
             style={{
               flex: 1,
-              marginVertical: 10,
+            }}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              width: '100%',
+              marginTop: SIZES.radius,
             }}>
             <DrawerItemList {...props} />
           </ScrollView>
@@ -239,12 +243,28 @@ const EmployeeDrawer = props => {
       initialRouteName="DashBoard"
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: COLORS.disableOrange1,
-        drawerActiveTintColor: COLORS.orange1,
-        drawerInactiveTintColor: COLORS.black,
+        drawerActiveBackgroundColor: COLORS.lightGray2,
+        drawerInactiveBackgroundColor: COLORS.white,
+        drawerActiveTintColor: COLORS.black,
+        // drawerInactiveTintColor: COLORS.green,
+        // drawerActiveBorderColor: COLORS.white,
+        // drawerInactiveBorderColor: COLORS.lightGray,
+
         drawerLabelStyle: {
-          marginLeft: -25,
           fontSize: 15,
+          width: '100%',
+        },
+
+        drawerItemStyle: {
+          width: 120,
+          height: 100,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: SIZES.radius * 1.5,
+          marginBottom: SIZES.radius,
+          // borderWidth: 1,
+          borderRadius: SIZES.radius,
+          paddingHorizontal: SIZES.base,
         },
       }}
       drawerContent={props => <CustomDrawer {...props} />}>
@@ -253,7 +273,14 @@ const EmployeeDrawer = props => {
         component={DashBoard}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="home-outline" size={22} color={color} />
+            // <Ionicons name="home-outline" size={28} color={color} />
+            <Image
+              source={icons.dashboard}
+              style={{
+                height: 32,
+                width: 32,
+              }}
+            />
           ),
         }}
       />
@@ -262,7 +289,13 @@ const EmployeeDrawer = props => {
         component={AttendanceStackScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="calendar-outline" size={22} color={color} />
+            <Image
+              source={icons.leave}
+              style={{
+                height: 32,
+                width: 32,
+              }}
+            />
           ),
         }}
       />
@@ -289,7 +322,14 @@ const EmployeeDrawer = props => {
         component={EmployeeApprovalStackScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="checkbox-outline" size={22} color={color} />
+            // <Ionicons name="checkbox-outline" size={28} color={color} />
+            <Image
+              source={icons.approval}
+              style={{
+                height: 34,
+                width: 34,
+              }}
+            />
           ),
         }}
       />
@@ -326,7 +366,14 @@ const EmployeeDrawer = props => {
         component={HiringStackScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="people-outline" size={22} color={color} />
+            // <Ionicons name="people-outline" size={28} color={color} />
+            <Image
+              source={icons.hiring}
+              style={{
+                height: 32,
+                width: 32,
+              }}
+            />
           ),
         }}
       />

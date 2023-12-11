@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import COLORS from '../../../../constants/theme';
 import DatePicker from 'react-native-date-picker';
-import {FONTS, SIZES} from '../../../../constants/font_size';
+import {COLORS, FONTS, SIZES} from '../../../../constants';
 import {useSelector} from 'react-redux';
 import {API} from '../../../../utility/services';
 import Toast from 'react-native-toast-message';

@@ -24,8 +24,6 @@ import {
 import {useDispatch} from 'react-redux';
 import Loader from '../../../components/Loader';
 import {candidateAuthActions} from '../../../redux/candidateAuthSlice';
-import COLORS from '../../../constants/theme';
-import {FONTS, SIZES} from '../../../constants/font_size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API, VERSIONS} from '../../../utility/services';
 import {loginBanner} from '../../../assets';
@@ -36,6 +34,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 
 const Login = props => {
   let page = null;

@@ -8,9 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, isValidElement} from 'react';
-import COLORS from '../../../../constants/theme';
 import SelectDropdown from 'react-native-select-dropdown';
-import {FONTS, SIZES} from '../../../../constants/font_size';
+import {COLORS, FONTS} from '../../../../constants';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
@@ -87,10 +86,10 @@ const UAN_BottomView = props => {
 
       return false;
     } else if (!isUanValidated) {
-    Toast.show({
-    type: 'error',
-    text1: 'Please Validate UAN First',
-    });
+      Toast.show({
+        type: 'error',
+        text1: 'Please Validate UAN First',
+      });
     } else {
       setError('');
       return true;
@@ -205,7 +204,7 @@ const UAN_BottomView = props => {
       }),
     };
     // const body = JSON.stringify(value)
-    setLoaderVisible(true)
+    setLoaderVisible(true);
     axios
       .post(`${API}/api/Hrms/uanNoPassbook`, body)
       .then(response => {

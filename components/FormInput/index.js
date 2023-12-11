@@ -1,46 +1,47 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
-import { COLORS, FONTS, SIZES } from "../../constants";
-
+import {StyleSheet, Text, TextInput, View} from 'react-native';
+import React from 'react';
+import {COLORS, FONTS, SIZES} from '../../constants';
 
 const FormInput = ({
   containerStyle,
   inputContainerStyle,
   label,
-  labelColor =COLORS.black,
+  labelColor = COLORS.black,
   placeholder,
   inputStyle,
   prependComponent,
   appendComponent,
   onChange,
   secureTextEntry,
-  keyboardType = "default",
-  autoCompleteType = "off",
-  autoCapitalize = "none",
-  errorMsg = "",
+  keyboardType = 'default',
+  autoCompleteType = 'off',
+  autoCapitalize = 'none',
+  errorMsg = '',
   onBlur,
   value,
   multiline = false,
-  required=true
+  required = true,
 }) => {
   return (
-    <View style={{ marginTop: SIZES.radius, ...containerStyle }}>
+    <View style={{marginTop: SIZES.radius, ...containerStyle}}>
       {/* Label & error msg */}
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-        }}
-      >
-        <Text style={{ color: labelColor, ...FONTS.h4 }}>{label}{required &&<Text style={styles.required}>{"*"}</Text>}</Text>
-        <Text style={{ color: COLORS.red, ...FONTS.body4 }}>{errorMsg}</Text>
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+        }}>
+        <Text style={{color: labelColor, ...FONTS.h4}}>
+          {label}
+          {required && <Text style={styles.required}>{'*'}</Text>}
+        </Text>
+        <Text style={{color: COLORS.red, ...FONTS.body4}}>{errorMsg}</Text>
       </View>
 
       {/* Text Input */}
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: 'row',
           height: 50,
           paddingHorizontal: SIZES.padding,
           marginTop: SIZES.padding / 3.5,
@@ -48,12 +49,11 @@ const FormInput = ({
           backgroundColor: COLORS.white,
           ...inputContainerStyle,
           flex: multiline ? 1 : null,
-          alignItems: multiline ?  'center' : null,
-          justifyContent:  multiline ? 'center' : null ,
+          alignItems: multiline ? 'center' : null,
+          justifyContent: multiline ? 'center' : null,
           borderColor: COLORS.lightGray,
           borderWidth: 0.5,
-        }}
-      >
+        }}>
         {prependComponent}
         <TextInput
           style={{
@@ -61,7 +61,7 @@ const FormInput = ({
             ...inputStyle,
           }}
           value={value}
-          textAlignVertical={"center"}
+          textAlignVertical={'center'}
           placeholder={placeholder}
           placeholderTextColor={COLORS.gray}
           secureTextEntry={secureTextEntry}
@@ -69,7 +69,7 @@ const FormInput = ({
           multiline={multiline}
           autoCompleteType={autoCompleteType}
           autoCapitalize={autoCapitalize}
-          onChangeText={(text) => onChange(text)}
+          onChangeText={text => onChange(text)}
           onBlur={onBlur}
         />
 
@@ -84,6 +84,6 @@ export default FormInput;
 const styles = StyleSheet.create({
   required: {
     color: COLORS.red,
-    paddingLeft: SIZES.base
-  }
+    paddingLeft: SIZES.base,
+  },
 });

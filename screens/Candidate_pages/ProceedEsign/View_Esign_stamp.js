@@ -1,7 +1,6 @@
-import {View, Text, TouchableOpacity,BackHandler} from 'react-native';
+import {View, Text, TouchableOpacity, BackHandler} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FONTS, SIZES} from '../../../constants/font_size';
-import COLORS from '../../../constants/theme';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCandidateList} from '../../../redux/eSignSlice';
@@ -25,20 +24,17 @@ const View_Esign_stamp = props => {
     setDocument();
   }, []);
 
-
-
   useEffect(() => {
     const backAction = () => {
-        props.navigation?.navigate("CandidateDashboard");
-        return true;
+      props.navigation?.navigate('CandidateDashboard');
+      return true;
     };
     const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
+      'hardwareBackPress',
+      backAction,
     );
     return () => backHandler.remove();
-}, []);
-
+  }, []);
 
   const getEsignData = async () => {
     const data = {
@@ -71,9 +67,7 @@ const View_Esign_stamp = props => {
       setDocumentUrl('AllMergeDoc/' + candidateList[index]?.FILE_NAME);
     } else {
       if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
-        setDocumentUrl(
-          'AllMergeDocSigned/' + candidateList[index]?.FILE_NAME,
-        );
+        setDocumentUrl('AllMergeDocSigned/' + candidateList[index]?.FILE_NAME);
       } else {
         setDocumentUrl('SignedDocument/' + candidateList[index]?.FILE_NAME);
       }

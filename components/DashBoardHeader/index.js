@@ -1,14 +1,12 @@
 import {View, Text, SafeAreaView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useSelector} from 'react-redux';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import COLORS from '../../constants/theme';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {COLORS} from '../../constants';
 
 const DashBoardHeader = () => {
-
-    const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const {userId, userName} = useSelector(state => state.auth);
   const {currentLocation, punchTime, loading} = useSelector(
