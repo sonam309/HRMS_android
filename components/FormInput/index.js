@@ -21,7 +21,8 @@ const FormInput = ({
   onBlur,
   value,
   multiline = false,
-  required=true
+  required=true,
+  returnKeyType="go"
 }) => {
   return (
     <View style={{ marginTop: SIZES.radius, ...containerStyle }}>

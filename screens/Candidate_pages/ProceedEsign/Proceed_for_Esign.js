@@ -12,6 +12,7 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
   Pressable,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,8 +30,11 @@ import axios from 'axios';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import { COLORS, FONTS, SIZES } from '../../../constants';
 
-const {EsignModule} = NativeModules;
-const eventEmitter = new NativeEventEmitter(EsignModule);
+if(Platform.OS === "android"){
+  const {EsignModule} = NativeModules;
+  const eventEmitter = new NativeEventEmitter(EsignModule);
+}
+
 
 const Proceed_for_Esign = props => {
   const dispatch = useDispatch();

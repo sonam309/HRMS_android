@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 import axios from 'axios';
 import WebView from 'react-native-webview';
 import {API} from '../../utility/services';
@@ -194,7 +194,7 @@ const Offer_Letter = props => {
         {offerLetter && (
           <Icons
             name="file-download"
-            onPress={() => requestFilePermission()}
+            // onPress={() => requestFilePermission()}
             color={COLORS.black}
             size={30}
             style={{position: 'absolute', right: 20}}

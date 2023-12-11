@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   Linking,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -107,7 +108,7 @@ const Login = props => {
   };
 
   // forgetpassword
-  const forgetPasswordApi = (userId) => {
+  const forgetPasswordApi = userId => {
     setLoaderVisible(true);
     let otp = RandomNumber('6');
     console.log('msg', otp + ' $ ' + userId + operFlag);
@@ -221,128 +222,149 @@ const Login = props => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <Loader loaderVisible={loaderVisible} />
-      {/* Company Logo */}
-      <View style={{flex: 1, alignItems: 'flex-start', flexDirection: 'row'}}>
-        <Image
-          source={company_icon}
-          style={{
-            width: '15%',
-            height: '15%',
-            resizeMode: 'center',
-            marginLeft: 10,
-            marginTop: 10,
-          }}
-        />
-
-        <Text
-          style={{
-            color: COLORS.orange1,
-            ...FONTS.h3,
-            fontSize: 20,
-            marginTop: 20,
-            marginLeft: -10,
-          }}>
-          Satya Sathi
-        </Text>
-      </View>
-
-      <View
-        style={{
-          width: responsiveWidth(100),
-          height: 100,
-          marginTop: -170,
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : 'position'}
+        contentContainerStyle={{
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
+        }}
+        style={{
+          flex: 1,
         }}>
-        <Image
-          source={loginIcon}
-          style={{height: '100%', width: '100%'}}
-          resizeMode="stretch"
-        />
-      </View>
-      <Formik
-        initialValues={userInfo}
-        validationSchema={validationSchema}
-        onSubmit={(values, formikActions, touched, isValid) => {
-          // onLogin(values, formikActions, touched, isValid);
-          submit(values, formikActions, touched, isValid);
-        }}>
-        {({
-          values,
-          errors,
-          handleChange,
-          touched,
-          handleBlur,
-          handleSubmit,
-          isValid,
-          dirty,
-          isSubmitting,
-        }) => {
-          const {userId, password} = values;
-          return (
-            // {/* candidate Login titlte */}
-            <View
+        <View
+        style={{
+          flex: 0.5,
+        }}
+        >
+          {/* Company Logo */}
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              marginHorizontal: SIZES.base,
+              marginTop: SIZES.base,
+              gap: SIZES.radius,
+            }}>
+            <Image
+              source={company_icon}
               style={{
-                justifyContent: 'center',
-                flex: 1.5,
-                borderRadius: 20,
-                backgroundColor: COLORS.white,
-                paddingHorizontal: 25,
-              }}>
-              <Text style={styles.header}>Candidate Login</Text>
+                width: 45,
+                height: 45,
+                resizeMode: 'center',
+              }}
+            />
 
-              {/* user credentials - userId */}
-              <View style={styles.textInputBox}>
-                {/* <CustomInput
+            <Text
+              style={{
+                color: COLORS.orange1,
+                ...FONTS.h3,
+                fontSize: 20,
+                marginTop: 20,
+                marginLeft: -10,
+              }}>
+              Satya Sathi
+            </Text>
+          </View>
+
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={loginIcon}
+              style={{
+                height: 220,
+                width: responsiveWidth(100),
+              }}
+              resizeMode="stretch"
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 0.8,
+            justifyContent: 'center',
+          }}>
+        <Formik
+          initialValues={userInfo}
+          validationSchema={validationSchema}
+          onSubmit={(values, formikActions, touched, isValid) => {
+            // onLogin(values, formikActions, touched, isValid);
+            submit(values, formikActions, touched, isValid);
+          }}>
+          {({
+            values,
+            errors,
+            handleChange,
+            touched,
+            handleBlur,
+            handleSubmit,
+            isValid,
+            dirty,
+            isSubmitting,
+          }) => {
+            const {userId, password} = values;
+            return (
+              // {/* candidate Login titlte */}
+              <View
+                style={{
+                  flex: 1,
+                  paddingHorizontal: 25,
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.header}>Candidate Login</Text>
+
+                {/* user credentials - userId */}
+                <View style={styles.textInputBox}>
+                  {/* <CustomInput
                   placeholder={'Candidate Id'}
                   caption={'Candidate ID'}
                   value={userId}
                   onChangeText={name => setUserId(name)}
                   required
                 /> */}
-                <FormInput
-                  label="Candidate Id"
-                  placeholder={'Candidate Id'}
-                  // keyboardType="email-address"
-                  // autoCompleteType="email"
-                  onChange={handleChange('userId')}
-                  errorMsg={errors.userId}
-                  onBlur={handleBlur('userId')}
-                  labelColor={COLORS.black}
-                  appendComponent={
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                      }}>
-                      <Image
-                        source={
-                          userId == '' ||
-                          (userId != '' && errors.userId == null)
-                            ? icons.correct
-                            : icons.cross
-                        }
+                  <FormInput
+                    label="Candidate Id"
+                    placeholder={'Candidate Id'}
+                    // keyboardType="email-address"
+                    // autoCompleteType="email"
+                    onChange={handleChange('userId')}
+                    errorMsg={errors.userId}
+                    onBlur={handleBlur('userId')}
+                    labelColor={COLORS.black}
+                    appendComponent={
+                      <View
                         style={{
-                          height: 20,
-                          width: 20,
-                          tintColor:
-                            userId == ''
-                              ? COLORS.gray
-                              : userId != '' && errors.userId == null
-                              ? COLORS.green
-                              : COLORS.red,
-                        }}
-                      />
-                    </View>
-                  }
-                  value={values.userId}
-                />
-              </View>
-              {/* Password */}
-              <View style={[styles.textInputBox]}>
-                {/* <CustomInput
+                          justifyContent: 'center',
+                        }}>
+                        <Image
+                          source={
+                            userId == '' ||
+                            (userId != '' && errors.userId == null)
+                              ? icons.correct
+                              : icons.cross
+                          }
+                          style={{
+                            height: 20,
+                            width: 20,
+                            tintColor:
+                              userId == ''
+                                ? COLORS.gray
+                                : userId != '' && errors.userId == null
+                                ? COLORS.green
+                                : COLORS.red,
+                          }}
+                        />
+                      </View>
+                    }
+                    value={values.userId}
+                  />
+                </View>
+                {/* Password */}
+                <View style={styles.textInputBox}>
+                  {/* <CustomInput
                   placeholder={'Password'}
                   caption={'Password'}
                   value={password}
@@ -359,119 +381,123 @@ const Login = props => {
                     </Pressable>
                   }
                 /> */}
-                <FormInput
-                  label="Password"
-                  placeholder={'Password'}
-                  autoCompleteType="password"
-                  secureTextEntry={showVisibility}
-                  onChange={handleChange('password')}
-                  errorMsg={errors.password}
-                  // onBlur={handleBlur('password')}
-                  labelColor={COLORS.black}
-                  value={values.password}
-                  appendComponent={
-                    <TouchableOpacity
-                      style={{
-                        width: 40,
-                        alignItems: 'flex-end',
-                        justifyContent: 'center',
-                      }}
-                      onPress={() => setShowVisibility(!showVisibility)}>
-                      <Image
-                        source={showVisibility ? icons.eye_close : icons.eye}
+                  <FormInput
+                    label="Password"
+                    placeholder={'Password'}
+                    autoCompleteType="password"
+                    secureTextEntry={showVisibility}
+                    onChange={handleChange('password')}
+                    errorMsg={errors.password}
+                    // onBlur={handleBlur('password')}
+                    labelColor={COLORS.black}
+                    value={values.password}
+                    appendComponent={
+                      <TouchableOpacity
                         style={{
-                          height: 20,
-                          width: 20,
-                          tintColor: COLORS.gray,
+                          width: 40,
+                          alignItems: 'flex-end',
+                          justifyContent: 'center',
                         }}
-                      />
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
+                        onPress={() => setShowVisibility(!showVisibility)}>
+                        <Image
+                          source={showVisibility ? icons.eye_close : icons.eye}
+                          style={{
+                            height: 20,
+                            width: 20,
+                            tintColor: COLORS.gray,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    }
+                  />
+                </View>
 
-              {/* Quick Pin Option */}
-              {/* <View style={styles.loginOption}>
+                {/* Quick Pin Option */}
+                {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 30, height: 30, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View> */}
 
-              <TextButton
-                color1={COLORS.green}
-                color2={'#9ADD00'}
-                linearGradientStyle={{
-                  marginTop: SIZES.base,
-                  marginBottom: SIZES.radius,
-                  borderRadius: SIZES.base,
-                }}
-                buttonContainerStyle={{width: responsiveWidth(90), height: 50}}
-                label={'Log In'}
-                labelStyle={{color: COLORS.white}}
-                onPress={handleSubmit}
-              />
+                <TextButton
+                  color1={COLORS.green}
+                  color2={'#9ADD00'}
+                  linearGradientStyle={{
+                    marginTop: SIZES.padding*1.2,
+                    marginBottom: SIZES.radius,
+                    borderRadius: SIZES.base,
+                  }}
+                  buttonContainerStyle={{
+                    width: responsiveWidth(90),
+                    height: 50,
+                  }}
+                  label={'Log In'}
+                  labelStyle={{color: COLORS.white}}
+                  onPress={handleSubmit}
+                />
 
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                {/* signIn for Employee */}
-                <TouchableOpacity
-                  onPress={async () => {
-                    props.navigation.push('EmployeeTab', {
-                      screen: 'EmployeeLogin',
-                    });
-                    await AsyncStorage.setItem('type', 'employee');
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
-                  <Text
-                    style={{
-                      color: COLORS.hyperlinkBlue,
-                      ...FONTS.h5,
-                      fontSize: 14,
-                      marginBottom: 100,
-                      textDecorationLine: 'underline',
+                  {/* signIn for Employee */}
+                  <TouchableOpacity
+                    onPress={async () => {
+                      props.navigation.push('EmployeeTab', {
+                        screen: 'EmployeeLogin',
+                      });
+                      await AsyncStorage.setItem('type', 'employee');
                     }}>
-                    Sign In as Employee
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: COLORS.hyperlinkBlue,
+                        ...FONTS.h5,
+                        fontSize: 14,
+                        textDecorationLine: 'underline',
+                      }}>
+                      Sign In as Employee
+                    </Text>
+                  </TouchableOpacity>
 
-                {/* Forgot Password */}
-                <TouchableOpacity>
-                  <Text
-                    style={styles.forgotPassword}
-                    onPress={() => {
-                      values.userId !== ''
-                        ? forgetPasswordApi(values.userId)
-                        : Toast.show({
-                            type: 'error',
-                            text1: 'Please enter User Id',
-                          });
-                    }}>
-                    Forgot Password?{' '}
-                  </Text>
-                </TouchableOpacity>
+                  {/* Forgot Password */}
+                  <TouchableOpacity>
+                    <Text
+                      style={styles.forgotPassword}
+                      onPress={() => {
+                        values.userId !== ''
+                          ? forgetPasswordApi(values.userId)
+                          : Toast.show({
+                              type: 'error',
+                              text1: 'Please enter User Id',
+                            });
+                      }}>
+                      Forgot Password?{' '}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          );
-        }}
-      </Formik>
+            );
+          }}
+        </Formik>
+</View>
 
-      {/* Bottom element */}
-      <View style={{backgroundColor: COLORS.white, height: 30}}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: COLORS.gray,
-            ...FONTS.h5,
-            fontWeight: '400',
-            padding: 5,
-          }}>
-          Version:{VERSIONS?.android}
-        </Text>
-      </View>
-      {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
-                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
-            </View> */}
-
+        {/* Bottom element */}
+        <View style={{
+            flex: 0.04,
+           }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: COLORS.gray,
+              ...FONTS.h5,
+              fontWeight: '400',
+            }}>
+            Version:{VERSIONS?.android}
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
       {greaterVersion && (
         <Modal
           animationType="slide"
@@ -556,10 +582,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   header: {
-    marginTop: 60,
     color: COLORS.black,
     ...FONTS.h3,
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Ubuntu-Bold',
   },
   elevation: {
@@ -583,7 +608,6 @@ const styles = StyleSheet.create({
     color: COLORS.orange1,
     ...FONTS.h4,
     fontSize: 14,
-    marginBottom: 100,
   },
   loginButton: {
     marginHorizontal: 25,
