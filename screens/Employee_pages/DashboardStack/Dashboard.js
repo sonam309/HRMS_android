@@ -28,7 +28,8 @@ import Toast from 'react-native-toast-message';
 import {showDevelopmetMode} from '../../../functions/utils';
 import {updatePunchTime} from '../../../redux/punchDetailSlice';
 import {getAttendanceDailyDetails} from '../../../redux/attendaceDetailSlice';
-import { COLORS } from '../../../constants';
+import {COLORS} from '../../../constants';
+import { StatusBar } from 'react-native';
 
 const Home = props => {
   var m_names = [
@@ -118,9 +119,8 @@ const Home = props => {
     },
   ];
 
-  const getDailyAttenceDetails = async date =>{
-
-    console.log("datettette",val)
+  const getDailyAttenceDetails = async date => {
+    console.log('datettette', val);
     const data = {
       userId: userId,
       day: date.day,
@@ -128,9 +128,7 @@ const Home = props => {
     };
 
     dispatch(getAttendanceDailyDetails(data));
-  }
-
-
+  };
 
   const getCurrentLocation = async val => {
     setLoaderVisible(true);
@@ -235,7 +233,10 @@ const Home = props => {
     <View style={styles.container}>
       <Loader loaderVisible={loaderVisible} />
 
-      <ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+        }}>
         <View style={styles.centeredView}>
           <Modal
             animationType="slide"
@@ -253,9 +254,9 @@ const Home = props => {
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
                   }}>
-                  {modalData.map((data,index) => {
+                  {modalData.map((data, index) => {
                     return (
-                      <View style={styles.modalWrap}  key={index}>
+                      <View style={styles.modalWrap} key={index}>
                         <Text style={styles.modalTextHeading}>
                           {data.heading}
                         </Text>
@@ -278,7 +279,7 @@ const Home = props => {
         </View>
 
         {/* header */}
-        <SafeAreaView
+        <View
           style={{
             height: 60,
             flexDirection: 'row',
@@ -316,7 +317,7 @@ const Home = props => {
           <TouchableOpacity style={{position: 'absolute', right: 10}}>
             {/* <Icons name="bell-ring-outline" color={COLORS.green} size={30} /> */}
           </TouchableOpacity>
-        </SafeAreaView>
+        </View>
 
         {/* Main Content-Calendar */}
         <Calendar
@@ -341,7 +342,7 @@ const Home = props => {
             return (
               <TouchableOpacity
                 onLongPress={() => {
-                  getDailyAttenceDetails(date)
+                  getDailyAttenceDetails(date);
                   setModalVisible(true);
                   console.log('selected day', date.day);
                 }}
@@ -679,7 +680,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     borderRadius: 0,
-    backgroundColor: COLORS.white
+    backgroundColor: COLORS.white,
   },
   actionText: {
     color: 'white',

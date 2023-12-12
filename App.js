@@ -1,20 +1,17 @@
-import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthNavigator from './navigation/StackNav/AuthNavigator';
 import messaging from '@react-native-firebase/messaging';
-import {Alert, Platform, StatusBar, View} from 'react-native';
+import {Alert, Platform, Text, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import CustomAlert from './components/CustomAlert';
 import CustomisableAlert from 'react-native-customisable-alert';
-import 'react-native-gesture-handler';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
-import LinearGradient from 'react-native-linear-gradient';
-import Orientation from 'react-native-orientation-locker';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+
 
 const App = () => {
+
   async function getNewFCMToken() {
     let fcmToken = await AsyncStorage.getItem('FCMToken');
     if (!fcmToken) {
@@ -26,6 +23,9 @@ const App = () => {
       } catch (error) {}
     }
   }
+
+  const statusBar = Platform.systemName === "" ? getStatusBarHeight(true)*2 : getStatusBarHeight(true);
+
 
   async function requestPermission() {
     const authStatus = await messaging().requestPermission();
@@ -54,19 +54,21 @@ const App = () => {
   }, []);
 
   return (
-      <SafeAreaView style={{flex: 1}}>
-      
-        <NavigationContainer>
-          <AuthNavigator />
-        </NavigationContainer>
-        <Toast position="top" bottomOffset={20} />
-        <CustomisableAlert
-          titleStyle={{
-            fontSize: 18,
-            fontWeight: 'bold',
-          }}
-        />
-      </SafeAreaView>
+    <SafeAreaView style={{flex: 1,marginTop: getStatusBarHeight(true)}}>
+
+     
+      <NavigationContainer>
+        <AuthNavigator />
+      </NavigationContainer>
+   
+      <Toast position="top" bottomOffset={20} />
+      <CustomisableAlert
+        titleStyle={{
+          fontSize: 18,
+          fontWeight: 'bold',
+        }}
+      />
+    </SafeAreaView>
   );
 };
 

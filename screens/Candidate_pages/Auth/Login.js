@@ -232,10 +232,9 @@ const Login = props => {
           flex: 1,
         }}>
         <View
-        style={{
-          flex: 0.5,
-        }}
-        >
+          style={{
+            flex: 0.5,
+          }}>
           {/* Company Logo */}
           <View
             style={{
@@ -287,84 +286,84 @@ const Login = props => {
             flex: 0.8,
             justifyContent: 'center',
           }}>
-        <Formik
-          initialValues={userInfo}
-          validationSchema={validationSchema}
-          onSubmit={(values, formikActions, touched, isValid) => {
-            // onLogin(values, formikActions, touched, isValid);
-            submit(values, formikActions, touched, isValid);
-          }}>
-          {({
-            values,
-            errors,
-            handleChange,
-            touched,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            dirty,
-            isSubmitting,
-          }) => {
-            const {userId, password} = values;
-            return (
-              // {/* candidate Login titlte */}
-              <View
-                style={{
-                  flex: 1,
-                  paddingHorizontal: 25,
-                  justifyContent: 'center',
-                }}>
-                <Text style={styles.header}>Candidate Login</Text>
+          <Formik
+            initialValues={userInfo}
+            validationSchema={validationSchema}
+            onSubmit={(values, formikActions, touched, isValid) => {
+              // onLogin(values, formikActions, touched, isValid);
+              submit(values, formikActions, touched, isValid);
+            }}>
+            {({
+              values,
+              errors,
+              handleChange,
+              touched,
+              handleBlur,
+              handleSubmit,
+              isValid,
+              dirty,
+              isSubmitting,
+            }) => {
+              const {userId, password} = values;
+              return (
+                // {/* candidate Login titlte */}
+                <View
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 25,
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={styles.header}>Candidate Login</Text>
 
-                {/* user credentials - userId */}
-                <View style={styles.textInputBox}>
-                  {/* <CustomInput
+                  {/* user credentials - userId */}
+                  <View style={styles.textInputBox}>
+                    {/* <CustomInput
                   placeholder={'Candidate Id'}
                   caption={'Candidate ID'}
                   value={userId}
                   onChangeText={name => setUserId(name)}
                   required
                 /> */}
-                  <FormInput
-                    label="Candidate Id"
-                    placeholder={'Candidate Id'}
-                    // keyboardType="email-address"
-                    // autoCompleteType="email"
-                    onChange={handleChange('userId')}
-                    errorMsg={errors.userId}
-                    onBlur={handleBlur('userId')}
-                    labelColor={COLORS.black}
-                    appendComponent={
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                        }}>
-                        <Image
-                          source={
-                            userId == '' ||
-                            (userId != '' && errors.userId == null)
-                              ? icons.correct
-                              : icons.cross
-                          }
+                    <FormInput
+                      label="Candidate Id"
+                      placeholder={'Candidate Id'}
+                      // keyboardType="email-address"
+                      // autoCompleteType="email"
+                      onChange={handleChange('userId')}
+                      errorMsg={errors.userId}
+                      onBlur={handleBlur('userId')}
+                      labelColor={COLORS.black}
+                      appendComponent={
+                        <View
                           style={{
-                            height: 20,
-                            width: 20,
-                            tintColor:
-                              userId == ''
-                                ? COLORS.gray
-                                : userId != '' && errors.userId == null
-                                ? COLORS.green
-                                : COLORS.red,
-                          }}
-                        />
-                      </View>
-                    }
-                    value={values.userId}
-                  />
-                </View>
-                {/* Password */}
-                <View style={styles.textInputBox}>
-                  {/* <CustomInput
+                            justifyContent: 'center',
+                          }}>
+                          <Image
+                            source={
+                              userId == '' ||
+                              (userId != '' && errors.userId == null)
+                                ? icons.correct
+                                : icons.cross
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor:
+                                userId == ''
+                                  ? COLORS.gray
+                                  : userId != '' && errors.userId == null
+                                  ? COLORS.green
+                                  : COLORS.red,
+                            }}
+                          />
+                        </View>
+                      }
+                      value={values.userId}
+                    />
+                  </View>
+                  {/* Password */}
+                  <View style={styles.textInputBox}>
+                    {/* <CustomInput
                   placeholder={'Password'}
                   caption={'Password'}
                   value={password}
@@ -381,112 +380,115 @@ const Login = props => {
                     </Pressable>
                   }
                 /> */}
-                  <FormInput
-                    label="Password"
-                    placeholder={'Password'}
-                    autoCompleteType="password"
-                    secureTextEntry={showVisibility}
-                    onChange={handleChange('password')}
-                    errorMsg={errors.password}
-                    // onBlur={handleBlur('password')}
-                    labelColor={COLORS.black}
-                    value={values.password}
-                    appendComponent={
-                      <TouchableOpacity
-                        style={{
-                          width: 40,
-                          alignItems: 'flex-end',
-                          justifyContent: 'center',
-                        }}
-                        onPress={() => setShowVisibility(!showVisibility)}>
-                        <Image
-                          source={showVisibility ? icons.eye_close : icons.eye}
+                    <FormInput
+                      label="Password"
+                      placeholder={'Password'}
+                      autoCompleteType="password"
+                      secureTextEntry={showVisibility}
+                      onChange={handleChange('password')}
+                      errorMsg={errors.password}
+                      // onBlur={handleBlur('password')}
+                      labelColor={COLORS.black}
+                      value={values.password}
+                      appendComponent={
+                        <TouchableOpacity
                           style={{
-                            height: 20,
-                            width: 20,
-                            tintColor: COLORS.gray,
+                            width: 40,
+                            alignItems: 'flex-end',
+                            justifyContent: 'center',
                           }}
-                        />
-                      </TouchableOpacity>
-                    }
-                  />
-                </View>
+                          onPress={() => setShowVisibility(!showVisibility)}>
+                          <Image
+                            source={
+                              showVisibility ? icons.eye_close : icons.eye
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor: COLORS.gray,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      }
+                    />
+                  </View>
 
-                {/* Quick Pin Option */}
-                {/* <View style={styles.loginOption}>
+                  {/* Quick Pin Option */}
+                  {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 30, height: 30, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View> */}
 
-                <TextButton
-                  color1={COLORS.green}
-                  color2={'#9ADD00'}
-                  linearGradientStyle={{
-                    marginTop: SIZES.padding*1.2,
-                    marginBottom: SIZES.radius,
-                    borderRadius: SIZES.base,
-                  }}
-                  buttonContainerStyle={{
-                    width: responsiveWidth(90),
-                    height: 50,
-                  }}
-                  label={'Log In'}
-                  labelStyle={{color: COLORS.white}}
-                  onPress={handleSubmit}
-                />
+                  <TextButton
+                    color1={COLORS.green}
+                    color2={'#9ADD00'}
+                    linearGradientStyle={{
+                      marginTop: SIZES.padding * 1.2,
+                      marginBottom: SIZES.radius,
+                      borderRadius: SIZES.base,
+                    }}
+                    buttonContainerStyle={{
+                      width: responsiveWidth(90),
+                      height: 50,
+                    }}
+                    label={'Log In'}
+                    labelStyle={{color: COLORS.white}}
+                    onPress={handleSubmit}
+                  />
 
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  {/* signIn for Employee */}
-                  <TouchableOpacity
-                    onPress={async () => {
-                      props.navigation.push('EmployeeTab', {
-                        screen: 'EmployeeLogin',
-                      });
-                      await AsyncStorage.setItem('type', 'employee');
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     }}>
-                    <Text
-                      style={{
-                        color: COLORS.hyperlinkBlue,
-                        ...FONTS.h5,
-                        fontSize: 14,
-                        textDecorationLine: 'underline',
+                    {/* signIn for Employee */}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        props.navigation.push('EmployeeTab', {
+                          screen: 'EmployeeLogin',
+                        });
+                        await AsyncStorage.setItem('type', 'employee');
                       }}>
-                      Sign In as Employee
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={{
+                          color: COLORS.hyperlinkBlue,
+                          ...FONTS.h5,
+                          fontSize: 14,
+                          textDecorationLine: 'underline',
+                        }}>
+                        Sign In as Employee
+                      </Text>
+                    </TouchableOpacity>
 
-                  {/* Forgot Password */}
-                  <TouchableOpacity>
-                    <Text
-                      style={styles.forgotPassword}
-                      onPress={() => {
-                        values.userId !== ''
-                          ? forgetPasswordApi(values.userId)
-                          : Toast.show({
-                              type: 'error',
-                              text1: 'Please enter User Id',
-                            });
-                      }}>
-                      Forgot Password?{' '}
-                    </Text>
-                  </TouchableOpacity>
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                      <Text
+                        style={styles.forgotPassword}
+                        onPress={() => {
+                          values.userId !== ''
+                            ? forgetPasswordApi(values.userId)
+                            : Toast.show({
+                                type: 'error',
+                                text1: 'Please enter User Id',
+                              });
+                        }}>
+                        Forgot Password?{' '}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            );
-          }}
-        </Formik>
-</View>
+              );
+            }}
+          </Formik>
+        </View>
 
         {/* Bottom element */}
-        <View style={{
+        <View
+          style={{
             flex: 0.04,
-           }}>
+          }}>
           <Text
             style={{
               textAlign: 'center',

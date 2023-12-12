@@ -52,7 +52,7 @@ const Entry_page = props => {
       <View style={{flex: 4}}>
         <Image
           resizeMode="contain"
-          source={Entry_logo}
+          source={Entry_logo}x
           style={{marginTop: 30, width: '100%', height: '100%'}}
         />
       </View>
@@ -90,8 +90,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    height: '100%',
-    width: '100%',
+    
   },
   elevation: {
     shadowColor: '#000',

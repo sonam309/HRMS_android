@@ -203,17 +203,18 @@ const Employee_Login = props => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
+      {/* <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" /> */}
       <Loader loaderVisible={loaderVisible} />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        behavior={Platform.OS === 'ios' ? 'position' : 'position'}
         contentContainerStyle={{
           flex: 1,
         }}
         style={{
           flex: 1,
-        }}>
+        }}
+        >
         <View
           style={{
             flex: 0.5,
@@ -292,7 +293,7 @@ const Employee_Login = props => {
                     paddingHorizontal: 25,
                     justifyContent: 'center',
                   }}>
-                  <Text style={styles.header}>Employee Login</Text>
+                  <Text style={styles.header}>Employee Login {Platform.systemName}</Text>
                   {/* user credentials -username */}
                   <View style={[styles.textInputBox]}>
                     {/* <CustomInput

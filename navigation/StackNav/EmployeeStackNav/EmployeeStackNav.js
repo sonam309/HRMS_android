@@ -15,17 +15,16 @@ const EmployeeStackNav = () => {
   return (
     <Stack.Navigator
       initialRouteName="EmployeeLogin"
-      screenOptions={{headerShown: false}}>
+      screenOptions={{headerShown: false}}
+      >
       {!authenticated ? (
         <Stack.Screen
           name="EmployeeLogin"
-          options={{orientation: 'portrait'}}
           component={Employee_Login}
         />
       ) : (
         <Stack.Screen
           name="DrawerTab"
-          options={{orientation: 'portrait'}}
           component={EmployeeDrawer}
         />
       )}

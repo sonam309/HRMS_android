@@ -10,7 +10,7 @@ import {API} from '../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
-import { COLORS, FONTS, SIZES } from '../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 
 const Candidate_Document = props => {
   // Candidate ID & Status
@@ -178,31 +178,37 @@ const Candidate_Document = props => {
         ],
         // allowMultiSelection: true
       });
-      // console.log(type);
-      if (type == 'Aadhar Card') {
-        setFileUpload(current => [
-          ...current,
-          {
-            name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0].type.split('/')[1]
-            }`,
-            type: doc[0].type,
-            uri: doc[0].uri,
-            txnId: '',
-          },
-        ]);
+      if (doc[0].size / (1024 * 1024) <= 10) {
+        if (type == 'Aadhar Card') {
+          setFileUpload(current => [
+            ...current,
+            {
+              name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
+                doc[0].type.split('/')[1]
+              }`,
+              type: doc[0].type,
+              uri: doc[0].uri,
+              txnId: '',
+            },
+          ]);
+        } else {
+          setFileUpload(current => [
+            ...current,
+            {
+              name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+                doc[0].type.split('/')[1]
+              }`,
+              type: doc[0].type,
+              uri: doc[0].uri,
+              txnId: '',
+            },
+          ]);
+        }
       } else {
-        setFileUpload(current => [
-          ...current,
-          {
-            name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0].type.split('/')[1]
-            }`,
-            type: doc[0].type,
-            uri: doc[0].uri,
-            txnId: '',
-          },
-        ]);
+        Toast.show({
+          type: 'error',
+          text1: 'Please upload file less than 10mb',
+        });
       }
     } catch (error) {
       // console.log(error);
@@ -236,8 +242,7 @@ const Candidate_Document = props => {
       const doc = await DocumentPicker.pick({
         type: imgType,
       });
-
-      // console.log(doc);
+      if (doc[0].size / (1024 * 1024) <= 10) {
 
       setOtherFiles([
         ...otherFiles.slice(0, index),
@@ -250,6 +255,12 @@ const Candidate_Document = props => {
         },
         ...otherFiles.slice(index + 1),
       ]);
+    }else{
+      Toast.show({
+        type: "error",
+        text1: 'Please upload file less than 10mb'
+      })
+    }
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -590,7 +601,7 @@ const Candidate_Document = props => {
                   size={24}
                   color={COLORS.green}
                   onPress={() => {
-                    props.navigation.navigate('View_Doc', {file: item.name, });
+                    props.navigation.navigate('View_Doc', {file: item.name});
                   }}
                 />
               )}
