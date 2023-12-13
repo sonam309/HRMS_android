@@ -251,8 +251,11 @@ const EmployeeDrawer = props => {
         // drawerInactiveBorderColor: COLORS.lightGray,
 
         drawerLabelStyle: {
-          fontSize: 15,
+          fontSize: 13,
+          flexWrap:'wrap',
           width: '100%',
+          paddingHorizontal: SIZES.base,
+         
         },
 
         drawerItemStyle: {
@@ -368,12 +371,12 @@ const EmployeeDrawer = props => {
           drawerIcon: ({color}) => (
             // <Ionicons name="people-outline" size={28} color={color} />
             <Image
-              source={icons.hiring}
-              style={{
-                height: 32,
-                width: 32,
-              }}
-            />
+            source={icons.hiring}
+            style={{
+              height: 32,
+              width: 32,
+            }}
+          />
           ),
         }}
       />

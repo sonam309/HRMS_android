@@ -80,16 +80,19 @@ const ForgetPassword = props => {
   }
 
   const MatchPasswordValidation = () => {
-    if (newPassword == '') {
+    const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+    if (!reg.test(newPassword)) {
       // console.warn("Plaese Enter New Password");
       Toast.show({
         type: 'error',
-        text1: 'Plaese Enter New Password',
+        text1: 'Password Contain 8 Characters, One Uppercase',
+        text2: 'One Lowercase, One Number and one special case Character',
       });
-    } else if (confirmPassword == '') {
+    } else if (!reg.test(confirmPassword)) {
       Toast.show({
         type: 'error',
-        text1: 'Plaese Enter Confirm Password',
+        text1: 'Confirm pass Contain 8 Characters, One UppercaseOne Lowercase',
+        text2: 'One Lowercase, One Number and one special case Character',
       });
 
       // console.warn("Plaese Enter Confirm Password");
@@ -137,8 +140,8 @@ const ForgetPassword = props => {
 
       result[0] === 'S'
         ? oper === 'R'
-          ? props.navigation.navigate('Employee_Login')
-          : props.navigation.navigate('Candidate_Login')
+          ? props.navigation.navigate('EmployeeTab')
+          : props.navigation.navigate('CandidateTab')
         : Toast.show({
             type: 'error',
             text1: 'error',

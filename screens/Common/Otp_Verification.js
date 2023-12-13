@@ -68,16 +68,24 @@ const Otp_Verification = props => {
 
   //forgetPassword api Call
   const forgetPasswordApi = () => {
+    setF2('');
+    setF3('');
+    setF4('');
+    setF5('');
+    setF6('');
+    setF1('');
+
+
     setLoaderVisible(true);
     let otp = RandomNumber('6');
-    // console.log("otpppppp", otp + " $ " + userId + " "+operFlag);
+    console.log('otpppppp', otp + ' $ ' + userId + ' ' + operFlag);
     axios
       .get(`${API}/api/GetMobileNo`, {
         params: {
           loginId: userId,
           operFlag: operFlag,
           message:
-            otp + ' Is the OTP for your mobile verfication on Satya One.',
+            otp + ' Is the OTP for your mobile verfication on Satya Sathi.',
         },
       })
       .then(response => {
@@ -91,12 +99,12 @@ const Otp_Verification = props => {
         if (result[0] == 'S') {
           Toast.show({
             type: 'success',
-            text1: 'success',
+            text1: 'OTP has been sent Successfully',
           });
         } else {
           Toast.show({
             type: 'error',
-            text1: 'error',
+            text1: 'Please try again!',
           });
         }
       });
@@ -112,6 +120,10 @@ const Otp_Verification = props => {
       props.navigation.navigate('ForgetPassword', {type, userId});
       setLoaderVisible(false);
     } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Please Enter valid OTP',
+      });
       setLoaderVisible(false);
     }
   };

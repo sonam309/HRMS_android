@@ -16,7 +16,7 @@ import {API} from '../../../utility/services';
 import {tag} from '../../../assets';
 import Toast from 'react-native-toast-message';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
-import {COLORS, SIZES} from '../../../constants';
+import { COLORS, FONTS, SIZES } from '../../../constants'
 
 const New_hiring = props => {
   const {navigation, selectedOption, setFilterVisible} = props;

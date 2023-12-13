@@ -39,7 +39,7 @@ const CreateMpin = props => {
           loginId: userName,
           operFlag: 'E',
           message:
-            otp + ' Is the OTP for your mobile verfication on Satya One.',
+            otp + ' Is the OTP for your mobile verfication on Satya Sathi.',
         },
       })
       .then(response => {

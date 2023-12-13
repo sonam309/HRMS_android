@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLORS, FONTS, SIZES} from '../../constants';
 
 const FormInput = ({
@@ -22,6 +22,11 @@ const FormInput = ({
   multiline = false,
   required = true,
 }) => {
+  const [didFocus, setDidFocus] = useState(false);
+
+  const handleFocus = () => setDidFocus(true);
+  const showFeedback = !!didFocus;
+
   return (
     <View style={{marginTop: SIZES.radius, ...containerStyle}}>
       {/* Label & error msg */}
@@ -35,7 +40,9 @@ const FormInput = ({
           {label}
           {required && <Text style={styles.required}>{'*'}</Text>}
         </Text>
-        <Text style={{color: COLORS.red, ...FONTS.body4}}>{errorMsg}</Text>
+        {showFeedback && (
+          <Text style={{color: COLORS.red, ...FONTS.body4}}>{errorMsg}</Text>
+        )}
       </View>
 
       {/* Text Input */}
@@ -71,6 +78,7 @@ const FormInput = ({
           autoCapitalize={autoCapitalize}
           onChangeText={text => onChange(text)}
           onBlur={onBlur}
+          onFocus={handleFocus}
         />
 
         {appendComponent}

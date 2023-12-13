@@ -1,6 +1,6 @@
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import { COLORS, FONTS, SIZES } from '../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
@@ -180,31 +180,38 @@ const Candidate_Document = props => {
         // allowMultiSelection: true
       });
       // console.log(type);
-      if (type == 'Aadhar Card') {
-        setFileUpload(current => [
-          ...current,
-          {
-            name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0].type.split('/')[1]
-            }`,
-            type: doc[0].type,
-            uri: doc[0].uri,
-            txnId: '',
-          },
-        ]);
-        console.log('t5635656735763676376783', name);
+      if (doc[0].size / (1024 * 1024) <= 10) {
+        if (type == 'Aadhar Card') {
+          setFileUpload(current => [
+            ...current,
+            {
+              name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
+                doc[0].type.split('/')[1]
+              }`,
+              type: doc[0].type,
+              uri: doc[0].uri,
+              txnId: '',
+            },
+          ]);
+          console.log('t5635656735763676376783', name);
+        } else {
+          setFileUpload(current => [
+            ...current,
+            {
+              name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+                doc[0].type.split('/')[1]
+              }`,
+              type: doc[0].type,
+              uri: doc[0].uri,
+              txnId: '',
+            },
+          ]);
+        }
       } else {
-        setFileUpload(current => [
-          ...current,
-          {
-            name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0].type.split('/')[1]
-            }`,
-            type: doc[0].type,
-            uri: doc[0].uri,
-            txnId: '',
-          },
-        ]);
+        Toast.show({
+          type: 'error',
+          text1: 'Please upload file less than 10mb',
+        });
       }
     } catch (error) {
       // console.log(error);
@@ -239,19 +246,26 @@ const Candidate_Document = props => {
         type: imgType,
       });
 
-      console.log("docsize",doc);
+      // console.log('docsize', doc);
 
-      setOtherFiles([
-        ...otherFiles.slice(0, index),
-        {
-          name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-            doc[0].type.split('/')[1]
-          }`,
-          type: doc[0].type,
-          uri: doc[0].uri,
-        },
-        ...otherFiles.slice(index + 1),
-      ]);
+      if (doc[0].size / (1024 * 1024) <= 10) {
+        setOtherFiles([
+          ...otherFiles.slice(0, index),
+          {
+            name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+              doc[0].type.split('/')[1]
+            }`,
+            type: doc[0].type,
+            uri: doc[0].uri,
+          },
+          ...otherFiles.slice(index + 1),
+        ]);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Please upload file less than 10mb',
+        });
+      }
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -456,7 +470,7 @@ const Candidate_Document = props => {
         });
 
         res = await res.json();
-        // console.log("SaveImages", res);
+        console.log('SaveImages', res);
         setLoaderVisible(false);
         Toast.show({
           type: 'success',
@@ -949,21 +963,57 @@ const Candidate_Document = props => {
           <Text style={{...FONTS.h3, color: COLORS.black}}>
             Upload your documents
           </Text>
-          <Text style={{...FONTS.body4, marginTop: 8, color: COLORS.gray}}>
-            File size should be less than 10MB{' '}
-          </Text>
-          <Text style={{...FONTS.body5, color: COLORS.gray}}>
-            JPG, JPEG, PNG, DOC, DOCX, PDF only
-          </Text>
-          <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Icon
+              name="check-all"
+              size={15}
+              color={COLORS.green}
+              style={{marginTop: 2}}
+            />
+            <Text style={{...FONTS.body4, marginTop: 8, color: COLORS.gray, marginLeft:4}}>
+              File size should be less than 10MB.
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Icon
+              name="check-all"
+              size={15}
+              color={COLORS.green}
+              style={{marginTop: 2}}
+            />
+            <Text style={{...FONTS.body5, color: COLORS.gray, marginLeft:4}}>
+              JPG, JPEG, PNG, DOC, DOCX, PDF only.
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Icon
+              name="check-all"
+              size={15}
+              color={COLORS.green}
+              style={{marginTop: 2}}
+            />
+
             <Text
               style={{
                 ...FONTS.body4,
                 alignItems: 'center',
                 color: COLORS.gray,
+                marginLeft: 4,
               }}>
               <Text style={{color: COLORS.red}}>*</Text>Marked Documents are
-              mandatory
+              mandatory.
             </Text>
           </View>
         </View>
@@ -1116,13 +1166,13 @@ const Candidate_Document = props => {
                 9,
                 '',
               )}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[13],
                 10,
                 // experience === 'No' && 'imp',
-              )}
+              )} */}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
@@ -1130,13 +1180,13 @@ const Candidate_Document = props => {
                 11,
                 '',
               )}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[15],
                 12,
                 '',
-              )}
+              )} */}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
@@ -1144,13 +1194,13 @@ const Candidate_Document = props => {
                 13,
                 '',
               )}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[17],
                 14,
                 '',
-              )}
+              )} */}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,

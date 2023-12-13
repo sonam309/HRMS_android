@@ -118,8 +118,8 @@ android {
         applicationId "com.koshishapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "2.4"
+        versionCode 16
+        versionName "2.5"
     }
     signingConfigs {
         release {

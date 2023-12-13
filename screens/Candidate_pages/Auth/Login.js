@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   Linking,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -34,7 +35,10 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
-import {COLORS, FONTS, SIZES} from '../../../constants';
+import {COLORS, FONTS, SIZES, icons} from '../../../constants';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import FormInput from '../../../components/FormInput';
 
 const Login = props => {
   let page = null;
@@ -49,18 +53,38 @@ const Login = props => {
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
 
+  const userInfo = {
+    userId: '',
+    password: '',
+  };
+
+  const validationSchema = Yup.object({
+    userId: Yup.string()
+      .trim()
+      .required('CandidateId is required')
+      .matches(/^[a-zA-Z0-9]+$/, 'Invalid candidate id'),
+
+    password: Yup.string().trim().required('Password is required'),
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+    //   'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+    // ),
+  });
+
   const getType = async () => {
     page = await AsyncStorage.getItem('type');
     {
       page ? (page === 'employee' ? setOperFlag('E') : setOperFlag('A')) : null;
     }
   };
+
   const userData = {
     loginId: userId,
     password: password,
     oprFlag: 'L',
     oldPassword: '',
   };
+
   //Random Number
   const RandomNumber = length => {
     return Math.floor(
@@ -84,7 +108,7 @@ const Login = props => {
   };
 
   // forgetpassword
-  const forgetPasswordApi = () => {
+  const forgetPasswordApi = userId => {
     setLoaderVisible(true);
     let otp = RandomNumber('6');
     console.log('msg', otp + ' $ ' + userId + operFlag);
@@ -94,7 +118,7 @@ const Login = props => {
           loginId: userId,
           operFlag: operFlag,
           message:
-            otp + ' Is the OTP for your mobile verfication on Satya One.',
+            otp + ' Is the OTP for your mobile verfication on Satya Sathi.',
         },
       })
       .then(response => {
@@ -118,249 +142,364 @@ const Login = props => {
   };
 
   // logging in function
-  const submit = () => {
-    if (userId === '' || password === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'UserId and Password is Mandatory !',
-      });
-    } else {
-      console.log('userLogReq', userData);
-      setLoaderVisible(true);
-      axios
-        .post(`${API}/api/User/candidateLogin`, userData)
-        .then(response => {
-          const returnedData = response.data.Result[0];
-          let candidateName = returnedData.CANDIDATE_NAME;
-          let candidateStatus = returnedData.CANDIDATE_STATUS;
-          let candidateRole = returnedData.JOB_TITLE;
-          let candidatePhone = returnedData.PHONE;
-          let candidateRoleId = returnedData.ROLE_ID;
-          let candidateStatusId = returnedData.STATUS_ID;
-          let offerAcceptFlag = returnedData.OFER_ACPT_FLAG;
-          let daysToJoin = returnedData.DAY_TO_JOIN;
-          let candidateOfferLetter = returnedData.OFFER_LETTER;
-          let growingDays = returnedData.GROWING_DAY;
-          let totalDay = returnedData.TOTAL_DAY;
-          let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL;
-          let candidateId = returnedData.USER_ID;
-          let satyaSathiVersion = returnedData.SATHI_VERSION;
+  const submit = values => {
+    const userData = {
+      loginId: values.userId,
+      password: values.password,
+      oprFlag: 'L',
+      oldPassword: '',
+    };
+    console.log('userLogReq', userData);
+    setLoaderVisible(true);
+    axios
+      .post(`${API}/api/User/candidateLogin`, userData)
+      .then(response => {
+        const returnedData = response.data.Result[0];
+        let candidateName = returnedData.CANDIDATE_NAME;
+        let candidateStatus = returnedData.CANDIDATE_STATUS;
+        let candidateRole = returnedData.JOB_TITLE;
+        let candidatePhone = returnedData.PHONE;
+        let candidateRoleId = returnedData.ROLE_ID;
+        let candidateStatusId = returnedData.STATUS_ID;
+        let offerAcceptFlag = returnedData.OFER_ACPT_FLAG;
+        let daysToJoin = returnedData.DAY_TO_JOIN;
+        let candidateOfferLetter = returnedData.OFFER_LETTER;
+        let growingDays = returnedData.GROWING_DAY;
+        let totalDay = returnedData.TOTAL_DAY;
+        let hiringLeadMail = returnedData.HIRING_LEAD_EMAIL;
+        let candidateId = returnedData.USER_ID;
+        let satyaSathiVersion = returnedData.SATHI_VERSION;
 
-          setLoaderVisible(false);
-          setLoginResponse(returnedData);
+        setLoaderVisible(false);
+        setLoginResponse(returnedData);
 
-          console.log('loginresp', returnedData);
+        console.log('loginresp', returnedData);
 
-          if (returnedData.FLAG === 'S') {
-            if (returnedData?.SATHI_VERSION > VERSIONS?.android) {
-              setGreaterVersion(true);
-              console.log(returnedData?.SATHI_VERSION);
-              setNewApkVersion(returnedData?.SATHI_VERSION);
-            } else {
-              dispatch(
-                candidateAuthActions.logIn({
-                  candidateId: returnedData.USER_ID,
-                  candidateName,
-                  candidateRole,
-                  candidateStatus,
-                  candidatePhone,
-                  candidateRoleId,
-                  candidateStatusId,
-                  offerAcceptFlag,
-                  daysToJoin,
-                  candidateOfferLetter,
-                  growingDays,
-                  totalDay,
-                  hiringLeadMail,
-                  satyaSathiVersion,
-                  candidateAuthenticated: true,
-                }),
-              );
-            }
+        if (returnedData.FLAG === 'S') {
+          if (returnedData?.SATHI_VERSION > VERSIONS?.android) {
+            setGreaterVersion(true);
+            console.log(returnedData?.SATHI_VERSION);
+            setNewApkVersion(returnedData?.SATHI_VERSION);
           } else {
-            Toast.show({
-              type: 'error',
-              text1: 'Failure Please enter correct credentials',
-            });
+            dispatch(
+              candidateAuthActions.logIn({
+                candidateId: returnedData.USER_ID,
+                candidateName,
+                candidateRole,
+                candidateStatus,
+                candidatePhone,
+                candidateRoleId,
+                candidateStatusId,
+                offerAcceptFlag,
+                daysToJoin,
+                candidateOfferLetter,
+                growingDays,
+                totalDay,
+                hiringLeadMail,
+                satyaSathiVersion,
+                candidateAuthenticated: true,
+              }),
+            );
           }
-
-          setUserId('');
-          setPassword('');
-        })
-        .catch(error => {
-          setLoaderVisible(false);
+        } else {
           Toast.show({
             type: 'error',
-            text1: error,
+            text1: 'Failure Please enter correct credentials',
           });
+        }
+
+        // setUserId('');
+        // setPassword('');
+      })
+      .catch(error => {
+        setLoaderVisible(false);
+        Toast.show({
+          type: 'error',
+          text1: error,
         });
-    }
+      });
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <Loader loaderVisible={loaderVisible} />
-      {/* Company Logo */}
-      <View style={{flex: 1, alignItems: 'flex-start', flexDirection: 'row'}}>
-        <Image
-          source={company_icon}
-          style={{
-            width: '15%',
-            height: '15%',
-            resizeMode: 'center',
-            marginLeft: 10,
-            marginTop: 10,
-          }}
-        />
-
-        <Text
-          style={{
-            color: COLORS.orange1,
-            ...FONTS.h3,
-            fontSize: 20,
-            marginTop: 20,
-            marginLeft: -10,
-          }}>
-          Satya Sathi
-        </Text>
-      </View>
-
-      <View
-        style={{
-          width: responsiveWidth(100),
-          height: 100,
-          marginTop: -170,
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : 'position'}
+        contentContainerStyle={{
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Image
-          source={loginIcon}
-          style={{height: '100%', width: '100%'}}
-          resizeMode="stretch"
-        />
-      </View>
-      {/* candidate Login titlte */}
-      <View
+        }}
         style={{
-          justifyContent: 'center',
-          flex: 1.5,
-          borderRadius: 20,
-          backgroundColor: COLORS.white,
-          paddingHorizontal: 25,
+          flex: 1,
         }}>
-        <Text style={styles.header}>Candidate Login</Text>
+        <View
+          style={{
+            flex: 0.5,
+          }}>
+          {/* Company Logo */}
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              marginHorizontal: SIZES.base,
+              marginTop: SIZES.base,
+              gap: SIZES.radius,
+            }}>
+            <Image
+              source={company_icon}
+              style={{
+                width: 45,
+                height: 45,
+                resizeMode: 'center',
+              }}
+            />
 
-        {/* user credentials - userId */}
-        <View style={styles.textInputBox}>
-          <CustomInput
-            placeholder={'Candidate Id'}
-            caption={'Candidate ID'}
-            value={userId}
-            onChangeText={name => setUserId(name)}
-            required
-          />
-        </View>
-        {/* Password */}
-        <View style={[styles.textInputBox]}>
-          <CustomInput
-            placeholder={'Password'}
-            caption={'Password'}
-            value={password}
-            onChangeText={security => setPassword(security)}
-            required
-            secureTextEntry={showVisibility}
-            isPasswordInput
-            textInputStyle={{
-              width: responsiveWidth(70),
-            }}
-            icon={
-              <Pressable onPress={changeVisibility}>
-                <AntDesign name="eye" size={22} />
-              </Pressable>
-            }
-          />
+            <Text
+              style={{
+                color: COLORS.orange1,
+                ...FONTS.h3,
+                fontSize: 20,
+                marginTop: 20,
+                marginLeft: -10,
+              }}>
+              Satya Sathi
+            </Text>
+          </View>
+
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={loginIcon}
+              style={{
+                height: 220,
+                width: responsiveWidth(100),
+              }}
+              resizeMode="stretch"
+            />
+          </View>
         </View>
 
-        {/* Quick Pin Option */}
-        {/* <View style={styles.loginOption}>
+        <View
+          style={{
+            flex: 0.8,
+            justifyContent: 'center',
+          }}>
+          <Formik
+            initialValues={userInfo}
+            validationSchema={validationSchema}
+            onSubmit={(values, formikActions, touched, isValid) => {
+              // onLogin(values, formikActions, touched, isValid);
+              submit(values, formikActions, touched, isValid);
+            }}>
+            {({
+              values,
+              errors,
+              handleChange,
+              touched,
+              handleBlur,
+              handleSubmit,
+              isValid,
+              dirty,
+              isSubmitting,
+            }) => {
+              const {userId, password} = values;
+              return (
+                // {/* candidate Login titlte */}
+                <View
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 25,
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={styles.header}>Candidate Login</Text>
+
+                  {/* user credentials - userId */}
+                  <View style={styles.textInputBox}>
+                    {/* <CustomInput
+                  placeholder={'Candidate Id'}
+                  caption={'Candidate ID'}
+                  value={userId}
+                  onChangeText={name => setUserId(name)}
+                  required
+                /> */}
+                    <FormInput
+                      label="Candidate Id"
+                      placeholder={'Candidate Id'}
+                      // keyboardType="email-address"
+                      // autoCompleteType="email"
+                      onChange={handleChange('userId')}
+                      errorMsg={errors.userId}
+                      onBlur={handleBlur('userId')}
+                      labelColor={COLORS.black}
+                      appendComponent={
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                          }}>
+                          <Image
+                            source={
+                              userId == '' ||
+                              (userId != '' && errors.userId == null)
+                                ? icons.correct
+                                : icons.cross
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor:
+                                userId == ''
+                                  ? COLORS.gray
+                                  : userId != '' && errors.userId == null
+                                  ? COLORS.green
+                                  : COLORS.red,
+                            }}
+                          />
+                        </View>
+                      }
+                      value={values.userId}
+                    />
+                  </View>
+                  {/* Password */}
+                  <View style={styles.textInputBox}>
+                    {/* <CustomInput
+                  placeholder={'Password'}
+                  caption={'Password'}
+                  value={password}
+                  onChangeText={security => setPassword(security)}
+                  required
+                  secureTextEntry={showVisibility}
+                  isPasswordInput
+                  textInputStyle={{
+                    width: responsiveWidth(70),
+                  }}
+                  icon={
+                    <Pressable onPress={changeVisibility}>
+                      <AntDesign name="eye" size={22} />
+                    </Pressable>
+                  }
+                /> */}
+                    <FormInput
+                      label="Password"
+                      placeholder={'Password'}
+                      autoCompleteType="password"
+                      secureTextEntry={showVisibility}
+                      onChange={handleChange('password')}
+                      errorMsg={errors.password}
+                      // onBlur={handleBlur('password')}
+                      labelColor={COLORS.black}
+                      value={values.password}
+                      appendComponent={
+                        <TouchableOpacity
+                          style={{
+                            width: 40,
+                            alignItems: 'flex-end',
+                            justifyContent: 'center',
+                          }}
+                          onPress={() => setShowVisibility(!showVisibility)}>
+                          <Image
+                            source={
+                              showVisibility ? icons.eye_close : icons.eye
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor: COLORS.gray,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      }
+                    />
+                  </View>
+
+                  {/* Quick Pin Option */}
+                  {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 30, height: 30, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View> */}
 
-        <TextButton
-          color1={COLORS.green}
-          color2={'#9ADD00'}
-          linearGradientStyle={{
-            marginTop: SIZES.base,
-            marginBottom: SIZES.radius,
-            borderRadius: SIZES.base,
-          }}
-          buttonContainerStyle={{width: responsiveWidth(90), height: 50}}
-          label={'Log In'}
-          labelStyle={{color: COLORS.white}}
-          onPress={() => submit()}
-        />
+                  <TextButton
+                    color1={COLORS.green}
+                    color2={'#9ADD00'}
+                    linearGradientStyle={{
+                      marginTop: SIZES.padding * 1.2,
+                      marginBottom: SIZES.radius,
+                      borderRadius: SIZES.base,
+                    }}
+                    buttonContainerStyle={{
+                      width: responsiveWidth(90),
+                      height: 50,
+                    }}
+                    label={'Log In'}
+                    labelStyle={{color: COLORS.white}}
+                    onPress={handleSubmit}
+                  />
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          {/* signIn for Employee */}
-          <TouchableOpacity
-            onPress={async () => {
-              props.navigation.push('EmployeeTab', {
-                screen: 'EmployeeLogin',
-              });
-              await AsyncStorage.setItem('type', 'employee');
-            }}>
-            <Text
-              style={{
-                color: COLORS.hyperlinkBlue,
-                ...FONTS.h5,
-                fontSize: 14,
-                marginBottom: 100,
-                textDecorationLine: 'underline',
-              }}>
-              Sign In as Employee
-            </Text>
-          </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    {/* signIn for Employee */}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        props.navigation.push('EmployeeTab', {
+                          screen: 'EmployeeLogin',
+                        });
+                        await AsyncStorage.setItem('type', 'employee');
+                      }}>
+                      <Text
+                        style={{
+                          color: COLORS.hyperlinkBlue,
+                          ...FONTS.h5,
+                          fontSize: 14,
+                          textDecorationLine: 'underline',
+                        }}>
+                        Sign In as Employee
+                      </Text>
+                    </TouchableOpacity>
 
-          {/* Forgot Password */}
-          <TouchableOpacity>
-            <Text
-              style={styles.forgotPassword}
-              onPress={() => {
-                userId !== ''
-                  ? forgetPasswordApi()
-                  : Toast.show({
-                      type: 'error',
-                      text1: 'Please enter User Id',
-                    });
-              }}>
-              Forgot Password?{' '}
-            </Text>
-          </TouchableOpacity>
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                      <Text
+                        style={styles.forgotPassword}
+                        onPress={() => {
+                          values.userId !== ''
+                            ? forgetPasswordApi(values.userId)
+                            : Toast.show({
+                                type: 'error',
+                                text1: 'Please enter User Id',
+                              });
+                        }}>
+                        Forgot Password?{' '}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            }}
+          </Formik>
         </View>
-      </View>
 
-      {/* Bottom element */}
-      <View style={{backgroundColor: COLORS.white, height: 30}}>
-        <Text
+        {/* Bottom element */}
+        <View
           style={{
-            textAlign: 'center',
-            color: COLORS.gray,
-            ...FONTS.h5,
-            fontWeight: '400',
-            padding: 5,
+            flex: 0.04,
           }}>
-          Version:{VERSIONS?.android}
-        </Text>
-      </View>
-      {/* <View style={{ flex: 0.5, marginBottom: 5, backgroundColor:COLORS.red}}>
-                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
-            </View> */}
-
+          <Text
+            style={{
+              textAlign: 'center',
+              color: COLORS.gray,
+              ...FONTS.h5,
+              fontWeight: '400',
+            }}>
+            Version:{VERSIONS?.android}
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
       {greaterVersion && (
         <Modal
           animationType="slide"
@@ -445,10 +584,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   header: {
-    marginTop: 60,
     color: COLORS.black,
     ...FONTS.h3,
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Ubuntu-Bold',
   },
   elevation: {
@@ -472,7 +610,6 @@ const styles = StyleSheet.create({
     color: COLORS.orange1,
     ...FONTS.h4,
     fontSize: 14,
-    marginBottom: 100,
   },
   loginButton: {
     marginHorizontal: 25,

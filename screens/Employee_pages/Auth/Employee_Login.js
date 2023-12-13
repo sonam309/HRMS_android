@@ -8,6 +8,9 @@ import {
   Pressable,
   Linking,
   Modal,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -30,9 +33,10 @@ import TextButton from '../../../components/TextButton';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import FormInput from '../../../components/FormInput';
 import {Formik} from 'formik';
-import {COLORS,FONTS,SIZES} from '../../../constants';
+import * as Yup from 'yup';
+import FormInput from '../../../components/FormInput';
+import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 
 const Employee_Login = props => {
   const [showVisibility, setShowVisibility] = useState(true);
@@ -57,16 +61,16 @@ const Employee_Login = props => {
     password: Yup.string()
       .trim()
       .required('Password is required')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
-        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-      ),
+      // .matches(
+      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+      //   'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+      // ),
   });
 
   const {loading} = useSelector(state => state.punchDetail);
 
   const getCurrentLocation = async val => {
-    Geolocation({val, userId, password});
+    Geolocation({val, userId: userInfo.userId, password: userInfo.password});
   };
   // preventing going to entry page
   const navigation = useNavigation();
@@ -167,7 +171,7 @@ const Employee_Login = props => {
             loginId: userId,
             operFlag: 'E',
             message:
-              otp + ' Is the OTP for your mobile verfication on Satya One.',
+              otp + ' Is the OTP for your mobile verfication on Satya Sathi.',
           },
         })
         .then(response => {
@@ -202,80 +206,96 @@ const Employee_Login = props => {
       <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <Loader loaderVisible={loaderVisible} />
 
-      {/* Company Logo */}
-      <View style={{flex: 1, alignItems: 'flex-start', flexDirection: 'row'}}>
-        <Image
-          source={company_icon}
-          style={{
-            width: '15%',
-            height: '15%',
-            resizeMode: 'center',
-            marginLeft: 10,
-            marginTop: 10,
-          }}
-        />
-        <Text
-          style={{
-            color: COLORS.orange1,
-            ...FONTS.h3,
-            fontSize: 20,
-            marginTop: 20,
-            marginLeft: -10,
-          }}>
-          Satya Sathi
-        </Text>
-      </View>
-
-      <View
-        style={{
-          width: responsiveWidth(100),
-          height: 100,
-          marginTop: -220,
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        contentContainerStyle={{
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
+        }}
+        style={{
+          flex: 1,
         }}>
-        <Image
-          source={employeeLoginBanner}
+        <View
           style={{
-            height: '90%',
-            width: '100%',
-          }}
-          resizeMode="stretch"
-        />
-      </View>
-      <Formik
-        initialValues={userInfo}
-        validationSchema={validationSchema}
-        onSubmit={(values, formikActions, touched, isValid) => {
-          // onLogin(values, formikActions, touched, isValid);
-          submit(values, formikActions, touched, isValid);
-        }}>
-        {({
-          values,
-          errors,
-          handleChange,
-          touched,
-          handleBlur,
-          handleSubmit,
-          isValid,
-          dirty,
-          isSubmitting,
-        }) => {
-          const {userId, password} = values;
-          return (
-            <View
+            flex: 0.5,
+          }}>
+          {/* Company Logo */}
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              marginHorizontal: SIZES.base,
+              marginTop: SIZES.base,
+              gap: SIZES.radius,
+            }}>
+            <Image
+              source={company_icon}
               style={{
-                justifyContent: 'center',
-                flex: 1.5,
-                borderRadius: 20,
-                backgroundColor: COLORS.white,
-                paddingHorizontal: 25,
+                width: 45,
+                height: 45,
+                resizeMode: 'center',
+              }}
+            />
+            <Text
+              style={{
+                color: COLORS.orange1,
+                ...FONTS.h3,
+                fontSize: 20,
               }}>
-              <Text style={styles.header}>Employee Login</Text>
-              {/* user credentials -username */}
-              <View style={[styles.textInputBox]}>
-                {/* <CustomInput
+              Satya Sathi
+            </Text>
+          </View>
+
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={employeeLoginBanner}
+              style={{
+                height: 220,
+                width: responsiveWidth(100),
+              }}
+              resizeMode="stretch"
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 0.8,
+            justifyContent: 'center',
+          }}>
+          <Formik
+            initialValues={userInfo}
+            validationSchema={validationSchema}
+            onSubmit={(values, formikActions, touched, isValid) => {
+              // onLogin(values, formikActions, touched, isValid);
+              submit(values, formikActions, touched, isValid);
+            }}>
+            {({
+              values,
+              errors,
+              handleChange,
+              touched,
+              handleBlur,
+              handleSubmit,
+              isValid,
+              dirty,
+              isSubmitting,
+            }) => {
+              const {userId, password} = values;
+              return (
+                <View
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 25,
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={styles.header}>Employee Login</Text>
+                  {/* user credentials -username */}
+                  <View style={[styles.textInputBox]}>
+                    {/* <CustomInput
                   placeholder={'User Id'}
                   caption={`User ID ${JSON.stringify(errors.userId)}`}
                   // value={}
@@ -289,46 +309,46 @@ const Employee_Login = props => {
                   // )}
                   onChange={handleChange("userId")}
                 /> */}
-                <FormInput
-                  label="User Id"
-                  placeholder={'User Id'}
-                  // keyboardType="email-address"
-                  // autoCompleteType="email"
-                  onChange={handleChange('userId')}
-                  errorMsg={errors.userId}
-                  onBlur={handleBlur('userId')}
-                  labelColor={COLORS.black}
-                  appendComponent={
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                      }}>
-                      <Image
-                        source={
-                          userId == '' ||
-                          (userId != '' && errors.userId == null)
-                            ? icons.correct
-                            : icons.cross
-                        }
-                        style={{
-                          height: 20,
-                          width: 20,
-                          tintColor:
-                            userId == ''
-                              ? COLORS.gray
-                              : userId != '' && errors.userId == null
-                              ? COLORS.green
-                              : COLORS.red,
-                        }}
-                      />
-                    </View>
-                  }
-                  value={values.userId}
-                />
-              </View>
-              {/* Password */}
-              <View style={[styles.textInputBox]}>
-                {/* <CustomInput
+                    <FormInput
+                      label="User Id"
+                      placeholder={'User Id'}
+                      // keyboardType="email-address"
+                      // autoCompleteType="email"
+                      onChange={handleChange('userId')}
+                      errorMsg={errors.userId}
+                      onBlur={handleBlur('userId')}
+                      labelColor={COLORS.black}
+                      appendComponent={
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                          }}>
+                          <Image
+                            source={
+                              userId == '' ||
+                              (userId != '' && errors.userId == null)
+                                ? icons.correct
+                                : icons.cross
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor:
+                                userId == ''
+                                  ? COLORS.gray
+                                  : userId != '' && errors.userId == null
+                                  ? COLORS.green
+                                  : COLORS.red,
+                            }}
+                          />
+                        </View>
+                      }
+                      value={values.userId}
+                    />
+                  </View>
+                  {/* Password */}
+                  <View style={[styles.textInputBox]}>
+                    {/* <CustomInput
                   placeholder={'Password'}
                   caption={'Password'}
                   value={password}
@@ -345,221 +365,231 @@ const Employee_Login = props => {
                     </Pressable>
                   }
                 /> */}
-                <FormInput
-                  label="Password"
-                  placeholder={'Password'}
-                  autoCompleteType="password"
-                  secureTextEntry={showVisibility}
-                  onChange={handleChange('password')}
-                  errorMsg={errors.password}
-                  // onBlur={handleBlur('password')}
-                  labelColor={COLORS.black}
-                  value={values.password}
-                  appendComponent={
-                    <TouchableOpacity
-                      style={{
-                        width: 40,
-                        alignItems: 'flex-end',
-                        justifyContent: 'center',
-                      }}
-                      onPress={() => setShowVisibility(!showVisibility)}>
-                      <Image
-                        source={showVisibility ? icons.eye_close : icons.eye}
-                        style={{
-                          height: 20,
-                          width: 20,
-                          tintColor: COLORS.gray,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
-              {/* Quick Pin Option */}
-              {/* <View style={styles.loginOption}>
+                    <FormInput
+                      label="Password"
+                      placeholder={'Password'}
+                      autoCompleteType="password"
+                      secureTextEntry={showVisibility}
+                      onChange={handleChange('password')}
+                      errorMsg={errors.password}
+                      // onBlur={handleBlur('password')}
+                      labelColor={COLORS.black}
+                      value={values.password}
+                      appendComponent={
+                        <TouchableOpacity
+                          style={{
+                            width: 40,
+                            alignItems: 'flex-end',
+                            justifyContent: 'center',
+                          }}
+                          onPress={() => setShowVisibility(!showVisibility)}>
+                          <Image
+                            source={
+                              showVisibility ? icons.eye_close : icons.eye
+                            }
+                            style={{
+                              height: 20,
+                              width: 20,
+                              tintColor: COLORS.gray,
+                            }}
+                          />
+                        </TouchableOpacity>
+                      }
+                    />
+                  </View>
+                  {/* Quick Pin Option */}
+                  {/* <View style={styles.loginOption}>
                     <TouchableOpacity style={{ alignItems: 'center' }}>
                         <Image source={Pinlock} style={{ width: 28, height: 28, }} />
                         <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
                     </TouchableOpacity>
                 </View> */}
-              <TextButton
-                color1={COLORS.green}
-                color2={'#9ADD00'}
-                linearGradientStyle={{
-                  marginTop: SIZES.font,
-                  marginBottom: SIZES.radius,
-                  borderRadius: SIZES.base,
-                }}
-                buttonContainerStyle={{width: responsiveWidth(90), height: 45}}
-                label={'Log In'}
-                labelStyle={{color: COLORS.white}}
-                onPress={handleSubmit}
-              />
-              {/* Punching Option */}
-              <View style={styles.punchArea}>
-                <TouchableOpacity
-                  onPress={() => getCurrentLocation('I')}
-                  style={[
-                    styles.punchButton,
-                    styles.elevation,
-                    {backgroundColor: '#D5F5E3'},
-                  ]}>
-                  <Text
-                    style={[styles.loginButtonText, {color: COLORS.darkGreen}]}>
-                    {loading ? 'loading...' : 'Punch In'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => getCurrentLocation('O')}
-                  style={[
-                    styles.punchButton,
-                    styles.elevation,
-                    {backgroundColor: '#FAE5D3'},
-                  ]}>
-                  <Text
-                    style={[styles.loginButtonText, {color: COLORS.orange1}]}>
-                    {loading ? 'loading...' : 'Punch Out'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  <TextButton
+                    color1={COLORS.green}
+                    color2={'#9ADD00'}
+                    linearGradientStyle={{
+                      marginTop: SIZES.font,
+                      marginBottom: SIZES.radius,
+                      borderRadius: SIZES.base,
+                    }}
+                    buttonContainerStyle={{
+                      width: responsiveWidth(90),
+                      height: 45,
+                    }}
+                    label={'Log In'}
+                    labelStyle={{color: COLORS.white}}
+                    onPress={handleSubmit}
+                  />
+                  {/* Punching Option */}
+                  <View style={styles.punchArea}>
+                    <TouchableOpacity
+                      onPress={() => getCurrentLocation('I')}
+                      style={[
+                        styles.punchButton,
+                        styles.elevation,
+                        {backgroundColor: '#D5F5E3'},
+                      ]}>
+                      <Text
+                        style={[
+                          styles.loginButtonText,
+                          {color: COLORS.darkGreen},
+                        ]}>
+                        {loading ? 'loading...' : 'Punch In'}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => getCurrentLocation('O')}
+                      style={[
+                        styles.punchButton,
+                        styles.elevation,
+                        {backgroundColor: '#FAE5D3'},
+                      ]}>
+                      <Text
+                        style={[
+                          styles.loginButtonText,
+                          {color: COLORS.orange1},
+                        ]}>
+                        {loading ? 'loading...' : 'Punch Out'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 15,
-                }}>
-                {/* signIn for Employee */}
-                <TouchableOpacity
-                  onPress={async () => {
-                    props.navigation.push('CandidateTab', {
-                      screen: 'CandidateLogin',
-                    });
-                    await AsyncStorage.setItem('type', 'candidate');
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: 15,
+                    }}>
+                    {/* signIn for Employee */}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        props.navigation.push('CandidateTab', {
+                          screen: 'CandidateLogin',
+                        });
+                        await AsyncStorage.setItem('type', 'candidate');
+                      }}>
+                      <Text
+                        style={{
+                          color: COLORS.hyperlinkBlue,
+                          ...FONTS.h5,
+                          fontSize: 14,
+                          textDecorationLine: 'underline',
+                        }}>
+                        Sign In as Candidate
+                      </Text>
+                    </TouchableOpacity>
+                    {/* Forgot Password */}
+                    <TouchableOpacity>
+                      <Text
+                        style={styles.forgotPassword}
+                        onPress={() =>
+                          values.userId !== ''
+                            ? forgetPasswordApi(values.userId)
+                            : Toast.show({
+                                type: 'error',
+                                text1: 'Please enter User id',
+                              })
+                        }>
+                        Forgot Password?
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            }}
+          </Formik>
+        </View>
+        {/* Bottom element */}
+        <View
+          style={{
+            flex: 0.04,
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: COLORS.gray,
+              ...FONTS.h5,
+              fontWeight: '400',
+            }}>
+            Version:{VERSIONS?.android}
+          </Text>
+        </View>
+
+        {greaterVersion && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={openVersionModal}
+            onRequestClose={() => {
+              setOpenVersionModal(!openVersionModal);
+              // console.log('closeee');
+
+              // props.navigation.navigate('Employee_Login');
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View
+                  style={{
+                    height: '100%',
+                    alignSelf: 'center',
+                    width: '100%',
+                    marginTop: -20,
                   }}>
+                  <Image
+                    source={company_logo_2}
+                    style={{height: 120, width: 120, marginLeft: 60}}
+                  />
                   <Text
                     style={{
-                      color: COLORS.hyperlinkBlue,
-                      ...FONTS.h5,
-                      fontSize: 14,
-                      marginBottom: 100,
-                      verticalAlign: 'middle',
-                      textDecorationLine: 'underline',
+                      ...FONTS.body5,
+                      lineHeight: 16,
+                      marginTop: -30,
+                      textAlign: 'center',
                     }}>
-                    Sign In as Candidate
+                    You are currently using older version of this APK, update
+                    now and continue.
                   </Text>
-                </TouchableOpacity>
-                {/* Forgot Password */}
-                <TouchableOpacity>
                   <Text
-                    style={styles.forgotPassword}
-                    onPress={() =>
-                      values.userId !== ''
-                        ? forgetPasswordApi(values.userId)
-                        : Toast.show({
-                            type: 'error',
-                            text1: 'Please enter User id',
-                          })
-                    }>
-                    Forgot Password?
+                    style={{
+                      marginTop: 10,
+                      ...FONTS.body5,
+                      textAlign: 'center',
+                      color: COLORS.lighterVoilet,
+                    }}>
+                    Older Version: {VERSIONS?.olderVersion}
                   </Text>
-                </TouchableOpacity>
+                  <Text
+                    style={{
+                      ...FONTS.h5,
+                      textAlign: 'center',
+                      color: COLORS.lighterVoilet,
+                    }}>
+                    New Version: {newApkVersion}
+                  </Text>
+
+                  <TextButton
+                    color1={COLORS.green}
+                    color2={COLORS.green}
+                    linearGradientStyle={{
+                      marginTop: SIZES.radius,
+                      marginBottom: SIZES.radius,
+                      borderRadius: 25,
+                    }}
+                    buttonContainerStyle={{height: 50}}
+                    label={'Update'}
+                    labelStyle={{color: COLORS.white, alignSelf: 'center'}}
+                    onPress={() =>
+                      Linking.openURL(
+                        'https://play.google.com/store/apps/details?id=com.koshishapp',
+                      )
+                    }
+                  />
+                </View>
               </View>
             </View>
-          );
-        }}
-      </Formik>
-      {/* Bottom element */}
-      <View style={{height: 30}}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: COLORS.gray,
-            ...FONTS.h5,
-            fontWeight: '400',
-            padding: 5,
-          }}>
-          Version:{VERSIONS?.android}
-        </Text>
-      </View>
-      {/* <View style={{ flex: 0.5, marginBottom: 5 }}>
-                <Text style={styles.bottomElement}>Version: <Text style={styles.bottomElement}>2.2</Text></Text>
-            </View> */}
-
-      {greaterVersion && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openVersionModal}
-          onRequestClose={() => {
-            setOpenVersionModal(!openVersionModal);
-            // console.log('closeee');
-
-            // props.navigation.navigate('Employee_Login');
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <View
-                style={{
-                  height: '100%',
-                  alignSelf: 'center',
-                  width: '100%',
-                  marginTop: -20,
-                }}>
-                <Image
-                  source={company_logo_2}
-                  style={{height: 120, width: 120, marginLeft: 60}}
-                />
-                <Text
-                  style={{
-                    ...FONTS.body5,
-                    lineHeight: 16,
-                    marginTop: -30,
-                    textAlign: 'center',
-                  }}>
-                  You are currently using older version of this APK, update now
-                  and continue.
-                </Text>
-                <Text
-                  style={{
-                    marginTop: 10,
-                    ...FONTS.body5,
-                    textAlign: 'center',
-                    color: COLORS.lighterVoilet,
-                  }}>
-                  Older Version: {VERSIONS?.olderVersion}
-                </Text>
-                <Text
-                  style={{
-                    ...FONTS.h5,
-                    textAlign: 'center',
-                    color: COLORS.lighterVoilet,
-                  }}>
-                  New Version: {newApkVersion}
-                </Text>
-
-                <TextButton
-                  color1={COLORS.green}
-                  color2={COLORS.green}
-                  linearGradientStyle={{
-                    marginTop: SIZES.radius,
-                    marginBottom: SIZES.radius,
-                    borderRadius: 25,
-                  }}
-                  buttonContainerStyle={{height: 50}}
-                  label={'Update'}
-                  labelStyle={{color: COLORS.white, alignSelf: 'center'}}
-                  onPress={() =>
-                    Linking.openURL(
-                      'https://play.google.com/store/apps/details?id=com.koshishapp',
-                    )
-                  }
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-      )}
+          </Modal>
+        )}
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -570,7 +600,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    marginTop: 140,
     color: COLORS.black,
     ...FONTS.h3,
     fontSize: 18,
@@ -597,7 +626,6 @@ const styles = StyleSheet.create({
     color: COLORS.orange1,
     ...FONTS.h4,
     fontSize: 14,
-    marginBottom: 150,
   },
   punchArea: {
     flexDirection: 'row',
