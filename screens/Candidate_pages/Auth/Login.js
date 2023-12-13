@@ -381,13 +381,13 @@ const Login = props => {
                   }
                 /> */}
                     <FormInput
-                      label="Password"
+                      label={"Password"}
                       placeholder={'Password'}
                       autoCompleteType="password"
                       secureTextEntry={showVisibility}
                       onChange={handleChange('password')}
                       errorMsg={errors.password}
-                      // onBlur={handleBlur('password')}
+                      onBlur={handleBlur('password')}
                       labelColor={COLORS.black}
                       value={values.password}
                       appendComponent={

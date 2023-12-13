@@ -39,6 +39,7 @@ import FormInput from '../../../components/FormInput';
 import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 
 const Employee_Login = props => {
+
   const [showVisibility, setShowVisibility] = useState(true);
   // const [userId, setUserId] = useState('17321');
   // const [password, setPassword] = useState('Test@123');
@@ -374,7 +375,7 @@ const Employee_Login = props => {
                       secureTextEntry={showVisibility}
                       onChange={handleChange('password')}
                       errorMsg={errors.password}
-                      // onBlur={handleBlur('password')}
+                      onBlur={handleBlur('password')}
                       labelColor={COLORS.black}
                       value={values.password}
                       appendComponent={

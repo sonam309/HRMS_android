@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { COLORS, FONTS, SIZES } from "../../constants";
+import { useField } from "formik";
 
 
 const FormInput = ({
@@ -22,8 +23,15 @@ const FormInput = ({
   value,
   multiline = false,
   required=true,
-  returnKeyType="go"
+  returnKeyType="go",
 }) => {
+  const [didFocus, setDidFocus] = useState(false);
+
+  const handleFocus = () => setDidFocus(true);
+  const showFeedback =
+  !!didFocus
+
+
   return (
     <View style={{ marginTop: SIZES.radius, ...containerStyle }}>
       {/* Label & error msg */}
@@ -35,7 +43,7 @@ const FormInput = ({
         }}
       >
         <Text style={{ color: labelColor, ...FONTS.h4 }}>{label}{required &&<Text style={styles.required}>{"*"}</Text>}</Text>
-        <Text style={{ color: COLORS.red, ...FONTS.body4 }}>{errorMsg}</Text>
+        {showFeedback && <Text style={{ color: COLORS.red, ...FONTS.body4 }}>{errorMsg}</Text>}
       </View>
 
       {/* Text Input */}
@@ -72,6 +80,7 @@ const FormInput = ({
           autoCapitalize={autoCapitalize}
           onChangeText={(text) => onChange(text)}
           onBlur={onBlur}
+          onFocus={handleFocus}
         />
 
         {appendComponent}

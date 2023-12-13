@@ -1,4 +1,4 @@
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ import {API} from '../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
-import {COLORS, FONTS, SIZES} from '../../../constants';
+import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 
 const Candidate_Document = props => {
   // Candidate ID & Status
@@ -243,24 +243,23 @@ const Candidate_Document = props => {
         type: imgType,
       });
       if (doc[0].size / (1024 * 1024) <= 10) {
-
-      setOtherFiles([
-        ...otherFiles.slice(0, index),
-        {
-          name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-            doc[0].type.split('/')[1]
-          }`,
-          type: doc[0].type,
-          uri: doc[0].uri,
-        },
-        ...otherFiles.slice(index + 1),
-      ]);
-    }else{
-      Toast.show({
-        type: "error",
-        text1: 'Please upload file less than 10mb'
-      })
-    }
+        setOtherFiles([
+          ...otherFiles.slice(0, index),
+          {
+            name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+              doc[0].type.split('/')[1]
+            }`,
+            type: doc[0].type,
+            uri: doc[0].uri,
+          },
+          ...otherFiles.slice(index + 1),
+        ]);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Please upload file less than 10mb',
+        });
+      }
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -515,6 +514,8 @@ const Candidate_Document = props => {
 
   // for displaying aadhar, pan and salary slip in front end
   const DocumentUploader = (file, setFile, number, type, Mandatory) => {
+    console.log("docVerify",docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
+    ?.STATUS)
     return (
       <TouchableOpacity
         style={{
@@ -948,13 +949,62 @@ const Candidate_Document = props => {
           <Text style={{...FONTS.h3, color: COLORS.black}}>
             Upload your documents
           </Text>
-          <Text style={{...FONTS.body4, marginTop: 8, color: COLORS.gray}}>
-            File size should be less than 10MB{' '}
-          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: SIZES.base/2,
+              marginTop: SIZES.base
+
+            }}>
+            <Image
+              source={icons.correct}
+              style={{
+                height: 17,
+                width: 17,
+                tintColor: COLORS.purple
+              }}
+            />
+            <Text style={{...FONTS.body4, color: COLORS.gray}}>
+              File size should be less than 10MB{' '}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: SIZES.base/2,
+
+            }}>
+            <Image
+              source={icons.correct}
+              style={{
+                height: 17,
+                width: 17,
+                tintColor: COLORS.purple
+              }}
+            />
           <Text style={{...FONTS.body5, color: COLORS.gray}}>
             JPG, JPEG, PNG, DOC, DOCX, PDF only
           </Text>
+          </View>
           <View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: SIZES.base/2,
+
+            }}>
+            <Image
+              source={icons.correct}
+              style={{
+                height: 17,
+                width: 17,
+                tintColor: COLORS.purple
+              }}
+            />
             <Text
               style={{
                 ...FONTS.body4,
@@ -964,6 +1014,7 @@ const Candidate_Document = props => {
               <Text style={{color: COLORS.red}}>*</Text>Marked Documents are
               mandatory
             </Text>
+            </View>
           </View>
         </View>
 

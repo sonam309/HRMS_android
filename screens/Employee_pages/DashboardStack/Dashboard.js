@@ -19,7 +19,7 @@ import Calendar from 'react-native-calendars/src/calendar';
 import axios from 'axios';
 import moment from 'moment';
 import Geolocation from '../../../functions/Geolocation';
-import {DrawerActions} from '@react-navigation/native';
+import {DrawerActions, useFocusEffect} from '@react-navigation/native';
 import Loader from '../../../components/Loader';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -29,7 +29,9 @@ import {showDevelopmetMode} from '../../../functions/utils';
 import {updatePunchTime} from '../../../redux/punchDetailSlice';
 import {getAttendanceDailyDetails} from '../../../redux/attendaceDetailSlice';
 import {COLORS} from '../../../constants';
-import { StatusBar } from 'react-native';
+import {StatusBar} from 'react-native';
+import {authActions} from '../../../redux/authSlice';
+
 
 const Home = props => {
   var m_names = [
@@ -228,6 +230,29 @@ const Home = props => {
         setAbsent(absentDays);
       });
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => {
+          Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {text: 'YES', onPress: () => {
+              BackHandler.exitApp()
+              dispatch(authActions.logOut())
+            }},
+          ]);
+          return true;
+        },
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
 
   return (
     <View style={styles.container}>

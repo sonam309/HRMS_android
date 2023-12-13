@@ -355,7 +355,10 @@ const CandidateDashboard = props => {
               onPress: () => null,
               style: 'cancel',
             },
-            {text: 'YES', onPress: () => BackHandler.exitApp()},
+            {text: 'YES', onPress: () => {
+              BackHandler.exitApp()
+              dispatch(candidateAuthActions.logOut())
+            }},
           ]);
           return true;
         },
