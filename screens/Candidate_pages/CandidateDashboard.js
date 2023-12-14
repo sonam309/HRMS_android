@@ -43,6 +43,7 @@ import {
 import {launchCamera} from 'react-native-image-picker';
 import {COLORS, FONTS, SIZES} from '../../constants';
 import {useFocusEffect} from '@react-navigation/native';
+import {LogoutModal} from '../../components';
 
 const CandidateDashboard = props => {
   const dispatch = useDispatch();
@@ -76,9 +77,20 @@ const CandidateDashboard = props => {
   const [pendingTest, setPendingTest] = useState('');
   const [profilePic, setProfilePic] = useState(null);
 
+  const [logoutModal, setLogoutModal] = useState(false);
+
   const [showPicModal, setShowPicModal] = useState(false);
 
   const isFocused = true;
+
+  const onLogout = async () => {
+      try {
+        setLogoutModal(!logoutModal);
+        dispatch(candidateAuthActions.logOut())
+      } catch (error) {
+        console.log('Logout', error);
+      }
+    };
 
   useEffect(() => {
     // if (isFocused) {
@@ -355,10 +367,13 @@ const CandidateDashboard = props => {
               onPress: () => null,
               style: 'cancel',
             },
-            {text: 'YES', onPress: () => {
-              BackHandler.exitApp()
-              dispatch(candidateAuthActions.logOut())
-            }},
+            {
+              text: 'YES',
+              onPress: () => {
+                BackHandler.exitApp();
+                dispatch(candidateAuthActions.logOut());
+              },
+            },
           ]);
           return true;
         },
@@ -440,7 +455,8 @@ const CandidateDashboard = props => {
             style={{justifyContent: 'flex-end', backgroundColor: COLORS.white}}
             onPress={() => {
               // props.navigation.navigate('Candidate_Login'),
-              dispatch(candidateAuthActions.logOut());
+              // dispatch(candidateAuthActions.logOut());
+              setLogoutModal(true);
             }}>
             <Icons
               name="logout"
@@ -1112,6 +1128,8 @@ const CandidateDashboard = props => {
           </View>
         </Modal>
       )}
+
+<LogoutModal {...{ setLogoutModal, logoutModal, onLogout }} />
     </View>
   );
 };

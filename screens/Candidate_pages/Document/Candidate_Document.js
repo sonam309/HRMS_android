@@ -514,8 +514,10 @@ const Candidate_Document = props => {
 
   // for displaying aadhar, pan and salary slip in front end
   const DocumentUploader = (file, setFile, number, type, Mandatory) => {
-    console.log("docVerify",docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
-    ?.STATUS)
+    console.log(
+      'docVerify',
+      docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]?.STATUS,
+    );
     return (
       <TouchableOpacity
         style={{
@@ -953,16 +955,15 @@ const Candidate_Document = props => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              gap: SIZES.base/2,
-              marginTop: SIZES.base
-
+              gap: SIZES.base / 2,
+              marginTop: SIZES.base,
             }}>
             <Image
               source={icons.correct}
               style={{
                 height: 17,
                 width: 17,
-                tintColor: COLORS.purple
+                tintColor: COLORS.purple,
               }}
             />
             <Text style={{...FONTS.body4, color: COLORS.gray}}>
@@ -973,47 +974,44 @@ const Candidate_Document = props => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              gap: SIZES.base/2,
-
+              gap: SIZES.base / 2,
             }}>
             <Image
               source={icons.correct}
               style={{
                 height: 17,
                 width: 17,
-                tintColor: COLORS.purple
+                tintColor: COLORS.purple,
               }}
             />
-          <Text style={{...FONTS.body5, color: COLORS.gray}}>
-            JPG, JPEG, PNG, DOC, DOCX, PDF only
-          </Text>
+            <Text style={{...FONTS.body5, color: COLORS.gray}}>
+              JPG, JPEG, PNG, DOC, DOCX, PDF only
+            </Text>
           </View>
           <View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: SIZES.base/2,
-
-            }}>
-            <Image
-              source={icons.correct}
+            <View
               style={{
-                height: 17,
-                width: 17,
-                tintColor: COLORS.purple
-              }}
-            />
-            <Text
-              style={{
-                ...FONTS.body4,
+                flexDirection: 'row',
                 alignItems: 'center',
-                color: COLORS.gray,
+                gap: SIZES.base / 2,
               }}>
-              <Text style={{color: COLORS.red}}>*</Text>Marked Documents are
-              mandatory
-            </Text>
+              <Image
+                source={icons.correct}
+                style={{
+                  height: 17,
+                  width: 17,
+                  tintColor: COLORS.purple,
+                }}
+              />
+              <Text
+                style={{
+                  ...FONTS.body4,
+                  alignItems: 'center',
+                  color: COLORS.gray,
+                }}>
+                <Text style={{color: COLORS.red}}>*</Text>Marked Documents are
+                mandatory
+              </Text>
             </View>
           </View>
         </View>

@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Attendance from '../../screens/Employee_pages/AttendanceStack/Attendance';
 import DashBoard from '../../screens/Employee_pages/DashboardStack/Dashboard';
 import {
@@ -25,6 +25,7 @@ import Details from '../../screens/Employee_pages/PendingApprovalStack/Approval_
 import Description_Job from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Description_Job';
 import CandidateTestResult from '../../screens/Employee_pages/Hiring_screens/CandidateTestResult';
 import {COLORS, FONTS, SIZES, icons} from '../../constants';
+import { LogoutModal } from '../../components';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -149,6 +150,17 @@ const EmployeeDrawer = props => {
   const {navigator} = props;
   const userData = useSelector(state => state.auth);
 
+  const [logoutModal, setLogoutModal] = useState(false);
+
+  const onLogout = async () => {
+    try {
+      setLogoutModal(!logoutModal);
+      dispatch(authActions.logOut())
+    } catch (error) {
+      console.log('Logout', error);
+    }
+  };
+
   const CustomDrawer = props => {
     return (
       // #FDEBD0
@@ -216,7 +228,7 @@ const EmployeeDrawer = props => {
           }}>
           <TouchableOpacity
             onPress={() => {
-              dispatch(authActions.logOut());
+              setLogoutModal(true)
             }}
             style={{paddingVertical: 15}}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -238,6 +250,7 @@ const EmployeeDrawer = props => {
   };
 
   return (
+    <>
     <Drawer.Navigator
       backBehavior="history"
       initialRouteName="DashBoard"
@@ -397,6 +410,9 @@ const EmployeeDrawer = props => {
         }}
       /> */}
     </Drawer.Navigator>
+
+    <LogoutModal {...{ setLogoutModal, logoutModal, onLogout }} />
+    </>
   );
 };
 
