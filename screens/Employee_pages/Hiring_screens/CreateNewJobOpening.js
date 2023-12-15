@@ -396,7 +396,7 @@ const CreateNewJobOpening = props => {
           Minimium Experience(Years) <Text style={{color: COLORS.red}}>* </Text>{' '}
         </Text>
         <CustomTextInput
-          placeholder="Eg:2-4 years"
+          placeholder="Eg:0-4... years"
           style={{borderColor: COLORS.skyBlue, marginHorizontal: 0}}
           value={experience}
           onChangeText={value => setExperience(value)}

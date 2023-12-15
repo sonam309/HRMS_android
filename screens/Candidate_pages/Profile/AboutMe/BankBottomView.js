@@ -645,7 +645,7 @@ const BankBottomView = ({onPress}) => {
                 value={IFSCCode}
                 onChangeText={val => setIFSCCode(val)}
                 style={styles.inputHolder}
-                maxLength={20}
+                maxLength={11}
               />
 
               <View

@@ -19,6 +19,7 @@ const FormInput = ({
   errorMsg = '',
   onBlur,
   value,
+  maxLengthinput,
   multiline = false,
   required = true,
 }) => {
@@ -67,6 +68,7 @@ const FormInput = ({
             flex: 1,
             ...inputStyle,
           }}
+          maxLength={maxLengthinput}
           value={value}
           textAlignVertical={'center'}
           placeholder={placeholder}

@@ -95,14 +95,16 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
     });
     res = await res.json();
     res = await res?.Result;
-    // console.log("languagedata", res);
+    console.log('languagedata', res);
     setApproveRemarks(res[0].DOC_REJ_REMARK);
     setApprovalFlag(res[0].APPROVAL_FLAG);
   };
   // for updating language
   const UpdateLanguage = async item => {
     setOperFlag('E');
-    // { console.warn("updating", item) }
+    {
+      console.warn('updating', item);
+    }
     setTXNID(item.TXN_ID);
 
     setIsMothertongue(item.MOTHER_TONGUE);
@@ -118,36 +120,45 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
   // for saving language
   const saveLanguageDetails = async () => {
     try {
-      const languageData = {
-        candidateId: userId,
-        languages: selectedLanguageValue,
-        motherTougue: isMothertongue,
-        canRead: isCanRead,
-        canWrite: isCanWrite,
-        canSpeak: isCanSpeak,
-        userId: userId,
-        operFlag: operFlag,
-        txnId: TXNID,
-      };
+      if (selectedLanguageValue !== null && selectedLanguageValue !== '') {
+        const languageData = {
+          candidateId: userId,
+          languages: selectedLanguageValue,
+          motherTougue: isMothertongue,
+          canRead: isCanRead,
+          canWrite: isCanWrite,
+          canSpeak: isCanSpeak,
+          userId: userId,
+          operFlag: operFlag,
+          txnId: TXNID,
+        };
 
-      // console.log("request", languageData);
-      let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(languageData),
-      });
+        console.log('request', languageData);
+        let res = await fetch(`${API}/api/hrms/candidateLanguage`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(languageData),
+        });
 
-      res = await res.json();
-      res = await res?.Result[0]?.MSG;
+        res = await res.json();
+        res = await res?.Result[0]?.MSG;
 
-      Toast.show({
-        type: 'success',
-        text1: res,
-      });
-      onPress();
+        console.log('resposneLanguage', res);
+
+        Toast.show({
+          type: 'success',
+          text1: res,
+        });
+        onPress();
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Please Select any Language!',
+        });
+      }
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -201,8 +212,10 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
           </TouchableOpacity>
         </View>
 
-        {languages.map(item => (
-          <DisplayLanguage item={item} key={item.LANGUAGE_NAME} />
+        {console.log('checkDatatta', languages)}
+
+        {languages.map((item, index) => (
+          <DisplayLanguage item={item} key={item.TXN_ID} />
         ))}
       </View>
     );
@@ -313,7 +326,7 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
           </TouchableOpacity>
         </View>
       </View>
-      {!showForm && languages[0].LANGUAGE_NAME && languages.length > 0 ? (
+      {!showForm && languages[0].TXN_ID && languages.length > 0 ? (
         <LanguageDetails />
       ) : (
         <View>
@@ -506,13 +519,7 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
 
           {/* save button */}
           {approvalFlag !== 'A' ? (
-            <TouchableOpacity
-              onPress={() =>
-                Toast.show({
-                  type: 'success',
-                  text1: 'Data Save Successfully',
-                })
-              }>
+            <TouchableOpacity onPress={() => saveLanguageDetails()}>
               <LinearGradient
                 colors={[COLORS.orange1, COLORS.disableOrange1]}
                 start={{x: 0, y: 0}}
@@ -523,8 +530,7 @@ const LanguageBottomView = ({languages, onPress, fetchLanguageData}) => {
                     color: COLORS.white,
                     textAlign: 'center',
                     ...FONTS.body3,
-                  }}
-                  onPress={() => saveLanguageDetails()}>
+                  }}>
                   {' '}
                   Save
                 </Text>

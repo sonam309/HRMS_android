@@ -332,6 +332,7 @@ const Login = props => {
                       onChange={handleChange('userId')}
                       errorMsg={errors.userId}
                       onBlur={handleBlur('userId')}
+                      maxLengthinput={8}
                       labelColor={COLORS.black}
                       appendComponent={
                         <View

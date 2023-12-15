@@ -210,7 +210,7 @@ const Candidate_Document = props => {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Please upload file less than 10mb',
+          text1: 'Please upload file less than 10 MB',
         });
       }
     } catch (error) {
@@ -263,7 +263,7 @@ const Candidate_Document = props => {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Please upload file less than 10mb',
+          text1: 'Please upload file less than 10 MB',
         });
       }
     } catch (error) {
@@ -975,7 +975,7 @@ const Candidate_Document = props => {
               style={{marginTop: 2}}
             />
             <Text style={{...FONTS.body4, marginTop: 8, color: COLORS.gray, marginLeft:4}}>
-              File size should be less than 10MB.
+              File size should be less than 10 MB.
             </Text>
           </View>
           <View

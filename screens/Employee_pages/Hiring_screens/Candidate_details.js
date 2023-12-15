@@ -99,7 +99,12 @@ const Candidate_details = props => {
   };
 
   const onSelectPress = async operFlag => {
+
+
     if (validateForm()) {
+
+      
+
       let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
         // let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
         method: 'POST',
@@ -119,7 +124,6 @@ const Candidate_details = props => {
           remark: yourRemarks,
         }),
       });
-      // console.log("dfghj",theInterviewType);
 
       res = await res.json();
       res = res?.Result[0];
@@ -133,9 +137,9 @@ const Candidate_details = props => {
       if (res.FLAG === 'S') {
         props.navigation.navigate('Interview_status');
 
-        setProfilePic(res?.PROFILE_PIC);
+        // setProfilePic(res?.PROFILE_PIC);
       }
-      // console.log("response", res)
+      console.log('response', res);
     }
   };
 

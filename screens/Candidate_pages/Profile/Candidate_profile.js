@@ -224,7 +224,7 @@ const Candidate_profile = props => {
     });
     res = await res.json();
     res = await res?.Result;
-    // console.log("languagedata", res);
+    console.log("227", res);
     setLanguages(res);
     setLanguageAppFlag(res[0].APPROVAL_FLAG);
   };

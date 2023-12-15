@@ -58,13 +58,11 @@ const Employee_Login = props => {
       .trim()
       .required('UserId is required')
       .matches(/^[a-zA-Z0-9]+$/, 'Invalid user id'),
-    password: Yup.string()
-      .trim()
-      .required('Password is required')
-      // .matches(
-      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
-      //   'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
-      // ),
+    password: Yup.string().trim().required('Password is required'),
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
+    //   'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+    // ),
   });
 
   const {loading} = useSelector(state => state.punchDetail);
@@ -318,6 +316,7 @@ const Employee_Login = props => {
                       errorMsg={errors.userId}
                       onBlur={handleBlur('userId')}
                       labelColor={COLORS.black}
+                      maxLengthinput={8}
                       appendComponent={
                         <View
                           style={{
