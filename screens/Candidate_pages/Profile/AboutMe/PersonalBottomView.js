@@ -159,6 +159,7 @@ const PersonalBottomView = ({onPress}) => {
   const DisplayPreviousDetails = () => {
     filledDetails &&
       (filledDetails.FLAG === 'S' ? setOperFlag('E') : setOperFlag('P'),
+      console.log('firstNam', filledDetails?.FIRST_NAME),
       setSalutation(filledDetails?.SALUTATION),
       setFirstName(filledDetails?.FIRST_NAME),
       setMiddleName(filledDetails?.MIDDLE_NAME),

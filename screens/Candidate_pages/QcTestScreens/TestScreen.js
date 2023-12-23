@@ -183,11 +183,11 @@ const TestScreen = props => {
       operFlag: 'A',
     };
 
-    // console.log("saveData",saveData);
+    console.log("saveData",saveData);
 
     dispatch(saveAttemptTest(saveData));
 
-    // console.log("finalDataSubmit", finalData);
+    console.log("finalDataSubmit", finalData);
   };
 
   return (

@@ -179,7 +179,7 @@ const Candidate_Document = props => {
         ],
         // allowMultiSelection: true
       });
-      // console.log(type);
+      console.log('filetyp2', type);
       if (doc[0].size / (1024 * 1024) <= 10) {
         if (type == 'Aadhar Card') {
           setFileUpload(current => [
@@ -246,7 +246,7 @@ const Candidate_Document = props => {
         type: imgType,
       });
 
-      // console.log('docsize', doc);
+      console.log('filetyp1', type);
 
       if (doc[0].size / (1024 * 1024) <= 10) {
         setOtherFiles([
@@ -260,6 +260,8 @@ const Candidate_Document = props => {
           },
           ...otherFiles.slice(index + 1),
         ]);
+
+        console.log('namemmemememe', name);
       } else {
         Toast.show({
           type: 'error',
@@ -453,7 +455,7 @@ const Candidate_Document = props => {
 
         candidateData.attachment = FileAttachment();
 
-        // console.log("candidateDatarwuq", candidateData);
+        console.log('candidateDatarwuq', candidateData);
 
         formData.append('data', JSON.stringify(candidateData));
 
@@ -564,7 +566,15 @@ const Candidate_Document = props => {
             docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
               ?.STATUS === 'R' && (
               <Text style={{color: COLORS.red, ...FONTS.body5}}>
-                Need Re-upload{' '}
+                {/* Need Re-upload{' '} */}
+                {
+                  docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
+                    ?.REJ_REMARK
+                }
+                {console.log(
+                  'documentName',
+                  JSON.stringify(docVerify[0]?.DOC_NAME),
+                )}
               </Text>
             )}
 
@@ -575,6 +585,7 @@ const Candidate_Document = props => {
                 size={30}
                 color={COLORS.green}
               />
+              
             </TouchableOpacity>
           )}
         </View>
@@ -656,14 +667,14 @@ const Candidate_Document = props => {
           marginHorizontal: SIZES.base / 4,
           borderColor:
             docVerify.length > 0
-              ? docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
+              ? docVerify?.filter(doc => doc?.TXN_ID === file[index]?.txnId)[0]
                   ?.STATUS === 'R'
                 ? COLORS.red
                 : COLORS.lightGray
               : '#fff',
           borderWidth:
             docVerify.length > 0
-              ? docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
+              ? docVerify?.filter(doc => doc?.TXN_ID === file[index]?.txnId)[0]
                   ?.STATUS === 'R'
                 ? 0.5
                 : 0
@@ -693,7 +704,12 @@ const Candidate_Document = props => {
             docVerify?.filter(doc => doc?.TXN_ID === file[index]?.txnId)[0]
               ?.STATUS === 'R' && (
               <Text style={{color: COLORS.red, ...FONTS.body5}}>
-                Need Re-upload{' '}
+                {/* Need Re-upload{' '} */}
+                {
+                  docVerify?.filter(
+                    doc => doc?.TXN_ID === file[index]?.txnId,
+                  )[0]?.REJ_REMARK
+                }
               </Text>
             )}
 
@@ -705,6 +721,7 @@ const Candidate_Document = props => {
                 size={30}
                 color={COLORS.green}
               />
+              <Text>2</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -798,7 +815,7 @@ const Candidate_Document = props => {
             flex: 1,
           }}>
           {' '}
-          Document{' '}
+          Documents{' '}
         </Text>
       </View>
     );
@@ -974,7 +991,13 @@ const Candidate_Document = props => {
               color={COLORS.green}
               style={{marginTop: 2}}
             />
-            <Text style={{...FONTS.body4, marginTop: 8, color: COLORS.gray, marginLeft:4}}>
+            <Text
+              style={{
+                ...FONTS.body4,
+                marginTop: 8,
+                color: COLORS.gray,
+                marginLeft: 4,
+              }}>
               File size should be less than 10 MB.
             </Text>
           </View>
@@ -989,7 +1012,7 @@ const Candidate_Document = props => {
               color={COLORS.green}
               style={{marginTop: 2}}
             />
-            <Text style={{...FONTS.body5, color: COLORS.gray, marginLeft:4}}>
+            <Text style={{...FONTS.body5, color: COLORS.gray, marginLeft: 4}}>
               JPG, JPEG, PNG, DOC, DOCX, PDF only.
             </Text>
           </View>
@@ -1033,14 +1056,8 @@ const Candidate_Document = props => {
             <Text style={{...FONTS.h4, color: COLORS.darkGray2}}>Actions</Text>
           </View>
 
-          {/* {docCount==="0"?<Text</Text>} */}
-
-          {/* {document && (candidateStatusId >= "121" && candidateStatusId<"165" */}
           {document && docCount && docCount === '3' && (
-            // || candidateStatusId === "124" || candidateStatusId === "122"||candidateStatusId === "123"
             <ScrollView>
-              {/* For uploading aadhar card docs */}
-              {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0]?.PARAM_NAME, "imp")} */}
               {DocumentUploader(
                 aadharCard,
                 setAadharCard,
@@ -1049,8 +1066,6 @@ const Candidate_Document = props => {
                 'imp',
               )}
 
-              {/*  For uploading pan card docs  */}
-              {/* {DocumentUploader(panCard, setPanCard, 2, document[1]?.PARAM_NAME, "imp")} */}
               {DocumentUploader(
                 panCard,
                 setPanCard,
@@ -1058,9 +1073,6 @@ const Candidate_Document = props => {
                 document[1]?.PARAM_NAME,
                 'imp',
               )}
-
-              {/* For uploading payment slips docs*/}
-              {/* {DocumentUploader(salarySlip, setSalarySlip, 3, document[2]?.PARAM_NAME)} */}
 
               {DocumentUploader(
                 salarySlip,
@@ -1072,27 +1084,27 @@ const Candidate_Document = props => {
             </ScrollView>
           )}
 
-          {/* {document && (candidateStatusId && candidateStatusId >= "165") && */}
           {document && docCount && docCount === '25' && (
             <ScrollView>
-              {/* <Text>{JSON.stringify(document)}</Text> */}
-              {/* {DocumentUploader(aadharCard, setAadharCard, 2, document[0], "imp")}
-                            {DocumentUploader(panCard, setPanCard, 2, document[1], "imp")}
-                            {DocumentUploader(salarySlip, setSalarySlip, 3, document[2])} */}
-
               {DocumentUploader(
                 aadharCard,
                 setAadharCard,
                 1,
-                document[0],
+                document[0]?.PARAM_NAME,
                 'imp',
               )}
-              {DocumentUploader(panCard, setPanCard, 1, document[1], 'imp')}
+              {DocumentUploader(
+                panCard,
+                setPanCard,
+                1,
+                document[1]?.PARAM_NAME,
+                'imp',
+              )}
               {DocumentUploader(
                 salarySlip,
                 setSalarySlip,
                 1,
-                document[2],
+                document[2]?.PARAM_NAME,
                 experience === 'Yes' && 'imp',
               )}
 
@@ -1173,13 +1185,13 @@ const Candidate_Document = props => {
                 10,
                 // experience === 'No' && 'imp',
               )} */}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[14],
                 11,
                 '',
-              )}
+              )} */}
               {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,

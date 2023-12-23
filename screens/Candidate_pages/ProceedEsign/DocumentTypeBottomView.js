@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {COLORS, FONTS} from '../../../constants';
+import {COLORS, FONTS,SIZES} from '../../../constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import {API} from '../../../utility/services';

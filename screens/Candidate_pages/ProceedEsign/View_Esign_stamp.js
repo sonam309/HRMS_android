@@ -44,30 +44,58 @@ const View_Esign_stamp = props => {
     dispatch(getCandidateList(data));
   };
 
+  // console.log('responseData', candidateList);
+  // console.log('esignCount', candidateList[index]?.ESSIGN_CNT);
+  // console.log('docTYpeeeeeeView', candidateList[index]?.DOCUMENT_TYPE);
+
   const setDocument = () => {
     if (
       candidateList[index]?.DOCUMENT_TYPE !== 'JOINING KIT' &&
+      candidateList[index]?.DOCUMENT_TYPE !== 'Appointment Letter' &&
       candidateList[index]?.ESSIGN_CNT === 0
     ) {
       setDocumentUrl('IndementyBond/' + candidateList[index]?.FILE_NAME);
+      console.log('1');
     } else if (
       candidateList[index]?.DOCUMENT_TYPE !== 'JOINING KIT' &&
+      candidateList[index]?.DOCUMENT_TYPE !== 'Appointment Letter' &&
       candidateList[index]?.ESSIGN_CNT === 1
     ) {
       setDocumentUrl('CandidateSign/' + candidateList[index]?.FILE_NAME);
+      console.log('2');
     } else if (
       candidateList[index]?.DOCUMENT_TYPE !== 'JOINING KIT' &&
+      candidateList[index]?.DOCUMENT_TYPE !== 'Appointment Letter' &&
       candidateList[index]?.ESSIGN_CNT === 2
     ) {
       setDocumentUrl('FirstGranterSign/' + candidateList[index]?.FILE_NAME);
+      console.log('3');
     } else if (
       candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT' &&
       candidateList[index]?.ESSIGN_CNT === 0
     ) {
       setDocumentUrl('AllMergeDoc/' + candidateList[index]?.FILE_NAME);
+      console.log('4');
+    } else if (
+      candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter' &&
+      candidateList[index]?.ESSIGN_CNT === 0
+    ) {
+      setDocumentUrl(
+        'CreatedAppointmentDoc/' + candidateList[index]?.FILE_NAME,
+      );
+      console.log('5');
     } else {
+      console.log('6');
+      console.log('kdocjsghjhg', candidateList[index]?.DOCUMENT_TYPE);
+      console.log('count', JSON.stringify(candidateList[index]?.ESSIGN_CNT));
       if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
         setDocumentUrl('AllMergeDocSigned/' + candidateList[index]?.FILE_NAME);
+      }
+      if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
+        setDocumentUrl(
+          'AppointmentSignedDoc/' + candidateList[index]?.FILE_NAME,
+        );
+        console.log('trueeee');
       } else {
         setDocumentUrl('SignedDocument/' + candidateList[index]?.FILE_NAME);
       }
@@ -110,6 +138,7 @@ const View_Esign_stamp = props => {
             marginLeft: 20,
           }}>
           View Document
+          {console.log('documentUrlsllll', `${API}${documentUrl}`)}
         </Text>
       </View>
 
@@ -126,7 +155,7 @@ const View_Esign_stamp = props => {
             flex: 1,
           }}
         />
-        {console.log('docUrlll', `${API}${documentUrl}`)}
+        {/* {console.log('docUrlll', `${API}${documentUrl}`)} */}
       </View>
     </View>
   );

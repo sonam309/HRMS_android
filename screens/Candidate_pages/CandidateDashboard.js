@@ -1078,7 +1078,7 @@ const CandidateDashboard = props => {
                       ...FONTS.h4,
                       textAlign: 'center',
                     }}>
-                    Final submittion
+                    Final submission
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>

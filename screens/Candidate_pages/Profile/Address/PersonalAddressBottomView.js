@@ -113,7 +113,7 @@ const PersonalAddressBottomView = ({onPress}) => {
   const [TXNID, setTXNID] = useState('');
 
   const DisplayPreviousDetails = () => {
-    // console.log("filledDetails", filledDetails);
+    console.log("filledDetails", filledDetails);
     filledDetails &&
       // present address
       // (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),

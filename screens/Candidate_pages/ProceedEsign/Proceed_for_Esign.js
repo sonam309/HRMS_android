@@ -69,7 +69,7 @@ const Proceed_for_Esign = props => {
   const [tkenRes, setTkenRes] = useState();
   const [input, setInput] = useState('');
   const [count, setCount] = useState('');
-  const [authMode, setAuthMode] = useState('2');
+  const [authMode, setAuthMode] = useState('1');
   const [esignStatusCode, setEsignStatusCode] = useState('');
   const [clientId, setClientId] = useState('');
   const [name, setName] = useState('');
@@ -81,19 +81,12 @@ const Proceed_for_Esign = props => {
   const [longitude, setLongitude] = useState(false);
 
   useEffect(() => {
-    // eventEmitter.addListener("EventCount", (eventCount) => {
-    //     setCount(eventCount)
-    //     console.log("esignResponseData",eventCount);
-    // });
-    // return () => {
-    //     eventEmitter.removeAllListeners();
-    // }
-
     console.log('Index', index);
   }, []);
 
   useEffect(() => {
     setPredefinedData();
+    console.log('checkDataWhatCome', candidateList);
   }, [candidateList]);
 
   const setPredefinedData = () => {
@@ -157,13 +150,15 @@ const Proceed_for_Esign = props => {
   const checkConfigration = () => {
     console.log('filenammememme', fileName);
 
-    if (fileName.includes('Appointment')) {
+    if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
       setLoanType('A');
     } else if (fileName.includes('JoiningKit')) {
       setLoanType('K');
     } else {
       if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
         setLoanType('K');
+      } else if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
+        setLoanType('A');
       } else {
         if (esignCount !== null && esignCount == 0) {
           setLoanType('E');
@@ -227,6 +222,9 @@ const Proceed_for_Esign = props => {
     if (type === 'JOINING KIT') {
       console.log('SonamT11');
       url = `${API}api/Hrms/GetSignedDocumentJoiningkit`;
+    } else if (type === 'Appointment Letter') {
+      console.log('sonamT13');
+      url = `${API}api/Kyc/appointmentGetSignedDocument`;
     } else {
       console.log('SonamT12');
       url = `${API}/api/Kyc/GetSignedDocument`;
@@ -308,11 +306,21 @@ const Proceed_for_Esign = props => {
     console.log('tytyppee', type);
     setLoaderVisible(true);
 
+    // if (type === 'Appointment Letter') {
+    //   setIsMobileOtp(true);
+    // } else if (type === 'JOINING KIT') {
+    //   setIsMobileOtp(true);
+    // } else {
+    //   setIsMobileOtp(false);
+    // }
+
     if (isMobileOtp) {
       setAuthMode('1');
     } else if (isBiometric) {
       setAuthMode('2');
     }
+
+    console.log('false', type);
 
     const prefillOption = generateEsignJson();
 
@@ -346,6 +354,87 @@ const Proceed_for_Esign = props => {
       console.log('SonammmmmmKKKKKKK');
       axios
         .post(`${API}api/Kyc/JoiningKitProceedForEsign`, data)
+        .then(response => {
+          const returnedData = response.data;
+          console.log('joiningKitResponse', returnedData);
+          setTkenRes(returnedData?.data?.token);
+          setClientId(returnedData?.data?.client_id);
+          var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
+
+          let esignResponseData = {};
+          setLoaderVisible(false);
+
+          //get Esign data from nsdl
+          let eventListener = eventEmitter.addListener(
+            'EventCount',
+            eventCount => {
+              setCount(eventCount);
+
+              // esignResponseData=eventCount;
+              const esignRes = JSON.parse(eventCount);
+              // console.log("esignResponseData", esignRes);
+              // console.log("esignResponseData1", esignRes["status_code"]);
+              eventListener.remove();
+
+              console.log('listnercount', eventCount);
+
+              console.log(
+                'esignResponstatus',
+                eventCount,
+                esignRes,
+                esignRes?.status_code,
+              );
+
+              if (
+                esignRes?.status_code == '200' ||
+                esignRes?.status_code === '200'
+              ) {
+                getEsignDocument(
+                  returnedData?.data?.client_id,
+                  candidateList[index]?.DOCUMENT_TYPE,
+                );
+              } else if (
+                esignRes?.status_code == '433' ||
+                esignRes?.status_code === '433'
+              ) {
+                console.log('errrrr1', JSON.stringify(esignRes?.message));
+                {
+                  Toast.show({
+                    type: 'error',
+                    text1: JSON.stringify(esignRes?.message),
+                  });
+                }
+                props.navigation.goBack();
+              } else {
+                console.log('errrrr', JSON.stringify(esignRes?.message));
+                {
+                  Toast.show({
+                    type: 'success',
+                    text1: JSON.stringify(esignRes?.message),
+                  });
+                }
+                props.navigation.goBack();
+              }
+            },
+          );
+          return () => {
+            eventEmitter.removeAllListeners();
+          };
+        })
+        .catch(error => {
+          setLoaderVisible(false);
+          Alert.alert('Alert Title', error, [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);
+        });
+    } else if (candidateList[index]?.DOCUMENT_TYPE == 'Appointment Letter') {
+      axios
+        .post(`${API}api/Kyc/appointmentProceedForEsign`, data)
         .then(response => {
           const returnedData = response.data;
           console.log('joiningKitResponse', returnedData);
@@ -512,6 +601,7 @@ const Proceed_for_Esign = props => {
   const getAxisData = () => {
     console.log('getCoordinateDat', coordinatesList.XYAXIS);
     setXYAXIS(coordinatesList?.XYAXIS);
+    // setXYAXIS('{"1":[{"x":400,"y":201}],"2":[{"x":468,"y":66}],"3":[{"x":451,"y":83}],"4":[{"x":400,"y":323}]}');
     setDocumentName(coordinatesList?.Document_name);
     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
     setDocTypeView(false);
@@ -574,17 +664,25 @@ const Proceed_for_Esign = props => {
             }}>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
-                disabled
-                onPress={() =>
-                  setIsMobileOtp(isMobileOtp === 'true' ? 'false' : 'true')
+                disabled={
+                  (candidateList[index]?.DOCUMENT_TYPE ===
+                    'Appointment Letter' ||
+                  candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT')
+                    ? false
+                    : true
                 }
+                onPress={() => {
+                  setIsMobileOtp(true);
+                  setIsBiometric(false);
+                }}
                 style={{
                   alignItems: 'center',
                   padding: SIZES.base,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                {isMobileOtp === 'true' ? (
+                {/* <Text>{JSON.stringify(isMobileOtp)}</Text> */}
+                {isMobileOtp ? (
                   <Icons
                     name="radiobox-marked"
                     size={25}
@@ -610,28 +708,33 @@ const Proceed_for_Esign = props => {
             </View>
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
-                onPress={() =>
-                  setIsBiometric(isBiometric === 'true' ? 'false' : 'true')
-                }
+                onPress={() => {
+                  setIsBiometric(true);
+                  setIsMobileOtp(false);
+                }}
                 style={{
                   alignItems: 'center',
                   padding: SIZES.base,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                {isBiometric === 'true' ? (
+                {isBiometric ? (
                   <Icons
                     name="radiobox-marked"
                     size={25}
                     color={COLORS.orange}
                   />
                 ) : (
-                  //  <Icons name='checkbox-blank-circle-outline' size={25} color={COLORS.orange} />
                   <Icons
-                    name="radiobox-marked"
+                    name="checkbox-blank-circle-outline"
                     size={25}
                     color={COLORS.orange}
                   />
+                  // <Icons
+                  //   name="radiobox-marked"
+                  //   size={25}
+                  //   color={COLORS.orange}
+                  // />
                 )}
                 <Text
                   style={{

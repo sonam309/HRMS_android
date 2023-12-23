@@ -4,8 +4,6 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
-  Pressable,
   Modal,
   Linking,
   KeyboardAvoidingView,
@@ -54,8 +52,8 @@ const Login = props => {
   const [newApkVersion, setNewApkVersion] = useState('');
 
   const userInfo = {
-    userId: '',
-    password: '',
+    userId: '754',
+    password: 'Test@123',
   };
 
   const validationSchema = Yup.object({
@@ -124,7 +122,7 @@ const Login = props => {
       .then(response => {
         const returnedData = response.data.Result;
         setLoaderVisible(false);
-        // console.log(returnedData);
+        console.log("GetMobileNo",returnedData);
         let result = returnedData.map(a => a.FLAG);
         let contact = returnedData.map(b => b.MSG);
         // console.log("login", userId);
