@@ -5,8 +5,8 @@ export const API = `https://econnectsatya.com:7033/`; //live
 
 
 export const VERSIONS = {
-  android: '2.9',
-  olderVersion: '2.8',
+  android: '3.0',
+  olderVersion: '2.9',
 };
 
 export const AxiosLog = false;

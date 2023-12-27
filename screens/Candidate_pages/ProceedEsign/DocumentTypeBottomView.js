@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {COLORS, FONTS,SIZES} from '../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import {API} from '../../../utility/services';
@@ -20,8 +20,13 @@ const DocumentTypeBottomView = props => {
 
   useEffect(() => {
     // getCoordinates();
-    console.log('loanType', props.loanType);
-    const data = {loanType: props.loanType};
+
+    const data = {
+      loanType: props.loanType, 
+      jobTitle: props.jobTitle};
+
+    console.log('fchsdgfjdshkjhkjhfjjhhjkuehku', JSON.stringify(data));
+
     dispatch(getCoordinates(data));
   }, []);
 
@@ -31,6 +36,7 @@ const DocumentTypeBottomView = props => {
         style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center'}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{...FONTS.h3, color: COLORS.black}}>Document Type</Text>
+          {/* <Text>{JSON.stringify(coordinatesList)}</Text> */}
         </View>
         <TouchableOpacity
           style={{

@@ -246,29 +246,31 @@ const Candidate_Document = props => {
         type: imgType,
       });
 
-      console.log('filetyp1', type);
+     
 
-      if (doc[0].size / (1024 * 1024) <= 10) {
+      if (doc[0]?.size / (1024 * 1024) <= 10) {
         setOtherFiles([
           ...otherFiles.slice(0, index),
           {
             name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0].type.split('/')[1]
+              doc[0]?.type.split('/')[1]
             }`,
-            type: doc[0].type,
-            uri: doc[0].uri,
+            type: doc[0]?.type,
+            uri: doc[0]?.uri,
           },
           ...otherFiles.slice(index + 1),
         ]);
 
-        console.log('namemmemememe', name);
+      
       } else {
         Toast.show({
           type: 'error',
           text1: 'Please upload file less than 10 MB',
         });
       }
-    } catch (error) {
+    } 
+    catch (error) {
+      console.log('erororooror', JSON.stringify(error));
       Toast.show({
         type: 'error',
         text1: 'Error Selecting File. Please try again.',
@@ -571,10 +573,10 @@ const Candidate_Document = props => {
                   docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
                     ?.REJ_REMARK
                 }
-                {console.log(
+                {/* {console.log(
                   'documentName',
                   JSON.stringify(docVerify[0]?.DOC_NAME),
-                )}
+                )} */}
               </Text>
             )}
 
@@ -585,7 +587,6 @@ const Candidate_Document = props => {
                 size={30}
                 color={COLORS.green}
               />
-              
             </TouchableOpacity>
           )}
         </View>
@@ -721,7 +722,6 @@ const Candidate_Document = props => {
                 size={30}
                 color={COLORS.green}
               />
-              <Text>2</Text>
             </TouchableOpacity>
           )}
         </View>

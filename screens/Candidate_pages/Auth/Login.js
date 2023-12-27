@@ -52,8 +52,8 @@ const Login = props => {
   const [newApkVersion, setNewApkVersion] = useState('');
 
   const userInfo = {
-    userId: '754',
-    password: 'Test@123',
+    userId: '',
+    password: '',
   };
 
   const validationSchema = Yup.object({

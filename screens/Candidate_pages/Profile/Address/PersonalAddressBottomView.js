@@ -113,7 +113,7 @@ const PersonalAddressBottomView = ({onPress}) => {
   const [TXNID, setTXNID] = useState('');
 
   const DisplayPreviousDetails = () => {
-    console.log("filledDetails", filledDetails);
+    console.log('filledDetails', filledDetails);
     filledDetails &&
       // present address
       // (filledDetails.FLAG === "S" ? setOperFlag("E") : setOperFlag("A")),
@@ -140,7 +140,8 @@ const PersonalAddressBottomView = ({onPress}) => {
       setPermanentDistrict(filledDetails?.PERMANENT_DISTRICT),
       setPermanentSubDivision(filledDetails?.PERMANENT_SUB_DIVISION),
       setPermanentThana(filledDetails?.PERMANENT_THANA),
-      setTXNID(filledDetails?.TXN_ID));
+      setTXNID(filledDetails?.TXN_ID)),
+      setSameAddress(filledDetails?.IS_ADDRESS_SAME_FLAG);
     // setLoaderVisible(false)
   };
   // For fetching details of Address dropdown -> Personal
@@ -284,6 +285,7 @@ const PersonalAddressBottomView = ({onPress}) => {
           permanentPostOffice: permanentPostOffice,
           permanentSubdivion: permanentSubDivision,
           permanentThana: permanentThana,
+          isAddressSameFlag: sameAddress,
         };
         let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
           method: 'POST',

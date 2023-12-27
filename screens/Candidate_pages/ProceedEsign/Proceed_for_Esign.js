@@ -69,7 +69,7 @@ const Proceed_for_Esign = props => {
   const [tkenRes, setTkenRes] = useState();
   const [input, setInput] = useState('');
   const [count, setCount] = useState('');
-  const [authMode, setAuthMode] = useState('1');
+  const [authMode, setAuthMode] = useState(2);
   const [esignStatusCode, setEsignStatusCode] = useState('');
   const [clientId, setClientId] = useState('');
   const [name, setName] = useState('');
@@ -189,6 +189,12 @@ const Proceed_for_Esign = props => {
   };
 
   const getEsignDocument = (clienid, type) => {
+    // if (isMobileOtp) {
+    //   setAuthMode('1');
+    // } else if (isBiometric) {
+    //   setAuthMode('2');
+    // }
+
     const data = {
       preUpload: 'true',
       clientId: clienid,
@@ -203,7 +209,7 @@ const Proceed_for_Esign = props => {
       userId: candidateId,
       memberId: '',
       appFileNo: '',
-      authMode: authMode,
+      authMode: isMobileOtp ? '1' : '2',
       txnId: txnID,
       aadharID: aadharID,
       latitude: latitude,
@@ -250,7 +256,7 @@ const Proceed_for_Esign = props => {
             response?.error !== null &&
             response?.error !== ''
           ) {
-            console.log('2');
+            // console.log('2');
             {
               response?.error && Alert.alert('E-sign error!', response?.error);
             }
@@ -314,15 +320,13 @@ const Proceed_for_Esign = props => {
     //   setIsMobileOtp(false);
     // }
 
-    if (isMobileOtp) {
-      setAuthMode('1');
-    } else if (isBiometric) {
-      setAuthMode('2');
-    }
-
-    console.log('false', type);
-
     const prefillOption = generateEsignJson();
+
+    // if (isMobileOtp) {
+    //   setAuthMode('1');
+    // } else if (isBiometric) {
+    //   setAuthMode('2');
+    // }
 
     const data = {
       documentName: documentName,
@@ -335,7 +339,7 @@ const Proceed_for_Esign = props => {
       rawData: JSON.stringify({
         pdf_pre_uploaded: true,
         config: {
-          auth_mode: authMode,
+          auth_mode: isMobileOtp ? '1' : '2',
           reason: documentName,
           positions: JSON.parse(XYAXIS),
           skip_email: true,
@@ -348,7 +352,13 @@ const Proceed_for_Esign = props => {
       }),
     };
 
-    console.log('Joiningkit requestdata', data, type);
+    console.log(
+      'Joiningkit requestdata',
+      data,
+      authMode,
+      isMobileOtp,
+      isBiometric,
+    );
 
     if (type === 'JOINING KIT') {
       console.log('SonammmmmmKKKKKKK');
@@ -601,7 +611,9 @@ const Proceed_for_Esign = props => {
   const getAxisData = () => {
     console.log('getCoordinateDat', coordinatesList.XYAXIS);
     setXYAXIS(coordinatesList?.XYAXIS);
-    // setXYAXIS('{"1":[{"x":400,"y":201}],"2":[{"x":468,"y":66}],"3":[{"x":451,"y":83}],"4":[{"x":400,"y":323}]}');
+    // setXYAXIS(
+    //   '{"1":[{"x":435 ,"y":140}],"2":[{"x":435,"y":127}],"3":[{"x":435,"y":30}],"4":[{"x":435,"y":180}]}',
+    // );
     setDocumentName(coordinatesList?.Document_name);
     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
     setDocTypeView(false);
@@ -665,9 +677,9 @@ const Proceed_for_Esign = props => {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 disabled={
-                  (candidateList[index]?.DOCUMENT_TYPE ===
+                  candidateList[index]?.DOCUMENT_TYPE ===
                     'Appointment Letter' ||
-                  candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT')
+                  candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT'
                     ? false
                     : true
                 }
@@ -885,6 +897,7 @@ const Proceed_for_Esign = props => {
                 {
                   <DocumentTypeBottomView
                     loanType={loanType}
+                    jobTitle={jobTitle}
                     getAxisData={getAxisData}
                     onPress={() => setDocTypeView(false)}
                   />
