@@ -148,29 +148,39 @@ const Proceed_for_Esign = props => {
   };
 
   const checkConfigration = () => {
-    console.log('filenammememme', fileName);
+    console.log('filenammememme', candidateList[index]?.DOCUMENT_TYPE);
 
+    // if (fileName.includes('Appointment')) {
+    //   setLoanType('A');
+    // } else if (fileName.includes('JoiningKit')) {
+    //   setLoanType('K');
+    // } else {
     if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
-      setLoanType('A');
-    } else if (fileName.includes('JoiningKit')) {
+      console.log('1');
       setLoanType('K');
+    } else if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
+      setLoanType('A');
+      console.log('2');
     } else {
-      if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
-        setLoanType('K');
-      } else if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
-        setLoanType('A');
+      console.log('3', candidateList[index]?.ESSIGN_CNT);
+
+      if (candidateList[index]?.ESSIGN_CNT == 0) {
+        console.log('4');
+
+        setLoanType('E');
+      } else if (candidateList[index]?.ESSIGN_CNT == 1) {
+        setLoanType('F');
+        console.log('5');
+      } else if (candidateList[index]?.ESSIGN_CNT == 2) {
+        setLoanType('S');
+        console.log('6');
       } else {
-        if (esignCount !== null && esignCount == 0) {
-          setLoanType('E');
-        } else if (esignCount !== null && esignCount === 1) {
-          setLoanType('F');
-        } else if (esignCount !== null && esignCount === 2) {
-          setLoanType('S');
-        } else {
-          setLoanType('K');
-        }
+        console.log('7');
+
+        setLoanType('K');
       }
     }
+    // }
   };
 
   useEffect(() => {
@@ -220,19 +230,19 @@ const Proceed_for_Esign = props => {
       eSignCount: esignCount,
     };
 
-    console.log('getdocRequest', data);
+    // console.log('getdocRequest', data);
 
     let url = '';
 
     setLoaderVisible(true);
     if (type === 'JOINING KIT') {
-      console.log('SonamT11');
+      // console.log('SonamT11');
       url = `${API}api/Hrms/GetSignedDocumentJoiningkit`;
     } else if (type === 'Appointment Letter') {
-      console.log('sonamT13');
+      // console.log('sonamT13');
       url = `${API}api/Kyc/appointmentGetSignedDocument`;
     } else {
-      console.log('SonamT12');
+      // console.log('SonamT12');
       url = `${API}/api/Kyc/GetSignedDocument`;
     }
 
@@ -241,13 +251,13 @@ const Proceed_for_Esign = props => {
     axios
       .post(url, data)
       .then(response => {
-        console.log('getDocumentResponse', response);
+        // console.log('getDocumentResponse', response);
 
         setLoaderVisible(false);
 
-        if (response && Object.keys(response).length > 0) {
+        if (response && Object.keys(response)?.length > 0) {
           if (response?.data != '' && response?.data !== null) {
-            console.log('1');
+            // console.log('1');
             {
               response?.data && Alert.alert('E-sign alert!', response?.data);
             }
@@ -322,12 +332,6 @@ const Proceed_for_Esign = props => {
 
     const prefillOption = generateEsignJson();
 
-    // if (isMobileOtp) {
-    //   setAuthMode('1');
-    // } else if (isBiometric) {
-    //   setAuthMode('2');
-    // }
-
     const data = {
       documentName: documentName,
       noOfPages: numberOfPages,
@@ -352,21 +356,12 @@ const Proceed_for_Esign = props => {
       }),
     };
 
-    console.log(
-      'Joiningkit requestdata',
-      data,
-      authMode,
-      isMobileOtp,
-      isBiometric,
-    );
-
     if (type === 'JOINING KIT') {
-      console.log('SonammmmmmKKKKKKK');
       axios
         .post(`${API}api/Kyc/JoiningKitProceedForEsign`, data)
         .then(response => {
           const returnedData = response.data;
-          console.log('joiningKitResponse', returnedData);
+          // console.log('joiningKitResponse', returnedData);
           setTkenRes(returnedData?.data?.token);
           setClientId(returnedData?.data?.client_id);
           var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
@@ -386,14 +381,14 @@ const Proceed_for_Esign = props => {
               // console.log("esignResponseData1", esignRes["status_code"]);
               eventListener.remove();
 
-              console.log('listnercount', eventCount);
+              // console.log('listnercount', eventCount);
 
-              console.log(
-                'esignResponstatus',
-                eventCount,
-                esignRes,
-                esignRes?.status_code,
-              );
+              // console.log(
+              //   'esignResponstatus',
+              //   eventCount,
+              //   esignRes,
+              //   esignRes?.status_code,
+              // );
 
               if (
                 esignRes?.status_code == '200' ||
@@ -407,7 +402,7 @@ const Proceed_for_Esign = props => {
                 esignRes?.status_code == '433' ||
                 esignRes?.status_code === '433'
               ) {
-                console.log('errrrr1', JSON.stringify(esignRes?.message));
+                // console.log('errrrr1', JSON.stringify(esignRes?.message));
                 {
                   Toast.show({
                     type: 'error',
@@ -416,7 +411,7 @@ const Proceed_for_Esign = props => {
                 }
                 props.navigation.goBack();
               } else {
-                console.log('errrrr', JSON.stringify(esignRes?.message));
+                // console.log('errrrr', JSON.stringify(esignRes?.message));
                 {
                   Toast.show({
                     type: 'success',
@@ -611,9 +606,7 @@ const Proceed_for_Esign = props => {
   const getAxisData = () => {
     console.log('getCoordinateDat', coordinatesList.XYAXIS);
     setXYAXIS(coordinatesList?.XYAXIS);
-    // setXYAXIS(
-    //   '{"1":[{"x":435 ,"y":140}],"2":[{"x":435,"y":127}],"3":[{"x":435,"y":30}],"4":[{"x":435,"y":180}]}',
-    // );
+    // setXYAXIS('{"1":[{"x":435 ,"y":130}],"2":[{"x":435,"y":125}],"3":[{"x":435,"y":70}],"4":[{"x":435,"y":320}]}');
     setDocumentName(coordinatesList?.Document_name);
     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
     setDocTypeView(false);

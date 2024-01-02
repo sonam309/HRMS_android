@@ -287,6 +287,8 @@ const PersonalAddressBottomView = ({onPress}) => {
           permanentThana: permanentThana,
           isAddressSameFlag: sameAddress,
         };
+        console.log('AddressSaveRequest', AddressData);
+
         let res = await fetch(`${API}/api/hrms/saveCandidateAddress`, {
           method: 'POST',
           headers: {
@@ -787,7 +789,7 @@ const PersonalAddressBottomView = ({onPress}) => {
           {approvalFlag !== 'A' ? (
             <TouchableOpacity
               onPress={() =>
-                filledDetails?.PIN_CODE
+                filledDetails?.PIN_CODE||filledDetails?.PERMANENT_PIN_CODE
                   ? saveAddressDetails('E')
                   : saveAddressDetails('A')
               }>

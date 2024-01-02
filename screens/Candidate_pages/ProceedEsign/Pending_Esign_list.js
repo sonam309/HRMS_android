@@ -186,8 +186,8 @@ const Pending_Esifn_list = props => {
                             flexWrap: 'wrap',
                             width: responsiveWidth(40),
                           }}>
-                          {(item?.DOCUMENT_TYPE === 'JOINING KIT' ||
-                          item?.DOCUMENT_TYPE === 'Appointment Letter')
+                          {item?.DOCUMENT_TYPE === 'JOINING KIT' ||
+                          item?.DOCUMENT_TYPE === 'Appointment Letter'
                             ? 'Esign Completed'
                             : 'First gauranter Esign Pending'}
                         </Text>
@@ -198,8 +198,8 @@ const Pending_Esifn_list = props => {
                             flexWrap: 'wrap',
                             width: responsiveWidth(40),
                           }}>
-                          {(item?.DOCUMENT_TYPE === 'JOINING KIT' ||
-                          item?.DOCUMENT_TYPE === 'Appointment Letter')
+                          {item?.DOCUMENT_TYPE === 'JOINING KIT' ||
+                          item?.DOCUMENT_TYPE === 'Appointment Letter'
                             ? 'Esign Completed'
                             : ' 2nd gauranter Esign Pending'}
                         </Text>
@@ -261,9 +261,11 @@ const Pending_Esifn_list = props => {
                     <View style={{marginTop: 10}}>
                       <TouchableOpacity
                         disabled={
-                          (item?.DOCUMENT_TYPE === 'JOINING KIT' ||
-                            item?.DOCUMENT_TYPE === 'Appointment Letter') &&
-                          item.ESSIGN_CNT != 0
+                          ((item?.DOCUMENT_TYPE === 'JOINING KIT' ||
+                              item?.DOCUMENT_TYPE === 'Appointment Letter') &&
+                            item.ESSIGN_CNT != 0) || ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
+                            item?.DOCUMENT_TYPE !== 'Appointment Letter') &&
+                          item.ESSIGN_CNT == 3)
                             ? true
                             : false
                         }
@@ -279,9 +281,11 @@ const Pending_Esifn_list = props => {
                         }}>
                         <LinearGradient
                           colors={
-                            (item?.DOCUMENT_TYPE === 'JOINING KIT' ||
+                            ((item?.DOCUMENT_TYPE === 'JOINING KIT' ||
                               item?.DOCUMENT_TYPE === 'Appointment Letter') &&
-                            item.ESSIGN_CNT != 0
+                            item.ESSIGN_CNT != 0) || ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
+                            item?.DOCUMENT_TYPE !== 'Appointment Letter') &&
+                          item.ESSIGN_CNT == 3)
                               ? [COLORS.gray, COLORS.lightGray]
                               : [COLORS.orange1, COLORS.disableOrange1]
                           }
@@ -294,7 +298,7 @@ const Pending_Esifn_list = props => {
                               textAlign: 'center',
                               ...FONTS.h4,
                             }}>
-                            Proceed for Esign
+                            Proceed for Esign 
                           </Text>
                         </LinearGradient>
                       </TouchableOpacity>
