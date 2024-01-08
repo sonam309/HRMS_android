@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Loader from '../../../../components/Loader';
 import {showAlert, closeAlert} from 'react-native-customisable-alert';
+import DateButton from '../../../../components/DateButton';
 
 const Emp_HistoryBottomView = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
@@ -447,12 +448,15 @@ const Emp_HistoryBottomView = props => {
                       modal
                       open={fromDateOpen}
                       mode="date"
+                      theme='auto'
                       date={fromDate}
                       onConfirm={date => actualFromDate(date)}
                       onCancel={() => {
                         setFromDateOpen(false);
                       }}
                     />
+
+
                   </TouchableOpacity>
                 </View>
               </View>
@@ -489,6 +493,7 @@ const Emp_HistoryBottomView = props => {
                       modal
                       open={toDateOpen}
                       mode="date"
+                      theme='auto'
                       date={toDate}
                       onConfirm={date => actualToDate(date)}
                       onCancel={() => {

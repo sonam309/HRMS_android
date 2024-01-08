@@ -43,8 +43,8 @@ const Proceed_for_Esign = props => {
     state => state.candidateAuth,
   );
 
-  const [isMobileOtp, setIsMobileOtp] = useState(false);
-  const [isBiometric, setIsBiometric] = useState(true);
+  const [isMobileOtp, setIsMobileOtp] = useState(true);
+  const [isBiometric, setIsBiometric] = useState(false);
   const [candidateName, setCandidateName] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [candidateMobileNo, setCandidateMobileNo] = useState('');

@@ -119,7 +119,7 @@ const Offer_Letter = props => {
 
     totalData = await totalData.json();
     totalData = totalData.Result[0];
-    // console.log("totaldata", totalData);
+    console.log("totaldata", totalData);
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
@@ -153,12 +153,12 @@ const Offer_Letter = props => {
       operFlag: operFlag,
     };
 
-    // console.log("345678765432", data);
+    console.log("345678765432", data);
 
     axios
       .post(`${API}/api/hrms/OfferAceptance`, data)
       .then(res => {
-        // console.log('hjsdfvhjs', res?.data?.Result);
+        console.log('hjsdfvhjs', res?.data?.Result);
 
         if (res?.data?.Result[0]?.FLAG == 'S') {
           Toast.show({

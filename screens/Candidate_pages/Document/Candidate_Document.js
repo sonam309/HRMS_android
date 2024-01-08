@@ -11,6 +11,7 @@ import {API} from '../../../utility/services';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {showAlert, closeAlert} from 'react-native-customisable-alert';
 
 const Candidate_Document = props => {
   // Candidate ID & Status
@@ -246,8 +247,6 @@ const Candidate_Document = props => {
         type: imgType,
       });
 
-     
-
       if (doc[0]?.size / (1024 * 1024) <= 10) {
         setOtherFiles([
           ...otherFiles.slice(0, index),
@@ -260,16 +259,13 @@ const Candidate_Document = props => {
           },
           ...otherFiles.slice(index + 1),
         ]);
-
-      
       } else {
         Toast.show({
           type: 'error',
           text1: 'Please upload file less than 10 MB',
         });
       }
-    } 
-    catch (error) {
+    } catch (error) {
       console.log('erororooror', JSON.stringify(error));
       Toast.show({
         type: 'error',
@@ -567,17 +563,56 @@ const Candidate_Document = props => {
           {docVerify.length > 0 &&
             docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
               ?.STATUS === 'R' && (
-              <Text style={{color: COLORS.red, ...FONTS.body5}}>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={
+                  () =>
+                    showAlert({
+                      title: '    ',
+                      customIcon: 'none',
+                      message: JSON.stringify(
+                        docVerify?.filter(
+                          doc => doc?.TXN_ID === file[0]?.txnId,
+                        )[0]?.REJ_REMARK,
+                      ),
+                      alertType: 'error',
+                      onPress: () => closeAlert(),
+                    })
+
+                  // Toast.show({
+                  //   type: 'success',
+                  //   text1: JSON.stringify(
+                  //     docVerify?.filter(
+                  //       doc => doc?.TXN_ID === file[0]?.txnId,
+                  //     )[0]?.REJ_REMARK,
+                  //   ),
+                  // })
+                }>
+                <Icon
+                  name="alert-octagon-outline"
+                  size={25}
+                  color={COLORS.red}
+                />
+                {/* <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    color: COLORS.red,
+                    ...FONTS.body5,
+                    width: responsiveWidth(40),
+                    textAlign: 'right',
+                  }}> */}
                 {/* Need Re-upload{' '} */}
-                {
-                  docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
-                    ?.REJ_REMARK
-                }
+                {/* {
+                    docVerify?.filter(doc => doc?.TXN_ID === file[0]?.txnId)[0]
+                      ?.REJ_REMARK
+                  } */}
                 {/* {console.log(
                   'documentName',
                   JSON.stringify(docVerify[0]?.DOC_NAME),
                 )} */}
-              </Text>
+                {/* </Text> */}
+              </TouchableOpacity>
             )}
 
           {file.length < number && (
@@ -704,14 +739,53 @@ const Candidate_Document = props => {
           {docVerify.length > 0 &&
             docVerify?.filter(doc => doc?.TXN_ID === file[index]?.txnId)[0]
               ?.STATUS === 'R' && (
-              <Text style={{color: COLORS.red, ...FONTS.body5}}>
-                {/* Need Re-upload{' '} */}
-                {
-                  docVerify?.filter(
-                    doc => doc?.TXN_ID === file[index]?.txnId,
-                  )[0]?.REJ_REMARK
-                }
-              </Text>
+              <TouchableOpacity
+                style={{alignItems: 'center'}}
+                onPress={
+                  () =>
+                    showAlert({
+                      title: '  ',
+                      customIcon: 'none',
+                      message: JSON.stringify(
+                        docVerify?.filter(
+                          doc => doc?.TXN_ID === file[index]?.txnId,
+                        )[0]?.REJ_REMARK,
+                      ),
+                      alertType: 'error',
+                      onPress: () => closeAlert(),
+                    })
+
+                  // Toast.show({
+                  //   type: 'success',
+                  //   text1: JSON.stringify(
+                  //     docVerify?.filter(
+                  //       doc => doc?.TXN_ID === file[index]?.txnId,
+                  //     )[0]?.REJ_REMARK,
+                  //   ),
+                  // })
+                }>
+                <Icon
+                  name="alert-octagon-outline"
+                  size={25}
+                  color={COLORS.red}
+                />
+              </TouchableOpacity>
+              // <Text
+              //   numberOfLines={1}
+              //   ellipsizeMode="tail"
+              //   style={{
+              //     color: COLORS.red,
+              //     ...FONTS.body5,
+              //     width: responsiveWidth(40),
+              //     textAlign: 'right',
+              //   }}>
+              //   {/* Need Re-upload{' '} */}
+              //   {
+              //     docVerify?.filter(
+              //       doc => doc?.TXN_ID === file[index]?.txnId,
+              //     )[0]?.REJ_REMARK
+              //   }
+              // </Text>
             )}
 
           {!file[index] && (
@@ -954,9 +1028,9 @@ const Candidate_Document = props => {
                 style={{borderRadius: 6, padding: 4, marginLeft: 8}}
               />
               <View style={{marginLeft: 10}}>
-                <Text style={{color: COLORS.black, ...FONTS.h5, fontSize: 14}}>
+                {/* <Text style={{color: COLORS.black, ...FONTS.h5, fontSize: 14}}>
                   Rejected
-                </Text>
+                </Text> */}
                 <Text
                   style={{color: COLORS.gray, ...FONTS.body5, marginTop: -8}}>
                   {rejectDocCount} files
@@ -1113,14 +1187,14 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[3],
                 0,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[4],
                 1,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
@@ -1134,14 +1208,14 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[6],
                 3,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[7],
                 4,
-                '',
+                'ijmp',
               )}
               {otherFilesUploader(
                 otherFiles,
@@ -1162,21 +1236,21 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[10],
                 7,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[11],
                 8,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[12],
                 9,
-                '',
+                'imp',
               )}
               {/* {otherFilesUploader(
                 otherFiles,
@@ -1204,7 +1278,7 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[16],
                 13,
-                '',
+                'imp',
               )}
               {/* {otherFilesUploader(
                 otherFiles,
@@ -1225,28 +1299,28 @@ const Candidate_Document = props => {
                 setOtherFiles,
                 document[19],
                 16,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[20],
                 17,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[21],
                 18,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[22],
                 19,
-                '',
+                'imp',
               )}
               {otherFilesUploader(
                 otherFiles,

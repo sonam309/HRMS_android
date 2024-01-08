@@ -44,6 +44,7 @@ import {
 // import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';/
 // import { useNavigation  } from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
+import {getCandidateOfferCheck} from '../../redux/candidatSlice';
 
 const CandidateDashboard = props => {
   const dispatch = useDispatch();
@@ -84,12 +85,18 @@ const CandidateDashboard = props => {
   useEffect(() => {
     // if (isFocused) {
     if (candidateId) {
-      console.log('testttttttttttttt');
+      // console.log('testttttttttttttt');
 
       getCandidateOfferDetails();
     }
     // }
   }, [candidateId]);
+
+  useEffect(() => {
+    const userData = {loginId: candidateId};
+
+    dispatch(getCandidateOfferCheck(userData));
+  }, []);
 
   useEffect(() => {
     if (employeeCreateFlag === 'Y') {
@@ -119,7 +126,7 @@ const CandidateDashboard = props => {
 
     axios.post(`${API}/api/saveEsignDataNew`, data).then(response => {
       const result = response.data.Result;
-      console.log('esignDatasssss', result[0]);
+      // console.log('esignDatasssss', result[0]);
       setEsignCount(result[0]?.ESSIGN_CNT);
       // setLoaderVisible(false);
     });
@@ -143,13 +150,15 @@ const CandidateDashboard = props => {
         setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
       })
       .catch(error => {
-        console.log('profilepic', JSON.stringify(error));
+        // console.log('profilepic', JSON.stringify(error));
       });
   };
 
   const getCandidateOfferDetails = async type => {
     const userData = {loginId: candidateId};
     // setLoaderVisible(true);
+
+    console.log('CLikkkkccc', type);
     axios
       .post(`${API}/api/hrms/candidateOfferCheck`, userData)
       .then(response => {
@@ -238,13 +247,9 @@ const CandidateDashboard = props => {
 
       {
         title: 'App Camera Permission',
-
         message: 'App needs access to your camera ',
-
         buttonNeutral: 'Ask Me Later',
-
         buttonNegative: 'Cancel',
-
         buttonPositive: 'OK',
       },
     );
@@ -254,8 +259,6 @@ const CandidateDashboard = props => {
 
       // grantedstorage === PermissionsAndroid.RESULTS.GRANTED
     ) {
-      console.log('Camera permission given');
-
       var options = {
         mediaType: 'photo', //to allow only photo to select ...no video
         saveToPhotos: false, //to store captured photo via camera to photos or else it will be stored in temp folders and will get deleted on temp clear
@@ -302,7 +305,7 @@ const CandidateDashboard = props => {
             body: formData,
           })
             .then(res => {
-              console.log(res);
+              // console.log(res);
               setLoaderVisible(false);
 
               if (res?.status === 200) {
@@ -321,7 +324,7 @@ const CandidateDashboard = props => {
             })
 
             .catch(error => {
-              console.log(error);
+              // console.log(error);
               setLoaderVisible(false);
               Toast.show({
                 type: 'error',
@@ -331,7 +334,11 @@ const CandidateDashboard = props => {
         }
       });
     } else {
-      console.log('Camera permission denied');
+      // console.log('Camera permission denied');
+      Toast.show({
+        type: 'error',
+        text1: 'Camera permission denied',
+      });
     }
   };
 
@@ -341,7 +348,7 @@ const CandidateDashboard = props => {
       .post(`${API}/api/User/completeCanProfile`, userData)
       .then(response => {
         const resultData = response.data;
-        console.log('finalSubmit', resultData);
+        // console.log('finalSubmit', resultData);
 
         if (resultData.FLAG === 'S') {
           Toast.show({
@@ -377,10 +384,13 @@ const CandidateDashboard = props => {
               onPress: () => null,
               style: 'cancel',
             },
-            {text: 'YES', onPress: () => {
-              BackHandler.exitApp()
-              dispatch(candidateAuthActions.logOut())
-            }},
+            {
+              text: 'YES',
+              onPress: () => {
+                BackHandler.exitApp();
+                dispatch(candidateAuthActions.logOut());
+              },
+            },
           ]);
           return true;
         },
@@ -460,7 +470,7 @@ const CandidateDashboard = props => {
               size={25}
               color={COLORS.black}
             /> */}
-            {console.log('ProflileImage', `${API}/ProfilePic/${profilePic}`)}
+            {/* {console.log('ProflileImage', `${API}/ProfilePic/${profilePic}`)} */}
 
             <Image
               source={
@@ -668,12 +678,12 @@ const CandidateDashboard = props => {
             </View>
 
             <TouchableOpacity
-              disabled={esignCount <= 2 ? false : true}
+              // disabled={esignCount <= 2 ? false : true}
               onPress={() => props.navigation.navigate('Pending_Esign_list')}>
               <View
                 style={{
                   borderRadius: 12,
-                  backgroundColor: esignCount < 2 ? COLORS.white : '#d9d9d9',
+                  backgroundColor: COLORS.white,
                   width: '35%',
                   justifyContent: 'center',
                   padding: 15,

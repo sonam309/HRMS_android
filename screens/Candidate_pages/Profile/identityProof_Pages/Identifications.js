@@ -463,6 +463,7 @@ const Identifications = props => {
                       modal
                       open={passportIssuedDateOpen}
                       mode="date"
+                      theme='auto'
                       date={pasportIssuedDate}
                       onConfirm={date => actualDateSelector(date)}
                       onCancel={() => {
@@ -509,6 +510,7 @@ const Identifications = props => {
                       modal
                       open={expiryDateOpen}
                       mode="date"
+                      theme='auto'
                       date={expiryDate}
                       onConfirm={date => ExpiryDateSelector(date)}
                       onCancel={() => {
@@ -842,6 +844,7 @@ const Identifications = props => {
                       modal
                       open={dlIssuedDateOpen}
                       mode="date"
+                      theme='auto'
                       date={dlIssuedDate}
                       onConfirm={date => DlIssuedDateSelector(date)}
                       onCancel={() => {
@@ -891,6 +894,7 @@ const Identifications = props => {
                       modal
                       open={dlExpiryDateOpen}
                       mode="date"
+                      theme='auto'
                       date={dlExpiryDate}
                       onConfirm={date => DlExpiryDateSelector(date)}
                       onCancel={() => {

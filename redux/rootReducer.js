@@ -4,6 +4,8 @@ import candidateAuthSlice from "./candidateAuthSlice"
 import eSignSlice from "./eSignSlice"
 import punchDetailSlice from "./punchDetailSlice"
 import attendaceDetailSlice from "./attendaceDetailSlice"
+import interviewDetailSlice from "./interviewDetailSlice"
+import candidatSlice from "./candidatSlice"
 
 
 export const rootReducer = combineReducers({
@@ -11,5 +13,7 @@ export const rootReducer = combineReducers({
     candidateAuth : candidateAuthSlice.reducer,
     eSign: eSignSlice,
     punchDetail: punchDetailSlice,
+    inteviewDetail:interviewDetailSlice,
     attendaceDetail:attendaceDetailSlice,
+    candidateInfo:candidatSlice,
 })

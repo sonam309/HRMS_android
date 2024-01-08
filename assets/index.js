@@ -24,6 +24,7 @@ import circleGreen from './images/fill_circle_green.png'
 import EsignD from './images/d_esign.png'
 import test from './images/test.png'
 import profileIC from './images/profile_ic.png'
+import late_ic from './images/late.png'
 
 //icons form icons folder
 
@@ -55,5 +56,5 @@ export {
     circleGreen,
     EsignD,
     test,
-    profileIC
+    profileIC, late_ic
 }

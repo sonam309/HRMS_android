@@ -13,7 +13,7 @@ const DateButton = ({caption, required, date, setDate,captionStyle}) => {
         mode={'date'}
         open={show}
         date={new Date()}
-        theme={'light'}
+        theme={'auto'}
         onConfirm={date => {
           let newDate = date.toDateString().split(' ');
           newDate = newDate[2] + '-' + newDate[1] + '-' + newDate[3];

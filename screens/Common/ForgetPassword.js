@@ -96,6 +96,16 @@ const ForgetPassword = props => {
       });
 
       // console.warn("Plaese Enter Confirm Password");
+    } else if (
+      newPassword === 'Satya@123' ||
+      newPassword === 'satya@123' ||
+      newPassword === 'Test@123' ||
+      newPassword === 'test@123'
+    ) {
+      Toast.show({
+        text1: 'error',
+        text1: 'You can not set domain name as Password',
+      });
     } else if (newPassword == confirmPassword) {
       ChangePasswordApi();
     } else {

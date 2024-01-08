@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS, FONTS, SIZES} from '../../../../constants';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -23,6 +23,10 @@ import {showAlert, closeAlert} from 'react-native-customisable-alert';
 
 const NominationBottomView = ({nominations, onPress}) => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
+
+  const nominationDWRef = useRef({})
+  const familyDWRef = useRef({})
+
   const [nominationTypeDw, setNominationTypeDw] = useState([]);
   const [selectedNominationType, setSelectedNominationType] = useState('');
   const [selectedNominationTypeValue, setSelectedNominationTypeValue] =
@@ -46,7 +50,11 @@ const NominationBottomView = ({nominations, onPress}) => {
   const getDropdownData = async P => {
     let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`);
     response = await response.json();
+
     const returnedData = response;
+
+    console.log('paramresposne', returnedData);
+
     if (P === 41) {
       setNominationTypeDw(returnedData);
     } else if (P === 38) {
@@ -70,11 +78,10 @@ const NominationBottomView = ({nominations, onPress}) => {
           share,
         },
       ]);
-
-      setSelectedNominationType('');
-      setSelectedNominationTypeValue('');
-      setSelectedFamilyMember('');
-      setSelectedFamilyMemberValue('');
+      nominationDWRef.current.reset();
+      familyDWRef.current.reset();
+      setSelectedNominationType('')
+      setSelectedFamilyMember('')
       setGaurdianName('');
       setShare('');
     } else {
@@ -443,12 +450,16 @@ const NominationBottomView = ({nominations, onPress}) => {
                   marginVertical: SIZES.radius,
                   borderRadius: SIZES.base,
                 }}>
+                  {/* <Text>
+                    {JSON.stringify(selectedNominationType)}
+                  </Text> */}
                 <TextDropdown
                   caption={'Nomination type'}
                   data={nominationTypeDw}
                   setData={setSelectedNominationType}
                   setIdvalue={setSelectedNominationTypeValue}
                   defaultButtonText={selectedNominationType}
+                  dropdownParamRef={nominationDWRef}
                 />
 
                 <TextDropdown
@@ -457,6 +468,7 @@ const NominationBottomView = ({nominations, onPress}) => {
                   setData={setSelectedFamilyMember}
                   setIdvalue={setSelectedFamilyMemberValue}
                   defaultButtonText={selectedFamilyMember}
+                  dropdownParamRef={familyDWRef}
                 />
 
                 <CustomInput

@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  ActivityIndicator,
-} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,58 +9,32 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import candidateIcon from '../../../assets/images/candidateIcon.png';
-import {useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
-import {API} from '../../../utility/services';
-import Toast from 'react-native-toast-message';
 import Loader from '../../../components/Loader';
 import {COLORS, FONTS} from '../../../constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {getInterviewList} from '../../../redux/interviewDetailSlice';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const Interview_status = props => {
   const {navigation} = props;
-  const [interViewDetail, setInterViewDetail] = useState([]);
   const [status, setStatus] = useState('P');
   const userId = useSelector(state => state.auth.userId);
-  const [interviewType, setInterviewType] = useState('');
   const [loaderVisibility, setLoaderVisibility] = useState(false);
+  const {inteviewListData} = useSelector(state => state.inteviewDetail);
+  const dispatch = useDispatch();
 
-  // fetching interviewer's list data
-  const fetchInterviewData = async () => {
-    try {
-      setLoaderVisibility(true);
-      let res = await fetch(`${API}/api/User/InterviewList`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({operFlag: 'V', userId: userId}),
-      });
-      res = await res.json();
-      res = res.Result;
-      setLoaderVisibility(false);
-      // console.log("responseIStatus", res)
-      setInterViewDetail(res);
-      // setInterviewType(res.INTERVIEW_TYPE);
-      // {console.log("InterviewTypesss",res.INTERVIEW_TYPE)}
-    } catch (error) {
-      setLoaderVisibility(false);
-      Toast.show({
-        type: 'error',
-        text1: error,
-      });
-    }
+  const getInterviewListData = async () => {
+    const data = {
+      operFlag: 'v',
+      userId: userId,
+    };
+    dispatch(getInterviewList(data));
   };
 
-  // useEffect(() => {
-  //     fetchInterviewData();
-  // }, [status])
+  useEffect(() => {
+    getInterviewListData();
+  }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchInterviewData();
-    }, [status]),
-  );
   // candidate icons
   function CandidateList(props) {
     const interviewId = props.id,
@@ -100,8 +69,7 @@ const Interview_status = props => {
             profilePic,
           })
         }>
-        {/* {console.log("TYpe", interviewType)} */}
-
+        {/* interViewDetail?.filter(item => item.STATUS === "R") ? COLORS.red : */}
         <View
           style={{
             borderRadius: 15,
@@ -113,14 +81,18 @@ const Interview_status = props => {
             paddingHorizontal: 5,
             marginTop: 15,
             borderWidth: 0.5,
-            borderColor: COLORS.gray,
+            borderColor: status === 'R' ? COLORS.red : COLORS.gray,
           }}>
           <View>
             <Image source={candidateIcon} style={{width: 50, height: 50}} />
           </View>
 
           <View style={{paddingHorizontal: 10}}>
-            <Text style={{color: COLORS.green, ...FONTS.h3}}>
+            <Text
+              style={{
+                color: status === 'R' ? COLORS.red : COLORS.green,
+                ...FONTS.h3,
+              }}>
               {name?.length < 15 ? `${name}` : `${name?.substring(0, 15)}...`}{' '}
             </Text>
             <View style={{flexDirection: 'row'}}>
@@ -198,14 +170,16 @@ const Interview_status = props => {
           styles.Elevation,
         ]}>
         {/* top buttons */}
-        <View style={{marginVertical: 10}}>
+        <View style={{marginVertical: 10, flex: 1}}>
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               marginHorizontal: 10,
             }}>
-            <TouchableOpacity onPress={() => setStatus('P')}>
+            <TouchableOpacity
+              style={{width: responsiveWidth(100) / 3.5}}
+              onPress={() => setStatus('P')}>
               <Text
                 style={[
                   styles.Elevation,
@@ -217,10 +191,12 @@ const Interview_status = props => {
                       status === 'P' ? COLORS.orange : COLORS.white,
                   },
                 ]}>
-                Schedule Interview{' '}
+                Schedule{' '}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setStatus('C')}>
+            <TouchableOpacity
+              style={{width: responsiveWidth(100) / 3.5}}
+              onPress={() => setStatus('C')}>
               <Text
                 style={[
                   styles.Elevation,
@@ -232,7 +208,25 @@ const Interview_status = props => {
                       status === 'C' ? COLORS.orange : COLORS.white,
                   },
                 ]}>
-                Complete Interview{' '}
+                Complete{' '}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{width: responsiveWidth(100) / 3.5}}
+              onPress={() => setStatus('R')}>
+              <Text
+                style={[
+                  styles.Elevation,
+                  styles.regilizationBtn,
+                  {
+                    color: status === 'R' ? COLORS.white : COLORS.orange,
+                    borderColor: status === 'R' ? COLORS.white : COLORS.orange,
+                    backgroundColor:
+                      status === 'R' ? COLORS.orange : COLORS.white,
+                  },
+                ]}>
+                Rejected{' '}
               </Text>
             </TouchableOpacity>
           </View>
@@ -246,11 +240,11 @@ const Interview_status = props => {
             padding: 8,
             justifyContent: 'space-between',
           }}>
-          {interViewDetail[0]?.TXN_ID !== undefined &&
-          interViewDetail[0]?.TXN_ID !== null ? (
+          {inteviewListData[0]?.TXN_ID !== undefined &&
+          inteviewListData[0]?.TXN_ID !== null ? (
             <ScrollView>
-              {/* {console.log("sonnammmmmm",interViewDetail[0]?.TXN_ID)} */}
-              {interViewDetail
+              {console.log('sonnammmmmm268', JSON.stringify(inteviewListData))}
+              {inteviewListData
                 ?.filter(item => item.STATUS === status)
                 .map(item => (
                   <CandidateList

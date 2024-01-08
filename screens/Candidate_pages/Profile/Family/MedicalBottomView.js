@@ -438,7 +438,7 @@ const MedicalBottomView = ({medicalPolicy, onPress, fetchMedicalData}) => {
                   />
                   <DatePicker
                     modal
-                    theme="light"
+                    theme='auto'
                     open={calendarOpen}
                     mode="date"
                     date={expiryDate}

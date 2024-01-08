@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { COLORS, FONTS, SIZES } from '../../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../../constants';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
 import {useSelector} from 'react-redux';
@@ -59,12 +59,43 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
     getFamilyData();
   }, []);
 
+  useEffect(() => {
+    if (
+      selectedFamilyMemberValue == '329' ||
+      selectedFamilyMemberValue == '332' ||
+      selectedFamilyMemberValue == '333' ||
+      selectedFamilyMemberValue == '335' ||
+      selectedFamilyMemberValue == '338' ||
+      selectedFamilyMemberValue == '340' ||
+      selectedFamilyMemberValue == '341' ||
+      selectedFamilyMemberValue == '346' ||
+      selectedFamilyMemberValue == '347' ||
+      selectedFamilyMemberValue == '349'
+    ) {
+      setSelectedGenderValue(104);
+      setSelectedGender('Male');
+    } else if (
+      selectedFamilyMemberValue == '330' ||
+      selectedFamilyMemberValue == '331' ||
+      selectedFamilyMemberValue == '334' ||
+      selectedFamilyMemberValue == '336' ||
+      selectedFamilyMemberValue == '339' ||
+      selectedFamilyMemberValue == '342' ||
+      selectedFamilyMemberValue == '345' ||
+      selectedFamilyMemberValue == '348' ||
+      selectedFamilyMemberValue == '350'
+    ) {
+      setSelectedGenderValue(103);
+      setSelectedGender('Female');
+    }
+  }, [selectedFamilyMemberValue]);
+
   // family member, blood group & Gender data
   const getDropdownData = async P => {
     let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`);
     response = await response.json();
     const returnedData = response;
-    // console.warn(returnedData);
+    // console.log('paramData', returnedData);
     if (P === 38) {
       setFamilyMemberDropDown(returnedData);
     } else if (P === 31) {
@@ -227,9 +258,9 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
           </Text>
           <TouchableOpacity
             onPress={() => setShowMembers(false)}
-            style={{flexDirection: 'row', alignItems: 'center', padding: 5}}>
+            style={{flexDirection: 'row', alignItems: 'center', padding: 8}}>
             <Text>ADD</Text>
-            <Icon name="plus" size={16} />
+            <Icon name="plus" size={20} />
           </TouchableOpacity>
         </View>
 
@@ -447,13 +478,6 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
           ) : (
             <View>
               {/* dropdown for family member */}
-              {
-                <Text>
-                  {/* {console.log("familydata",members[0]?.MEMBER_FIRST_NAME)} */}
-                  {members[0]?.MEMBER_FIRST_NAME}
-                </Text>
-              }
-
               <TextDropdown
                 caption={'Family Member'}
                 data={familyMemberDropDown}
@@ -462,10 +486,6 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
                 defaultButtonText={selectedFamilyMember}
                 captionStyle={{color: COLORS.green, ...FONTS.h4}}
               />
-
-              {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Family Member</Text> */}
-              {/* <TextInput onChangeText={(val) => newMember.Member = val} value={newMember.Member} style={[styles.inputHolder, { marginVertical: 3, marginHorizontal: 7 }]} /> */}
-              {/* <SelectDropdown data={familyMemberDropDown?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3, marginHorizontal: 7 }]} onSelect={(value) => { setSelectedFamilyMember(value), checkFamilyMemberValue(value) }} defaultButtonText={selectDropDownText("familyMember")} defaultValueByIndex={(selectDropDownValue("familyMember"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
 
               {/* first name */}
               <Text
@@ -485,24 +505,6 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
                   {marginVertical: 3, marginHorizontal: 7},
                 ]}
               />
-
-              {/* middle name */}
-              {/* <Text
-                style={{
-                  color: 'green',
-                  paddingHorizontal: 6,
-                  paddingVertical: 3,
-                }}>
-                Member Middle Name
-              </Text>
-              <TextInput
-                onChangeText={val => setMiddleName(val)}
-                value={middleName}
-                style={[
-                  styles.inputHolder,
-                  {marginVertical: 3, marginHorizontal: 7},
-                ]}
-              /> */}
 
               {/* last name */}
               <Text
@@ -533,9 +535,6 @@ const FamilyBottomView = ({members, setMembers, onPress, fetchFamilyData}) => {
                 defaultButtonText={selectedGender}
                 captionStyle={{color: COLORS.green, ...FONTS.h4}}
               />
-
-              {/* <Text style={{ color: 'green', paddingHorizontal: 6, paddingVertical: 3 }}>Gender<Text style={{ color: 'red', fontWeight: 500 }}>*</Text></Text>
-                            <SelectDropdown data={gender?.map(a => a.PARAM_NAME)} buttonStyle={[styles.inputHolder, { width: '96%', marginVertical: 3 }]} onSelect={(value) => { setSelectedGender(value), checkSelectedGender(value) }} defaultButtonText={selectDropDownText("gender")} defaultValueByIndex={(selectDropDownValue("gender"))} buttonTextStyle={{ fontSize: 15, color: '#a5abb5' }} /> */}
 
               {/* for date of birth */}
               <Text

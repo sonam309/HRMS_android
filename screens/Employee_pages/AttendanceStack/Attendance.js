@@ -111,7 +111,6 @@ const Attendance = props => {
       day: date.day,
       monthYear: date.month,
     };
-
     dispatch(getAttendanceDailyDetails(data));
   };
 
@@ -263,7 +262,7 @@ const Attendance = props => {
           <Calendar
             initialDate=""
             style={{
-              marginBottom: 20,
+              marginBottom: 10,
               justifyContent: 'center',
               marginTop: 10,
             }}
@@ -357,61 +356,6 @@ const Attendance = props => {
               );
             }}
           />
-
-          {/* attendance summary */}
-
-          <View style={{marginBottom: 20, display: 'none'}}>
-            <Text style={styles.txtLeaveBalance}>Attendance summary</Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                width: '100%',
-                marginTop: 10,
-              }}>
-              <Image
-                source={Donut_chart}
-                style={{
-                  width: 130,
-                  height: 130,
-                  alignSelf: 'center',
-                  marginLeft: 20,
-                }}
-              />
-
-              <View
-                style={{
-                  alignSelf: 'flex-end',
-                  width: '60%',
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  flex: 1,
-                  marginRight: 10,
-                }}>
-                <Text
-                  style={[
-                    styles.attendanceBtn,
-                    {backgroundColor: '#E21818', marginBottom: 10},
-                  ]}>
-                  Absents 20
-                </Text>
-
-                <Text
-                  style={[
-                    styles.attendanceBtn,
-                    {backgroundColor: '#0079FF', marginBottom: 10},
-                  ]}>
-                  Leves 5
-                </Text>
-
-                <Text
-                  style={[styles.attendanceBtn, {backgroundColor: '#FFB200'}]}>
-                  HalfDay 2
-                </Text>
-              </View>
-            </View>
-          </View>
 
           {/* Leave Balance */}
           <View style={{display: 'none'}}>
@@ -590,6 +534,403 @@ const Attendance = props => {
                   Leave
                 </Text>
               </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* attendance summary */}
+
+          <View style={{marginBottom: 20}}>
+            <Text style={styles.txtLeaveBalance}>Attendance summary</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                width: '90%',
+                marginTop: 10,
+                borderRadius: 10,
+                borderWidth: 0.5,
+                height: 70,
+                borderLeftWidth: 10,
+                borderColor: '#E21818',
+                // borderLeftColor: '#E21818',
+                // borderTopColor: COLORS.lightGray,
+                // borderRightColor: COLORS.lightGray,
+                // borderBottomColor: COLORS.lightGray,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 15,
+                marginLeft: 20,
+              }}>
+              <Text
+                style={{textAlign: 'center', color: COLORS.black, ...FONTS.h3}}>
+                Absents
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: '#E21818',
+                  ...FONTS.h3,
+                  fontSize: 22,
+                  verticalAlign: 'middle',
+                }}>
+                5
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                width: '90%',
+                marginTop: 10,
+                borderRadius: 10,
+                borderWidth: 0.5,
+                height: 70,
+                borderLeftWidth: 10,
+                borderColor: '#0079FF',
+                // borderLeftColor: '#0079FF',
+                // borderTopColor: COLORS.lightGray,
+                // borderRightColor: COLORS.lightGray,
+                // borderBottomColor: COLORS.lightGray,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 15,
+                marginLeft: 20,
+              }}>
+              <Text
+                style={{textAlign: 'center', color: COLORS.black, ...FONTS.h3}}>
+                Leves
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: '#0079FF',
+                  ...FONTS.h3,
+                  fontSize: 22,
+                  verticalAlign: 'middle',
+                }}>
+                2
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                width: '90%',
+                marginTop: 10,
+                borderRadius: 10,
+                borderWidth: 0.5,
+                height: 70,
+                borderLeftWidth: 10,
+                borderColor: '#FFB200',
+                // borderLeftColor: '#FFB200',
+                // borderTopColor: COLORS.lightGray,
+                // borderRightColor: COLORS.lightGray,
+                // borderBottomColor: COLORS.lightGray,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 15,
+                marginLeft: 20,
+              }}>
+              <Text
+                style={{textAlign: 'center', color: COLORS.black, ...FONTS.h3}}>
+                HalfDay
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: '#FFB200',
+                  ...FONTS.h3,
+                  fontSize: 22,
+                  verticalAlign: 'middle',
+                }}>
+                1
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: '90%',
+              backgroundColor: COLORS.white,
+              borderRadius: 10,
+              borderWidth: 0.5,
+              alignSelf: 'center',
+              borderColor: COLORS.lightGray,
+              marginBottom: 40,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-around',
+              }}>
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/late.png')}
+                    style={{
+                      height: 30,
+                      width: 30,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Late
+                </Text>
+              </View>
+
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/earlyout.png')}
+                    style={{
+                      height: 30,
+                      width: 30,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Early Out
+                </Text>
+              </View>
+
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/deficithours.png')}
+                    style={{
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Deficit Hours
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-around',
+              }}>
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/totalwh.png')}
+                    style={{
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Total WH
+                </Text>
+              </View>
+
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    marginLeft:-10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/daysworked.png')}
+                    style={{
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Day(s) Worked
+                </Text>
+              </View>
+
+              <View style={{marginRight:20}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/avgwh.png')}
+                    style={{
+                      height: 30,
+                      width: 30,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  Avg. WH
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                marginLeft:30,
+              }}>
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/reg.png')}
+                    style={{
+                      height: 30,
+                      width: 30,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      ...FONTS.body4,
+                      alignSelf: 'center',
+                      marginLeft: 10,
+                    }}>
+                    0
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    color: COLORS.black,
+                    ...FONTS.body4,
+                    padding: 4,
+                  }}>
+                  REG
+                </Text>
+              </View>
             </View>
           </View>
         </View>

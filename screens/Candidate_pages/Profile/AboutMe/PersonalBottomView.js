@@ -460,7 +460,7 @@ const PersonalBottomView = ({onPress}) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
             <View>
               <View style={{margin: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
+                <Text style={{color: COLORS.green, ...FONTS.h5,marginLeft:5}}>
                   Date of Birth{' '}
                   <Text style={{color: 'red', fontWeight: 500}}>*</Text>{' '}
                 </Text>
@@ -485,6 +485,7 @@ const PersonalBottomView = ({onPress}) => {
                   modal
                   open={recordOpen}
                   mode="date"
+                  theme='auto'
                   date={recordBirthDate}
                   onConfirm={date => recordDateSelector(date)}
                   onCancel={() => {
@@ -585,7 +586,7 @@ const PersonalBottomView = ({onPress}) => {
               />
             </View>
 
-            <View style={{width: '48%', paddingHorizontal: 3}}>
+            <View style={{width: '48%', paddingHorizontal: 3,}}>
               <DateButton
                 caption={'Date of Marriage'}
                 date={marriageDate}
