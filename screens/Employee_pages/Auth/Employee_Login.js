@@ -39,7 +39,6 @@ import FormInput from '../../../components/FormInput';
 import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 
 const Employee_Login = props => {
-
   const [showVisibility, setShowVisibility] = useState(true);
   // const [userId, setUserId] = useState('17321');
   // const [password, setPassword] = useState('Test@123');
@@ -214,8 +213,7 @@ const Employee_Login = props => {
         }}
         style={{
           flex: 1,
-        }}
-        >
+        }}>
         <View
           style={{
             flex: 0.5,
@@ -294,7 +292,9 @@ const Employee_Login = props => {
                     paddingHorizontal: 25,
                     justifyContent: 'center',
                   }}>
-                  <Text style={styles.header}>Employee Login {Platform.systemName}</Text>
+                  <Text style={styles.header}>
+                    Employee Login {Platform.systemName}
+                  </Text>
                   {/* user credentials -username */}
                   <View style={[styles.textInputBox]}>
                     {/* <CustomInput
@@ -345,7 +345,6 @@ const Employee_Login = props => {
                           />
                         </View>
                       }
-                      
                       value={values.userId}
                     />
                   </View>

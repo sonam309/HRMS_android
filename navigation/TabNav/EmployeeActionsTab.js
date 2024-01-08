@@ -6,11 +6,16 @@ import Pending from '../../screens/Employee_pages/PendingApprovalStack/Approval_
 import Rejected from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Rejected/Rejected';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import BottomUpModal from '../../components/BottomUpModal';
-import { COLORS, FONTS } from '../../constants';
+import { COLORS, FONTS, SIZES } from '../../constants';
+import { LinearGradientTopTab } from '../../components';
 
 const Tab = createMaterialTopTabNavigator();
 
 const EmployeeActionsTab = (props) => {
+    const [selected, setSelected] = useState('Pending');
+    const arrayList = ['Approved', 'Pending', 'Rejected'];
+  
+
     const { flag } = props.route.params
     const [isVisible, setIsVisible] = useState(false)
     const [notificationCat, setNotificationCat] = useState('');
@@ -89,7 +94,10 @@ const EmployeeActionsTab = (props) => {
     }
 
     return (
-        <>
+        <View style={{
+            flex: 1,
+            backgroundColor: COLORS.white
+        }}>
             {/* Header */}
             <SafeAreaView style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <TouchableOpacity style={{ paddingHorizontal: 14 }} onPress={() => props.navigation.navigate("Approval_actions")}>
@@ -103,7 +111,7 @@ const EmployeeActionsTab = (props) => {
                 </TouchableOpacity>
             </SafeAreaView>
 
-            <Tab.Navigator initialRouteName='Pending'
+            {/* <Tab.Navigator initialRouteName='Pending'
             //  screenOptions={{
             //     tabBarActiveTintColor: COLORS.white,
             //     tabBarIndicatorStyle: { backgroundColor: COLORS.voilet, width: '33.34%', height: '100%' },
@@ -120,7 +128,34 @@ const EmployeeActionsTab = (props) => {
                 <Tab.Screen name="Approved" children={() => <Approved flag={flag} notificationCat={notificationCat} name={"Approved"} navigation={props.navigation} />} />
                 <Tab.Screen name="Pending" children={() => <Pending flag={flag} notificationCat={notificationCat} name="Pending" navigation={props.navigation} />} />
                 <Tab.Screen name="Rejected" children={() => <Rejected flag={flag} notificationCat={notificationCat} name="Rejected" navigation={props.navigation} />} />
-            </Tab.Navigator>
+            </Tab.Navigator> */}
+
+<View
+style={{
+    marginVertical: SIZES.radius
+}}
+        >
+        {/* TABS */}
+        <LinearGradientTopTab
+          arrayList={arrayList}
+          selected={selected}
+          setSelected={setSelected}
+          LinearStyle={styles.LinearStyle}
+        />
+      </View>
+      <View style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          {selected == 'Approved' && (
+            <Approved flag={flag} notificationCat={notificationCat} name={"Approved"} navigation={props.navigation} />
+          )}
+          {selected == 'Pending' && (
+           <Pending flag={flag} notificationCat={notificationCat} name="Pending" navigation={props.navigation} />
+          )}
+           {selected == 'Rejected' && (
+           <Rejected flag={flag} notificationCat={notificationCat} name="Rejected" navigation={props.navigation} />
+          )}
+        </View>
+      </View>
 
             {/* Bottom Up Modal to display filter options */}
             {isVisible && (
@@ -134,7 +169,7 @@ const EmployeeActionsTab = (props) => {
                     {renderFilterModal()}
                 </BottomUpModal>
             )}
-        </>
+        </View>
     )
 }
 

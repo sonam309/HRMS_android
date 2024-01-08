@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import New_hiring from '../../screens/Employee_pages/Hiring_screens/New_hiring';
 import Interview_status from '../../screens/Employee_pages/Hiring_screens/Interview_status';
 import {DrawerActions} from '@react-navigation/native';
@@ -16,7 +15,6 @@ import BottomUpModal from '../../components/BottomUpModal';
 import {COLORS, FONTS} from '../../constants';
 import {LinearGradientTopTab} from '../../components';
 
-const Tab = createMaterialTopTabNavigator();
 
 const CreateHiringTab = props => {
   const [selected, setSelected] = useState('New Hiring');

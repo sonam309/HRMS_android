@@ -8,7 +8,7 @@ export const API = `https://econnectsatya.com:7033/`  //live
 export const API2 = `http://192.168.2.35:7038/`
 
 export const VERSIONS = {
-    android: "2.3",
+    android: "3.3",
     olderVersion:"2.1"
 }
 
