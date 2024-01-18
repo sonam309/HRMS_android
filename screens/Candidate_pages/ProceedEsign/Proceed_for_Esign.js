@@ -356,12 +356,14 @@ const Proceed_for_Esign = props => {
       }),
     };
 
+    console.log('requesttdatatattata', JSON.stringify(data));
+
     if (type === 'JOINING KIT') {
       axios
         .post(`${API}api/Kyc/JoiningKitProceedForEsign`, data)
         .then(response => {
           const returnedData = response.data;
-          // console.log('joiningKitResponse', returnedData);
+          console.log('joiningKitResponse', returnedData);
           setTkenRes(returnedData?.data?.token);
           setClientId(returnedData?.data?.client_id);
           var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
@@ -377,7 +379,7 @@ const Proceed_for_Esign = props => {
 
               // esignResponseData=eventCount;
               const esignRes = JSON.parse(eventCount);
-              // console.log("esignResponseData", esignRes);
+              console.log('esignResponseData', esignRes);
               // console.log("esignResponseData1", esignRes["status_code"]);
               eventListener.remove();
 
@@ -596,6 +598,7 @@ const Proceed_for_Esign = props => {
               text: 'Cancel',
               onPress: () => console.log('Cancel Pressed'),
               style: 'cancel',
+              s,
             },
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ]);
@@ -606,7 +609,7 @@ const Proceed_for_Esign = props => {
   const getAxisData = () => {
     console.log('getCoordinateDat', coordinatesList.XYAXIS);
     setXYAXIS(coordinatesList?.XYAXIS);
-    // setXYAXIS('{"1":[{"x":435 ,"y":130}],"2":[{"x":435,"y":125}],"3":[{"x":435,"y":70}],"4":[{"x":435,"y":320}]}');
+    // setXYAXIS('{"1":[{"x":320 ,"y":130}],"2":[{"x":320,"y":10}],"3":[{"x":320,"y":40}],"4":[{"x":320,"y":400}],"5":[{"x":320,"y":180}]}');
     setDocumentName(coordinatesList?.Document_name);
     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
     setDocTypeView(false);

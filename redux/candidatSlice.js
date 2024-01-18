@@ -15,7 +15,7 @@ const candidateSlice = createSlice({
     builder.addMatcher(
       isAnyOf(getCandidateOfferCheck.fulfilled),
       (state, action) => {
-        console.log('gfhfyjhgjgujkukhkhkhkh', action.payload.Result);
+        // console.log('gfhfyjhgjgujkukhkhkhkh', action.payload.Result);
         state.loading = false;
         state.candidateOfferCheckResult = action.payload.Result;
       },

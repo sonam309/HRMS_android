@@ -162,7 +162,7 @@ const Employee_Login = props => {
     try {
       setLoaderVisible(true);
       let otp = RandomNumber('6');
-      // console.log("emplogin", userId + "  " + otp);
+      console.log("emplogin", userId + "  " + otp);
       axios
         .get(`${API}/api/GetMobileNo`, {
           params: {

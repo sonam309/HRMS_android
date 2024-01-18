@@ -208,7 +208,7 @@ const CandidateTestResult = ({navigation, route}) => {
                         textAlign: 'center',
                         marginLeft: 20,
                       }}>
-                      Question:{item?.QUES_NO}
+                      Question:{item?.S_No}
                     </Text>
                     <Text
                       style={{

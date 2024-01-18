@@ -298,8 +298,8 @@ const TestScreen = props => {
 
 
 
-
             </ScrollView> */}
+
             {currentQuestion && (
               <QuestionItem
                 item={currentQuestion}

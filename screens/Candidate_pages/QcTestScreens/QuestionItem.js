@@ -21,7 +21,7 @@ const QuestionItem = ({
 
   const options = useMemo(() => {
     return OPTIONS.map(i => item[i]);
-  }, [currentIndex]);
+  }, [currentIndex, item]);
 
   useMemo(() => {
     if (item?.selectedAnswer === '') {
@@ -31,7 +31,7 @@ const QuestionItem = ({
         if (item.selectedAnswer == OPTIONS[index]) setSelectAnswer(index);
       });
     }
-  }, [currentIndex]);
+  }, [currentIndex, item]);
 
   // useEffect(() => {
 

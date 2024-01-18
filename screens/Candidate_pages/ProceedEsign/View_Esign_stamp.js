@@ -44,9 +44,9 @@ const View_Esign_stamp = props => {
     dispatch(getCandidateList(data));
   };
 
-  // console.log('responseData', candidateList);
-  // console.log('esignCount', candidateList[index]?.ESSIGN_CNT);
-  // console.log('docTYpeeeeeeView', candidateList[index]?.DOCUMENT_TYPE);
+  console.log('responseData', candidateList);
+  console.log('esignCount', candidateList[index]?.ESSIGN_CNT);
+  console.log('docTYpeeeeeeView', candidateList[index]?.DOCUMENT_TYPE);
 
   const setDocument = () => {
     if (

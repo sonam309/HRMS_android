@@ -41,8 +41,6 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-// import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';/
-// import { useNavigation  } from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
 import {getCandidateOfferCheck} from '../../redux/candidatSlice';
 
@@ -50,6 +48,10 @@ const CandidateDashboard = props => {
   const dispatch = useDispatch();
   const current_Status = useSelector(
     state => state.candidateAuth.candidateStatus,
+  );
+
+  const {candidateOfferCheckResult, loading} = useSelector(
+    state => state.candidateInfo,
   );
   const Job_Title = useSelector(state => state.candidateAuth.candidateRole);
   const [loaderVisible, setLoaderVisible] = useState(false);
@@ -70,33 +72,19 @@ const CandidateDashboard = props => {
   const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
   const [esignCount, setEsignCount] = useState();
   const [todoList, setTodoList] = useState('');
-
-  const [error, setError] = useState(false);
-  const [tkenRes, setTkenRes] = useState();
-  const [input, setInput] = useState('');
-  const [count, setCount] = useState('');
   const [pendingTest, setPendingTest] = useState('');
   const [profilePic, setProfilePic] = useState(null);
-
   const [showPicModal, setShowPicModal] = useState(false);
 
   const isFocused = true;
 
-  useEffect(() => {
-    // if (isFocused) {
-    if (candidateId) {
-      // console.log('testttttttttttttt');
 
-      getCandidateOfferDetails();
-    }
-    // }
-  }, [candidateId]);
 
-  useEffect(() => {
-    const userData = {loginId: candidateId};
+  // useFocusEffect(() => {
+  //     console.log('testttttttttttttttttttttttttttttttttt');
+  //     getCandidateOfferDetails();
 
-    dispatch(getCandidateOfferCheck(userData));
-  }, []);
+  // });
 
   useEffect(() => {
     if (employeeCreateFlag === 'Y') {
@@ -106,7 +94,9 @@ const CandidateDashboard = props => {
 
   const onRefreshData = React.useCallback(() => {
     if (candidateId) {
-      getCandidateOfferDetails();
+      if (!profilePic) {
+        getCandidateOfferDetails();
+      }
     }
 
     if (employeeCreateFlag === 'Y') {
@@ -158,7 +148,6 @@ const CandidateDashboard = props => {
     const userData = {loginId: candidateId};
     // setLoaderVisible(true);
 
-    console.log('CLikkkkccc', type);
     axios
       .post(`${API}/api/hrms/candidateOfferCheck`, userData)
       .then(response => {
@@ -177,7 +166,7 @@ const CandidateDashboard = props => {
         setTodoList(resultData?.Result[0]?.DOC_REQ);
         setPendingTest(resultData?.Result[0]?.PENDING_TEST);
         setProfilePic(resultData?.Result[0]?.PROFILE_PIC);
-        if (!resultData?.Result[0]?.PROFILE_PIC) {
+        if (!resultData?.Result[0]?.PROFILE_PIC && showPicModal === false) {
           setShowPicModal(true);
         }
 
@@ -214,6 +203,16 @@ const CandidateDashboard = props => {
         });
       });
   };
+
+  useMemo(() => {
+    // if (isFocused) {
+    if (candidateId) {
+      console.log('testttttttttttttt');
+
+      getCandidateOfferDetails();
+    }
+    // }
+  }, [candidateId]);
 
   // for submitting file
 

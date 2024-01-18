@@ -142,10 +142,10 @@ const Attendance = props => {
     setLoaderVisible(false);
   };
 
-  useEffect(() => {
-    userId && getAttendance();
-    loadingData('V');
-  }, []);
+  // useEffect(() => {
+  //   userId && getAttendance();
+  //   loadingData('V');
+  // }, []);
 
   useEffect(() => {
     userId && getAttendance();
@@ -169,6 +169,8 @@ const Attendance = props => {
       .then(response => {
         setLoaderVisible(false);
         const returnedData = response?.data?.Result;
+
+        console.log('AttendanceDetails', returnedData);
 
         // Create the final object
         returnedData.map(obj => {
@@ -357,34 +359,7 @@ const Attendance = props => {
             }}
           />
 
-          {/* Leave Balance */}
-          <View style={{display: 'none'}}>
-            <Text style={styles.txtLeaveBalance}>Leave Balance</Text>
-
-            <View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  marginHorizontal: 10,
-                }}>
-                {LeaveBalanceList.map(item => (
-                  <DrawerIcons
-                    icon={item.Icon}
-                    header={item.Title}
-                    count={item.LeaveCount}
-                    color={item.Color}
-                    key={item.id}
-                  />
-                ))}
-              </View>
-            </View>
-          </View>
-
           {/* Regulization */}
-
           <View style={{paddingTop: 20, marginBottom: 30}}>
             <View
               style={{
@@ -657,7 +632,7 @@ const Attendance = props => {
               borderWidth: 0.5,
               alignSelf: 'center',
               borderColor: COLORS.lightGray,
-              marginBottom: 40,
+              marginBottom: 5,
             }}>
             <View
               style={{
@@ -821,7 +796,7 @@ const Attendance = props => {
                   style={{
                     flexDirection: 'row',
                     marginTop: 10,
-                    marginLeft:-10,
+                    marginLeft: -10,
                     justifyContent: 'center',
                   }}>
                   <Image
@@ -853,7 +828,7 @@ const Attendance = props => {
                 </Text>
               </View>
 
-              <View style={{marginRight:20}}>
+              <View style={{marginRight: 20}}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -894,7 +869,7 @@ const Attendance = props => {
               style={{
                 flexDirection: 'row',
                 width: '100%',
-                marginLeft:30,
+                marginLeft: 30,
               }}>
               <View>
                 <View
@@ -931,6 +906,217 @@ const Attendance = props => {
                   REG
                 </Text>
               </View>
+            </View>
+          </View>
+
+          <View style={{marginBottom: 20, marginLeft: 10}}>
+            <Text style={styles.txtLeaveBalance}>Leave Balance</Text>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop: 10,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    padding: 4,
+                    width: responsiveWidth(30),
+                    backgroundColor: COLORS.lightBlue,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.white,
+                      ...FONTS.h5,
+                    }}>
+                    Casual Leave
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    width: responsiveWidth(30),
+                    padding: 4,
+                    backgroundColor: COLORS.lightGreen,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.white,
+                      ...FONTS.h5,
+                    }}>
+                    Sick Leave
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    width: responsiveWidth(30),
+                    padding: 4,
+                    backgroundColor: COLORS.lightOrange,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.white,
+                      ...FONTS.h5,
+                    }}>
+                    Earned Leave
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop: 10,
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    padding: 4,
+                    width: responsiveWidth(30),
+                    backgroundColor: COLORS.gray,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.white,
+                      ...FONTS.h5,
+                    }}>
+                    BirthDay Leaves
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    width: responsiveWidth(30),
+                    padding: 4,
+                    backgroundColor: COLORS.hyperlinkBlue,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.lightRed,
+                      ...FONTS.h5,
+                    }}>
+                    Maternity Leaves
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Attendance', {
+                    screen: 'Leave',
+                  });
+                }}>
+                <View
+                  style={{
+                    borderRadius: 4,
+                    width: responsiveWidth(30),
+                    padding: 4,
+                    backgroundColor: COLORS.purple,
+                  }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      textAlign: 'center',
+                      ...FONTS.h5,
+                    }}>
+                    1.0
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: COLORS.white,
+                      ...FONTS.h5,
+                    }}>
+                    Marriage Leave
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
