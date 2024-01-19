@@ -25,6 +25,7 @@ import EsignD from './images/d_esign.png'
 import test from './images/test.png'
 import profileIC from './images/profile_ic.png'
 import late_ic from './images/late.png'
+import candidate_info from './images/candidate_info.png'
 
 //icons form icons folder
 
@@ -56,5 +57,7 @@ export {
     circleGreen,
     EsignD,
     test,
-    profileIC, late_ic
+    profileIC, 
+    late_ic,
+    candidate_info
 }

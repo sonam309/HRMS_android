@@ -60,6 +60,8 @@ const Candidate_details = props => {
   // console.log("interviewMail", interviewMail);
   // console.log("resume", resume);
   // console.log("UserID",userId);
+  // console.log('Name',name);
+
   let theInterviewType = '';
   let theInterviewId = '';
 
@@ -703,7 +705,7 @@ const Candidate_details = props => {
 
               <View style={{justifyContent: 'center', marginHorizontal: 10}}>
                 <Text style={{color: COLORS.green, ...FONTS.h5, fontSize: 17}}>
-                  {name}
+                  {name && name}
                 </Text>
                 <Text style={{...FONTS.h4}}>{designation}</Text>
               </View>
@@ -728,11 +730,12 @@ const Candidate_details = props => {
                   color: COLORS.darkGray2,
                   ...FONTS.h5,
                 }}>
-                {date}
+                {date && date}
               </Text>
               <Icons name="timetable" color={COLORS.darkGray2} size={25} />
               <Text style={{marginHorizontal: 10}}>
-                {interviewStartTime} - {interviewEndTime}
+                {interviewStartTime && interviewStartTime} -{' '}
+                {interviewEndTime && interviewEndTime}
               </Text>
             </View>
 
@@ -761,7 +764,7 @@ const Candidate_details = props => {
                     marginHorizontal: 8,
                     ...FONTS.h4,
                   }}>
-                  {resume}
+                  {resume && resume}
                 </Text>
               </TouchableOpacity>
 

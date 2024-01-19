@@ -140,6 +140,15 @@ function EmployeeApprovalStackScreen({navigation}) {
           mode: 'none',
         }}
       />
+
+      <Stack.Screen
+        name="Candidate_details"
+        component={Candidate_details}
+        options={{
+          headerMode: 'none',
+          mode: 'none',
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -252,10 +261,9 @@ const EmployeeDrawer = props => {
 
         drawerLabelStyle: {
           fontSize: 13,
-          flexWrap:'wrap',
+          flexWrap: 'wrap',
           width: '100%',
           paddingHorizontal: SIZES.base,
-         
         },
 
         drawerItemStyle: {
@@ -371,12 +379,12 @@ const EmployeeDrawer = props => {
           drawerIcon: ({color}) => (
             // <Ionicons name="people-outline" size={28} color={color} />
             <Image
-            source={icons.hiring}
-            style={{
-              height: 32,
-              width: 32,
-            }}
-          />
+              source={icons.hiring}
+              style={{
+                height: 32,
+                width: 32,
+              }}
+            />
           ),
         }}
       />

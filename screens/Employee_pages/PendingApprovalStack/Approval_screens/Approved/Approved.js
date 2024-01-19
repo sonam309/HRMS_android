@@ -24,7 +24,7 @@ const Approved = props => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        console.log('approvals', returnedData);
+        // console.log('approvals', returnedData);
         setApprovedData(returnedData);
         setLoading(false);
       })

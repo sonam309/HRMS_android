@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -22,11 +23,21 @@ import TextDropdown from '../../../../components/TextDropdown';
 import {TextInput} from 'react-native-gesture-handler';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {COLORS} from '../../../../constants';
+import {SIZES, FONTS} from '../../../../constants';
 
 const Details = props => {
+  const {navigation} = props;
   const {width} = useWindowDimensions();
-  const {candidate_ID, category, date, mail_body, approver, action, jobId} =
-    props.route.params;
+  const {
+    candidate_ID,
+    category,
+    date,
+    mail_body,
+    approver,
+    action,
+    jobId,
+    wholeList,
+  } = props.route.params;
   const [jobRequestData, setJobRequestData] = useState(null);
   const [jobOpeningData, setJobOpeningData] = useState(null);
   const [HTMLdata, setHTMLdata] = useState(null);
@@ -369,13 +380,13 @@ const Details = props => {
       .then(response => {
         const returnedData = response?.data;
         setData(returnedData);
-        // console.log("htmldata", returnedData);
+        // console.log("Response375.....", returnedData);
       });
   };
 
   // Setting the variables data coming for Salary Allocation
   const updating = () => {
-    console.log('htmldataaaaa', data);
+    // console.log('htmldataaaaa', data);
     fullName = data.Table1[0]?.FULL_NAME;
     JobTitle = data?.Table[0]?.DESIGNATION;
     contactPersonMob = data.Table1[0]?.CONTACT_PERSON;
@@ -443,7 +454,7 @@ const Details = props => {
     //     //V_2.2 sk
     //     + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
 
-    console.log('ctttctctct', data.Table[0]?.BRKP_CTC);
+    // console.log('ctttctctct', data.Table[0]?.BRKP_CTC);
   };
 
   // Updating the HTML data for Salary Allocation
@@ -1306,54 +1317,97 @@ const Details = props => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <Type />
+    <ScrollView>
+      <View style={{flex: 1}}>
+        <TouchableOpacity
+          onPress={() => {
+           
+            navigation.navigate('Candidate_details', {
+              // resume,
+              name: `${wholeList?.FIRST_NAME} ${wholeList?.LAST_NAME}`,
+              designation: wholeList?.JOB_TITLE,
+              // date,
+              // interviewEndTime,
+              // interviewStartTime,
+              // status,
+              candidateId: candidate_ID,
+              // interviewId,
+              // interviewType,
+              // interviewMail,
+              // profilePic,-
+            });
+          }}
+          style={{
+            flex: 0.6,
+            width: responsiveWidth(100),
+            backgroundColor: COLORS.disableOrange1,
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            flexDirection: 'row',
+            height: 60,
+            marginTop: 5,
+            marginBottom: -10,
+          }}>
+          <Text style={{color: COLORS.black, ...FONTS.h3}}>
+            Candidate Information
+          </Text>
+          <Image
+            source={require('../../../../assets/images/candidate_info.png')}
+            style={{
+              height: 45,
+              width: 45,
+            }}
+          />
+        </TouchableOpacity>
+{/* <Text>{JSON.stringify(wholeList)}</Text> */}
+        <Type />
 
-      {/* Approval Buttons */}
-      {action === 'P' && (
-        <View style={styles.footerDesign}>
-          <TouchableOpacity
-            disabled={disableBtn}
-            onPress={() => approveType('C')}
-            style={[
-              {
-                backgroundColor: disableBtn
-                  ? COLORS.disableGreen
-                  : COLORS.green,
-              },
-              styles.buttonStyle,
-            ]}>
-            <MaterialCommunityIcons
-              name="check-circle-outline"
-              size={20}
-              color={COLORS.white}
-            />
-            <Text style={{color: COLORS.white, fontWeight: '600'}}>
-              {' '}
-              Approve{' '}
-            </Text>
-          </TouchableOpacity>
+        {/* Approval Buttons */}
+        {action === 'P' && (
+          <View style={styles.footerDesign}>
+            <TouchableOpacity
+              disabled={disableBtn}
+              onPress={() => approveType('C')}
+              style={[
+                {
+                  backgroundColor: disableBtn
+                    ? COLORS.disableGreen
+                    : COLORS.green,
+                },
+                styles.buttonStyle,
+              ]}>
+              <MaterialCommunityIcons
+                name="check-circle-outline"
+                size={20}
+                color={COLORS.white}
+              />
+              <Text style={{color: COLORS.white, fontWeight: '600'}}>
+                {' '}
+                Approve{' '}
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => rejectType('R')}
-            disabled={disableBtn}
-            style={[
-              {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
-              styles.buttonStyle,
-            ]}>
-            <MaterialCommunityIcons
-              name="close-circle-outline"
-              size={20}
-              color={COLORS.white}
-            />
-            <Text style={{color: COLORS.white, fontWeight: '600'}}>
-              {' '}
-              Reject{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+            <TouchableOpacity
+              onPress={() => rejectType('R')}
+              disabled={disableBtn}
+              style={[
+                {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
+                styles.buttonStyle,
+              ]}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={20}
+                color={COLORS.white}
+              />
+              <Text style={{color: COLORS.white, fontWeight: '600'}}>
+                {' '}
+                Reject{' '}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({

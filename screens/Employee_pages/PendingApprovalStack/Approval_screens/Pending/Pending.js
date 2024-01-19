@@ -1,13 +1,17 @@
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../../../../../components/Loader';
 import {API} from '../../../../../utility/services';
 import {COLORS} from '../../../../../constants';
+import {getpendingApprovalsData} from '../../../../../redux/aprovalPendingSlice';
 
 const Pending = props => {
+  const dispatch = useDispatch();
+  const {pendingApprovalList} = useSelector(state => state.aprovalPending);
+
   const {navigation, flag, notificationCat, name} = props;
   const [pendingData, setPendingData] = useState([]);
   const [loaderVisible, setLoaderVisible] = useState(false);
@@ -26,7 +30,9 @@ const Pending = props => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        // console.log("pending",returnedData);
+
+        console.log('pending34', returnedData);
+
         setPendingData(returnedData);
         setLoaderVisible(false);
       })
@@ -35,6 +41,17 @@ const Pending = props => {
         setLoaderVisible(false);
       });
   };
+
+  // useEffect(() => {
+  //   const requestData = {
+  //     userId: userId,
+  //     operFlag: 'P',
+  //     notificationCat: notificationCat,
+  //   };
+
+  //   dispatch(getpendingApprovalsData(requestData));
+  //   console.log('sliceResponse', pendingApprovalList);
+  // }, []);
 
   useEffect(() => {
     getData();
@@ -47,6 +64,7 @@ const Pending = props => {
     }, [notificationCat]),
   );
 
+
   function ListItems(props) {
     const date = props?.applyDate,
       mail_body = props?.mail,
@@ -54,6 +72,7 @@ const Pending = props => {
       candidate_ID = props?.id,
       category = props?.cat,
       jobId = props?.jobId;
+      wholeList = props?.totalItem;
 
     switch (category) {
       case 'New Job Opening':
@@ -74,7 +93,9 @@ const Pending = props => {
       <TouchableOpacity
         key={candidate_ID}
         style={[styles.ListIcons, styles.Elevation]}
+      
         onPress={() => {
+          // console.log("data99",wholeList)
           navigation.navigate('Details', {
             candidate_ID,
             category,
@@ -83,9 +104,13 @@ const Pending = props => {
             approver,
             action,
             jobId,
+            wholeList: props?.totalItem
           });
         }}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          {/* <Text>
+            {JSON.stringify(wholeList)}
+          </Text> */}
           <Text style={{fontSize: 14, fontWeight: '500', color: COLORS.black}}>
             Applied date {'-'}{' '}
             <Text
@@ -149,6 +174,9 @@ const Pending = props => {
                 id={item?.CANDIDATE_ID}
                 jobId={item?.JOB_ID}
                 cat={item?.NOTIFICATION_CAT}
+                name={`${item?.FIRST_NAME} ${item?.LAST_NAME}`}
+                designation={item?.JOB_TITLE}
+                totalItem={item}
               />
             )}
           />
