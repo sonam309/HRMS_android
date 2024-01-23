@@ -19,6 +19,7 @@ import WebView from 'react-native-webview';
 import {API} from '../../utility/services';
 import Toast from 'react-native-toast-message';
 import Header from '../../components/Header';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 const Offer_Letter = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
@@ -34,71 +35,60 @@ const Offer_Letter = props => {
   }, []);
 
   const requestFilePermission = async () => {
-    try {
-      isReadGranted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
-        {
-          title: 'File Permission',
-          message: 'Satya HRMS needs access to your storage',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-
-      // console.log("permission", isReadGranted);
-      if (isReadGranted === PermissionsAndroid.RESULTS.GRANTED) {
-        downloadFile();
-      } else if (isReadGranted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-        downloadFile();
-
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Storage access denied'
-        // })
-      } else {
+    if (Platform.OS === 'android') {
+      try {
+        isReadGranted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
+          {
+            title: 'File Permission',
+            message: 'Satya HRMS needs access to your storage',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (isReadGranted === PermissionsAndroid.RESULTS.GRANTED) {
+          downloadFile();
+        } else if (
+          isReadGranted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN
+        ) {
+          downloadFile();
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Storage access denied',
+          });
+        }
+      } catch (error) {
         Toast.show({
           type: 'error',
-          text1: 'Storage access denied',
+          text1: JSON.stringify(error),
         });
       }
-    } catch (err) {
-      Toast.show({
-        type: 'error',
-        text1: JSON.stringify(err),
-      });
+    } else {
+      downloadFile();
     }
   };
 
   const downloadFile = () => {
-    // const {config, fs} = RNFetchBlob;
-    // const fileDir = fs.dirs.DownloadDir;
+    let fileDir = ReactNativeBlobUtil.fs.dirs;
 
-    // config({
-    //   // add this option that makes response data to be stored as a file,
-    //   // this is much more performant.
-    //   fileCache: true,
-    //   addAndroidDownloads: {
-    //     useDownloadManager: true,
-    //     notification: true,
-    //     description: 'Downloading File',
-    //     path: fileDir + '/download_' + '.pdf',
-    //   },
-    // })
-    //   // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
-    //   .fetch('GET', `${API}/OfferLetter/${offerLetter}`, {
-    //     //some headers ..
-    //   })
-    //   .then(res => {
-    //     // the temp file path
-    //     // console.log('The file saved to ', res.path())
-    //     Toast.show({
-    //       type: 'success',
-    //       text1: 'File saved Successfully to' + res.path(),
-    //     });
-    //   });
+    ReactNativeBlobUtil.config({
+      // response data will be saved to this path if it has access right.
+      fileCache: true,
+      path: fileDir.DownloadDir + '/download_' + '.pdf',
+    })
+      .fetch('GET', `${API}/OfferLetter/${offerLetter}`)
+      .then(res => {
+        // the path should be dirs.DocumentDir + 'path-to-file.anything'
+        // console.log('The file saved to ', res.path())
+        Toast.show({
+          type: 'success',
+          text1: 'File saved Successfully to' + res.path(),
+        });
+      });
   };
 
   // Fetching salary allocation template
@@ -119,7 +109,7 @@ const Offer_Letter = props => {
 
     totalData = await totalData.json();
     totalData = totalData.Result[0];
-    console.log("totaldata", totalData);
+    console.log('totaldata', totalData);
     setOfferLetterUrl(`${API}/OfferLetter/` + totalData.OFFER_LETTER);
     // console.log("Urloffer", "https://econnectsatya.com:7033/OfferLetter/" + totalData.OFFER_LETTER);
     if (!totalData) {
@@ -153,7 +143,7 @@ const Offer_Letter = props => {
       operFlag: operFlag,
     };
 
-    console.log("345678765432", data);
+    console.log('345678765432', data);
 
     axios
       .post(`${API}/api/hrms/OfferAceptance`, data)
