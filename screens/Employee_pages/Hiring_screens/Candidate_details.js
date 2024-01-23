@@ -26,6 +26,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import {saveAttemptTest} from '../../../redux/eSignSlice';
 import {COLORS, FONTS} from '../../../constants';
+import Header from '../../../components/Header';
 
 const Candidate_details = props => {
   const {
@@ -639,6 +640,7 @@ const Candidate_details = props => {
   // Main component to return
   return (
     <ScrollView style={{flex: 1}}>
+      <Header title={'Candidate details'} />
       <View
         style={{
           flex: 1,

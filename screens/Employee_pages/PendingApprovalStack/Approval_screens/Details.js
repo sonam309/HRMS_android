@@ -13,7 +13,7 @@ import RenderHtml, {RenderHTML} from 'react-native-render-html';
 import Icons from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../../../components/Loader';
 import SelectDropdown from 'react-native-select-dropdown';
 import {API} from '../../../../utility/services';
@@ -24,9 +24,13 @@ import {TextInput} from 'react-native-gesture-handler';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {COLORS} from '../../../../constants';
 import {SIZES, FONTS} from '../../../../constants';
+import Header from '../../../../components/Header';
+import LinearGradient from 'react-native-linear-gradient';
+import { getInterviewList } from '../../../../redux/interviewDetailSlice';
 
 const Details = props => {
   const {navigation} = props;
+  const dispatch = useDispatch()
   const {width} = useWindowDimensions();
   const {
     candidate_ID,
@@ -38,6 +42,8 @@ const Details = props => {
     jobId,
     wholeList,
   } = props.route.params;
+
+  const { inteviewListData } = useSelector((state)=> state.inteviewDetail)
   const [jobRequestData, setJobRequestData] = useState(null);
   const [jobOpeningData, setJobOpeningData] = useState(null);
   const [HTMLdata, setHTMLdata] = useState(null);
@@ -84,8 +90,17 @@ const Details = props => {
     onElement: onElement,
   };
 
+  const getInterviewListData = async () => {
+    const data = {
+      operFlag: 'v',
+      userId: userId,
+    };
+    dispatch(getInterviewList(data));
+  };
+
   useEffect(() => {
     getDropdownData('L');
+    getInterviewListData()
     {
       switch (category) {
         case 'Salary Allocation':
@@ -1317,11 +1332,28 @@ const Details = props => {
   };
 
   return (
-    <ScrollView>
-      <View style={{flex: 1}}>
+    <View style={{flex: 1}}>
+      <Header title={'Salary allocation'} />
+
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <Type />
+
         <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: COLORS.lightGray1,
+            marginVertical: SIZES.padding,
+            width: responsiveWidth(90),
+            alignSelf: 'center',
+            borderRadius: SIZES.radius,
+            height: 50,
+            justifyContent: 'center',
+          }}
           onPress={() => {
-           
             navigation.navigate('Candidate_details', {
               // resume,
               name: `${wholeList?.FIRST_NAME} ${wholeList?.LAST_NAME}`,
@@ -1336,78 +1368,70 @@ const Details = props => {
               // interviewMail,
               // profilePic,-
             });
-          }}
-          style={{
-            flex: 0.6,
-            width: responsiveWidth(100),
-            backgroundColor: COLORS.disableOrange1,
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            flexDirection: 'row',
-            height: 60,
-            marginTop: 5,
-            marginBottom: -10,
           }}>
-          <Text style={{color: COLORS.black, ...FONTS.h3}}>
+          <Text
+            style={{
+              ...FONTS.h3,
+              fontWeight: '700',
+              color: COLORS.black,
+            }}>
             Candidate Information
           </Text>
           <Image
             source={require('../../../../assets/images/candidate_info.png')}
             style={{
-              height: 45,
-              width: 45,
+              height: 25,
+              width: 25,
             }}
           />
         </TouchableOpacity>
-{/* <Text>{JSON.stringify(wholeList)}</Text> */}
-        <Type />
-
-        {/* Approval Buttons */}
-        {action === 'P' && (
-          <View style={styles.footerDesign}>
-            <TouchableOpacity
-              disabled={disableBtn}
-              onPress={() => approveType('C')}
-              style={[
-                {
-                  backgroundColor: disableBtn
-                    ? COLORS.disableGreen
-                    : COLORS.green,
-                },
-                styles.buttonStyle,
-              ]}>
-              <MaterialCommunityIcons
-                name="check-circle-outline"
-                size={20}
-                color={COLORS.white}
-              />
-              <Text style={{color: COLORS.white, fontWeight: '600'}}>
-                {' '}
-                Approve{' '}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => rejectType('R')}
-              disabled={disableBtn}
-              style={[
-                {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
-                styles.buttonStyle,
-              ]}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={20}
-                color={COLORS.white}
-              />
-              <Text style={{color: COLORS.white, fontWeight: '600'}}>
-                {' '}
-                Reject{' '}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
-    </ScrollView>
+
+      {/* Approval Buttons */}
+      {action === 'P' && (
+        <View style={styles.footerDesign}>
+          <TouchableOpacity
+            disabled={disableBtn}
+            onPress={() => approveType('C')}
+            style={[
+              {
+                backgroundColor: disableBtn
+                  ? COLORS.disableGreen
+                  : COLORS.green,
+              },
+              styles.buttonStyle,
+            ]}>
+            <MaterialCommunityIcons
+              name="check-circle-outline"
+              size={20}
+              color={COLORS.white}
+            />
+            <Text style={{color: COLORS.white, fontWeight: '600'}}>
+              {' '}
+              Approve{' '}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => rejectType('R')}
+            disabled={disableBtn}
+            style={[
+              {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
+              styles.buttonStyle,
+            ]}>
+            <MaterialCommunityIcons
+              name="close-circle-outline"
+              size={20}
+              color={COLORS.white}
+            />
+            <Text style={{color: COLORS.white, fontWeight: '600'}}>
+              {' '}
+              Reject{' '}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 };
 const styles = StyleSheet.create({
