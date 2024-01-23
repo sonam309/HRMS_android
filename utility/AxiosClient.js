@@ -5,13 +5,6 @@ import {
     setSuccessMessageRedux,
     setUnAuthMessageRedux,
 } from "./../redux/Message/message.slice";
-/*
- * Axios Api Call Component
- * @type : GET POST PATCH DELETE
- * @api : Api Path
- * @payload : Payload that need to be sent to server
- * @toolkit: dispatch, fulfillWithValue, rejectWithValue
- */
 
 const AxiosClient = async (
     type,

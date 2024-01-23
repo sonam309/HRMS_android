@@ -87,8 +87,11 @@ function HiringStackScreen({navigation}) {
       />
       <Stack.Screen
         name="Candidate_details"
-        options={{title: 'Candidate Feedback'}}
+
         component={Candidate_details}
+        options={{
+          headerShown: false
+        }}
       />
       <Stack.Screen
         name="Candidate_Resume"

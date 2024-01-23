@@ -239,9 +239,10 @@ const EmployeeActionsTab = props => {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
+          backgroundColor: COLORS.white
         }}>
         <TouchableOpacity
-          style={{paddingHorizontal: 14}}
+          style={{paddingHorizontal: 14, }}
           onPress={() => props.navigation.navigate('Approval_actions')}>
           <Icons name="arrow-left" color="black" size={25} />
         </TouchableOpacity>
