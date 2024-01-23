@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import Loader from '../../components/Loader';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 import {COLORS, FONTS, SIZES} from '../../constants';
 import axios from 'axios';
 import WebView from 'react-native-webview';
@@ -73,32 +73,32 @@ const Offer_Letter = props => {
   };
 
   const downloadFile = () => {
-    const {config, fs} = RNFetchBlob;
-    const fileDir = fs.dirs.DownloadDir;
+    // const {config, fs} = RNFetchBlob;
+    // const fileDir = fs.dirs.DownloadDir;
 
-    config({
-      // add this option that makes response data to be stored as a file,
-      // this is much more performant.
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        description: 'Downloading File',
-        path: fileDir + '/download_' + '.pdf',
-      },
-    })
-      // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
-      .fetch('GET', `${API}/OfferLetter/${offerLetter}`, {
-        //some headers ..
-      })
-      .then(res => {
-        // the temp file path
-        // console.log('The file saved to ', res.path())
-        Toast.show({
-          type: 'success',
-          text1: 'File saved Successfully to' + res.path(),
-        });
-      });
+    // config({
+    //   // add this option that makes response data to be stored as a file,
+    //   // this is much more performant.
+    //   fileCache: true,
+    //   addAndroidDownloads: {
+    //     useDownloadManager: true,
+    //     notification: true,
+    //     description: 'Downloading File',
+    //     path: fileDir + '/download_' + '.pdf',
+    //   },
+    // })
+    //   // .fetch('GET', `https://econnectsatya.com:7033/OfferLetter/${offerLetter}`, {
+    //   .fetch('GET', `${API}/OfferLetter/${offerLetter}`, {
+    //     //some headers ..
+    //   })
+    //   .then(res => {
+    //     // the temp file path
+    //     // console.log('The file saved to ', res.path())
+    //     Toast.show({
+    //       type: 'success',
+    //       text1: 'File saved Successfully to' + res.path(),
+    //     });
+    //   });
   };
 
   // Fetching salary allocation template

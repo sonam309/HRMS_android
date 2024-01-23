@@ -546,7 +546,7 @@ PODS:
     - React-callinvoker
     - React-Core
   - Yoga (1.14.0)
- 
+
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
@@ -612,7 +612,7 @@ DEPENDENCIES:
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
- 
+
 SPEC REPOS:
   trunk:
     - Firebase
@@ -629,7 +629,7 @@ SPEC REPOS:
     - libevent
     - nanopb
     - PromisesObjC
- 
+
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
@@ -745,9 +745,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
- 
+
 SPEC CHECKSUMS:
-  boost: 64032b9e9b938fda23325e68a3771f0fabf414dc
+  boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: f637f31eacba90d4fdeff3fa41608b8f361c173b
@@ -818,7 +818,7 @@ SPEC CHECKSUMS:
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   VisionCamera: 4b98b273902ac18491bb68481b6601f1f0da0f2d
   Yoga: 065f0b74dba4832d6e328238de46eb72c5de9556
- 
+
 PODFILE CHECKSUM: f3a4b4c166e5a68ab84b7dd56ab218f5401d1ac5
- 
+
 COCOAPODS: 1.12.1
