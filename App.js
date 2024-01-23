@@ -14,41 +14,41 @@ import CustomisableAlert from 'react-native-customisable-alert';
 import 'react-native-gesture-handler';
 
 const App = () => {
-  async function getNewFCMToken() {
-    let fcmToken = await AsyncStorage.getItem('FCMToken');
-    if (!fcmToken) {
-      try {
-        fcmToken = await messaging().getToken();
-        if (fcmToken) {
-          AsyncStorage.setItem('FCMToken', fcmToken);
-        }
-      } catch (error) {}
-    }
-  }
+  // async function getNewFCMToken() {
+  //   let fcmToken = await AsyncStorage.getItem('FCMToken');
+  //   if (!fcmToken) {
+  //     try {
+  //       fcmToken = await messaging().getToken();
+  //       if (fcmToken) {
+  //         AsyncStorage.setItem('FCMToken', fcmToken);
+  //       }
+  //     } catch (error) {}
+  //   }
+  // }
 
-  async function requestPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  // async function requestPermission() {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    if (enabled) {
-      getNewFCMToken();
-    }
-  }
+  //   if (enabled) {
+  //     getNewFCMToken();
+  //   }
+  // }
 
-  useEffect(() => {
-    requestPermission();
-    const otherOne = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {},
-    );
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert(
-        JSON.stringify(remoteMessage?.notification?.title),
-        JSON.stringify(remoteMessage?.notification?.body),
-      );
-    });
-  }, []);
+  // useEffect(() => {
+  //   requestPermission();
+  //   const otherOne = messaging().setBackgroundMessageHandler(
+  //     async remoteMessage => {},
+  //   );
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert(
+  //       JSON.stringify(remoteMessage?.notification?.title),
+  //       JSON.stringify(remoteMessage?.notification?.body),
+  //     );
+  //   });
+  // }, []);
 
   return (
     <Provider store={store}>

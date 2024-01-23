@@ -233,7 +233,7 @@ const EmployeeDrawer = props => {
               <Text
                 style={{
                   fontSize: 15,
-                  fontFamily: 'Roboto-Medium',
+                  // fontFamily: 'Roboto-Medium',
                   marginLeft: 5,
                   color: '#000',
                 }}>

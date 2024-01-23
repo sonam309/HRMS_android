@@ -16,7 +16,7 @@ import {API} from '../../../utility/services';
 import {tag} from '../../../assets';
 import Toast from 'react-native-toast-message';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
-import { COLORS, FONTS, SIZES } from '../../../constants'
+import {COLORS, FONTS, SIZES} from '../../../constants';
 
 const New_hiring = props => {
   const {navigation, selectedOption, setFilterVisible} = props;
@@ -132,23 +132,20 @@ const New_hiring = props => {
             style={[
               {
                 justifyContent: 'center',
-                backgroundColor: 'white',
+                backgroundColor: COLORS.green,
                 alignItems: 'center',
                 width: 40,
                 height: 40,
                 borderRadius: 20,
                 marginHorizontal: 5,
+                borderWidth: 2,
+                borderColor: COLORS.white,
               },
               styles.Elevation,
             ]}>
             <Text
               style={{
-                backgroundColor: COLORS.green,
-                width: 36,
-                height: 36,
-                borderRadius: 18,
-                textAlignVertical: 'center',
-                textAlign: 'center',
+                color: COLORS.white,
               }}>
               {counting}
             </Text>

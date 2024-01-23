@@ -262,18 +262,25 @@ const Pending_Esifn_list = props => {
                       <TouchableOpacity
                         disabled={
                           ((item?.DOCUMENT_TYPE === 'JOINING KIT' ||
-                              item?.DOCUMENT_TYPE === 'Appointment Letter') &&
-                            item.ESSIGN_CNT != 0) || ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
+                            item?.DOCUMENT_TYPE === 'Appointment Letter') &&
+                            item.ESSIGN_CNT != 0) ||
+                          ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
                             item?.DOCUMENT_TYPE !== 'Appointment Letter') &&
-                          item.ESSIGN_CNT == 3)
+                            item.ESSIGN_CNT == 3)
                             ? true
                             : false
                         }
-                        onPress={() =>
-                          props.navigation.navigate('Proceed_for_Esign', {
-                            index: index,
-                          })
-                        }
+                        onPress={() => {
+                          Platform.OS === 'ios'
+                            ? Toast.show({
+                                type: 'error',
+                                text1:
+                                  'This module is only avalable on android',
+                              })
+                            : props.navigation.navigate('Proceed_for_Esign', {
+                                index: index,
+                              });
+                        }}
                         style={{
                           alignSelf: 'flex-end',
                           justifyContent: 'flex-end',
@@ -283,9 +290,10 @@ const Pending_Esifn_list = props => {
                           colors={
                             ((item?.DOCUMENT_TYPE === 'JOINING KIT' ||
                               item?.DOCUMENT_TYPE === 'Appointment Letter') &&
-                            item.ESSIGN_CNT != 0) || ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
-                            item?.DOCUMENT_TYPE !== 'Appointment Letter') &&
-                          item.ESSIGN_CNT == 3)
+                              item.ESSIGN_CNT != 0) ||
+                            ((item?.DOCUMENT_TYPE !== 'JOINING KIT' ||
+                              item?.DOCUMENT_TYPE !== 'Appointment Letter') &&
+                              item.ESSIGN_CNT == 3)
                               ? [COLORS.gray, COLORS.lightGray]
                               : [COLORS.orange1, COLORS.disableOrange1]
                           }
@@ -298,7 +306,7 @@ const Pending_Esifn_list = props => {
                               textAlign: 'center',
                               ...FONTS.h4,
                             }}>
-                            Proceed for Esign 
+                            Proceed for Esign
                           </Text>
                         </LinearGradient>
                       </TouchableOpacity>

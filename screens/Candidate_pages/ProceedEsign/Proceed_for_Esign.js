@@ -12,6 +12,7 @@ import {
   PermissionsAndroid,
   ActivityIndicator,
   Pressable,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, FONTS, SIZES} from '../../../constants';
@@ -29,8 +30,13 @@ import Loader from '../../../components/Loader';
 import axios from 'axios';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
-const {EsignModule} = NativeModules;
-const eventEmitter = new NativeEventEmitter(EsignModule);
+let EsignModule;
+let eventEmitter;
+
+if (Platform.OS === 'android') {
+  EsignModule = NativeModules?.EsignModule;
+  eventEmitter = new NativeEventEmitter(EsignModule);
+}
 
 const Proceed_for_Esign = props => {
   const dispatch = useDispatch();
@@ -319,290 +325,292 @@ const Proceed_for_Esign = props => {
   };
 
   const EsignEvent = type => {
-    console.log('tytyppee', type);
-    setLoaderVisible(true);
+    if (Platform.OS === 'android') {
+      console.log('tytyppee', type);
+      setLoaderVisible(true);
 
-    // if (type === 'Appointment Letter') {
-    //   setIsMobileOtp(true);
-    // } else if (type === 'JOINING KIT') {
-    //   setIsMobileOtp(true);
-    // } else {
-    //   setIsMobileOtp(false);
-    // }
+      // if (type === 'Appointment Letter') {
+      //   setIsMobileOtp(true);
+      // } else if (type === 'JOINING KIT') {
+      //   setIsMobileOtp(true);
+      // } else {
+      //   setIsMobileOtp(false);
+      // }
 
-    const prefillOption = generateEsignJson();
+      const prefillOption = generateEsignJson();
 
-    const data = {
-      documentName: documentName,
-      noOfPages: numberOfPages,
-      userId: candidateId,
-      docPath: fileName,
-      status: 'A',
-      eSignCount: esignCount,
-      appVersion: VERSIONS?.android,
-      rawData: JSON.stringify({
-        pdf_pre_uploaded: true,
-        config: {
-          auth_mode: isMobileOtp ? '1' : '2',
-          reason: documentName,
-          positions: JSON.parse(XYAXIS),
-          skip_email: true,
-          name_match: {
-            match: true,
-            score: 55,
+      const data = {
+        documentName: documentName,
+        noOfPages: numberOfPages,
+        userId: candidateId,
+        docPath: fileName,
+        status: 'A',
+        eSignCount: esignCount,
+        appVersion: VERSIONS?.android,
+        rawData: JSON.stringify({
+          pdf_pre_uploaded: true,
+          config: {
+            auth_mode: isMobileOtp ? '1' : '2',
+            reason: documentName,
+            positions: JSON.parse(XYAXIS),
+            skip_email: true,
+            name_match: {
+              match: true,
+              score: 55,
+            },
           },
-        },
-        prefill_options: prefillOption,
-      }),
-    };
+          prefill_options: prefillOption,
+        }),
+      };
 
-    console.log('requesttdatatattata', JSON.stringify(data));
+      console.log('requesttdatatattata', JSON.stringify(data));
 
-    if (type === 'JOINING KIT') {
-      axios
-        .post(`${API}api/Kyc/JoiningKitProceedForEsign`, data)
-        .then(response => {
-          const returnedData = response.data;
-          console.log('joiningKitResponse', returnedData);
-          setTkenRes(returnedData?.data?.token);
-          setClientId(returnedData?.data?.client_id);
-          var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
+      if (type === 'JOINING KIT') {
+        axios
+          .post(`${API}api/Kyc/JoiningKitProceedForEsign`, data)
+          .then(response => {
+            const returnedData = response.data;
+            console.log('joiningKitResponse', returnedData);
+            setTkenRes(returnedData?.data?.token);
+            setClientId(returnedData?.data?.client_id);
+            var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
 
-          let esignResponseData = {};
-          setLoaderVisible(false);
+            let esignResponseData = {};
+            setLoaderVisible(false);
 
-          //get Esign data from nsdl
-          let eventListener = eventEmitter.addListener(
-            'EventCount',
-            eventCount => {
-              setCount(eventCount);
+            //get Esign data from nsdl
+            let eventListener = eventEmitter.addListener(
+              'EventCount',
+              eventCount => {
+                setCount(eventCount);
 
-              // esignResponseData=eventCount;
-              const esignRes = JSON.parse(eventCount);
-              console.log('esignResponseData', esignRes);
-              // console.log("esignResponseData1", esignRes["status_code"]);
-              eventListener.remove();
+                // esignResponseData=eventCount;
+                const esignRes = JSON.parse(eventCount);
+                console.log('esignResponseData', esignRes);
+                // console.log("esignResponseData1", esignRes["status_code"]);
+                eventListener.remove();
 
-              // console.log('listnercount', eventCount);
+                // console.log('listnercount', eventCount);
 
-              // console.log(
-              //   'esignResponstatus',
-              //   eventCount,
-              //   esignRes,
-              //   esignRes?.status_code,
-              // );
+                // console.log(
+                //   'esignResponstatus',
+                //   eventCount,
+                //   esignRes,
+                //   esignRes?.status_code,
+                // );
 
-              if (
-                esignRes?.status_code == '200' ||
-                esignRes?.status_code === '200'
-              ) {
-                getEsignDocument(
-                  returnedData?.data?.client_id,
-                  candidateList[index]?.DOCUMENT_TYPE,
+                if (
+                  esignRes?.status_code == '200' ||
+                  esignRes?.status_code === '200'
+                ) {
+                  getEsignDocument(
+                    returnedData?.data?.client_id,
+                    candidateList[index]?.DOCUMENT_TYPE,
+                  );
+                } else if (
+                  esignRes?.status_code == '433' ||
+                  esignRes?.status_code === '433'
+                ) {
+                  // console.log('errrrr1', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'error',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
+                } else {
+                  // console.log('errrrr', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'success',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
+                }
+              },
+            );
+            return () => {
+              eventEmitter.removeAllListeners();
+            };
+          })
+          .catch(error => {
+            setLoaderVisible(false);
+            Alert.alert('Alert Title', error, [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          });
+      } else if (candidateList[index]?.DOCUMENT_TYPE == 'Appointment Letter') {
+        axios
+          .post(`${API}api/Kyc/appointmentProceedForEsign`, data)
+          .then(response => {
+            const returnedData = response.data;
+            console.log('joiningKitResponse', returnedData);
+            setTkenRes(returnedData?.data?.token);
+            setClientId(returnedData?.data?.client_id);
+            var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
+
+            let esignResponseData = {};
+            setLoaderVisible(false);
+
+            //get Esign data from nsdl
+            let eventListener = eventEmitter.addListener(
+              'EventCount',
+              eventCount => {
+                setCount(eventCount);
+
+                // esignResponseData=eventCount;
+                const esignRes = JSON.parse(eventCount);
+                // console.log("esignResponseData", esignRes);
+                // console.log("esignResponseData1", esignRes["status_code"]);
+                eventListener.remove();
+
+                console.log('listnercount', eventCount);
+
+                console.log(
+                  'esignResponstatus',
+                  eventCount,
+                  esignRes,
+                  esignRes?.status_code,
                 );
-              } else if (
-                esignRes?.status_code == '433' ||
-                esignRes?.status_code === '433'
-              ) {
-                // console.log('errrrr1', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
+
+                if (
+                  esignRes?.status_code == '200' ||
+                  esignRes?.status_code === '200'
+                ) {
+                  getEsignDocument(
+                    returnedData?.data?.client_id,
+                    candidateList[index]?.DOCUMENT_TYPE,
+                  );
+                } else if (
+                  esignRes?.status_code == '433' ||
+                  esignRes?.status_code === '433'
+                ) {
+                  console.log('errrrr1', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'error',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
+                } else {
+                  console.log('errrrr', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'success',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
                 }
-                props.navigation.goBack();
-              } else {
-                // console.log('errrrr', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'success',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
-                }
-                props.navigation.goBack();
-              }
-            },
-          );
-          return () => {
-            eventEmitter.removeAllListeners();
-          };
-        })
-        .catch(error => {
-          setLoaderVisible(false);
-          Alert.alert('Alert Title', error, [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ]);
-        });
-    } else if (candidateList[index]?.DOCUMENT_TYPE == 'Appointment Letter') {
-      axios
-        .post(`${API}api/Kyc/appointmentProceedForEsign`, data)
-        .then(response => {
-          const returnedData = response.data;
-          console.log('joiningKitResponse', returnedData);
-          setTkenRes(returnedData?.data?.token);
-          setClientId(returnedData?.data?.client_id);
-          var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
+              },
+            );
+            return () => {
+              eventEmitter.removeAllListeners();
+            };
+          })
+          .catch(error => {
+            setLoaderVisible(false);
+            Alert.alert('Alert Title', error, [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          });
+      } else {
+        console.log('hitTehereeee');
+        axios
+          .post(`${API}/api/Kyc/ProceedForEsign`, data)
+          .then(response => {
+            const returnedData = response.data;
+            console.log('proceesEsignResponse', returnedData);
+            setTkenRes(returnedData?.data?.token);
+            setClientId(returnedData?.data?.client_id);
+            var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
 
-          let esignResponseData = {};
-          setLoaderVisible(false);
+            let esignResponseData = {};
+            setLoaderVisible(false);
 
-          //get Esign data from nsdl
-          let eventListener = eventEmitter.addListener(
-            'EventCount',
-            eventCount => {
-              setCount(eventCount);
+            //get Esign data from nsdl
+            let eventListener = eventEmitter.addListener(
+              'EventCount',
+              eventCount => {
+                setCount(eventCount);
 
-              // esignResponseData=eventCount;
-              const esignRes = JSON.parse(eventCount);
-              // console.log("esignResponseData", esignRes);
-              // console.log("esignResponseData1", esignRes["status_code"]);
-              eventListener.remove();
+                // esignResponseData=eventCount;
+                const esignRes = JSON.parse(eventCount);
+                // console.log("esignResponseData", esignRes);
+                // console.log("esignResponseData1", esignRes["status_code"]);
+                eventListener.remove();
 
-              console.log('listnercount', eventCount);
+                console.log('listnercount', eventCount);
 
-              console.log(
-                'esignResponstatus',
-                eventCount,
-                esignRes,
-                esignRes?.status_code,
-              );
-
-              if (
-                esignRes?.status_code == '200' ||
-                esignRes?.status_code === '200'
-              ) {
-                getEsignDocument(
-                  returnedData?.data?.client_id,
-                  candidateList[index]?.DOCUMENT_TYPE,
+                console.log(
+                  'esignResponstatus',
+                  eventCount,
+                  esignRes,
+                  esignRes?.status_code,
                 );
-              } else if (
-                esignRes?.status_code == '433' ||
-                esignRes?.status_code === '433'
-              ) {
-                console.log('errrrr1', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
+
+                if (
+                  esignRes?.status_code == '200' ||
+                  esignRes?.status_code === '200'
+                ) {
+                  getEsignDocument(
+                    returnedData?.data?.client_id,
+                    candidateList[index]?.DOCUMENT_TYPE,
+                  );
+                } else if (
+                  esignRes?.status_code == '433' ||
+                  esignRes?.status_code === '433'
+                ) {
+                  console.log('errrrr1', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'error',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
+                } else {
+                  console.log('errrrr', JSON.stringify(esignRes?.message));
+                  {
+                    Toast.show({
+                      type: 'success',
+                      text1: JSON.stringify(esignRes?.message),
+                    });
+                  }
+                  props.navigation.goBack();
                 }
-                props.navigation.goBack();
-              } else {
-                console.log('errrrr', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'success',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
-                }
-                props.navigation.goBack();
-              }
-            },
-          );
-          return () => {
-            eventEmitter.removeAllListeners();
-          };
-        })
-        .catch(error => {
-          setLoaderVisible(false);
-          Alert.alert('Alert Title', error, [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ]);
-        });
-    } else {
-      console.log('hitTehereeee');
-      axios
-        .post(`${API}/api/Kyc/ProceedForEsign`, data)
-        .then(response => {
-          const returnedData = response.data;
-          console.log('proceesEsignResponse', returnedData);
-          setTkenRes(returnedData?.data?.token);
-          setClientId(returnedData?.data?.client_id);
-          var tokenRes = EsignModule.GetToken(returnedData?.data?.token);
-
-          let esignResponseData = {};
-          setLoaderVisible(false);
-
-          //get Esign data from nsdl
-          let eventListener = eventEmitter.addListener(
-            'EventCount',
-            eventCount => {
-              setCount(eventCount);
-
-              // esignResponseData=eventCount;
-              const esignRes = JSON.parse(eventCount);
-              // console.log("esignResponseData", esignRes);
-              // console.log("esignResponseData1", esignRes["status_code"]);
-              eventListener.remove();
-
-              console.log('listnercount', eventCount);
-
-              console.log(
-                'esignResponstatus',
-                eventCount,
-                esignRes,
-                esignRes?.status_code,
-              );
-
-              if (
-                esignRes?.status_code == '200' ||
-                esignRes?.status_code === '200'
-              ) {
-                getEsignDocument(
-                  returnedData?.data?.client_id,
-                  candidateList[index]?.DOCUMENT_TYPE,
-                );
-              } else if (
-                esignRes?.status_code == '433' ||
-                esignRes?.status_code === '433'
-              ) {
-                console.log('errrrr1', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
-                }
-                props.navigation.goBack();
-              } else {
-                console.log('errrrr', JSON.stringify(esignRes?.message));
-                {
-                  Toast.show({
-                    type: 'success',
-                    text1: JSON.stringify(esignRes?.message),
-                  });
-                }
-                props.navigation.goBack();
-              }
-            },
-          );
-          return () => {
-            eventEmitter.removeAllListeners();
-          };
-        })
-        .catch(error => {
-          setLoaderVisible(false);
-          Alert.alert('Alert Title', error, [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-              s,
-            },
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ]);
-        });
+              },
+            );
+            return () => {
+              eventEmitter.removeAllListeners();
+            };
+          })
+          .catch(error => {
+            setLoaderVisible(false);
+            Alert.alert('Alert Title', error, [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+                s,
+              },
+              {text: 'OK', onPress: () => console.log('OK Pressed')},
+            ]);
+          });
+      }
     }
   };
 

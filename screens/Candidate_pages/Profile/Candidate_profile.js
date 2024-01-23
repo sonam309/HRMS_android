@@ -37,6 +37,7 @@ import Toast from 'react-native-toast-message';
 import {launchCamera} from 'react-native-image-picker';
 import axios from 'axios';
 import Header from '../../../components/Header';
+import {Camera} from 'react-native-vision-camera';
 
 const Candidate_profile = props => {
   const userId = useSelector(state => state.candidateAuth.candidateId);
@@ -224,7 +225,7 @@ const Candidate_profile = props => {
     });
     res = await res.json();
     res = await res?.Result;
-    console.log("227", res);
+    console.log('227', res);
     setLanguages(res);
     setLanguageAppFlag(res[0].APPROVAL_FLAG);
   };
@@ -417,24 +418,26 @@ const Candidate_profile = props => {
   }
 
   const selectProfilePic = async () => {
-    const grantedcamera = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
+    const newCameraPermission = await Camera.requestCameraPermission();
+    // const grantedcamera = await PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.CAMERA,
 
-      {
-        title: 'App Camera Permission',
+    //   {
+    //     title: 'App Camera Permission',
 
-        message: 'App needs access to your camera ',
+    //     message: 'App needs access to your camera ',
 
-        buttonNeutral: 'Ask Me Later',
+    //     buttonNeutral: 'Ask Me Later',
 
-        buttonNegative: 'Cancel',
+    //     buttonNegative: 'Cancel',
 
-        buttonPositive: 'OK',
-      },
-    );
+    //     buttonPositive: 'OK',
+    //   },
+    // );
 
     if (
-      grantedcamera === PermissionsAndroid.RESULTS.GRANTED
+      newCameraPermission === 'granted'
+      // grantedcamera === PermissionsAndroid.RESULTS.GRANTED
 
       // grantedstorage === PermissionsAndroid.RESULTS.GRANTED
     ) {
@@ -456,6 +459,11 @@ const Candidate_profile = props => {
           console.log('ImagePicker Error: ', res?.error);
         } else if (res.customButton) {
           console.log('User tapped custom button: ', res?.customButton);
+        } else if (res.errorCode) {
+          Toast.show({
+            type: 'error',
+            text1: JSON.stringify(res.errorCode),
+          });
         } else {
           // let source = res;
 
@@ -516,7 +524,11 @@ const Candidate_profile = props => {
         }
       });
     } else {
-      console.log('Camera permission denied');
+      Toast.show({
+        type: 'error',
+        text1: 'Please Allow Camera Permission',
+      });
+      // console.log('Camera permission denied');
     }
   };
 

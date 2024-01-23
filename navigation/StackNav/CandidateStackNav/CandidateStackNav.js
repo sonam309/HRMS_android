@@ -26,7 +26,7 @@ const CandidateStackNav = () => {
       {!candidateAuthenticated ? (
         <Stack.Screen
           name="CandidateLogin"
-          options={{orientation: 'portrait'}}
+          // options={{orientation: 'portrait'}}
           component={Login}
         />
       ) : (
@@ -35,7 +35,7 @@ const CandidateStackNav = () => {
           screenOptions={{headerShown: false}}>
           <Stack.Screen
             name="CandidateDashboard"
-            options={{orientation: 'portrait'}}
+            // options={{orientation: 'portrait'}}
             component={CandidateDashboard}
           />
           <Stack.Screen

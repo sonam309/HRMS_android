@@ -272,7 +272,7 @@ const CreateHiringTab = props => {
   return (
     <>
       <SafeAreaView
-        style={{height: 50, flexDirection: 'row', alignItems: 'center'}}>
+        style={{height: 50, flexDirection: 'row', alignItems: 'center',backgroundColor:COLORS.white}}>
         <TouchableOpacity
           style={{paddingHorizontal: 14}}
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>

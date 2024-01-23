@@ -53,6 +53,8 @@ const CandidateDashboard = props => {
   const {candidateOfferCheckResult, loading} = useSelector(
     state => state.candidateInfo,
   );
+
+  
   const Job_Title = useSelector(state => state.candidateAuth.candidateRole);
   const [loaderVisible, setLoaderVisible] = useState(false);
   const {

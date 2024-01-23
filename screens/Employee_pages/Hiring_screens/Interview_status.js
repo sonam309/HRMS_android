@@ -178,54 +178,67 @@ const Interview_status = props => {
               marginHorizontal: 10,
             }}>
             <TouchableOpacity
-              style={{width: responsiveWidth(100) / 3.5}}
+              style={[
+                styles.Elevation,
+                styles.regilizationBtn,
+                {
+                  borderColor: status === 'P' ? COLORS.white : COLORS.orange,
+                  backgroundColor:
+                    status === 'P' ? COLORS.orange : COLORS.white,
+                  alignItems: 'center',
+                },
+                {width: responsiveWidth(100) / 3.5},
+              ]}
               onPress={() => setStatus('P')}>
               <Text
-                style={[
-                  styles.Elevation,
-                  styles.regilizationBtn,
-                  {
-                    color: status === 'P' ? COLORS.white : COLORS.orange,
-                    borderColor: status === 'P' ? COLORS.white : COLORS.orange,
-                    backgroundColor:
-                      status === 'P' ? COLORS.orange : COLORS.white,
-                  },
-                ]}>
+                style={{
+                  color: status === 'P' ? COLORS.white : COLORS.orange,
+                }}>
                 Schedule{' '}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{width: responsiveWidth(100) / 3.5}}
+              style={[
+                styles.Elevation,
+                styles.regilizationBtn,
+                {
+                  borderColor: status === 'C' ? COLORS.white : COLORS.orange,
+                  backgroundColor:
+                    status === 'C' ? COLORS.orange : COLORS.white,
+                  alignItems: 'center',
+                },
+                {width: responsiveWidth(100) / 3.5},
+              ]}
               onPress={() => setStatus('C')}>
               <Text
-                style={[
-                  styles.Elevation,
-                  styles.regilizationBtn,
-                  {
-                    color: status === 'C' ? COLORS.white : COLORS.orange,
-                    borderColor: status === 'C' ? COLORS.white : COLORS.orange,
-                    backgroundColor:
-                      status === 'C' ? COLORS.orange : COLORS.white,
-                  },
-                ]}>
+                style={{
+                  color: status === 'C' ? COLORS.white : COLORS.orange,
+                  borderColor: status === 'C' ? COLORS.white : COLORS.orange,
+                }}>
                 Complete{' '}
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={{width: responsiveWidth(100) / 3.5}}
+              style={[
+                styles.Elevation,
+                styles.regilizationBtn,
+                {
+                  borderColor: status === 'R' ? COLORS.white : COLORS.orange,
+                  backgroundColor:
+                    status === 'R' ? COLORS.orange : COLORS.white,
+                  alignItems: 'center',
+                },
+                {width: responsiveWidth(100) / 3.5},
+              ]}
               onPress={() => setStatus('R')}>
               <Text
-                style={[
-                  styles.Elevation,
-                  styles.regilizationBtn,
-                  {
-                    color: status === 'R' ? COLORS.white : COLORS.orange,
-                    borderColor: status === 'R' ? COLORS.white : COLORS.orange,
-                    backgroundColor:
-                      status === 'R' ? COLORS.orange : COLORS.white,
-                  },
-                ]}>
+                style={{
+                  color: status === 'R' ? COLORS.white : COLORS.orange,
+                  borderColor: status === 'R' ? COLORS.white : COLORS.orange,
+                  backgroundColor:
+                    status === 'R' ? COLORS.orange : COLORS.white,
+                }}>
                 Rejected{' '}
               </Text>
             </TouchableOpacity>

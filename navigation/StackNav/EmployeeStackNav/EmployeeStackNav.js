@@ -19,13 +19,13 @@ const EmployeeStackNav = () => {
       {!authenticated ? (
         <Stack.Screen
           name="EmployeeLogin"
-          options={{orientation: 'portrait'}}
+          // options={{orientation: 'portrait'}}
           component={Employee_Login}
         />
       ) : (
         <Stack.Screen
           name="DrawerTab"
-          options={{orientation: 'portrait'}}
+          // options={{orientation: 'portrait'}}
           component={EmployeeDrawer}
         />
       )}
