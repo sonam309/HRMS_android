@@ -23,6 +23,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CustomIconInput from '../../../components/CustomIconInput';
 import {COLORS, FONTS} from '../../../constants';
+import Header from '../../../components/Header';
 
 const Regulization = ({navigation, route}) => {
   const selectDate = route.params.selectedDate;
@@ -133,28 +134,9 @@ const Regulization = ({navigation, route}) => {
       style={{
         flex: 1,
       }}>
-      {/* header text */}
-      <View style={styles.newJobOpeneingTxt}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icons
-            name="arrow-left-thin"
-            color={COLORS.black}
-            size={30}
-            style={{alignItems: 'center', padding: 2}}
-          />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: COLORS.black,
-            textAlignVertical: 'center',
-            ...FONTS.body3,
-            marginLeft: 10,
-            padding: 5,
-          }}>
-          Regularization for {selectDate.day} {route.params.selectedMonth},{' '}
-          {selectDate.year}
-        </Text>
-      </View>
+      <Header
+        title={`Regularization for ${selectDate.day} ${route.params.selectedMonth}, ${selectDate.year}`}
+      />
 
       {/* shift Information details for regularization */}
 
