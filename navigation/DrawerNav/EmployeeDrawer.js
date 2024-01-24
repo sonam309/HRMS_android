@@ -152,6 +152,14 @@ function EmployeeApprovalStackScreen({navigation}) {
           mode: 'none',
         }}
       />
+      <Stack.Screen
+        name="Candidate_Resume"
+        component={Candidate_Resume}
+        options={{
+          headerMode: 'none',
+          mode: 'none',
+        }}
+      />
     </Stack.Navigator>
   );
 }

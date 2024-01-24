@@ -26,11 +26,14 @@ import {COLORS} from '../../../../constants';
 import {SIZES, FONTS} from '../../../../constants';
 import Header from '../../../../components/Header';
 import LinearGradient from 'react-native-linear-gradient';
-import { getInterviewList } from '../../../../redux/interviewDetailSlice';
+import {
+  getInterviewList,
+  getCandidateInterviewData,
+} from '../../../../redux/interviewDetailSlice';
 
 const Details = props => {
   const {navigation} = props;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {width} = useWindowDimensions();
   const {
     candidate_ID,
@@ -43,7 +46,7 @@ const Details = props => {
     wholeList,
   } = props.route.params;
 
-  const { inteviewListData } = useSelector((state)=> state.inteviewDetail)
+  const {candidateInterviewData} = useSelector(state => state.inteviewDetail);
   const [jobRequestData, setJobRequestData] = useState(null);
   const [jobOpeningData, setJobOpeningData] = useState(null);
   const [HTMLdata, setHTMLdata] = useState(null);
@@ -92,15 +95,15 @@ const Details = props => {
 
   const getInterviewListData = async () => {
     const data = {
-      operFlag: 'v',
-      userId: userId,
+      operFlag: 'G',
+      candidateId: candidate_ID,
     };
-    dispatch(getInterviewList(data));
+    dispatch(getCandidateInterviewData(data));
   };
 
   useEffect(() => {
     getDropdownData('L');
-    getInterviewListData()
+    getInterviewListData();
     {
       switch (category) {
         case 'Salary Allocation':
@@ -1314,6 +1317,97 @@ const Details = props => {
                 source={{html: `${modifiedTemplate}`}}
               />
               {modifiedTemplate && setLoaderVisible(false)}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  paddingVertical: SIZES.radius,
+                  backgroundColor: COLORS.white,
+                  marginBottom: 50,
+                  width: responsiveWidth(95),
+                  alignSelf: 'center',
+                  borderRadius: SIZES.radius,
+                }}>
+                {/* <Text
+            style={{
+              ...FONTS.h3,
+              fontWeight: '700',
+              color: COLORS.black,
+            }}>
+            Candidate Information
+          </Text>
+         */}
+
+                <View
+                  style={{
+                    backgroundColor: COLORS.disableOrange1,
+                    padding: SIZES.base,
+                    borderRadius: 50,
+                  }}>
+                  <Image
+                    source={require('../../../../assets/images/candidate_info.png')}
+                    style={{
+                      height: 65,
+                      width: 65,
+                    }}
+                  />
+                </View>
+
+                <View>
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                      fontSize: 16,
+                      fontWeight: '600',
+                    }}>
+                    Candidate Information
+                  </Text>
+                  <Text
+                    style={{
+                      color: COLORS.black,
+                    }}>
+                    Tap here to see candidate details
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('Candidate_details', {
+                        resume: candidateInterviewData?.RESUME,
+                        name: candidateInterviewData?.CANDIDATE_NAME,
+                        designation: candidateInterviewData?.JOB_TITLE,
+                        date: candidateInterviewData?.SCHEDULED_DATE,
+                        interviewEndTime: `${candidateInterviewData?.SCHEDULE_TIME_TO}-${candidateInterviewData?.SCHEDULE_TIME_FROM}`,
+                        interviewStartTime:
+                          candidateInterviewData?.SCHEDULE_TIME_TO,
+                        status: candidateInterviewData?.STATUS,
+                        candidateId: candidateInterviewData?.CANDIDATE_ID,
+                        interviewId: candidateInterviewData?.INTERVIEW_ID,
+                        interviewType: candidateInterviewData?.INTERVIEW_TYPE,
+                        interviewMail: candidateInterviewData?.INTERVIEW_MAIL,
+                        profilePic: candidateInterviewData?.PROFILE_PIC,
+                      });
+                    }}
+                    style={{
+                      marginTop: 12,
+                    }}>
+                    <LinearGradient
+                      colors={[COLORS.orange1, COLORS.disableOrange1]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 2, y: 0}}
+                      style={{borderRadius: 50, padding: 8, width: 110}}>
+                      <Text
+                        style={{
+                          color: COLORS.white,
+                          ...FONTS.h4,
+                          textAlign: 'center',
+                          paddingVertical: 3,
+                        }}>
+                        View Details
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </ScrollView>
           </>
         );
@@ -1341,7 +1435,9 @@ const Details = props => {
         }}>
         <Type />
 
-        <TouchableOpacity
+        {console.log('candidateData', candidateInterviewData)}
+
+        {/* <TouchableOpacity
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -1355,18 +1451,18 @@ const Details = props => {
           }}
           onPress={() => {
             navigation.navigate('Candidate_details', {
-              // resume,
-              name: `${wholeList?.FIRST_NAME} ${wholeList?.LAST_NAME}`,
-              designation: wholeList?.JOB_TITLE,
-              // date,
-              // interviewEndTime,
-              // interviewStartTime,
-              // status,
-              candidateId: candidate_ID,
-              // interviewId,
-              // interviewType,
-              // interviewMail,
-              // profilePic,-
+              resume:candidateInterviewData?.RESUME,
+              name: candidateInterviewData?.CANDIDATE_NAME,
+              designation: candidateInterviewData?.JOB_TITLE,
+              date:candidateInterviewData?.SCHEDULED_DATE,
+              interviewEndTime:`${candidateInterviewData?.SCHEDULE_TIME_TO}-${candidateInterviewData?.SCHEDULE_TIME_FROM}`,
+              interviewStartTime:candidateInterviewData?.SCHEDULE_TIME_TO,
+              status:candidateInterviewData?.STATUS,
+              candidateId: candidateInterviewData?.CANDIDATE_ID,
+              interviewId:candidateInterviewData?.INTERVIEW_ID,
+              interviewType:candidateInterviewData?.INTERVIEW_TYPE,
+              interviewMail:candidateInterviewData?.INTERVIEW_MAIL,
+              profilePic:candidateInterviewData?.PROFILE_PIC,
             });
           }}>
           <Text
@@ -1384,7 +1480,7 @@ const Details = props => {
               width: 25,
             }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Approval Buttons */}

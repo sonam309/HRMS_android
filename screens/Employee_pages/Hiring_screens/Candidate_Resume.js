@@ -1,9 +1,10 @@
-import {Linking, Text} from 'react-native';
+import {Linking, Text, View} from 'react-native';
 import Pdf from 'react-native-pdf';
 import {useState} from 'react';
 import Loader from '../../../components/Loader';
 import {API} from '../../../utility/services';
 import {COLORS} from '../../../constants';
+import Header from '../../../components/Header';
 
 const Candidate_Resume = props => {
   const {resume} = props.route.params;
@@ -12,7 +13,10 @@ const Candidate_Resume = props => {
 
   return (
     // fetching Resume from backend
-    <>
+    <View style={{
+      flex: 1
+    }}>
+      <Header title={"Candidate Resume"} />
       {error && (
         <Text
           style={{
@@ -41,7 +45,7 @@ const Candidate_Resume = props => {
         }}
         onPressLink={link => Linking.openURL(link)}
       />
-    </>
+    </View>
   );
 };
 
