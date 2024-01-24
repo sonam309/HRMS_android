@@ -1494,6 +1494,7 @@ const Details = props => {
                 backgroundColor: disableBtn
                   ? COLORS.disableGreen
                   : COLORS.green,
+                  
               },
               styles.buttonStyle,
             ]}>
