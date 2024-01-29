@@ -25,7 +25,7 @@ const Rejected = props => {
       })
       .then(response => {
         const returnedData = response?.data?.Result;
-        // console.log("Reject",returnedData);
+        console.log("Reject2666",returnedData);
         setRejectedData(returnedData);
         setLoading(false);
       })

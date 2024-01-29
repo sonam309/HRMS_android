@@ -174,7 +174,7 @@ const Pending_Esifn_list = props => {
                             width: responsiveWidth(40),
                           }}>
                           {item?.DOCUMENT_TYPE === 'JOINING KIT'
-                            ? 'Joinigkit Esign Pending'
+                            ? 'Joiningkit Esign Pending'
                             : item?.DOCUMENT_TYPE === 'Appointment Letter'
                             ? 'Appointment Letter Pending'
                             : 'Candidate Esign Pending'}

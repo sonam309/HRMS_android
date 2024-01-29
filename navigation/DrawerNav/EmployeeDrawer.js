@@ -25,6 +25,7 @@ import Details from '../../screens/Employee_pages/PendingApprovalStack/Approval_
 import Description_Job from '../../screens/Employee_pages/PendingApprovalStack/Approval_screens/Description_Job';
 import CandidateTestResult from '../../screens/Employee_pages/Hiring_screens/CandidateTestResult';
 import {COLORS, FONTS, SIZES, icons} from '../../constants';
+import Candidate_basic_info from '../../screens/Employee_pages/Candidate_basic_info';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -147,6 +148,14 @@ function EmployeeApprovalStackScreen({navigation}) {
       <Stack.Screen
         name="Candidate_details"
         component={Candidate_details}
+        options={{
+          headerMode: 'none',
+          mode: 'none',
+        }}
+      />
+      <Stack.Screen
+        name="Candidate_basic_info"
+        component={Candidate_basic_info}
         options={{
           headerMode: 'none',
           mode: 'none',

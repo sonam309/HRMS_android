@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -20,7 +21,7 @@ import {API} from '../../../../utility/services';
 import Toast from 'react-native-toast-message';
 import {removeElement, isTag} from 'domutils';
 import TextDropdown from '../../../../components/TextDropdown';
-import {TextInput} from 'react-native-gesture-handler';
+// import {TextInput} from 'react-native-gesture-handler';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {COLORS} from '../../../../constants';
 import {SIZES, FONTS} from '../../../../constants';
@@ -61,7 +62,9 @@ const Details = props => {
   const [selectedHiringLeadValue, setSelectedHiringLeadValue] = useState('');
   const [compensationAmount, setCompensationAmount] = useState('');
   const [numOfPosition, setNumOfPosition] = useState('');
+  const [salaryRemark, setSalaryRemark] = useState('');
   var n = '';
+  var rn = '';
 
   const [test, setTest] = useState('');
   //version 2.2 sonam 2.aug,2023
@@ -104,6 +107,8 @@ const Details = props => {
   useEffect(() => {
     getDropdownData('L');
     getInterviewListData();
+
+    // console.log("remarrrr115",JSON.stringify(data?.Table[0]?.REMARK));
     {
       switch (category) {
         case 'Salary Allocation':
@@ -254,7 +259,7 @@ const Details = props => {
     driveAllowance: '0',
     esicPercentage: '0',
     foodAllowance: '0',
-    Remark: '',
+    Remark: salaryRemark,
     approver: '',
     salApproverId: '',
     fixedCtcMonthly: data?.Table[0]?.FIXED_CTC_MONTHLY,
@@ -262,24 +267,30 @@ const Details = props => {
     employeePfCheck: data?.Table[0]?.EMPLR_PF_CHECK,
     costOfCompany: '0',
   };
+  {
+    console.log('remarrrr115', JSON.stringify(data?.Table[0]?.REMARK));
+  }
 
   // for Approving salary pending approvals
   const SalaryAction = oprFlag => {
+    console.log('26999', SalaryDetails, oprFlag);
     axios
       .post(`${API}/api/hrms/saveSaleryAllocation`, {
         ...SalaryDetails,
         operFlag: oprFlag,
+        // Remark: salaryRemark,
       })
       .then(response => {
         // console.log("salary", SalaryDetails)
         const returnedData = response?.data;
-        // console.log("this is response from backend", returnedData);
+        console.log('this is response from backend', returnedData);
 
         Toast.show({
           type: 'success',
           text1: returnedData?.MSG,
         });
         setDisableBtn(true);
+        navigation.goBack();
       })
       .catch(error => {
         // Alert.alert('Error', error);
@@ -398,7 +409,9 @@ const Details = props => {
       .then(response => {
         const returnedData = response?.data;
         setData(returnedData);
-        // console.log("Response375.....", returnedData);
+        setSalaryRemark(data?.Table[0]?.REMARK);
+
+        console.log('Response375.....', returnedData);
       });
   };
 
@@ -1308,28 +1321,27 @@ const Details = props => {
         approveType = SalaryAction;
         rejectType = SalaryAction;
         return (
-          <>
-            <ScrollView>
-              <Loader loaderVisible={loaderVisible} />
-              <RenderHtml
-                domVisitors={domVisitors}
-                contentWidth={width}
-                source={{html: `${modifiedTemplate}`}}
-              />
-              {modifiedTemplate && setLoaderVisible(false)}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-around',
-                  paddingVertical: SIZES.radius,
-                  backgroundColor: COLORS.white,
-                  marginBottom: 50,
-                  width: responsiveWidth(95),
-                  alignSelf: 'center',
-                  borderRadius: SIZES.radius,
-                }}>
-                {/* <Text
+          <ScrollView>
+            <Loader loaderVisible={loaderVisible} />
+            <RenderHtml
+              domVisitors={domVisitors}
+              contentWidth={width}
+              source={{html: `${modifiedTemplate}`}}
+            />
+            {modifiedTemplate && setLoaderVisible(false)}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                paddingVertical: SIZES.radius,
+                backgroundColor: COLORS.white,
+                marginTop: -10,
+                width: responsiveWidth(95),
+                alignSelf: 'center',
+                borderRadius: SIZES.radius,
+              }}>
+              {/* <Text
             style={{
               ...FONTS.h3,
               fontWeight: '700',
@@ -1339,36 +1351,67 @@ const Details = props => {
           </Text>
          */}
 
+              <View
+                style={{
+                  backgroundColor: COLORS.disableOrange1,
+                  padding: SIZES.base,
+                  borderRadius: 50,
+                }}>
+                <Image
+                  source={require('../../../../assets/images/candidate_info.png')}
+                  style={{
+                    height: 65,
+                    width: 65,
+                  }}
+                />
+              </View>
+
+              <View>
+                <Text
+                  style={{
+                    color: COLORS.black,
+                    fontSize: 16,
+                    fontWeight: '600',
+                  }}>
+                  Candidate Information
+                </Text>
+                <Text
+                  style={{
+                    color: COLORS.black,
+                  }}>
+                  Tap here to see candidate details
+                </Text>
                 <View
                   style={{
-                    backgroundColor: COLORS.disableOrange1,
-                    padding: SIZES.base,
-                    borderRadius: 50,
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
                   }}>
-                  <Image
-                    source={require('../../../../assets/images/candidate_info.png')}
-                    style={{
-                      height: 65,
-                      width: 65,
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('Candidate_basic_info', {
+                        candidateId: candidateInterviewData?.CANDIDATE_ID,
+                      });
                     }}
-                  />
-                </View>
+                    style={{
+                      marginTop: 12,
+                    }}>
+                    <LinearGradient
+                      colors={[COLORS.orange1, COLORS.disableOrange1]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 2, y: 0}}
+                      style={{borderRadius: 50, padding: 8, width: 90}}>
+                      <Text
+                        style={{
+                          color: COLORS.white,
+                          ...FONTS.h4,
+                          textAlign: 'center',
+                          paddingVertical: 3,
+                        }}>
+                        Details
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
 
-                <View>
-                  <Text
-                    style={{
-                      color: COLORS.black,
-                      fontSize: 16,
-                      fontWeight: '600',
-                    }}>
-                    Candidate Information
-                  </Text>
-                  <Text
-                    style={{
-                      color: COLORS.black,
-                    }}>
-                    Tap here to see candidate details
-                  </Text>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('Candidate_details', {
@@ -1402,14 +1445,57 @@ const Details = props => {
                           textAlign: 'center',
                           paddingVertical: 3,
                         }}>
-                        View Details
+                        Assesment
                       </Text>
                     </LinearGradient>
                   </TouchableOpacity>
                 </View>
               </View>
-            </ScrollView>
-          </>
+            </View>
+
+            <View
+              style={{
+                marginVertical: SIZES.base,
+                marginHorizontal: SIZES.radius,
+              }}>
+              <Text
+                style={{
+                  color: COLORS.black,
+                  ...FONTS.h4,
+                  marginBottom: SIZES.base,
+                }}>
+                Remarks
+                 {/* {JSON.stringify(salaryRemark)} */}
+              </Text>
+              {/* <TextInput
+                placeholder="Remarks"
+                style={{
+                  backgroundColor: COLORS.white,
+                  borderRadius: SIZES.radius,
+                  borderWidth: 1,
+                  borderColor: COLORS.lightGray1,
+                }}
+                value={salaryRemark}
+                onChangeText={setSalaryRemark}
+              /> */}
+
+              <TextInput
+                defaultValue={salaryRemark}
+                // onChangeText={setSalaryRemark}
+                onChangeText={value => (rn = value)}
+                onEndEditing={() => setSalaryRemark(rn)}
+                style={{
+                  borderWidth: 0.5,
+                  borderColor: COLORS.lightGray,
+                  height: 40,
+                  color: COLORS.black,
+                  marginTop: 5,
+                  borderRadius: 8,
+                  paddingHorizontal: 8,
+                }}
+              />
+            </View>
+          </ScrollView>
         );
       }
 
@@ -1435,66 +1521,20 @@ const Details = props => {
         }}>
         <Type />
 
-        {console.log('candidateData', candidateInterviewData)}
-
-        {/* <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: COLORS.lightGray1,
-            marginVertical: SIZES.padding,
-            width: responsiveWidth(90),
-            alignSelf: 'center',
-            borderRadius: SIZES.radius,
-            height: 50,
-            justifyContent: 'center',
-          }}
-          onPress={() => {
-            navigation.navigate('Candidate_details', {
-              resume:candidateInterviewData?.RESUME,
-              name: candidateInterviewData?.CANDIDATE_NAME,
-              designation: candidateInterviewData?.JOB_TITLE,
-              date:candidateInterviewData?.SCHEDULED_DATE,
-              interviewEndTime:`${candidateInterviewData?.SCHEDULE_TIME_TO}-${candidateInterviewData?.SCHEDULE_TIME_FROM}`,
-              interviewStartTime:candidateInterviewData?.SCHEDULE_TIME_TO,
-              status:candidateInterviewData?.STATUS,
-              candidateId: candidateInterviewData?.CANDIDATE_ID,
-              interviewId:candidateInterviewData?.INTERVIEW_ID,
-              interviewType:candidateInterviewData?.INTERVIEW_TYPE,
-              interviewMail:candidateInterviewData?.INTERVIEW_MAIL,
-              profilePic:candidateInterviewData?.PROFILE_PIC,
-            });
-          }}>
-          <Text
-            style={{
-              ...FONTS.h3,
-              fontWeight: '700',
-              color: COLORS.black,
-            }}>
-            Candidate Information
-          </Text>
-          <Image
-            source={require('../../../../assets/images/candidate_info.png')}
-            style={{
-              height: 25,
-              width: 25,
-            }}
-          />
-        </TouchableOpacity> */}
+        {/* {console.log('candidateData', candidateInterviewData)} */}
       </View>
 
       {/* Approval Buttons */}
       {action === 'P' && (
         <View style={styles.footerDesign}>
           <TouchableOpacity
-            disabled={disableBtn}
+            // disabled={disableBtn}
             onPress={() => approveType('C')}
             style={[
               {
                 backgroundColor: disableBtn
                   ? COLORS.disableGreen
                   : COLORS.green,
-                  
               },
               styles.buttonStyle,
             ]}>
@@ -1511,7 +1551,7 @@ const Details = props => {
 
           <TouchableOpacity
             onPress={() => rejectType('R')}
-            disabled={disableBtn}
+            // disabled={disableBtn}
             style={[
               {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
               styles.buttonStyle,

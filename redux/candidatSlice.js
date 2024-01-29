@@ -4,8 +4,10 @@ import {AxiosClient} from '../utility/AxiosClient';
 const candidateSlice = createSlice({
   name: 'candidateInfo',
   initialState: {
-    candidateOfferCheckResult: [],
+    candidateOfferCheckResult: {},
+    candidateBasicDetailsResult: [],
     loading: false,
+    cbdloading: false,
   },
 
   extraReducers: builder => {
@@ -26,6 +28,25 @@ const candidateSlice = createSlice({
         state.loading = false;
       },
     );
+
+    builder.addMatcher(isAnyOf(getCandidateBasicDetails.pending), state => {
+      state.cbdloading = true;
+    });
+    builder.addMatcher(
+      isAnyOf(getCandidateBasicDetails.fulfilled),
+      (state, action) => {
+        state.cbdloading = false;
+        // state.candidateBasicDetailsResult = action.payload.Result;
+
+        console.log('gfhfyjhgjgujkukhkhkhkh', action.payload.Result);
+      },
+    );
+    builder.addMatcher(
+      isAnyOf(getCandidateBasicDetails.rejected),
+      (state, action) => {
+        state.cbdloading = false;
+      },
+    );
   },
 });
 
@@ -41,5 +62,12 @@ export const getCandidateOfferCheck = createAsyncThunk(
       payload,
       toolkit,
     );
+  },
+);
+
+export const getCandidateBasicDetails = createAsyncThunk(
+  'mobile/getCandidateBasicDetails',
+  async (payload, toolkit) => {
+    return await AxiosClient('POST', `/api/addCandidate`, payload, toolkit);
   },
 );
