@@ -96,7 +96,7 @@ function HiringStackScreen({navigation}) {
       />
       <Stack.Screen
         name="Candidate_Resume"
-        options={{title: 'Candidate Resume'}}
+        options={{title: 'Candidate Resume', headerShown:false}}
         component={Candidate_Resume}
       />
       <Stack.Screen
@@ -168,6 +168,11 @@ function EmployeeApprovalStackScreen({navigation}) {
           headerMode: 'none',
           mode: 'none',
         }}
+      />
+      <Stack.Screen
+        name="CandidateTestResult"
+        options={{title: 'Result'}}
+        component={CandidateTestResult}
       />
     </Stack.Navigator>
   );

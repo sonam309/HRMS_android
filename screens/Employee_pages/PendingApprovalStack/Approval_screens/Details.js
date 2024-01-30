@@ -274,7 +274,12 @@ const Details = props => {
   // for Approving salary pending approvals
   const SalaryAction = oprFlag => {
     console.log('26999', SalaryDetails, oprFlag);
-    if (salaryRemark !== undefined && salaryRemark !== '') {
+    if (
+      (salaryRemark !== null &&
+      salaryRemark !== undefined) &&
+      salaryRemark !== ''
+    ) {
+      setLoaderVisible(true);
       axios
         .post(`${API}/api/hrms/saveSaleryAllocation`, {
           ...SalaryDetails,
@@ -284,6 +289,7 @@ const Details = props => {
         .then(response => {
           // console.log("salary", SalaryDetails)
           const returnedData = response?.data;
+          setLoaderVisible(false);
           console.log('this is response from backend', returnedData);
 
           Toast.show({
@@ -294,6 +300,7 @@ const Details = props => {
           navigation.goBack();
         })
         .catch(error => {
+          setLoaderVisible(false);
           // Alert.alert('Error', error);
           // console.log("error", error)
           Toast.show({
@@ -1461,6 +1468,10 @@ const Details = props => {
               style={{
                 marginVertical: SIZES.base,
                 marginHorizontal: SIZES.radius,
+                backgroundColor: COLORS.white,
+                borderRadius: SIZES.base,
+                marginBottom: 30,
+                padding: SIZES.base,
               }}>
               <Text
                 style={{
@@ -1485,15 +1496,16 @@ const Details = props => {
 
               <TextInput
                 defaultValue={salaryRemark}
-                // onChangeText={setSalaryRemark}
+                placeholder="Please enter your Remarks"
                 onChangeText={value => (rn = value)}
                 onEndEditing={() => setSalaryRemark(rn)}
                 style={{
-                  borderWidth: 0.5,
-                  borderColor: COLORS.lightGray,
+                  borderWidth: 0.8,
+                  borderColor: COLORS.black,
                   height: 40,
                   color: COLORS.black,
                   marginTop: 5,
+                  marginBottom: 10,
                   borderRadius: 8,
                   paddingHorizontal: 8,
                 }}

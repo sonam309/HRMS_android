@@ -426,7 +426,7 @@ const BankBottomView = ({onPress}) => {
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{...FONTS.h3, fontSize: 20, color: COLORS.orange}}>
-            Bank Detials
+            Bank Details
           </Text>
           {approvalFlag === 'R' ? (
             <TouchableOpacity

@@ -54,7 +54,6 @@ const CandidateDashboard = props => {
     state => state.candidateInfo,
   );
 
-  
   const Job_Title = useSelector(state => state.candidateAuth.candidateRole);
   const [loaderVisible, setLoaderVisible] = useState(false);
   const {
@@ -78,9 +77,9 @@ const CandidateDashboard = props => {
   const [profilePic, setProfilePic] = useState(null);
   const [showPicModal, setShowPicModal] = useState(false);
 
+  const [profilePicLoading, setProfilePicLoading] = useState(false);
+
   const isFocused = true;
-
-
 
   // useFocusEffect(() => {
   //     console.log('testttttttttttttttttttttttttttttttttt');
@@ -168,7 +167,8 @@ const CandidateDashboard = props => {
         setTodoList(resultData?.Result[0]?.DOC_REQ);
         setPendingTest(resultData?.Result[0]?.PENDING_TEST);
         setProfilePic(resultData?.Result[0]?.PROFILE_PIC);
-        if (!resultData?.Result[0]?.PROFILE_PIC && showPicModal === false) {
+        if (!resultData?.Result[0]?.PROFILE_PIC && !showPicModal) {
+          console.log('171');
           setShowPicModal(true);
         }
 
@@ -206,15 +206,15 @@ const CandidateDashboard = props => {
       });
   };
 
-  useMemo(() => {
-    // if (isFocused) {
-    if (candidateId) {
-      console.log('testttttttttttttt');
+  // useMemo(() => {
+  //   // if (isFocused) {
+  //   if (candidateId) {
+  //     console.log('testttttttttttttt');
 
-      getCandidateOfferDetails();
-    }
-    // }
-  }, [candidateId]);
+  //     getCandidateOfferDetails();
+  //   }
+  //   // }
+  // }, [candidateId]);
 
   // for submitting file
 
@@ -299,7 +299,7 @@ const CandidateDashboard = props => {
             uri: res.assets[0]?.uri,
           });
 
-          setLoaderVisible(true);
+          setProfilePicLoading(true);
 
           fetch(`${API}/api/hrms/profilePic`, {
             method: 'POST',
@@ -307,7 +307,7 @@ const CandidateDashboard = props => {
           })
             .then(res => {
               // console.log(res);
-              setLoaderVisible(false);
+              setProfilePicLoading(false);
 
               if (res?.status === 200) {
                 Toast.show({
@@ -326,7 +326,7 @@ const CandidateDashboard = props => {
 
             .catch(error => {
               // console.log(error);
-              setLoaderVisible(false);
+              setProfilePicLoading(false);
               Toast.show({
                 type: 'error',
                 text1: error,
@@ -375,11 +375,9 @@ const CandidateDashboard = props => {
   };
 
   useFocusEffect(
-   
     React.useCallback(() => {
-      if(candidateId){
+      if (candidateId) {
         getCandidateOfferDetails();
-  
       }
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
@@ -530,7 +528,7 @@ const CandidateDashboard = props => {
             onRefresh={onRefreshData}
           />
         }>
-        <Loader loaderVisible={loaderVisible} />
+        <Loader loaderVisible={loaderVisible || profilePicLoading} />
         {employeeCreateFlag !== '' &&
         employeeCreateFlag !== null &&
         employeeCreateFlag === 'Y' ? (
@@ -1137,18 +1135,19 @@ const CandidateDashboard = props => {
         </View>
       </ScrollView>
 
-      {!profilePic && (
+      {showPicModal && (
         <Modal
           animationType="slide"
           transparent={true}
           visible={showPicModal}
-          onRequestClose={() => {
-            // setShowPicModal(!showPicModal);
-            // console.log('closeee');
+          // onRequestClose={() => {
+          //   // setShowPicModal(!showPicModal);
+          //   // console.log('closeee');
 
-            props.navigation.navigate('Candidate_Login'),
-              dispatch(candidateAuthActions.logOut());
-          }}>
+          //   props.navigation.navigate('Candidate_Login'),
+          //     dispatch(candidateAuthActions.logOut());
+          // }}
+        >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               {/* <Text style={styles.modalText}>Hello World!</Text>

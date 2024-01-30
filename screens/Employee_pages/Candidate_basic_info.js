@@ -174,7 +174,7 @@ const Candidate_basic_info = ({route}) => {
       setIdentityMarks(filledDetails?.Table[0]?.IDENTIFICATION_MARKS),
       setCurrentLocation(filledDetails?.Table[0]?.CURRENT_LOCATION),
       setMarriageDate(filledDetails?.Table[0]?.MARRIAGE_DATE),
-      setPreferredLocation(filledDetails?.Table[0]?.PREFERRED_LOCATION),
+      setPreferredLocation(filledDetails?.Table[0]?.PREFERRED_LOCATION_NAME),
       setRefAddress(filledDetails?.Table[0]?.REF_ADDRESS),
       setRefAddress1(filledDetails?.Table[0]?.REF_ADDRESS1),
       setRefContact(filledDetails?.Table[0]?.REF_CONTACT_NO),
@@ -681,14 +681,15 @@ const Candidate_basic_info = ({route}) => {
                     marginVertical: 3,
                     marginHorizontal: 7,
                     height: cLocationHeight,
+                    
                   },
                 ]}
                 multiline={true}
                 onContentSizeChange={event => {
                   setCLocationHeight(event.nativeEvent.contentSize.height);
                 }}
-                value={currentLocation}
-                onChangeText={val => setCurrentLocation(val)}
+                value={preferredLocation}
+                onChangeText={val => setPreferredLocation(val)}
               />
             </View>
 
@@ -753,6 +754,7 @@ const Candidate_basic_info = ({route}) => {
                   justifyContent: 'center',
                   borderRadius: SIZES.base,
                   borderWidth: 1,
+                  height:80,
                 }}>
                 <Text>{address}</Text>
               </View>
@@ -918,6 +920,7 @@ const Candidate_basic_info = ({route}) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                marginBottom:30,
               }}>
               <View style={{width: '100%', paddingHorizontal: 3}}>
                 <Text
@@ -927,7 +930,7 @@ const Candidate_basic_info = ({route}) => {
                     marginTop: 10,
                     marginBottom: 4,
                   }}>
-                  Collge/University
+                  college/University
                 </Text>
                 <View
                   style={{
@@ -937,6 +940,7 @@ const Candidate_basic_info = ({route}) => {
                     justifyContent: 'center',
                     borderRadius: SIZES.base,
                     borderWidth: 1,
+                   height:80,
                   }}>
                   <Text>{college}</Text>
                 </View>
