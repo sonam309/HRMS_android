@@ -274,32 +274,36 @@ const Details = props => {
   // for Approving salary pending approvals
   const SalaryAction = oprFlag => {
     console.log('26999', SalaryDetails, oprFlag);
-    axios
-      .post(`${API}/api/hrms/saveSaleryAllocation`, {
-        ...SalaryDetails,
-        operFlag: oprFlag,
-        // Remark: salaryRemark,
-      })
-      .then(response => {
-        // console.log("salary", SalaryDetails)
-        const returnedData = response?.data;
-        console.log('this is response from backend', returnedData);
+    if (salaryRemark !== undefined && salaryRemark !== '') {
+      axios
+        .post(`${API}/api/hrms/saveSaleryAllocation`, {
+          ...SalaryDetails,
+          operFlag: oprFlag,
+          // Remark: salaryRemark,
+        })
+        .then(response => {
+          // console.log("salary", SalaryDetails)
+          const returnedData = response?.data;
+          console.log('this is response from backend', returnedData);
 
-        Toast.show({
-          type: 'success',
-          text1: returnedData?.MSG,
+          Toast.show({
+            type: 'success',
+            text1: returnedData?.MSG,
+          });
+          setDisableBtn(true);
+          navigation.goBack();
+        })
+        .catch(error => {
+          // Alert.alert('Error', error);
+          // console.log("error", error)
+          Toast.show({
+            type: 'error',
+            text1: error,
+          });
         });
-        setDisableBtn(true);
-        navigation.goBack();
-      })
-      .catch(error => {
-        // Alert.alert('Error', error);
-        // console.log("error", error)
-        Toast.show({
-          type: 'error',
-          text1: error,
-        });
-      });
+    } else {
+      Toast.show({type: 'error', text1: 'Please enter Reject Remark!'});
+    }
   };
 
   const jobRequestAction = async opr => {
@@ -1465,7 +1469,7 @@ const Details = props => {
                   marginBottom: SIZES.base,
                 }}>
                 Remarks
-                 {/* {JSON.stringify(salaryRemark)} */}
+                {/* {JSON.stringify(salaryRemark)} */}
               </Text>
               {/* <TextInput
                 placeholder="Remarks"
