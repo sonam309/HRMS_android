@@ -14,6 +14,7 @@ import View_Esign_stamp from '../../../screens/Candidate_pages/ProceedEsign/View
 import TestScreen from '../../../screens/Candidate_pages/QcTestScreens/TestScreen';
 import TestResult from '../../../screens/Candidate_pages/QcTestScreens/TestResult';
 import PendigEsignList from '../../../screens/Candidate_pages/ProceedEsign/Pending_Esign_list';
+import Signup from '../../../screens/Candidate_pages/Auth/Signup';
 const Stack = createStackNavigator();
 
 const CandidateStackNav = () => {
@@ -24,11 +25,20 @@ const CandidateStackNav = () => {
       initialRouteName="CandidateLogin"
       screenOptions={{headerShown: false}}>
       {!candidateAuthenticated ? (
+          <Stack.Group
+          initialRouteName="CandidateLogin"
+          screenOptions={{headerShown: false}}>
         <Stack.Screen
           name="CandidateLogin"
           // options={{orientation: 'portrait'}}
           component={Login}
         />
+         <Stack.Screen
+          name="CanidateSignup"
+          // options={{orientation: 'portrait'}}
+          component={Signup}
+        />
+        </Stack.Group>
       ) : (
         <Stack.Group
           initialRouteName="CandidateDashboard"

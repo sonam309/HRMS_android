@@ -7,6 +7,7 @@ import {
   Modal,
   Linking,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -122,7 +123,7 @@ const Login = props => {
       .then(response => {
         const returnedData = response.data.Result;
         setLoaderVisible(false);
-        console.log("GetMobileNo",returnedData);
+        console.log('GetMobileNo', returnedData);
         let result = returnedData.map(a => a.FLAG);
         let contact = returnedData.map(b => b.MSG);
         // console.log("login", userId);
@@ -477,6 +478,25 @@ const Login = props => {
                       </Text>
                     </TouchableOpacity>
                   </View>
+                  {Platform.OS === 'ios' && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('CanidateSignup');
+                      }}
+                      style={{
+                        marginTop: SIZES.base,
+                      }}>
+                      <Text
+                        style={{
+                          color: COLORS.black,
+                          ...FONTS.h5,
+                          fontSize: 14,
+                          textDecorationLine: 'underline',
+                        }}>
+                        New user? SignUp Here
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               );
             }}
