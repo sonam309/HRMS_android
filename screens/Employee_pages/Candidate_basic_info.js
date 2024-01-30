@@ -38,6 +38,8 @@ const Candidate_basic_info = ({route}) => {
 
   const [filledDetails, setFilledDetails] = useState('');
 
+  const [experience, setExperience] = useState('NO');
+
   const [marital, setMarital] = useState([]);
   const [selectedMarital, setSelectedMarital] = useState();
   const [selectedMaritalValue, setSelectedMaritalValue] = useState();
@@ -53,30 +55,6 @@ const Candidate_basic_info = ({route}) => {
   const [gender, setGender] = useState([]);
   const [selectedGender, setSelectedGender] = useState();
   const [selectedGenderValue, setSelectedGenderValue] = useState('s');
-
-  const getDropdownData = async P => {
-    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`);
-    response = await response.json();
-    const returnedData = response;
-    if (P === 18) {
-      setGender(returnedData);
-    } else if (P === 30) {
-      setMarital(returnedData);
-    } else if (P === 31) {
-      setBloodGroup(returnedData);
-    } else {
-      setCaste(returnedData);
-    }
-  };
-
-  useEffect(() => {
-    fetchPersonalData();
-    DisplayPreviousDetails();
-    getDropdownData(18);
-    getDropdownData(30);
-    getDropdownData(31);
-    getDropdownData(32);
-  }, []);
 
   const [refAddressHeight, setRefAddressHeight] = useState(40);
   const [refAddressHeight1, setRefAddressHeight1] = useState(40);
@@ -99,6 +77,26 @@ const Candidate_basic_info = ({route}) => {
   const [recordOpen, setRecordOpen] = useState(false);
 
   const [marriageDate, setMarriageDate] = useState('');
+
+  const [department, setDepartment] = useState('');
+
+  const [phone, setPhone] = useState('');
+
+  const [aadharNo, setAadharNo] = useState('');
+
+  const [address, setAddress] = useState('');
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [state, setState] = useState('');
+
+  const [desiredPay, setDesiredPay] = useState('');
+  const [highestEducationObtained, setHighestEducationObtained] = useState('');
+  const [college, setCollege] = useState('');
+
+  const [currentEmployer, setCurrentEmployer] = useState('');
+  const [lastEmployer, setLastEmployer] = useState('');
+  const [currentCtc, setCurrentCtc] = useState('');
 
   const [countryBirth, setCountryBirth] = useState('');
   const [placeBirth, setPlaceBirth] = useState('');
@@ -129,16 +127,46 @@ const Candidate_basic_info = ({route}) => {
 
   const salutationList = ['Miss', 'Mr.', 'Mrs.'];
 
+  const getDropdownData = async P => {
+    let response = await fetch(`${API}/api/User/getParam?getClaim=${P}`);
+    response = await response.json();
+    const returnedData = response;
+    if (P === 18) {
+      setGender(returnedData);
+    } else if (P === 30) {
+      setMarital(returnedData);
+    } else if (P === 31) {
+      setBloodGroup(returnedData);
+    } else {
+      setCaste(returnedData);
+    }
+  };
+
   const DisplayPreviousDetails = () => {
     filledDetails &&
       (filledDetails.FLAG === 'S' ? setOperFlag('E') : setOperFlag('P'),
       console.log('firstNam13333333333333333', filledDetails?.Table[0]),
+      setExperience(filledDetails?.Table[0]?.EXPERIENCE_TYPE),
       setSalutation(filledDetails?.Table[0]?.SALUTATION),
       setFirstName(filledDetails?.Table[0]?.FIRST_NAME),
       setMiddleName(filledDetails?.Table[0]?.MIDDLE_NAME),
       setPostTitle(filledDetails?.Table[0]?.JOB_TITLE),
       setLastName(filledDetails?.Table[0]?.LAST_NAME),
       setFatherName(filledDetails?.Table[0]?.FATHER_NAME),
+      setDepartment(filledDetails?.Table[0]?.DEPARTMENT_NAME),
+      setCurrentEmployer(filledDetails?.Table[0]?.CURRENT_EMPLOYEEMENT),
+      setLastEmployer(filledDetails?.Table[0]?.LATEST_EMPLOYEEMENT),
+      setCurrentCtc(filledDetails?.Table[0]?.CTC),
+      setPhone(filledDetails?.Table[0]?.PHONE),
+      setAadharNo(filledDetails?.Table[0]?.AADHAR),
+      setAddress(filledDetails?.Table[0]?.ADRESS),
+      setCountry(filledDetails?.Table[0]?.COUNTRY_NAME),
+      setCity(filledDetails?.Table[0]?.CITY),
+      setState(filledDetails?.Table[0]?.STATE_NAME),
+      setPostalCode(filledDetails?.Table[0]?.POSTAL_CODE),
+      setDesiredPay(filledDetails?.Table[0]?.DESIREDPAY),
+      setHighestEducationObtained(filledDetails?.Table[0]?.HIGHEST_EDUCATION),
+      setCollege(filledDetails?.Table[0]?.BORAD_UNIVERSITY),
       setSelectedActualBirthDate(filledDetails?.Table[0]?.ACTUAL_BIRTH_DATE),
       setSelectedRecordBirthDate(filledDetails?.Table[0]?.RECORD_BIRTH_DATE),
       setCountryBirth(filledDetails?.Table[0]?.BIRTH_COUNTRY),
@@ -197,6 +225,18 @@ const Candidate_basic_info = ({route}) => {
     }
   };
 
+  useEffect(() => {
+    fetchPersonalData();
+    getDropdownData(18);
+    getDropdownData(30);
+    getDropdownData(31);
+    getDropdownData(32);
+  }, []);
+
+  useEffect(() => {
+    DisplayPreviousDetails();
+  }, [filledDetails]);
+
   const recordDateSelector = date => {
     setRecordOpen(false);
     let newDate = date.toDateString().split(' ');
@@ -224,6 +264,46 @@ const Candidate_basic_info = ({route}) => {
       ) : (
         <ScrollView>
           <View style={{flex: 1, padding: 10}}>
+            <View>
+              <Text style={{color: COLORS.green, ...FONTS.h5}}>Experience</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 20,
+                }}>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: COLORS.white,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 80,
+                    borderRadius: SIZES.base,
+                    borderColor:
+                      experience !== 'Yes' ? COLORS.orange1 : COLORS.lightGray1,
+                    borderWidth: 1,
+                  }}>
+                  <Text>Fresher</Text>
+                </View>
+
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: COLORS.white,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 80,
+                    borderRadius: SIZES.base,
+                    borderColor:
+                      experience === 'Yes' ? COLORS.orange1 : COLORS.lightGray1,
+                    borderWidth: 1,
+                  }}>
+                  <Text>Experience</Text>
+                </View>
+              </View>
+            </View>
+
             <View
               style={{
                 flexDirection: 'row',
@@ -358,14 +438,35 @@ const Candidate_basic_info = ({route}) => {
             <View
               style={{
                 flexDirection: 'row',
-                margin: 3,
                 justifyContent: 'space-between',
               }}>
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Gender
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{selectedGender}</Text>
+                </View>
+              </View>
               {/* <View style={{ width: '48%', paddingHorizontal: 3 }}>
                             <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Country of Birth</Text>
                             <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
                         </View> */}
-              <View style={{width: '98%', paddingHorizontal: 3}}>
+              {/* <View style={{width: '98%', paddingHorizontal: 3}}>
                 <Text style={{color: COLORS.green, ...FONTS.h5}}>
                   Place of Birth
                 </Text>
@@ -374,6 +475,29 @@ const Candidate_basic_info = ({route}) => {
                   value={placeBirth}
                   onChangeText={val => setPlaceBirth(val)}
                 />
+              </View> */}
+
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Phone
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{phone}</Text>
+                </View>
               </View>
             </View>
 
@@ -383,7 +507,7 @@ const Candidate_basic_info = ({route}) => {
                 margin: 3,
                 justifyContent: 'space-between',
               }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
+              {/* <View style={{width: '48%', paddingHorizontal: 3}}>
                 <Text style={{color: COLORS.green, ...FONTS.h5}}>
                   Identification Marks
                 </Text>
@@ -392,18 +516,7 @@ const Candidate_basic_info = ({route}) => {
                   value={identityMarks}
                   onChangeText={val => setIdentityMarks(val)}
                 />
-              </View>
-              <View
-                style={{width: '48%', paddingHorizontal: 3, marginTop: -15}}>
-                <TextDropdown
-                  caption={'Gender'}
-                  data={gender}
-                  setData={setSelectedGender}
-                  setIdvalue={setSelectedGenderValue}
-                  defaultButtonText={selectedGender}
-                  captionStyle={{color: COLORS.green, ...FONTS.h5}}
-                />
-              </View>
+              </View> */}
             </View>
 
             <View
@@ -414,317 +527,421 @@ const Candidate_basic_info = ({route}) => {
                 marginTop: -10,
                 justifyContent: 'space-between',
               }}>
-              <View style={{width: '50%', paddingHorizontal: 3}}>
-                <TextDropdown
-                  caption={'Marital Status'}
-                  data={marital}
-                  setData={setSelectedMarital}
-                  setIdvalue={setSelectedMaritalValue}
-                  defaultButtonText={selectedMarital}
-                  captionStyle={{color: COLORS.green, ...FONTS.h5}}
-                />
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Maritial Status
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{selectedMarital}</Text>
+                </View>
               </View>
 
               <View style={{width: '48%', paddingHorizontal: 3}}>
-                <DateButton
-                  caption={'Date of Marriage'}
-                  date={marriageDate}
-                  setDate={setMarriageDate}
-                  isShow={false}
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Department
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{department}</Text>
+                </View>
+              </View>
+            </View>
+
+            {experience === 'Yes' && (
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{width: '48%', paddingHorizontal: 3}}>
+                    <Text
+                      style={{
+                        color: COLORS.green,
+                        ...FONTS.h5,
+                        marginTop: 10,
+                        marginBottom: 4,
+                      }}>
+                      Current Employer
+                    </Text>
+                    <View
+                      style={{
+                        height: 40,
+                        backgroundColor: '#fff',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: SIZES.base,
+                        borderWidth: 1,
+                      }}>
+                      <Text>{currentEmployer}</Text>
+                    </View>
+                  </View>
+
+                  <View style={{width: '48%', paddingHorizontal: 3}}>
+                    <Text
+                      style={{
+                        color: COLORS.green,
+                        ...FONTS.h5,
+                        marginTop: 10,
+                        marginBottom: 4,
+                      }}>
+                      Last Employer
+                    </Text>
+                    <View
+                      style={{
+                        height: 40,
+                        backgroundColor: '#fff',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: SIZES.base,
+                        borderWidth: 1,
+                      }}>
+                      <Text>{lastEmployer}</Text>
+                    </View>
+                  </View>
+                </View>
+
+                <View style={{width: '99%', paddingHorizontal: 3}}>
+                  <Text
+                    style={{
+                      color: COLORS.green,
+                      ...FONTS.h5,
+                      marginTop: 10,
+                      marginBottom: 4,
+                    }}>
+                    Current CTC(monthly)
+                  </Text>
+                  <View
+                    style={{
+                      height: 40,
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: SIZES.base,
+                      borderWidth: 1,
+                    }}>
+                    <Text>{currentCtc}</Text>
+                  </View>
+                </View>
+              </>
+            )}
+
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginLeft: 3,
+                  marginRight: 3,
+                  marginTop: 5,
+                  justifyContent: 'space-between',
+                }}></View>
+
+              <Text
+                style={{
+                  color: COLORS.green,
+                  ...FONTS.h5,
+                  paddingHorizontal: 6,
+                  paddingVertical: 3,
+                  marginTop: -5,
+                }}>
+                Interview Location
+              </Text>
+
+              <TextInput
+                style={[
+                  styles.inputHolder,
+                  {
+                    marginVertical: 3,
+                    marginHorizontal: 7,
+                    height: cLocationHeight,
+                  },
+                ]}
+                multiline={true}
+                onContentSizeChange={event => {
+                  setCLocationHeight(event.nativeEvent.contentSize.height);
+                }}
+                value={currentLocation}
+                onChangeText={val => setCurrentLocation(val)}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '99%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Aadhar No.
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{aadharNo}</Text>
+                </View>
+              </View>
+              {/* <View style={{ width: '48%', paddingHorizontal: 3 }}>
+                            <Text style={{ color: COLORS.green, ...FONTS.h5 }}>Country of Birth</Text>
+                            <TextInput style={styles.inputHolder} value={countryBirth} onChangeText={(val) => setCountryBirth(val)} />
+                        </View> */}
+              {/* <View style={{width: '98%', paddingHorizontal: 3}}>
+                <Text style={{color: COLORS.green, ...FONTS.h5}}>
+                  Place of Birth
+                </Text>
+                <TextInput
+                  style={styles.inputHolder}
+                  value={placeBirth}
+                  onChangeText={val => setPlaceBirth(val)}
                 />
+              </View> */}
+            </View>
+
+            <View style={{width: '99%', paddingHorizontal: 3}}>
+              <Text
+                style={{
+                  color: COLORS.green,
+                  ...FONTS.h5,
+                  marginTop: 10,
+                  marginBottom: 4,
+                }}>
+                Address
+              </Text>
+              <View
+                style={{
+                  height: 40,
+                  backgroundColor: '#fff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: SIZES.base,
+                  borderWidth: 1,
+                }}>
+                <Text>{address}</Text>
               </View>
             </View>
 
             <View
               style={{
                 flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: -10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Country
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{country}</Text>
+                </View>
+              </View>
+
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  City
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{city}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  State
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{state}</Text>
+                </View>
+              </View>
+
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Postal Code
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{postalCode}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Desired pay
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{desiredPay}</Text>
+                </View>
+              </View>
+
+              <View style={{width: '48%', paddingHorizontal: 3}}>
+                <Text
+                  style={{
+                    color: COLORS.green,
+                    ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
+                  }}>
+                  Highest Education Obtained
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
+                  }}>
+                  <Text>{highestEducationObtained}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
               <View style={{width: '100%', paddingHorizontal: 3}}>
-                <TextDropdown
-                  caption={'Blood Group'}
-                  data={bloodGroup}
-                  setData={setSelectedBloodGroup}
-                  setIdvalue={setSelectedBloodGroupValue}
-                  defaultButtonText={selectedBloodGroup}
-                  captionStyle={{color: COLORS.green, ...FONTS.h5}}
-                />
-              </View>
-            </View>
-
-            <Text
-              style={{
-                color: COLORS.green,
-                ...FONTS.h5,
-                paddingHorizontal: 6,
-                paddingVertical: 3,
-                marginTop: -5,
-              }}>
-              Current Location
-            </Text>
-
-            <TextInput
-              style={[
-                styles.inputHolder,
-                {
-                  marginVertical: 3,
-                  marginHorizontal: 7,
-                  height: cLocationHeight,
-                },
-              ]}
-              multiline={true}
-              onContentSizeChange={event => {
-                setCLocationHeight(event.nativeEvent.contentSize.height);
-              }}
-              value={currentLocation}
-              onChangeText={val => setCurrentLocation(val)}
-            />
-
-            {/* / */}
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  width: '48%',
-                  paddingHorizontal: 3,
-                }}>
                 <Text
                   style={{
                     color: COLORS.green,
                     ...FONTS.h5,
+                    marginTop: 10,
+                    marginBottom: 4,
                   }}>
-                  Reference Name 1
+                  Collge/University
                 </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refName}
-                  onChangeText={val => setRefName(val)}
-                />
-              </View>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Occupation 1
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refOccupation}
-                  onChangeText={val => setRefOccupation(val)}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Contact No. 1
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refContact}
-                  onChangeText={val => setRefContact(val)}
-                  keyboardType="numeric"
-                  maxLength={10}
-                />
-              </View>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Ref Email ID 1
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refEmail}
-                  onChangeText={val => setRefEmail(val)}
-                  keyboardType="email-address"
-                  maxLength={50}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Emp code 1
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refEmpCode1}
-                  onChangeText={val => setRefEmpCode1(val)}
-                  maxLength={50}
-                  editable={true}
-                />
-              </View>
-
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text
+                <View
                   style={{
-                    color: COLORS.green,
-                    ...FONTS.h5,
-                    paddingHorizontal: 6,
-                    paddingVertical: 3,
+                    height: 40,
+                    backgroundColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.base,
+                    borderWidth: 1,
                   }}>
-                  Reference Address 1
-                </Text>
-                <TextInput
-                  style={[styles.inputHolder, {marginTop: -5}]}
-                  multiline={true}
-                  onContentSizeChange={event => {
-                    setRefAddressHeight(event.nativeEvent.contentSize.height);
-                  }}
-                  value={refAddress}
-                  onChangeText={val => setRefAddress(val)}
-                />
+                  <Text>{college}</Text>
+                </View>
               </View>
             </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Name 2
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refName1}
-                  onChangeText={val => setRefName1(val)}
-                />
-              </View>
-              <View style={{width: '48%', paddingHorizontal: 2}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Occupation 2
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refOccupation1}
-                  onChangeText={val => setRefOccupation1(val)}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Ref Email ID 2
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refEmail1}
-                  onChangeText={val => setRefEmail1(val)}
-                  keyboardType="email-address"
-                  maxLength={50}
-                />
-              </View>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Contact No.2
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refContact1}
-                  onChangeText={val => setRefContact1(val)}
-                  keyboardType="numeric"
-                  maxLength={10}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginLeft: 3,
-                marginRight: 3,
-                marginTop: 10,
-                justifyContent: 'space-between',
-              }}>
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text style={{color: COLORS.green, ...FONTS.h5}}>
-                  Reference Emp code 2
-                </Text>
-                <TextInput
-                  style={styles.inputHolder}
-                  value={refEmpCode2}
-                  onChangeText={val => setRefEmpCode2(val)}
-                  maxLength={50}
-                  editable={true}
-                />
-              </View>
-
-              <View style={{width: '48%', paddingHorizontal: 3}}>
-                <Text
-                  style={{
-                    color: COLORS.green,
-                    ...FONTS.h5,
-                    paddingHorizontal: 6,
-                    paddingVertical: 3,
-                  }}>
-                  Reference Address 2
-                </Text>
-                <TextInput
-                  style={[styles.inputHolder, {marginTop: -5}]}
-                  multiline={true}
-                  onContentSizeChange={event => {
-                    setRefAddressHeight1(event.nativeEvent.contentSize.height);
-                  }}
-                  value={refAddress1}
-                  onChangeText={val => setRefAddress1(val)}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={{marginLeft: 20, marginRight: 20, marginBottom: 40, display:'none'}}
-              onPress={() => savePersonalDetails()}>
-              <LinearGradient
-                colors={[COLORS.orange1, COLORS.disableOrange1]}
-                start={{x: 0, y: 0}}
-                end={{x: 2, y: 0}}
-                style={{borderRadius: 8, padding: 10, marginTop: 20}}>
-                <Text
-                  style={{
-                    color: COLORS.white,
-                    textAlign: 'center',
-                    ...FONTS.body3,
-                  }}>
-                  Update Personal Details
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       )}

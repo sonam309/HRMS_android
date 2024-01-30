@@ -375,7 +375,12 @@ const CandidateDashboard = props => {
   };
 
   useFocusEffect(
+   
     React.useCallback(() => {
+      if(candidateId){
+        getCandidateOfferDetails();
+  
+      }
       const backHandler = BackHandler.addEventListener(
         'hardwareBackPress',
         () => {
