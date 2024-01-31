@@ -316,6 +316,7 @@ const CandidateDashboard = props => {
                 });
 
                 setShowPicModal(false);
+                getCandidateOfferDetails();
               } else {
                 Toast.show({
                   type: 'error',

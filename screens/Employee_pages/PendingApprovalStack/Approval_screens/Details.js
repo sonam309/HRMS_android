@@ -55,7 +55,8 @@ const Details = props => {
   const [disableBtn, setDisableBtn] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(true);
   const userId = useSelector(state => state.auth.userId);
-  let modifiedTemplate = null;
+
+  const [finalTemplate, setFinalTemplate] = useState('');
 
   const [hirningLead, setHiringLead] = useState([]);
   const [selectedhirningLead, setSelectedHiringLead] = useState('');
@@ -74,12 +75,6 @@ const Details = props => {
     if (element.tagName === 'tr') {
       for (const child of element.children) {
         if (child.tagName === 'td') {
-          // console.log(
-          //   'children',
-          //   child.next.children[0].name === 'b' &&
-          //     child.next.children[0].children[0].data === '0',
-          // );
-
           if (
             child.next.children[0].name === 'b' &&
             child.next.children[0].children[0].data === '0'
@@ -108,11 +103,11 @@ const Details = props => {
     getDropdownData('L');
     getInterviewListData();
 
-    // console.log("remarrrr115",JSON.stringify(data?.Table[0]?.REMARK));
     {
       switch (category) {
         case 'Salary Allocation':
-          getSalaryData(), getSalaryHTMLData();
+          getSalaryData();
+           getSalaryHTMLData();
           break;
         case 'New Job Opening':
           getJobOpeningData();
@@ -267,30 +262,32 @@ const Details = props => {
     employeePfCheck: data?.Table[0]?.EMPLR_PF_CHECK,
     costOfCompany: '0',
   };
-  {
-    console.log('remarrrr115', JSON.stringify(data?.Table[0]?.REMARK));
-  }
+  // {
+  //   console.log('remarrrr115', JSON.stringify(data?.Table[0]?.REMARK));
+  // }
 
   // for Approving salary pending approvals
   const SalaryAction = oprFlag => {
-    console.log('26999', SalaryDetails, oprFlag);
     if (
-      (salaryRemark !== null &&
-      salaryRemark !== undefined) &&
+      salaryRemark !== null &&
+      salaryRemark !== undefined &&
       salaryRemark !== ''
     ) {
       setLoaderVisible(true);
+      console.log("submittedDta",{
+        ...SalaryDetails,
+        operFlag: oprFlag,
+        Remark: salaryRemark,
+      })
       axios
         .post(`${API}/api/hrms/saveSaleryAllocation`, {
           ...SalaryDetails,
           operFlag: oprFlag,
-          // Remark: salaryRemark,
+          Remark: salaryRemark,
         })
         .then(response => {
-          // console.log("salary", SalaryDetails)
           const returnedData = response?.data;
           setLoaderVisible(false);
-          console.log('this is response from backend', returnedData);
 
           Toast.show({
             type: 'success',
@@ -302,7 +299,6 @@ const Details = props => {
         .catch(error => {
           setLoaderVisible(false);
           // Alert.alert('Error', error);
-          // console.log("error", error)
           Toast.show({
             type: 'error',
             text1: error,
@@ -340,7 +336,6 @@ const Details = props => {
           body: formData,
         });
         res = await res.json();
-        // console.log("before", res);
 
         Toast.show({
           type: 'success',
@@ -373,7 +368,7 @@ const Details = props => {
       compensation: compensationAmount,
     };
     jobInfodata = JSON.stringify(jobInfodata);
-    // console.log(jobInfodata)
+    console.log(jobInfodata);
     try {
       let res = await fetch(`${API}/api/createNewJob`, {
         method: 'POST',
@@ -386,8 +381,7 @@ const Details = props => {
 
       res = await res.json();
       res = res?.Result;
-      // console.log("this is response from backend", res)
-
+      console.log('res', res);
       Toast.show({
         type: 'success',
         text1: res[0].MSG,
@@ -407,11 +401,11 @@ const Details = props => {
     totalData = await totalData.json();
     totalData = totalData.Result[0]?.MAIL_BODY;
     setHTMLdata(totalData);
-    // console.log("htmlForm", totalData);
   };
 
   // Fetching salary allocation data
   const getSalaryData = () => {
+    
     axios
       .post(`${API}/api/hrms/saveSaleryAllocation`, {
         operFlag: 'V',
@@ -420,92 +414,17 @@ const Details = props => {
       .then(response => {
         const returnedData = response?.data;
         setData(returnedData);
-        setSalaryRemark(data?.Table[0]?.REMARK);
-
-        console.log('Response375.....', returnedData);
+        console.log("remarkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",returnedData)
+        setSalaryRemark(returnedData?.Table[0]?.REMARK);
       });
-  };
-
-  // Setting the variables data coming for Salary Allocation
-  const updating = () => {
-    // console.log('htmldataaaaa', data);
-    fullName = data.Table1[0]?.FULL_NAME;
-    JobTitle = data?.Table[0]?.DESIGNATION;
-    contactPersonMob = data.Table1[0]?.CONTACT_PERSON;
-    contactPersonName = data.Table1[0]?.FULL_NAME;
-    candidateDep = data?.Table[0]?.DEPARTMENT_NAME;
-    baseSalary = data.Table[0]?.BASIC_SAL;
-    HRA = data.Table[0]?.HRA;
-    foodAllowance = data.Table[0]?.FOOD_ALLOWANCE;
-    bikeMaintenaceAllowance = data.Table[0]?.BIKE_MANTENANCE;
-    conveyanceAllowance = data.Table[0]?.CONVEYANCE_ALLOWANCE;
-    bonusPay = data.Table[0]?.BONUS_PAY;
-    specialAllowance = data.Table[0]?.SPECIAL_ALLOWANCE;
-    dvrAllowance = data.Table[0]?.DRIVER_ALLOWANCE;
-    fuelAllowance = data.Table[0]?.FUEL_ALLOWANCE;
-    grossAmount = data.Table[0]?.GROSS_AMOUNT;
-    employerPF = data.Table[0]?.EMPLOPYER_PF;
-    distanceAllowance = data.Table[0]?.DISTANCE_ALLOWANCE; //V_2.2 sk
-    fieldAllowance = data.Table[0]?.FIELD_ALLOWANCE; //V_2.2 sk
-    inchargeAllowance = data.Table[0]?.INCHG_ALLOWANCE; //V_2.2 sk
-    performanceAllowance = data.Table[0]?.PRFORM_ALLOWANCE; //V_2.2 sk
-    protfolioQualityAllowance = data.Table[0]?.PORTFOL_ALLOWANCE; //V_2.2 sk
-    leaveTravelAllowance = data.Table[0]?.LEV_TRVEL_ALLOWANCE; //V_2.2 sk
-    otherReimbursement = data.Table[0]?.OTHR_REMBURS_ALLOWANCE; //V_2.2 sk
-    fuelReimbursement = data.Table[0]?.FUEL_REMBURSEMENT; //V_2.2 sk
-    employeeESIC = data.Table[0]?.EMPLOYER_ESIC_ALLOWNCE; //V_2.2 sk
-    FoodCoupon = data.Table[0]?.FOOD_COUPON; //V_2.2 sk
-    gratuity = data.Table[0]?.GRATUITY_AMT; //V_2.2 sk
-    nps = data.Table[0]?.EMPLOYE_NPS; //V_2.2 sk
-    ctc = data.Table[0]?.BRKP_CTC;
-
-    yearlyNps = Number(nps) * 12; //V_2.2 sk
-    yearlyGratuity = Number(gratuity) * 12; //V_2.2 sk
-    yearlyFoodCoupon = Number(FoodCoupon) * 12; //V_2.2 sk
-    yearlyEmployeeEsic = Number(employeeESIC) * 12; //V_2.2 sk
-    yearFuelReimbursement = Number(fuelReimbursement) * 12; //V_2.2 sk
-    yearlyOtherReimbursement = Number(otherReimbursement) * 12; //V_2.2 sk
-    yearlyLTAllowance = Number(leaveTravelAllowance) * 12; //V_2.2 sk
-    yearlyPortfolioQualityAllowance = Number(protfolioQualityAllowance) * 12; //V_2.2 sk
-    yearlyPerformanceAllowance = Number(performanceAllowance) * 12; //V_2.2 sk
-    yearlyInchargeAllowance = Number(inchargeAllowance) * 12; //V_2.2 sk
-    yearlyDistanceAllowance = Number(distanceAllowance) * 12; //V_2.2 sk
-    YearlyFieldAllowance = Number(fieldAllowance) * 12; //V_2.2 sk
-    yearbaseVariable = Number(baseSalary) * 12;
-    yearlybasectc = Number(ctc) * 12;
-    YearHRA = Number(HRA) * 12;
-    YearfoodAllowance = Number(foodAllowance) * 12;
-    YearbikeMaintenaceAllowance = Number(bikeMaintenaceAllowance) * 12;
-    YearconveyanceAllowance = Number(conveyanceAllowance) * 12;
-    YearbonusPay = Number(bonusPay) * 12;
-    YearspecialAllowance = Number(specialAllowance) * 12;
-    YeardvrAllowance = Number(dvrAllowance) * 12;
-    YearfuelAllowance = Number(fuelAllowance) * 12;
-    YeargrossAmount = Number(grossAmount) * 12;
-    YearemployerPF = Number(employerPF) * 12;
-
-    // Monthly value
-    MonthtotalSalValue = Number(ctc);
-    // Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
-    //     //V_2.2 sk
-    //     + Number(distanceAllowance) + Number(fieldAllowance) + Number(inchargeAllowance) + Number(performanceAllowance) + Number(protfolioQualityAllowance) + Number(leaveTravelAllowance) + Number(otherReimbursement) + Number(fuelReimbursement) + Number(employeeESIC) + Number(FoodCoupon) + Number(gratuity) + Number(nps)
-
-    //Total Year Value
-    YeartotalSalValue = Number(yearlybasectc);
-    // Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
-    //     //V_2.2 sk
-    //     + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
-
-    // console.log('ctttctctct', data.Table[0]?.BRKP_CTC);
   };
 
   // Updating the HTML data for Salary Allocation
   const updateHTML = () => {
-    data ? updating() : null;
-    return data && HTMLdata
-      ? // console.warn(fullName),
+    // data ? updating() : null;
 
-        HTMLdata.replace('NameVariable', fullName ? fullName : 'fullName')
+    return data && HTMLdata
+      ? HTMLdata.replace('NameVariable', fullName ? fullName : 'fullName')
           .replaceAll(
             'DesignationVariable',
             JobTitle === '' ? 'DesignationVariable' : JobTitle,
@@ -706,8 +625,85 @@ const Details = props => {
       : null;
   };
 
-  // function call for updating the HTML for Salary Allocation
-  modifiedTemplate = updateHTML();
+  // Setting the variables data coming for Salary Allocation
+  const updating = async () => {
+    fullName = data.Table1[0]?.FULL_NAME;
+    JobTitle = data?.Table[0]?.DESIGNATION;
+    contactPersonMob = data.Table1[0]?.CONTACT_PERSON;
+    contactPersonName = data.Table1[0]?.FULL_NAME;
+    candidateDep = data?.Table[0]?.DEPARTMENT_NAME;
+    baseSalary = data.Table[0]?.BASIC_SAL;
+    HRA = data.Table[0]?.HRA;
+    foodAllowance = data.Table[0]?.FOOD_ALLOWANCE;
+    bikeMaintenaceAllowance = data.Table[0]?.BIKE_MANTENANCE;
+    conveyanceAllowance = data.Table[0]?.CONVEYANCE_ALLOWANCE;
+    bonusPay = data.Table[0]?.BONUS_PAY;
+    specialAllowance = data.Table[0]?.SPECIAL_ALLOWANCE;
+    dvrAllowance = data.Table[0]?.DRIVER_ALLOWANCE;
+    fuelAllowance = data.Table[0]?.FUEL_ALLOWANCE;
+    grossAmount = data.Table[0]?.GROSS_AMOUNT;
+    employerPF = data.Table[0]?.EMPLOPYER_PF;
+    distanceAllowance = data.Table[0]?.DISTANCE_ALLOWANCE; //V_2.2 sk
+    fieldAllowance = data.Table[0]?.FIELD_ALLOWANCE; //V_2.2 sk
+    inchargeAllowance = data.Table[0]?.INCHG_ALLOWANCE; //V_2.2 sk
+    performanceAllowance = data.Table[0]?.PRFORM_ALLOWANCE; //V_2.2 sk
+    protfolioQualityAllowance = data.Table[0]?.PORTFOL_ALLOWANCE; //V_2.2 sk
+    leaveTravelAllowance = data.Table[0]?.LEV_TRVEL_ALLOWANCE; //V_2.2 sk
+    otherReimbursement = data.Table[0]?.OTHR_REMBURS_ALLOWANCE; //V_2.2 sk
+    fuelReimbursement = data.Table[0]?.FUEL_REMBURSEMENT; //V_2.2 sk
+    employeeESIC = data.Table[0]?.EMPLOYER_ESIC_ALLOWNCE; //V_2.2 sk
+    FoodCoupon = data.Table[0]?.FOOD_COUPON; //V_2.2 sk
+    gratuity = data.Table[0]?.GRATUITY_AMT; //V_2.2 sk
+    nps = data.Table[0]?.EMPLOYE_NPS; //V_2.2 sk
+    ctc = data.Table[0]?.BRKP_CTC;
+
+    yearlyNps = Number(nps) * 12; //V_2.2 sk
+    yearlyGratuity = Number(gratuity) * 12; //V_2.2 sk
+    yearlyFoodCoupon = Number(FoodCoupon) * 12; //V_2.2 sk
+    yearlyEmployeeEsic = Number(employeeESIC) * 12; //V_2.2 sk
+    yearFuelReimbursement = Number(fuelReimbursement) * 12; //V_2.2 sk
+    yearlyOtherReimbursement = Number(otherReimbursement) * 12; //V_2.2 sk
+    yearlyLTAllowance = Number(leaveTravelAllowance) * 12; //V_2.2 sk
+    yearlyPortfolioQualityAllowance = Number(protfolioQualityAllowance) * 12; //V_2.2 sk
+    yearlyPerformanceAllowance = Number(performanceAllowance) * 12; //V_2.2 sk
+    yearlyInchargeAllowance = Number(inchargeAllowance) * 12; //V_2.2 sk
+    yearlyDistanceAllowance = Number(distanceAllowance) * 12; //V_2.2 sk
+    YearlyFieldAllowance = Number(fieldAllowance) * 12; //V_2.2 sk
+    yearbaseVariable = Number(baseSalary) * 12;
+    yearlybasectc = Number(ctc) * 12;
+    YearHRA = Number(HRA) * 12;
+    YearfoodAllowance = Number(foodAllowance) * 12;
+    YearbikeMaintenaceAllowance = Number(bikeMaintenaceAllowance) * 12;
+    YearconveyanceAllowance = Number(conveyanceAllowance) * 12;
+    YearbonusPay = Number(bonusPay) * 12;
+    YearspecialAllowance = Number(specialAllowance) * 12;
+    YeardvrAllowance = Number(dvrAllowance) * 12;
+    YearfuelAllowance = Number(fuelAllowance) * 12;
+    YeargrossAmount = Number(grossAmount) * 12;
+    YearemployerPF = Number(employerPF) * 12;
+
+    // Monthly value
+    MonthtotalSalValue = Number(ctc);
+    // Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
+    //     //V_2.2 sk
+    //     + Number(distanceAllowance) + Number(fieldAllowance) + Number(inchargeAllowance) + Number(performanceAllowance) + Number(protfolioQualityAllowance) + Number(leaveTravelAllowance) + Number(otherReimbursement) + Number(fuelReimbursement) + Number(employeeESIC) + Number(FoodCoupon) + Number(gratuity) + Number(nps)
+
+    //Total Year Value
+    YeartotalSalValue = Number(yearlybasectc);
+    // Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
+    //     //V_2.2 sk
+    //     + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
+
+    const temp = await updateHTML();
+    setFinalTemplate(temp);
+    setLoaderVisible(false);
+  };
+
+  useEffect(() => {
+    if (data && HTMLdata) {
+      updating();
+    }
+  }, [data, HTMLdata]);
 
   // Fetching data for new job request
   const getJobRequestData = async () => {
@@ -716,21 +712,20 @@ const Details = props => {
       'data',
       JSON.stringify({operFlag: 'V', txnId: jobId, userId: userId}),
     );
-    // console.log("first", formData._parts)
     let res = await fetch(`${API}/api/hrms/jobOpeningRequest`, {
       method: 'POST',
       body: formData,
     });
+    console.log('res', res.json());
     res = await res?.json();
-    // console.log("after", res)
     res = await res?.Table[0];
-    console.log('responsedataJobb req', res);
+    // console.log("res1", res)
     setJobRequestData(res);
     setCompensationAmount(res?.COMPENSATION);
     setSelectedHiringLead(res?.HIRING_LEAD_NAME);
     setNumOfPosition(res?.NO_OF_POSITION);
     setSelectedHiringLeadValue(res?.HIRING_LEAD_ID);
-    // console.log("jobrequestsssssssssssssssss", res?.COMPENSATION);
+    setLoaderVisible(false);
   };
 
   // Fetching data for new job opening
@@ -741,7 +736,6 @@ const Details = props => {
     // console.warn(jobId);
     res = await res?.json();
     res = await res?.Table[0];
-    // console.log("jobOpening", res)
     setJobOpeningData(res);
     setCompensationAmount(res?.COMPENSATION);
     setSelectedHiringLead(res?.HIRING_LEAD_NAME);
@@ -1060,8 +1054,6 @@ const Details = props => {
           </View>
         </View>
 
-        {jobRequestData && setLoaderVisible(false)}
-
         {/* Position */}
         <Text
           style={{
@@ -1324,22 +1316,42 @@ const Details = props => {
     ) : null;
   };
 
-  let approveType, rejectType;
-
-  const Type = () => {
+  const onRejectApprove = oprFlag => {
     switch (category) {
-      case 'Salary Allocation': {
-        approveType = SalaryAction;
-        rejectType = SalaryAction;
-        return (
-          <ScrollView>
+      case 'Salary Allocation':
+        SalaryAction(oprFlag);
+        break;
+
+      case 'New Job Opening':
+        jobOpeningAction(oprFlag);
+        break;
+
+      case 'New Job Request':
+        jobRequestAction(oprFlag);
+        break;
+    }
+  };
+
+  return (
+    <View style={{flex: 1}}>
+      <Header title={'Salary allocation'} />
+      <View
+        style={{
+          flex: 1,
+        }}>
+        {/* <Type /> */}
+
+        {category === 'Salary Allocation' && (
+          <ScrollView
+            style={{
+              flex: 1,
+            }}>
             <Loader loaderVisible={loaderVisible} />
             <RenderHtml
               domVisitors={domVisitors}
               contentWidth={width}
-              source={{html: `${modifiedTemplate}`}}
+              source={{html: `${finalTemplate}`}}
             />
-            {modifiedTemplate && setLoaderVisible(false)}
             <View
               style={{
                 flexDirection: 'row',
@@ -1482,7 +1494,7 @@ const Details = props => {
                 Remarks
                 {/* {JSON.stringify(salaryRemark)} */}
               </Text>
-              {/* <TextInput
+              <TextInput
                 placeholder="Remarks"
                 style={{
                   backgroundColor: COLORS.white,
@@ -1492,13 +1504,16 @@ const Details = props => {
                 }}
                 value={salaryRemark}
                 onChangeText={setSalaryRemark}
-              /> */}
+              />
 
-              <TextInput
+              {/* <TextInput
                 defaultValue={salaryRemark}
                 placeholder="Please enter your Remarks"
                 onChangeText={value => (rn = value)}
-                onEndEditing={() => setSalaryRemark(rn)}
+                onEndEditing={() => {
+                  console.log('ended');
+                  setSalaryRemark(rn);
+                }}
                 style={{
                   borderWidth: 0.8,
                   borderColor: COLORS.black,
@@ -1509,81 +1524,59 @@ const Details = props => {
                   borderRadius: 8,
                   paddingHorizontal: 8,
                 }}
-              />
+              /> */}
             </View>
           </ScrollView>
-        );
-      }
+        )}
+        {category === 'New Job Opening' && <JobOpening />}
 
-      case 'New Job Opening':
-        approveType = jobOpeningAction;
-        rejectType = jobOpeningAction;
-        return <JobOpening />;
+        {category === 'New Job Request' && <JobRequest />}
 
-      case 'New Job Request':
-        approveType = jobRequestAction;
-        rejectType = jobRequestAction;
-        return <JobRequest />;
-    }
-  };
+        {/* Approval Buttons */}
+        {action === 'P' && (
+          <View style={styles.footerDesign}>
+            <TouchableOpacity
+              // disabled={disableBtn}
+              onPress={() => onRejectApprove('C')}
+              style={[
+                {
+                  backgroundColor: disableBtn
+                    ? COLORS.disableGreen
+                    : COLORS.green,
+                },
+                styles.buttonStyle,
+              ]}>
+              <MaterialCommunityIcons
+                name="check-circle-outline"
+                size={20}
+                color={COLORS.white}
+              />
+              <Text style={{color: COLORS.white, fontWeight: '600'}}>
+                {' '}
+                Approve{' '}
+              </Text>
+            </TouchableOpacity>
 
-  return (
-    <View style={{flex: 1}}>
-      <Header title={'Salary allocation'} />
-
-      <View
-        style={{
-          flex: 1,
-        }}>
-        <Type />
-
-        {/* {console.log('candidateData', candidateInterviewData)} */}
+            <TouchableOpacity
+              onPress={() => onRejectApprove('R')}
+              // disabled={disableBtn}
+              style={[
+                {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
+                styles.buttonStyle,
+              ]}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={20}
+                color={COLORS.white}
+              />
+              <Text style={{color: COLORS.white, fontWeight: '600'}}>
+                {' '}
+                Reject{' '}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-
-      {/* Approval Buttons */}
-      {action === 'P' && (
-        <View style={styles.footerDesign}>
-          <TouchableOpacity
-            // disabled={disableBtn}
-            onPress={() => approveType('C')}
-            style={[
-              {
-                backgroundColor: disableBtn
-                  ? COLORS.disableGreen
-                  : COLORS.green,
-              },
-              styles.buttonStyle,
-            ]}>
-            <MaterialCommunityIcons
-              name="check-circle-outline"
-              size={20}
-              color={COLORS.white}
-            />
-            <Text style={{color: COLORS.white, fontWeight: '600'}}>
-              {' '}
-              Approve{' '}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => rejectType('R')}
-            // disabled={disableBtn}
-            style={[
-              {backgroundColor: disableBtn ? COLORS.disableRed : COLORS.red},
-              styles.buttonStyle,
-            ]}>
-            <MaterialCommunityIcons
-              name="close-circle-outline"
-              size={20}
-              color={COLORS.white}
-            />
-            <Text style={{color: COLORS.white, fontWeight: '600'}}>
-              {' '}
-              Reject{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };

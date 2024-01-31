@@ -5,8 +5,9 @@ import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../../../../../components/Loader';
 import {API} from '../../../../../utility/services';
-import {COLORS} from '../../../../../constants';
+import {COLORS, SIZES} from '../../../../../constants';
 import {getpendingApprovalsData} from '../../../../../redux/aprovalPendingSlice';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 const Pending = props => {
   const dispatch = useDispatch();
@@ -53,17 +54,16 @@ const Pending = props => {
   //   console.log('sliceResponse', pendingApprovalList);
   // }, []);
 
-  useEffect(() => {
-    getData();
-    // console.log("Hello from pending")
-  }, [notificationCat]);
+  // useEffect(() => {
+  //   getData();
+  //   // console.log("Hello from pending")
+  // }, [notificationCat]);
 
   useFocusEffect(
     useCallback(() => {
       getData();
     }, [notificationCat]),
   );
-
 
   function ListItems(props) {
     const date = props?.applyDate,
@@ -72,7 +72,7 @@ const Pending = props => {
       candidate_ID = props?.id,
       category = props?.cat,
       jobId = props?.jobId;
-      wholeList = props?.totalItem;
+    wholeList = props?.totalItem;
 
     switch (category) {
       case 'New Job Opening':
@@ -92,8 +92,7 @@ const Pending = props => {
     return (
       <TouchableOpacity
         key={candidate_ID}
-        style={[styles.ListIcons, styles.Elevation]}
-      
+        style={[styles.ListIcons]}
         onPress={() => {
           // console.log("data99",wholeList)
           navigation.navigate('Details', {
@@ -104,10 +103,19 @@ const Pending = props => {
             approver,
             action,
             jobId,
-            wholeList: props?.totalItem
+            wholeList: props?.totalItem,
           });
         }}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            borderBottomWidth: 1,
+            borderColor: COLORS.lightGray1,
+            paddingVertical: SIZES.base,
+            paddingHorizontal: SIZES.base,
+            // borderStyle: 'dashed',
+          }}>
           {/* <Text>
             {JSON.stringify(wholeList)}
           </Text> */}
@@ -124,32 +132,107 @@ const Pending = props => {
           </Text>
         </View>
 
-        <Text
-          style={{fontSize: 14, marginVertical: 8, color: COLORS.darkerGrey}}>
-          {mail_body}
-        </Text>
+        <View
+          style={{
+            paddingVertical: SIZES.base,
+            // borderBottomWidth: 1,
+            borderColor: COLORS.lightGray1,
+            paddingHorizontal: SIZES.base,
+            marginTop: SIZES.base,
+            gap: 5,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginRight: 10,
+            }}>
+            {approver != '-' ? (
+              <View
+                style={{
+                  width: responsiveWidth(50),
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: COLORS.orange1,
+                    fontWeight: '500',
+                    alignSelf: 'center',
+                    backgroundColor: COLORS.disableOrange1,
+                    borderRadius: SIZES.base / 2,
+                    padding: SIZES.base / 2,
+                  }}>
+                  Pending by {approver}
+                </Text>
+              </View>
+            ) : null}
+            <View
+              style={{
+                width: responsiveWidth(50),
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              {candidate_ID && (
+                <Text
+                  style={{
+                    color: COLORS.orange1,
+                    backgroundColor: COLORS.disableOrange1,
+                    padding: SIZES.base / 2,
+                    borderRadius: SIZES.base / 2,
+                    fontWeight: '500',
+                  }}>
+                  Candidate ID- ({candidate_ID})
+                </Text>
+              )}
+              {/* {candidate_ID && jobId && (
+              <Text style={{color: COLORS.orange1}}>Job ID- ({jobId})</Text>
+            )} */}
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: responsiveWidth(50),
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: SIZES.base / 2,
+            }}>
+            {!candidate_ID && jobId && (
+              <Text
+                style={{
+                  color: COLORS.orange1,
+                  backgroundColor: COLORS.disableOrange1,
+                  padding: SIZES.base / 2,
+                  borderRadius: SIZES.base / 2,
+                  fontWeight: '500',
+                }}>
+                Job ID- ({jobId})
+              </Text>
+            )}
+            {/* {candidate_ID && jobId && (
+              <Text style={{color: COLORS.orange1}}>Job ID- ({jobId})</Text>
+            )} */}
+          </View>
+        </View>
 
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginRight: 10,
+            paddingHorizontal: SIZES.base,
           }}>
-          {approver != '-' ? (
-            <Text
-              style={{fontSize: 14, color: COLORS.orange, fontWeight: '400'}}>
-              Pending by {approver}
-            </Text>
-          ) : null}
-          {candidate_ID && (
-            <Text style={{color: COLORS.orange1}}>
-              Candidate ID- ({candidate_ID})
-            </Text>
-          )}
-
-          {!candidate_ID && jobId && (
-            <Text style={{color: COLORS.orange1}}>Job ID- ({jobId})</Text>
-          )}
+          <Text
+            style={{
+              fontSize: 14,
+              // marginVertical: ,
+              color: COLORS.darkerGrey,
+              paddingVertical: SIZES.base / 2,
+            }}>
+            {mail_body}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -212,20 +295,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   ListIcons: {
+    width: responsiveWidth(92),
+    alignSelf: 'center',
     backgroundColor: COLORS.white,
-    marginVertical: 4,
-    marginHorizontal: 8,
-    paddingLeft: 12,
-    paddingVertical: 8,
-    borderRadius: 18,
+    paddingVertical: SIZES.base,
+    marginBottom: SIZES.base,
+    borderRadius: SIZES.base,
+    borderWidth: 1,
+    borderColor: COLORS.lightGray1,
     overflow: 'hidden',
   },
   categoryTag: {
-    color: 'white',
+    color: COLORS.white,
     paddingHorizontal: 10,
     paddingVertical: 1,
-    marginRight: -5,
-    borderRadius: 10,
+    borderRadius: SIZES.base / 2,
   },
 });
 
