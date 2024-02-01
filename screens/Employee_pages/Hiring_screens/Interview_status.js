@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useMemo} from 'react';
 import {
   View,
   Text,
@@ -34,6 +34,10 @@ const Interview_status = props => {
   useEffect(() => {
     getInterviewListData();
   }, []);
+
+  useMemo(() => {
+    getInterviewListData();
+  }, [status]);
 
   // candidate icons
   function CandidateList(props) {
@@ -256,7 +260,6 @@ const Interview_status = props => {
           {inteviewListData[0]?.TXN_ID !== undefined &&
           inteviewListData[0]?.TXN_ID !== null ? (
             <ScrollView>
-              {console.log('sonnammmmmm268', JSON.stringify(inteviewListData))}
               {inteviewListData
                 ?.filter(item => item.STATUS === status)
                 .map(item => (

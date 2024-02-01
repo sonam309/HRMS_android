@@ -27,6 +27,7 @@ import {
 import {saveAttemptTest} from '../../../redux/eSignSlice';
 import {COLORS, FONTS} from '../../../constants';
 import Header from '../../../components/Header';
+import _ from 'lodash';
 
 const Candidate_details = props => {
   const {
@@ -55,7 +56,21 @@ const Candidate_details = props => {
   const {userId} = useSelector(state => state.auth);
   const {testResultLoading, saveTestResult} = useSelector(state => state.eSign);
 
-  // console.log("candidateId", candidateId);
+  console.log(
+    'candidateId600000000000000000000',
+    resume,
+    name,
+    designation,
+    interviewStartTime,
+    interviewEndTime,
+    date,
+    status,
+    candidateId,
+    interviewId,
+    interviewType,
+    interviewMail,
+    profilePic,
+  );
   // console.log("interviewId", interviewId);
   // console.log("interviewType", interviewType);
   // console.log("interviewMail", interviewMail);
@@ -83,6 +98,10 @@ const Candidate_details = props => {
     };
 
     dispatch(saveAttemptTest(saveData));
+  }, []);
+
+  useEffect(() => {
+    getFeedback();
   }, []);
 
   const validateForm = () => {
@@ -554,20 +573,34 @@ const Candidate_details = props => {
     });
 
     res = await res.json();
-    res = res.Result[0];
-    setFeedback(res);
-    // console.log("response", res)
+    // res = res.Result[0];
+    setFeedback(res.Result);
+    console.log('response559999999', res);
   };
 
-  useEffect(() => {
-    {
-      status === 'C' && getFeedback();
-    }
-  }, []);
+  // useEffect(() => {
+  //   {
+  //     status === 'C' && getFeedback();
+  //   }
+  // }, []);
 
-  const Remarks = () => {
+  const Remarks = ({item}) => {
     return (
-      <>
+      <View
+        style={{
+          backgroundColor: COLORS.white,
+          padding: 10,
+          borderRadius: 4,
+          width: responsiveWidth(88),
+          alignSelf: 'center',
+          borderColor: COLORS.lightGray,
+          borderBottomWidth: 0.5,
+        }}>
+        {item?.INTERVIEW_TYPE && (
+          <Text style={{color: COLORS.black, padding: 5, ...FONTS.h4}}>
+            {item?.INTERVIEW_TYPE}
+          </Text>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -580,17 +613,15 @@ const Candidate_details = props => {
             <PieChart
               widthAndHeight={120}
               series={[
-                feedback?.Speaking_Obtained_Score,
-                feedback?.Speaking_Maximum_Score -
-                  feedback?.Speaking_Obtained_Score,
+                item?.Speaking_Obtained_Score,
+                item?.Speaking_Maximum_Score - item?.Speaking_Obtained_Score,
               ]}
               sliceColor={['orange', 'white']}
               coverRadius={0.8}
             />
 
             <Text style={styles.score}>
-              {feedback?.Speaking_Obtained_Score}/
-              {feedback?.Speaking_Maximum_Score}
+              {item?.Speaking_Obtained_Score}/{item?.Speaking_Maximum_Score}
             </Text>
             <Text style={styles.scoreText}>Score</Text>
           </View>
@@ -601,17 +632,15 @@ const Candidate_details = props => {
             <PieChart
               widthAndHeight={120}
               series={[
-                feedback?.Technical_Obtained_Score,
-                feedback?.Technical_Maximum_Score -
-                  feedback?.Technical_Obtained_Score,
+                item?.Technical_Obtained_Score,
+                item?.Technical_Maximum_Score - item?.Technical_Obtained_Score,
               ]}
               sliceColor={[COLORS.green, 'white']}
               coverRadius={0.8}
             />
 
             <Text style={styles.score}>
-              {feedback?.Technical_Obtained_Score}/
-              {feedback?.Technical_Maximum_Score}
+              {item?.Technical_Obtained_Score}/{item?.Technical_Maximum_Score}
             </Text>
             <Text style={styles.scoreText}>Score</Text>
           </View>
@@ -626,14 +655,14 @@ const Candidate_details = props => {
             borderColor: COLORS.green,
             justifyContent: 'center',
           }}>
-          {feedback?.REMARK ? (
+          {item?.REMARK ? (
             <Text style={{padding: 10, color: '#000', fontWeight: '600'}}>
               {' '}
-              {feedback.REMARK}{' '}
+              {item.REMARK}{' '}
             </Text>
           ) : null}
         </View>
-      </>
+      </View>
     );
   };
 
@@ -805,6 +834,15 @@ const Candidate_details = props => {
               )}
             </View>
           </View>
+
+          <View>
+           
+            {feedback[0]?.Speaking_Obtained_Score &&
+              _.map(feedback, (item, index) => {
+                return <Remarks item={item} key={index} />;
+              })}
+              
+          </View>
         </View>
 
         <View style={{justifyContent: 'flex-end'}}>
@@ -814,7 +852,11 @@ const Candidate_details = props => {
               <Text style={styles.ButtonStyle}>Feedback</Text>
             </TouchableOpacity>
           ) : (
-            <Remarks />
+            <View>
+              {/* {_.map(feedback, (item, index) => {
+                return <Remarks item={item} />;
+              })} */}
+            </View>
           )}
 
           {status === 'P' && isVisible && (

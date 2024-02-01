@@ -305,7 +305,7 @@ const Details = props => {
           });
         });
     } else {
-      Toast.show({type: 'error', text1: 'Please enter Reject Remark!'});
+      Toast.show({type: 'error', text1: 'Please enter Remark!'});
     }
   };
 
