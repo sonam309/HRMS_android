@@ -25,7 +25,7 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import {saveAttemptTest} from '../../../redux/eSignSlice';
-import {COLORS, FONTS} from '../../../constants';
+import {COLORS, FONTS, SIZES} from '../../../constants';
 import Header from '../../../components/Header';
 import _ from 'lodash';
 
@@ -596,11 +596,26 @@ const Candidate_details = props => {
           borderColor: COLORS.lightGray,
           borderBottomWidth: 0.5,
         }}>
-        {item?.INTERVIEW_TYPE && (
-          <Text style={{color: COLORS.black, padding: 5, ...FONTS.h4}}>
-            {item?.INTERVIEW_TYPE}
+        <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
+          {item?.INTERVIEW_TYPE && (
+            <Text style={{color: COLORS.black, padding: 5, ...FONTS.h4}}>
+              {item?.INTERVIEW_TYPE}
+            </Text>
+          )}
+
+          {item?.CREATED_ON && (
+            <Text style={{color: COLORS.black, padding: 5, ...FONTS.h4}}>
+              {item?.CREATED_ON}
+            </Text>
+          )}
+        </View>
+
+        {item?.INTERVIWER_ID && (
+          <Text style={{color: COLORS.darkGray2, padding: 5, ...FONTS.h4, backgroundColor:"#F0F0F0", borderRadius: SIZES.base/2,  }}>
+            {item?.INTERVIWER_ID} 
           </Text>
         )}
+
         <View
           style={{
             flexDirection: 'row',
@@ -836,12 +851,10 @@ const Candidate_details = props => {
           </View>
 
           <View>
-           
             {feedback[0]?.Speaking_Obtained_Score &&
               _.map(feedback, (item, index) => {
                 return <Remarks item={item} key={index} />;
               })}
-              
           </View>
         </View>
 
