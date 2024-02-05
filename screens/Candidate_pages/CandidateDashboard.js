@@ -265,6 +265,7 @@ const CandidateDashboard = props => {
         saveToPhotos: false, //to store captured photo via camera to photos or else it will be stored in temp folders and will get deleted on temp clear
         includeBase64: false,
         cameraType: 'front',
+        quality: 0.15,
       };
 
       launchCamera(options, res => {
@@ -475,7 +476,6 @@ const CandidateDashboard = props => {
               size={25}
               color={COLORS.black}
             /> */}
-            {/* {console.log('ProflileImage', `${API}/ProfilePic/${profilePic}`)} */}
 
             <Image
               source={

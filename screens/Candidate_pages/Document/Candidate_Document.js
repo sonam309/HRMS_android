@@ -12,6 +12,8 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {showAlert, closeAlert} from 'react-native-customisable-alert';
+import ImageResizer from 'react-native-image-resizer';
+import RNFS from 'react-native-fs';
 
 const Candidate_Document = props => {
   // Candidate ID & Status
@@ -178,44 +180,57 @@ const Candidate_Document = props => {
           DocumentPicker.types.docx,
           DocumentPicker.types.images,
         ],
-        // allowMultiSelection: true
       });
-      console.log('filetyp2', type);
-      if (doc[0].size / (1024 * 1024) <= 10) {
-        if (type == 'Aadhar Card') {
-          setFileUpload(current => [
-            ...current,
-            {
-              name: `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
-                doc[0].type.split('/')[1]
-              }`,
-              type: doc[0].type,
-              uri: doc[0].uri,
-              txnId: '',
-            },
-          ]);
-          console.log('t5635656735763676376783', name);
-        } else {
-          setFileUpload(current => [
-            ...current,
-            {
-              name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-                doc[0].type.split('/')[1]
-              }`,
-              type: doc[0].type,
-              uri: doc[0].uri,
-              txnId: '',
-            },
-          ]);
-        }
-      } else {
+
+      if (doc[0].size / (1024 * 1024) > 10) {
         Toast.show({
           type: 'error',
           text1: 'Please upload file less than 10 MB',
         });
+        return;
       }
+
+      let compressedUri = doc[0].uri;
+
+      if (doc[0].type.startsWith('image/')) {
+        // Resize and compress the image
+        const resizedImage = await ImageResizer.createResizedImage(
+          doc[0].uri,
+          800, // Width
+          600, // Height
+          'JPEG', // Format
+        70, // Quality (0-100)
+          90
+        );
+
+        compressedUri = resizedImage.uri;
+      }
+
+      const fileName =
+        type === 'Aadhar Card'
+          ? `129_Assesment_${candidateId}_${getFormattedTimestamp()}.${
+              doc[0].type.split('/')[1]
+            }`
+          : `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+              doc[0].type.split('/')[1]
+            }`;
+
+      // Read the compressed file data
+      const compressedData = await RNFS.readFile(compressedUri, 'base64');
+
+      setFileUpload(current => [
+        ...current,
+        {
+          name: fileName,
+          type: doc[0].type,
+          uri: compressedUri,
+          data: compressedData, // Include the base64 data for PDF and DOCX files
+          txnId: '',
+        },
+      ]);
     } catch (error) {
-      // console.log(error);
+      // Handle errors
+      console.log(error);
     }
   };
 
@@ -230,12 +245,12 @@ const Candidate_Document = props => {
   // for selecting other 22 docs
   const selectOtherFile = async (index, type) => {
     try {
-      let imgType = [];
+      let allowedTypes = [];
 
-      if (type == 141) {
-        imgType = [DocumentPicker.types.images];
+      if (type === 141) {
+        allowedTypes = [DocumentPicker.types.images];
       } else {
-        imgType = [
+        allowedTypes = [
           DocumentPicker.types.pdf,
           DocumentPicker.types.doc,
           DocumentPicker.types.docx,
@@ -244,32 +259,58 @@ const Candidate_Document = props => {
       }
 
       const doc = await DocumentPicker.pick({
-        type: imgType,
+        type: allowedTypes,
       });
 
-      if (doc[0]?.size / (1024 * 1024) <= 10) {
-        setOtherFiles([
-          ...otherFiles.slice(0, index),
-          {
-            name: `Assesment_${candidateId}_${getFormattedTimestamp()}.${
-              doc[0]?.type.split('/')[1]
-            }`,
-            type: doc[0]?.type,
-            uri: doc[0]?.uri,
-          },
-          ...otherFiles.slice(index + 1),
-        ]);
-      } else {
+      if (
+        doc[0]?.type.startsWith('image/') &&
+        doc[0]?.size / (1024 * 1024) > 10
+      ) {
         Toast.show({
           type: 'error',
-          text1: 'Please upload file less than 10 MB',
+          text1: 'Please upload image less than 10 MB',
         });
+        return;
       }
+
+      let compressedUri = doc[0]?.uri;
+
+      if (doc[0]?.type.startsWith('image/')) {
+        // Resize and compress the image
+        const resizedImage = await ImageResizer.createResizedImage(
+          doc[0]?.uri,
+          800, // Width
+          600, // Height
+          'JPEG', // Format
+          70, // Quality (0-100)
+          90
+        );
+
+        compressedUri = resizedImage.uri;
+      }
+
+      const fileName = `Assesment_${candidateId}_${getFormattedTimestamp()}.${
+        doc[0]?.type.split('/')[1]
+      }`;
+
+      // Read the compressed file data
+      const compressedData = await RNFS.readFile(compressedUri, 'base64');
+
+      setOtherFiles(current => [
+        ...current.slice(0, index),
+        {
+          name: fileName,
+          type: doc[0]?.type,
+          uri: compressedUri,
+          data: compressedData, // Include the base64 data for PDF and DOCX files
+        },
+        ...current.slice(index + 1),
+      ]);
     } catch (error) {
-      console.log('erororooror', JSON.stringify(error));
+      console.log('Error:', JSON.stringify(error));
       Toast.show({
         type: 'error',
-        text1: 'Error Selecting File. Please try again.',
+        text1: 'Error selecting file. Please try again.',
       });
     }
   };
