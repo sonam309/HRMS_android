@@ -130,32 +130,7 @@ const Details = props => {
     }
   };
 
-  // getting state value
-  const checkHiringLeadValue = value => {
-    {
-      for (let index = 0; index < hirningLead.length; index++) {
-        const element = hirningLead[index];
-        if (element.PARAM_NAME === value)
-          setSelectedHiringLeadValue(element.PARAM_ID);
-      }
-    }
-  };
 
-  const selectedDropDownText = id => {
-    if (id === 'hiringLead') {
-      return jobRequestData.HIRING_LEAD_NAME
-        ? jobRequestData.HIRING_LEAD_NAME
-        : hirningLead?.map(a => a.PARAM_NAME)[0];
-    }
-  };
-
-  const selectDropDownValue = id => {
-    if (id === 'hiringLead') {
-      return jobRequestData.HIRING_LEAD
-        ? jobRequestData.HIRING_LEAD
-        : hirningLead?.map(a => a.PARAM_ID)[0];
-    }
-  };
 
   // Variables to be updated for salary allocation
   let fullName,
@@ -439,11 +414,7 @@ const Details = props => {
               ? 'contactPersonVarName'
               : contactPersonName,
           )
-          // .replaceAll("ContractionsVariable", candidateBeforeValue == "" ? "ContractionsVariable" : candidateBeforeValue)
-          // .replaceAll("CompensationVariable", compensation == "" ? "CompensationVariable" : compensation)
-          // .replaceAll('DateVariable', startDate == "" ? "DateVariable" : dateOfIssue)
-
-          // .replaceAll('NameVariable', candidateName == "" ? 'NameVariable' : candidateName)
+       
           .replaceAll(
             'DepartmentVariable',
             candidateDep == '' ? 'DepartmentVariable' : candidateDep,
@@ -684,15 +655,11 @@ const Details = props => {
 
     // Monthly value
     MonthtotalSalValue = Number(ctc);
-    // Number(baseSalary) + Number(HRA) + Number(foodAllowance) + Number(bikeMaintenaceAllowance) + Number(conveyanceAllowance) + Number(bonusPay) + Number(specialAllowance) + Number(dvrAllowance) + Number(fuelAllowance) + Number(grossAmount) + Number(employerPF)
-    //     //V_2.2 sk
-    //     + Number(distanceAllowance) + Number(fieldAllowance) + Number(inchargeAllowance) + Number(performanceAllowance) + Number(protfolioQualityAllowance) + Number(leaveTravelAllowance) + Number(otherReimbursement) + Number(fuelReimbursement) + Number(employeeESIC) + Number(FoodCoupon) + Number(gratuity) + Number(nps)
+   
 
     //Total Year Value
     YeartotalSalValue = Number(yearlybasectc);
-    // Number(yearbaseVariable) + Number(YearHRA) + Number(YearfoodAllowance) + Number(YearbikeMaintenaceAllowance) + Number(YearconveyanceAllowance) + Number(YearbonusPay) + Number(YearspecialAllowance) + Number(YeardvrAllowance) + Number(YearfuelAllowance) + Number(YeargrossAmount) + Number(YearemployerPF)
-    //     //V_2.2 sk
-    //     + Number(yearlyDistanceAllowance) + Number(YearlyFieldAllowance) + Number(yearlyInchargeAllowance) + Number(yearlyPerformanceAllowance) + Number(yearlyDistanceAllowance) + Number(yearlyPortfolioQualityAllowance) + Number(yearlyLTAllowance) + Number(yearlyOtherReimbursement) + Number(yearFuelReimbursement) + Number(yearlyEmployeeEsic) + Number(yearlyFoodCoupon) + Number(yearlyGratuity) + Number(yearlyNps)
+ 
 
     const temp = await updateHTML();
     setFinalTemplate(temp);
@@ -716,7 +683,7 @@ const Details = props => {
       method: 'POST',
       body: formData,
     });
-    console.log('res', res.json());
+    // console.log('res', res.json());
     res = await res?.json();
     res = await res?.Table[0];
     // console.log("res1", res)

@@ -8,6 +8,8 @@ import {
 } from 'react-native-vision-camera';
 import Navigation from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
+import {COLORS, SIZES} from '../../../constants';
+import Header from '../../../components/Header';
 
 const QRScanner = props => {
   const navigation = useNavigation();
@@ -21,7 +23,7 @@ const QRScanner = props => {
       const valueParts = codes[0].value.split('/');
       const index = valueParts.indexOf('add-candidate-by-QR');
       const extractedValue = valueParts[index + 2];
-      console.log(extractedValue); // Output: "7"
+      //   console.log(extractedValue); // Output: "7"
 
       navigation.navigate('CanidateSignup', {
         jobId: extractedValue,
@@ -42,13 +44,40 @@ const QRScanner = props => {
     );
   }
   return (
-    <Camera
-      {...props}
-      style={StyleSheet.absoluteFill}
-      device={device}
-      codeScanner={codeScanner}
-      isActive={true}
-    />
+    <View
+      style={{
+        flex: 1,
+      }}>
+      <Header title={'Apply Job'} />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: COLORS.black,
+        }}>
+        <Text
+          style={{
+            color: COLORS.white,
+            marginBottom: SIZES.padding * 2,
+            fontWeight: '500',
+            fontSize: 18,
+          }}>
+          Scan QR Code to Apply
+        </Text>
+        <Camera
+          {...props}
+          style={{
+            height: 350,
+            width: 350,
+            alignSelf: 'center',
+          }}
+          device={device}
+          codeScanner={codeScanner}
+          isActive={true}
+        />
+      </View>
+    </View>
   );
 };
 

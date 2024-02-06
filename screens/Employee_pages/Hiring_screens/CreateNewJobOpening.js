@@ -341,7 +341,7 @@ const CreateNewJobOpening = props => {
       <View style={{margin: 7}}>
         {/* {console.warn(titleName)} */}
         <Text style={{color: COLORS.black, fontWeight: '500'}}>
-          Posting Title {selectedTitle} {selectedTitleValue}
+          Posting Title 
           <Text style={{color: COLORS.red}}>* </Text>
         </Text>
         <SelectDropdown

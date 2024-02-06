@@ -56,8 +56,8 @@ const Login = props => {
 
 
   const userInfo = {
-    userId: '3401',
-    password: 'Test@321',
+    userId: '',
+    password: '',
   };
 
   const validationSchema = Yup.object({
@@ -485,7 +485,7 @@ const Login = props => {
                     </TouchableOpacity>
                   </View>
 
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('QRScanner');
                       // setOpenScanner(true);
@@ -500,9 +500,9 @@ const Login = props => {
                         fontSize: 14,
                         textDecorationLine: 'underline',
                       }}>
-                      New user? SignUp Here
+                      New user? SignUp Heres
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               );
             }}

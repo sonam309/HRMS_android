@@ -119,7 +119,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 28
-        versionName "3.7s"
+        versionName "3.7"
     }
     signingConfigs {
         release {
