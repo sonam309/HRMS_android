@@ -8,6 +8,7 @@ import {
   Linking,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -39,6 +40,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import FormInput from '../../../components/FormInput';
 
+
 const Login = props => {
   let page = null;
   const [showVisibility, setShowVisibility] = useState(true);
@@ -51,6 +53,7 @@ const Login = props => {
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
+
 
   const userInfo = {
     userId: '3401',
@@ -211,13 +214,16 @@ const Login = props => {
         // setPassword('');
       })
       .catch(error => {
+        console.log(JSON.stringify(error));
         setLoaderVisible(false);
         Toast.show({
           type: 'error',
-          text1: error,
+          text1: JSON.stringify(error),
         });
       });
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -478,25 +484,25 @@ const Login = props => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  {Platform.OS === 'ios' && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate('CanidateSignup');
-                      }}
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('QRScanner');
+                      // setOpenScanner(true);
+                    }}
+                    style={{
+                      marginTop: SIZES.base,
+                    }}>
+                    <Text
                       style={{
-                        marginTop: SIZES.base,
+                        color: COLORS.black,
+                        ...FONTS.h5,
+                        fontSize: 14,
+                        textDecorationLine: 'underline',
                       }}>
-                      <Text
-                        style={{
-                          color: COLORS.black,
-                          ...FONTS.h5,
-                          fontSize: 14,
-                          textDecorationLine: 'underline',
-                        }}>
-                        New user? SignUp Here
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                      New user? SignUp Here
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               );
             }}
@@ -593,6 +599,7 @@ const Login = props => {
           </View>
         </Modal>
       )}
+
     </View>
   );
 };

@@ -15,6 +15,7 @@ import TestScreen from '../../../screens/Candidate_pages/QcTestScreens/TestScree
 import TestResult from '../../../screens/Candidate_pages/QcTestScreens/TestResult';
 import PendigEsignList from '../../../screens/Candidate_pages/ProceedEsign/Pending_Esign_list';
 import Signup from '../../../screens/Candidate_pages/Auth/Signup';
+import QRScanner from '../../../screens/Candidate_pages/Auth/QRScanner';
 const Stack = createStackNavigator();
 
 const CandidateStackNav = () => {
@@ -32,6 +33,11 @@ const CandidateStackNav = () => {
           name="CandidateLogin"
           // options={{orientation: 'portrait'}}
           component={Login}
+        />
+           <Stack.Screen
+          name="QRScanner"
+          // options={{orientation: 'portrait'}}
+          component={QRScanner}
         />
          <Stack.Screen
           name="CanidateSignup"

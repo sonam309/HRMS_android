@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'react-native-reanimated'
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthNavigator from './navigation/StackNav/AuthNavigator';
@@ -10,7 +11,6 @@ import store from './redux/store';
 import Toast from 'react-native-toast-message';
 import CustomAlert from './components/CustomAlert';
 import CustomisableAlert from 'react-native-customisable-alert';
-import 'react-native-gesture-handler';
 
 const App = () => {
   // async function getNewFCMToken() {
