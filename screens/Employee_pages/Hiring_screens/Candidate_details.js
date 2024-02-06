@@ -6,6 +6,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -28,6 +29,7 @@ import {saveAttemptTest} from '../../../redux/eSignSlice';
 import {COLORS, FONTS, SIZES} from '../../../constants';
 import Header from '../../../components/Header';
 import _ from 'lodash';
+import {getInterviewList} from '../../../redux/interviewDetailSlice';
 
 const Candidate_details = props => {
   const {
@@ -52,6 +54,7 @@ const Candidate_details = props => {
   const [yourRemarks, setYourRemarks] = useState('');
   const [error, setError] = useState(false);
   const [feedback, setFeedback] = useState('');
+  const [loder, setLoder] = useState(false);
   // const [profilePic, setProfilePic] = useState('');
   const {userId} = useSelector(state => state.auth);
   const {testResultLoading, saveTestResult} = useSelector(state => state.eSign);
@@ -108,7 +111,7 @@ const Candidate_details = props => {
     if (
       obtainedSpeakScoreValue === '' ||
       obtainedTechScoreValue === '' ||
-      yourRemarks === ''
+      yourRemarks.trim() === ''
     ) {
       setError(true);
       setTimeout(() => {
@@ -122,6 +125,7 @@ const Candidate_details = props => {
 
   const onSelectPress = async operFlag => {
     if (validateForm()) {
+      setLoder(true);
       let res = await fetch(`${API}/api/hrms/interViewDeatils`, {
         // let res = await fetch(`http://192.168.1.169:7038/api/hrms/interViewDeatils`, {
         method: 'POST',
@@ -144,6 +148,8 @@ const Candidate_details = props => {
 
       res = await res.json();
       res = res?.Result[0];
+      
+      setLoder(false);
 
       console.log('feedbackkkk', res);
 
@@ -154,16 +160,31 @@ const Candidate_details = props => {
       if (res.FLAG === 'S') {
         props.navigation.navigate('Interview_status');
 
+        const data = {
+          operFlag: 'v',
+          userId: userId,
+        };
+        dispatch(getInterviewList(data));
+
         // setProfilePic(res?.PROFILE_PIC);
       }
       console.log('response', res);
+    }else{
+
     }
   };
 
   // Feedback bottom Up modal
   const renderFeedbackModal = () => {
     return (
-      <View>
+      <>
+      { loder ?
+      <View style={{alignItems:'center', marginTop:30}}>
+        <ActivityIndicator color={COLORS.orange1} size={"small"} />
+        <Text style={{color:COLORS.black}}>Submitting status</Text>
+      </View>
+      : 
+       <View>
         {/* feedback header */}
         <View
           style={{
@@ -560,7 +581,9 @@ const Candidate_details = props => {
             </View>
           </View>
         </KeyboardAwareScrollView>
-      </View>
+      </View> }
+      </>
+     
     );
   };
 
@@ -596,7 +619,7 @@ const Candidate_details = props => {
           borderColor: COLORS.lightGray,
           borderBottomWidth: 0.5,
         }}>
-        <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           {item?.INTERVIEW_TYPE && (
             <Text style={{color: COLORS.black, padding: 5, ...FONTS.h4}}>
               {item?.INTERVIEW_TYPE}
@@ -611,8 +634,15 @@ const Candidate_details = props => {
         </View>
 
         {item?.INTERVIWER_ID && (
-          <Text style={{color: COLORS.darkGray2, padding: 5, ...FONTS.h4, backgroundColor:"#F0F0F0", borderRadius: SIZES.base/2,  }}>
-            {item?.INTERVIWER_ID} 
+          <Text
+            style={{
+              color: COLORS.darkGray2,
+              padding: 5,
+              ...FONTS.h4,
+              backgroundColor: '#F0F0F0',
+              borderRadius: SIZES.base / 2,
+            }}>
+            {item?.INTERVIWER_ID}
           </Text>
         )}
 

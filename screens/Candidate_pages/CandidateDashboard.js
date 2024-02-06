@@ -60,7 +60,6 @@ const CandidateDashboard = props => {
     candidateId,
     candidateName,
     candidateStatusId,
-    offerAcceptFlag,
     daysToJoin,
     candidateOfferLetter,
     growingDays,
@@ -70,37 +69,26 @@ const CandidateDashboard = props => {
   const [showAlert, setShowAlert] = useState(false);
   const [profileAlert, setProfileAlert] = useState(false);
   const [offerLetterAlert, setOfferLetterAlert] = useState(false);
-  const [employeeCreateFlag, setEmployeeCreateFlag] = useState('');
   const [esignCount, setEsignCount] = useState();
-  const [todoList, setTodoList] = useState('');
-  const [pendingTest, setPendingTest] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
   const [showPicModal, setShowPicModal] = useState(false);
-
   const [profilePicLoading, setProfilePicLoading] = useState(false);
 
-  const isFocused = true;
-
-  // useFocusEffect(() => {
-  //     console.log('testttttttttttttttttttttttttttttttttt');
-  //     getCandidateOfferDetails();
-
-  // });
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    if (employeeCreateFlag === 'Y') {
+    if (candidateOfferCheckResult?.EMP_CREATION_FLAG === 'Y') {
       getEsignData();
     }
-  }, [employeeCreateFlag]);
+  }, [candidateOfferCheckResult?.EMP_CREATION_FLAG]);
 
   const onRefreshData = React.useCallback(() => {
     if (candidateId) {
-      if (!profilePic) {
+      if (!candidateOfferCheckResult?.PROFILE_PIC) {
         getCandidateOfferDetails();
       }
     }
 
-    if (employeeCreateFlag === 'Y') {
+    if (candidateOfferCheckResult?.EMP_CREATION_FLAG === 'Y') {
       getEsignData();
     }
   }, []);
@@ -123,98 +111,76 @@ const CandidateDashboard = props => {
     });
   };
 
-  const getProfilePic = () => {
-    let profilePicData = {
-      candidateId: `${userId}`,
-      operFlag: 'V',
-    };
+  useEffect(() => {
+    // console.log("126666",candidateOfferCheckResult?.PROFILE_PIC === null)
+    // setProfilePic(candidateOfferCheckResult?.PROFILE_PIC);
+    if (candidateOfferCheckResult?.PROFILE_PIC === null && !showPicModal) {
+      console.log('171');
+      setShowPicModal(true);
+    }
+  }, [candidateOfferCheckResult?.PROFILE_PIC]);
 
-    var formData = new FormData();
+  useEffect(() => {
+    dispatch(
+      candidateAuthActions.updateLogin({
+        candidateStatusId: candidateOfferCheckResult?.STATUS,
+        candidateStatus: candidateOfferCheckResult?.CANDIDATE_STATUS,
+      }),
+    );
+  }, [candidateOfferCheckResult?.STATUS]);
 
-    formData.append('data', JSON.stringify(profilePicData));
-
-    axios
-      .post(`${API}api/hrms/profilePic`, formData, {
-        headers: {'Content-Type': 'multipart/form-data'},
-      })
-      .then(res => {
-        setProfilePic(res?.data?.Result[0]?.PROFILE_PIC);
-      })
-      .catch(error => {
-        // console.log('profilepic', JSON.stringify(error));
-      });
-  };
-
-  const getCandidateOfferDetails = async type => {
+  const getCandidateOfferDetails = () => {
     const userData = {loginId: candidateId};
+    dispatch(getCandidateOfferCheck(userData));
+
+    // const userData = {loginId: candidateId};
     // setLoaderVisible(true);
 
-    axios
-      .post(`${API}/api/hrms/candidateOfferCheck`, userData)
-      .then(response => {
-        const resultData = response?.data;
+    // axios
+    //   .post(`${API}/api/hrms/candidateOfferCheck`, userData)
+    //   .then(response => {
+    //     const resultData = response?.data;
 
-        console.log('candidateOfferCheck', resultData);
-        // setLoaderVisible(false);
-        dispatch(
-          candidateAuthActions.updateLogin({
-            candidateStatusId: resultData?.Result[0]?.STATUS,
-            candidateStatus: resultData?.Result[0]?.CANDIDATE_STATUS,
-          }),
-        );
+    //     console.log('candidateOfferCheck', resultData);
+    // setLoaderVisible(false);
 
-        setEmployeeCreateFlag(resultData?.Result[0]?.EMP_CREATION_FLAG);
-        setTodoList(resultData?.Result[0]?.DOC_REQ);
-        setPendingTest(resultData?.Result[0]?.PENDING_TEST);
-        setProfilePic(resultData?.Result[0]?.PROFILE_PIC);
-        if (!resultData?.Result[0]?.PROFILE_PIC && !showPicModal) {
-          console.log('171');
-          setShowPicModal(true);
-        }
+    // setEmployeeCreateFlag(resultData?.Result[0]?.EMP_CREATION_FLAG);
+    // setTodoList(resultData?.Result[0]?.DOC_REQ);
+    // setPendingTest(resultData?.Result[0]?.PENDING_TEST);
 
-        if (type !== '' && type === 'offer') {
-          resultData?.Result[0]?.OFFER_LETTER !== null &&
-          resultData?.Result[0]?.OFFER_LETTER !== ''
-            ? props.navigation.navigate('Offer Letter')
-            : setOfferLetterAlert(true);
-        }
+    // if (type !== '' && type === 'offer') {
+    //   resultData?.Result[0]?.OFFER_LETTER !== null &&
+    //   resultData?.Result[0]?.OFFER_LETTER !== ''
+    //     ? props.navigation.navigate('Offer Letter')
+    //     : setOfferLetterAlert(true);
+    // }
 
-        if (type !== '' && type === 'Document') {
-          resultData?.Result[0]?.DOC_REQ !== 0 &&
-          resultData?.Result[0]?.DOC_REQ !== ''
-            ? props.navigation.navigate('Candidate_Document')
-            : setShowAlert(true);
-        }
-        if (type !== '' && type === 'profile') {
-          resultData?.Result[0]?.OFER_ACPT_FLAG == 'A'
-            ? props.navigation.navigate('Candidate profile')
-            : setProfileAlert(true);
-        }
-        if (type !== '' && type === 'track') {
-          resultData?.Result[0]?.CANDIDATE_STATUS &&
-            props.navigation.navigate('Status view page');
-        }
-      })
-      .catch(error => {
-        // console.log(error)
-        // setLoaderVisible(false)
+    // if (type !== '' && type === 'Document') {
+    //   resultData?.Result[0]?.DOC_REQ !== 0 &&
+    //   resultData?.Result[0]?.DOC_REQ !== ''
+    //     ? props.navigation.navigate('Candidate_Document')
+    //     : setShowAlert(true);
+    // }
+    // if (type !== '' && type === 'profile') {
+    //   resultData?.Result[0]?.OFER_ACPT_FLAG == 'A'
+    //     ? props.navigation.navigate('Candidate profile')
+    //     : setProfileAlert(true);
+    // }
+    // if (type !== '' && type === 'track') {
+    //   resultData?.Result[0]?.CANDIDATE_STATUS &&
+    //     props.navigation.navigate('Status view page');
+    // }
+    // })
+    // .catch(error => {
+    //   // console.log(error)
+    //   // setLoaderVisible(false)
 
-        Toast.show({
-          type: 'error',
-          text1: error,
-        });
-      });
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: error,
+    //   });
+    // });
   };
-
-  // useMemo(() => {
-  //   // if (isFocused) {
-  //   if (candidateId) {
-  //     console.log('testttttttttttttt');
-
-  //     getCandidateOfferDetails();
-  //   }
-  //   // }
-  // }, [candidateId]);
 
   // for submitting file
 
@@ -479,8 +445,10 @@ const CandidateDashboard = props => {
 
             <Image
               source={
-                profilePic
-                  ? {uri: `${API}/ProfilePic/${profilePic}`}
+                candidateOfferCheckResult?.PROFILE_PIC
+                  ? {
+                      uri: `${API}/ProfilePic/${candidateOfferCheckResult?.PROFILE_PIC}`,
+                    }
                   : user_profile
               }
               resizeMode="contain"
@@ -530,9 +498,9 @@ const CandidateDashboard = props => {
           />
         }>
         <Loader loaderVisible={loaderVisible || profilePicLoading} />
-        {employeeCreateFlag !== '' &&
-        employeeCreateFlag !== null &&
-        employeeCreateFlag === 'Y' ? (
+        {candidateOfferCheckResult?.EMP_CREATION_FLAG !== '' &&
+        candidateOfferCheckResult?.EMP_CREATION_FLAG !== null &&
+        candidateOfferCheckResult?.EMP_CREATION_FLAG === 'Y' ? (
           <>
             <View
               style={{
@@ -864,7 +832,11 @@ const CandidateDashboard = props => {
                     style={{
                       marginTop: 12,
                     }}
-                    onPress={() => getCandidateOfferDetails('track')}>
+                    onPress={() =>
+                      //  getCandidateOfferDetails('track')
+                      candidateOfferCheckResult?.CANDIDATE_STATUS &&
+                      props.navigation.navigate('Status view page')
+                    }>
                     <LinearGradient
                       colors={[COLORS.orange1, COLORS.disableOrange1]}
                       start={{x: 0, y: 0}}
@@ -886,16 +858,18 @@ const CandidateDashboard = props => {
           </View>
         )}
 
-        {pendingTest && (
+        {candidateOfferCheckResult?.PENDING_TEST && (
           <View style={{marginHorizontal: 12, marginVertical: 12}}>
             <Text style={{fontWeight: 500, fontSize: 16, color: COLORS.black}}>
               {' '}
-              {pendingTest === 'C' ? 'Complete Task' : "To Do's"}
+              {candidateOfferCheckResult?.PENDING_TEST === 'C'
+                ? 'Complete Task'
+                : "To Do's"}
             </Text>
 
             <TouchableOpacity
               onPress={() => {
-                pendingTest === 'C'
+                candidateOfferCheckResult?.PENDING_TEST === 'C'
                   ? props.navigation.navigate('TestResult')
                   : props.navigation.navigate('TestScreen');
               }}>
@@ -918,7 +892,9 @@ const CandidateDashboard = props => {
                     color: COLORS.orange1,
                     marginLeft: 10,
                   }}>
-                  {pendingTest === 'C' ? 'Test Result' : 'Proceed for Test...'}
+                  {candidateOfferCheckResult?.PENDING_TEST === 'C'
+                    ? 'Test Result'
+                    : 'Proceed for Test...'}
                 </Text>
                 <Image
                   source={test}
@@ -954,7 +930,11 @@ const CandidateDashboard = props => {
                 borderWidth: 0.5,
               }}
               onPress={() => {
-                getCandidateOfferDetails('offer');
+                // getCandidateOfferDetails('offer');
+                candidateOfferCheckResult?.OFFER_LETTER !== null &&
+                candidateOfferCheckResult?.OFFER_LETTER !== ''
+                  ? props.navigation.navigate('Offer Letter')
+                  : setOfferLetterAlert(true);
               }}>
               <View
                 style={{
@@ -986,120 +966,131 @@ const CandidateDashboard = props => {
 
         {/* task view */}
 
-        {todoList !== '' && todoList !== 0 && (
-          <View style={{marginHorizontal: 12, marginVertical: 6}}>
-            <Text style={{fontWeight: 500, fontSize: 16, color: COLORS.black}}>
-              {' '}
-              Task1
-              {/* {JSON.stringify(count,"ggvbg")}  */}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 6,
-                elevation: 5,
-              }}>
-              {/* profile view */}
-              <TouchableOpacity
+        {candidateOfferCheckResult?.DOC_REQ !== '' &&
+          candidateOfferCheckResult?.DOC_REQ !== 0 && (
+            <View style={{marginHorizontal: 12, marginVertical: 6}}>
+              <Text
+                style={{fontWeight: 500, fontSize: 16, color: COLORS.black}}>
+                {' '}
+                Task1
+                {/* {JSON.stringify(count,"ggvbg")}  */}
+              </Text>
+              <View
                 style={{
-                  height: 160,
-                  width: '45%',
-                  borderColor: COLORS.orange,
-                  borderWidth: 0.5,
-                  backgroundColor: COLORS.disableOrange1,
-                  padding: 12,
+                  flexDirection: 'row',
+                  marginTop: 10,
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 12,
-                }}
-                onPress={() => {
-                  getCandidateOfferDetails('profile');
+                  justifyContent: 'space-between',
+                  marginVertical: 6,
+                  elevation: 5,
                 }}>
-                <FontAwesome5 name="user" size={44} color={COLORS.orange1} />
-                <Text
+                {/* profile view */}
+                <TouchableOpacity
                   style={{
-                    color: COLORS.orange1,
-                    fontWeight: 500,
-                    fontSize: 16,
-                    marginTop: 12,
+                    height: 160,
+                    width: '45%',
+                    borderColor: COLORS.orange,
+                    borderWidth: 0.5,
+                    backgroundColor: COLORS.disableOrange1,
+                    padding: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 12,
+                  }}
+                  onPress={() => {
+                    // getCandidateOfferDetails('profile');
+                    candidateOfferCheckResult?.OFER_ACPT_FLAG == 'A'
+                      ? props.navigation.navigate('Candidate profile')
+                      : setProfileAlert(true);
                   }}>
-                  {' '}
-                  Your profile{' '}
-                </Text>
-              </TouchableOpacity>
-              {/* document view */}
-
-              <TouchableOpacity
-                onPress={() => {
-                  getCandidateOfferDetails('Document');
-                }}
-                style={{
-                  borderColor: COLORS.green,
-                  borderWidth: 0.5,
-                  height: 160,
-                  backgroundColor: COLORS.disableGreen,
-                  padding: 12,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 12,
-                  width: '45%',
-                }}>
-                <Icons
-                  name="file-document-outline"
-                  size={44}
-                  color={COLORS.green}
-                />
-                <Text
-                  style={{
-                    color: COLORS.green,
-                    fontWeight: 500,
-                    fontSize: 16,
-                    marginTop: 12,
-                  }}>
-                  {' '}
-                  Documents{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-        {/* final submittion view */}
-
-        {todoList !== '' && todoList !== 0 && (
-          <View
-            style={{marginHorizontal: 12, marginVertical: 6, width: '100%'}}>
-            {candidateStatusId <= '166' && (
-              <TouchableOpacity
-                style={{
-                  marginTop: 12,
-                  justifyContent: 'flex-end',
-                  width: responsiveWidth(35),
-                  alignSelf: 'flex-end',
-                  marginRight: 25,
-                  marginTop: -5,
-                }}
-                onPress={() => finalSubmit()}>
-                <LinearGradient
-                  colors={[COLORS.orange1, COLORS.disableOrange1]}
-                  start={{x: 0, y: 0}}
-                  end={{x: 2, y: 0}}
-                  style={{borderRadius: 8, padding: 8}}>
+                  <FontAwesome5 name="user" size={44} color={COLORS.orange1} />
                   <Text
                     style={{
-                      color: COLORS.white,
-                      ...FONTS.h4,
-                      textAlign: 'center',
+                      color: COLORS.orange1,
+                      fontWeight: 500,
+                      fontSize: 16,
+                      marginTop: 12,
                     }}>
-                    Final submission
+                    {' '}
+                    Your profile{' '}
                   </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
+                </TouchableOpacity>
+                {/* document view */}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    // getCandidateOfferDetails('Document');
+
+                    candidateOfferCheckResult?.DOC_REQ !== 0 &&
+                    candidateOfferCheckResult?.DOC_REQ !== ''
+                      ? props.navigation.navigate('Candidate_Document')
+                      : setShowAlert(true);
+                  }}
+                  style={{
+                    borderColor: COLORS.green,
+                    borderWidth: 0.5,
+                    height: 160,
+                    backgroundColor: COLORS.disableGreen,
+                    padding: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 12,
+                    width: '45%',
+                  }}>
+                  <Icons
+                    name="file-document-outline"
+                    size={44}
+                    color={COLORS.green}
+                  />
+                  <Text
+                    style={{
+                      color: COLORS.green,
+                      fontWeight: 500,
+                      fontSize: 16,
+                      marginTop: 12,
+                    }}>
+                    {' '}
+                    Documents{' '}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        {/* final submittion view */}
+
+        {candidateOfferCheckResult?.DOC_REQ !== '' &&
+          candidateOfferCheckResult?.DOC_REQ !== 0 && (
+            <View
+              style={{marginHorizontal: 12, marginVertical: 6, width: '100%'}}>
+              {candidateStatusId <= '166' && (
+                <TouchableOpacity
+                  style={{
+                    marginTop: 12,
+                    justifyContent: 'flex-end',
+                    width: responsiveWidth(35),
+                    alignSelf: 'flex-end',
+                    marginRight: 25,
+                    marginTop: -5,
+                  }}
+                  onPress={() => finalSubmit()}>
+                  <LinearGradient
+                    colors={[COLORS.orange1, COLORS.disableOrange1]}
+                    start={{x: 0, y: 0}}
+                    end={{x: 2, y: 0}}
+                    style={{borderRadius: 8, padding: 8}}>
+                    <Text
+                      style={{
+                        color: COLORS.white,
+                        ...FONTS.h4,
+                        textAlign: 'center',
+                      }}>
+                      Final submission
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
 
         {/* about satya */}
         <View

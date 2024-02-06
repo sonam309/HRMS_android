@@ -86,7 +86,7 @@ const Employee_Login = props => {
   };
   // logging in function
   const submit = values => {
-    console.log(values);
+    console.log('valuessss8989', values);
     try {
       const userData = {
         loginId: values.userId,
@@ -97,18 +97,10 @@ const Employee_Login = props => {
       // console.log(userData);
       axios.post(`${API}/api/User/login`, userData).then(response => {
         const returnedData = response?.data?.Result[0];
+        setLoaderVisible(false);
         console.log('resposne', returnedData);
 
-        let result = response?.data?.Result.map(a => a.FLAG);
-        let userId = returnedData.USER_ID;
-        let userName = returnedData.FIRST_NAME;
-        let userDeptId = returnedData.DEPT_ID;
-        let userDept = returnedData.DEPT_NAME;
-        let userEmail = returnedData.EMAIL_ID;
-        // console.log("returnedData", returnedData);
-        setLoaderVisible(false);
-
-        if (result[0] === 'S') {
+        if (returnedData?.FLAG === 'S') {
           if (returnedData?.SATHI_VERSION > VERSIONS?.android) {
             setGreaterVersion(true);
             console.log(returnedData?.SATHI_VERSION);
@@ -116,11 +108,11 @@ const Employee_Login = props => {
           } else {
             dispatch(
               authActions.logIn({
-                userId,
-                userName,
-                userDeptId,
-                userDept,
-                userEmail,
+                userId: returnedData.USER_ID,
+                userName: returnedData.FIRST_NAME,
+                userDeptId: returnedData.DEPT_ID,
+                userDept: returnedData.DEPT_NAME,
+                userEmail: returnedData.EMAIL_ID,
                 userPassword: values.password,
                 authenticated: true,
               }),
@@ -132,22 +124,9 @@ const Employee_Login = props => {
             text1: 'Please enter correct credentials',
           });
         }
-        // setUserId('');
-        // setPassword('');
       });
     } catch (error) {
       setLoaderVisible(false);
-    }
-  };
-
-  const clickQuickPin = () => {
-    if (userId != '') {
-      props.navigation.navigate('QuickPin');
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Please enter User Name',
-      });
     }
   };
 
@@ -162,7 +141,7 @@ const Employee_Login = props => {
     try {
       setLoaderVisible(true);
       let otp = RandomNumber('6');
-      console.log("emplogin", userId + "  " + otp);
+      console.log('emplogin', userId + '  ' + otp);
       axios
         .get(`${API}/api/GetMobileNo`, {
           params: {
@@ -175,19 +154,17 @@ const Employee_Login = props => {
         .then(response => {
           const returnedData = response.data.Result;
           setLoaderVisible(false);
-          // console.log(returnedData);
-          let result = returnedData.map(a => a.FLAG);
-          let contact = returnedData.map(b => b.MSG.trim());
+          console.log(returnedData);
 
-          result[0] === 'S'
+          returnedData?.FLAG === 'S'
             ? props.navigation.navigate('Otp_Verification', {
-                contact,
+                contact: returnedData?.MSG.trim(),
                 otp,
                 userId,
               })
             : Toast.show({
                 type: 'error',
-                text1: contact,
+                text1: JSON.stringify(returnedData?.MSG.trim()),
               });
         });
     } catch (error) {
@@ -293,20 +270,6 @@ const Employee_Login = props => {
                   <Text style={styles.header}>Employee Login</Text>
                   {/* user credentials -username */}
                   <View style={[styles.textInputBox]}>
-                    {/* <CustomInput
-                  placeholder={'User Id'}
-                  caption={`User ID ${JSON.stringify(errors.userId)}`}
-                  // value={}
-                  required
-                  // onChangeText={id => (
-                  //   // setUserId(id),
-                  //   userInfo = {...userInfo,userId: id},
-                  //   dispatch(
-                  //     authActions.logIn({userId: id, userPassword: password}),
-                  //   )
-                  // )}
-                  onChange={handleChange("userId")}
-                /> */}
                     <FormInput
                       label="User Id"
                       placeholder={'User Id'}
@@ -347,23 +310,6 @@ const Employee_Login = props => {
                   </View>
                   {/* Password */}
                   <View style={[styles.textInputBox]}>
-                    {/* <CustomInput
-                  placeholder={'Password'}
-                  caption={'Password'}
-                  value={password}
-                  onChangeText={security => setPassword(security)}
-                  required
-                  secureTextEntry={showVisibility}
-                  isPasswordInput
-                  textInputStyle={{
-                    width: responsiveWidth(70),
-                  }}
-                  icon={
-                    <Pressable onPress={changeVisibility}>
-                      <AntDesign name="eye" size={22} />
-                    </Pressable>
-                  }
-                /> */}
                     <FormInput
                       label="Password"
                       placeholder={'Password'}
@@ -397,12 +343,6 @@ const Employee_Login = props => {
                     />
                   </View>
                   {/* Quick Pin Option */}
-                  {/* <View style={styles.loginOption}>
-                    <TouchableOpacity style={{ alignItems: 'center' }}>
-                        <Image source={Pinlock} style={{ width: 28, height: 28, }} />
-                        <Text style={{ color: COLORS.darkGray2, ...FONTS.body5 }}>Quick Pin</Text>
-                    </TouchableOpacity>
-                </View> */}
                   <TextButton
                     color1={COLORS.green}
                     color2={'#9ADD00'}

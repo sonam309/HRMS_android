@@ -271,7 +271,7 @@ const Details = props => {
     if (
       salaryRemark !== null &&
       salaryRemark !== undefined &&
-      salaryRemark !== ''
+      salaryRemark.trim() !== ''
     ) {
       setLoaderVisible(true);
       console.log("submittedDta",{

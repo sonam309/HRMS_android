@@ -3,8 +3,8 @@ export const API = `https://econnectsatya.com:7033/`; //live
 // exports.API = `http://192.168.1.146:7038/`; //local
 
 export const VERSIONS = {
-  android: '3.6',
-  olderVersion: '3.5',
+  android: '3.7',
+  olderVersion: '3.6',
 };
 
-export const AxiosLog = false;
+export const AxiosLog = true;

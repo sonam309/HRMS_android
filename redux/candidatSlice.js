@@ -17,9 +17,9 @@ const candidateSlice = createSlice({
     builder.addMatcher(
       isAnyOf(getCandidateOfferCheck.fulfilled),
       (state, action) => {
-        // console.log('gfhfyjhgjgujkukhkhkhkh', action.payload.Result);
         state.loading = false;
-        state.candidateOfferCheckResult = action.payload.Result;
+        state.candidateOfferCheckResult = action.payload.Result[0];
+        // console.log('datattatata2222',action.payload);
       },
     );
     builder.addMatcher(
@@ -28,6 +28,8 @@ const candidateSlice = createSlice({
         state.loading = false;
       },
     );
+
+
 
     builder.addMatcher(isAnyOf(getCandidateBasicDetails.pending), state => {
       state.cbdloading = true;
