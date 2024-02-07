@@ -40,7 +40,6 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import FormInput from '../../../components/FormInput';
 
-
 const Login = props => {
   let page = null;
   const [showVisibility, setShowVisibility] = useState(true);
@@ -53,7 +52,6 @@ const Login = props => {
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
-
 
   const userInfo = {
     userId: '',
@@ -222,8 +220,6 @@ const Login = props => {
         });
       });
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -485,7 +481,7 @@ const Login = props => {
                     </TouchableOpacity>
                   </View>
 
-                  {/* <TouchableOpacity
+                  <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('QRScanner');
                       // setOpenScanner(true);
@@ -500,9 +496,9 @@ const Login = props => {
                         fontSize: 14,
                         textDecorationLine: 'underline',
                       }}>
-                      New user? SignUp Heres
+                      New user? SignUp Here
                     </Text>
-                  </TouchableOpacity> */}
+                  </TouchableOpacity>
                 </View>
               );
             }}
@@ -599,7 +595,6 @@ const Login = props => {
           </View>
         </Modal>
       )}
-
     </View>
   );
 };

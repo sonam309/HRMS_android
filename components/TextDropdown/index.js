@@ -11,7 +11,8 @@ const TextDropdown = ({
   setIdvalue,
   defaultButtonText,
   captionStyle,
-  dropdownParamRef
+  dropdownParamRef,
+  disabled=false
 }) => {
 
   const dropdownRef = useRef({});  
@@ -40,6 +41,7 @@ const TextDropdown = ({
           paddingVertical: SIZES.padding,
           paddingHorizontal: SIZES.padding,
         }}
+        disabled={disabled}
         data={data?.map(a => a.PARAM_NAME)}
         buttonStyle={[styles.inputHolder]}
         onSelect={value => {
