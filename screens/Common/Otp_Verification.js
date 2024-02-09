@@ -75,7 +75,6 @@ const Otp_Verification = props => {
     setF6('');
     setF1('');
 
-
     setLoaderVisible(true);
     let otp = RandomNumber('6');
     console.log('otpppppp', otp + ' $ ' + userId + ' ' + operFlag);

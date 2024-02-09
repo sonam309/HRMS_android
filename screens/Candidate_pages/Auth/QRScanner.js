@@ -19,14 +19,18 @@ const QRScanner = props => {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr', 'ean-13'],
     onCodeScanned: codes => {
-      console.log(codes);
+      // console.log(codes);
       const valueParts = codes[0].value.split('/');
       const index = valueParts.indexOf('add-candidate-by-QR');
       const extractedValue = valueParts[index + 2];
-      //   console.log(extractedValue); // Output: "7"
+      const departmentId = valueParts[index + 3];
+      const type = valueParts[index + 5];
+      // console.log("datatattata288",valueParts); // Output: "7"
 
       navigation.navigate('CanidateSignup', {
         jobId: extractedValue,
+        depId: departmentId,
+        interviewType:type,
       });
       //   Linking.openURL(codes[0].value);
     },

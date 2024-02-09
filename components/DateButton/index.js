@@ -1,9 +1,9 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import DatePicker from 'react-native-date-picker';
-import { COLORS, FONTS, SIZES } from '../../constants';
+import {COLORS, FONTS, SIZES} from '../../constants';
 
-const DateButton = ({caption, required, date, setDate,captionStyle}) => {
+const DateButton = ({caption, required, date, setDate, captionStyle}) => {
   const [show, setShow] = useState(false);
 
   const renderDatePicker = () => {
@@ -38,7 +38,7 @@ const DateButton = ({caption, required, date, setDate,captionStyle}) => {
           style={{
             marginVertical: SIZES.base / 2,
             ...FONTS.h5,
-            color:COLORS.green,
+            color: COLORS.green,
             ...captionStyle,
           }}>
           {caption} {required && <Text style={{color: COLORS.red}}>*</Text>}
@@ -48,7 +48,7 @@ const DateButton = ({caption, required, date, setDate,captionStyle}) => {
           style={{
             borderColor: COLORS.black,
             borderWidth: 1,
-            height:40,
+            height: 40,
             padding: SIZES.base,
             borderRadius: SIZES.base,
           }}>

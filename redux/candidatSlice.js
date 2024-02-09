@@ -29,8 +29,6 @@ const candidateSlice = createSlice({
       },
     );
 
-
-
     builder.addMatcher(isAnyOf(getCandidateBasicDetails.pending), state => {
       state.cbdloading = true;
     });
@@ -70,6 +68,6 @@ export const getCandidateOfferCheck = createAsyncThunk(
 export const getCandidateBasicDetails = createAsyncThunk(
   'mobile/getCandidateBasicDetails',
   async (payload, toolkit) => {
-    return await AxiosClient('POST', `/api/addCandidate`, payload, toolkit);
+    return await AxiosClient('POST', `/api/addCandidate`, payload, toolkit,'multipart/form-data');
   },
 );

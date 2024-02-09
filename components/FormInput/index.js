@@ -22,6 +22,7 @@ const FormInput = ({
   maxLengthinput,
   multiline = false,
   required = true,
+  editable=true,
 }) => {
   const [didFocus, setDidFocus] = useState(false);
 
@@ -66,6 +67,7 @@ const FormInput = ({
         <TextInput
           style={{
             flex: 1,
+            color:COLORS.black,
             ...inputStyle,
           }}
           maxLength={maxLengthinput}
@@ -81,6 +83,7 @@ const FormInput = ({
           onChangeText={text => onChange(text)}
           onBlur={onBlur}
           onFocus={handleFocus}
+          editable={editable}
         />
 
         {appendComponent}

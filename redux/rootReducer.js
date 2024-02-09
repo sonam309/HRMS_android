@@ -7,6 +7,8 @@ import attendaceDetailSlice from "./attendaceDetailSlice"
 import interviewDetailSlice from "./interviewDetailSlice"
 import candidatSlice from "./candidatSlice"
 import aprovalPendingSlice from "./aprovalPendingSlice"
+import aadharValidationSlice from "./aadharValidationSlice"
+import locationSlice from "./locationSlice"
 
 
 export const rootReducer = combineReducers({
@@ -18,4 +20,6 @@ export const rootReducer = combineReducers({
     attendaceDetail:attendaceDetailSlice,
     candidateInfo:candidatSlice,
     aprovalPending:aprovalPendingSlice,
+    aadharValidation:aadharValidationSlice,
+    location:locationSlice,
 })

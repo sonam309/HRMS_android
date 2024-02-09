@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS, FONTS, SIZES} from '../../constants';
@@ -12,10 +12,11 @@ const TextDropdown = ({
   defaultButtonText,
   captionStyle,
   dropdownParamRef,
-  disabled=false
+  disabled = false,
+  search,
+  required = false,
 }) => {
-
-  const dropdownRef = useRef({});  
+  const dropdownRef = useRef({});
 
   const checkIdValue = value => {
     {
@@ -29,10 +30,12 @@ const TextDropdown = ({
   return (
     <View style={{marginVertical: SIZES.base}}>
       <Text style={{...FONTS.h3, fontWeight: '500', ...captionStyle}}>
-        {caption} 
+        {caption}{' '}
+        {required && <Text style={{color: COLORS.red, ...FONTS.h4}}>*</Text>}
       </Text>
       <SelectDropdown
-        ref={dropdownParamRef ? dropdownParamRef : dropdownRef}  
+        search={search}
+        ref={dropdownParamRef ? dropdownParamRef : dropdownRef}
         dropdownStyle={{
           backgroundColor: COLORS.white,
           borderRadius: SIZES.radius,
