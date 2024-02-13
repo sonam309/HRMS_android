@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, FONTS, SIZES} from '../../../constants';
@@ -32,8 +33,14 @@ import {API} from '../../../utility/services';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {useNavigation} from '@react-navigation/native';
 import {color} from 'react-native-reanimated';
-import {getAadharValidation} from '../../../redux/aadharValidationSlice';
-import {getLocationList} from '../../../redux/locationSlice';
+import {
+  getAadharValidation,
+  resetAadharResult,
+} from '../../../redux/aadharValidationSlice';
+import {
+  getLocationList,
+  resetLocationListData,
+} from '../../../redux/locationSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import BottomUpModal from '../../../components/BottomUpModal';
 import OtpBottomUpModal from './OtpBottomUpModal';
@@ -41,6 +48,7 @@ import LocationBottomUpModal from './LocationBottomUpModal';
 import Loader from '../../../components/Loader';
 import Micons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {showAlert, closeAlert} from 'react-native-customisable-alert';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Signup = ({route, params}) => {
   const typeInterview = route.params.interviewType;
@@ -427,7 +435,7 @@ const Signup = ({route, params}) => {
         });
 
         const finalRes = await res?.json();
-        console.log(finalRes);
+        console.log("ghgyugyuy",finalRes);
         setSubmitLoader(false);
         if (finalRes) {
           Toast.show({
@@ -435,43 +443,45 @@ const Signup = ({route, params}) => {
             text1: finalRes?.Result[0]?.MSG,
           });
           // navigation.goBack();
+          setaadharNum('');
+          setFirstname('');
+          setLastName('');
+          setFatherName('');
+          setMotherName('');
+          setDob('');
+          setEmail('');
+          setPhone('');
+          setMaritialStatusValue(0);
+          setCurrentEmployer('');
+          setlastEmployer('');
+          setCurrentCtc('');
+          setAddress('');
+          setGenderValue(0);
+          setDesiredPay('');
+          setCity('');
+          setStateValue(0);
+          setPostalCode('');
+          setCollege('');
+          setSelectLocation(0);
+          setLocationBottomView(false);
+          navigation.navigate('CandidateLogin');
         }
-        {
-          finalRes?.Result[0]?.CANDIDATE_ID &&
-            showAlert({
-              title: `Candidate ID- ${finalRes?.Result[0]?.CANDIDATE_ID}`,
-              customIcon: 'none',
-              message: 'Use this ID, Reset your password & Login to proceed.',
-              alertType: 'error',
-              btnLabel: 'ok',
-              onPress: () => closeAlert(),
-            });
-        }
-        setaadharNum('');
-        setFirstname('');
-        setLastName('');
-        setFatherName('');
-        setMotherName('');
-        setDob('');
-        setEmail('');
-        setPhone('');
-        setMaritialStatusValue(0);
-        setCurrentEmployer('');
-        setlastEmployer('');
-        setCurrentCtc('');
-        setAddress('');
-        setGenderValue(0);
-        setDesiredPay('');
-        setCity('');
-        setStateValue(0);
-        setPostalCode('');
-        setCollege('');
-        setSelectLocation(0);
-        loactaionBottomView(false);
 
-        navigation.navigate('CandidateLogin');
+        dispatch(resetLocationListData());
+        dispatch(resetAadharResult());
+
+        if (finalRes?.Result[0]?.CANDIDATE_ID) {
+          showAlert({
+            title: `Candidate ID- ${finalRes?.Result[0]?.CANDIDATE_ID}`,
+            customIcon: 'none',
+            message: 'Use this ID, Reset your password & Login to proceed.',
+            alertType: 'error',
+            btnLabel: 'ok',
+            onPress: () => closeAlert(),
+          });
+        }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         setSubmitLoader(false);
         Toast.show({
           type: 'error',
@@ -480,12 +490,6 @@ const Signup = ({route, params}) => {
         });
       }
     }
-    // else {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Plesae fill all Mandatory feilds.',
-    //   });
-    // }
   };
 
   useEffect(() => {
@@ -544,6 +548,10 @@ const Signup = ({route, params}) => {
     getDropdownData('A');
     getDropdownData(7);
     getDropdownData(33);
+    return ()=> {
+      dispatch(resetLocationListData());
+      dispatch(resetAadharResult());
+    }
   }, []);
 
   useEffect(() => {
@@ -591,9 +599,22 @@ const Signup = ({route, params}) => {
         setGenderValue(filteredgender[0]?.PARAM_ID);
       }
     } else {
+      
       setaadharNum('');
     }
   }, [verifyOtpResult]);
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('CandidateLogin')
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <View
@@ -601,7 +622,34 @@ const Signup = ({route, params}) => {
         flex: 1,
         backgroundColor: COLORS.white,
       }}>
-      <Header title={'Add Candidate'} />
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          elevation: 6,
+          backgroundColor: COLORS.white,
+          padding: 15,
+        }}>
+        <TouchableOpacity onPress={() => navigation.navigate('CandidateLogin')}>
+          <Icons
+            name="arrow-left"
+            size={28}
+            color={COLORS.black}
+            style={{alignSelf: 'center'}}
+            verticalAlign={'center'}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            ...FONTS.body3,
+            fontSize: 17,
+            color: COLORS.black,
+            verticalAlign: 'middle',
+            marginLeft: 20,
+          }}>
+          Add Candidate
+        </Text>
+      </View>
 
       {submitLoader ? (
         // <View style={{alignItems: 'center', marginTop: '30%'}}>
@@ -641,7 +689,14 @@ const Signup = ({route, params}) => {
                   value={aadharNum}
                   onChange={setaadharNum}
                   keyboardType={'numeric'}
+                  maxLengthinput={12}
                 />
+
+                {/* <Text>{JSON.stringify(locationListData)}</Text>
+
+                <Text>{JSON.stringify(aadharValidationResult)}</Text>
+z
+                <Text>{JSON.stringify(verifyOtpResult)}</Text> */}
 
                 {optBottomView && (
                   <BottomUpModal
@@ -793,6 +848,7 @@ const Signup = ({route, params}) => {
                 value={phone}
                 onChange={setPhone}
                 keyboardType={'numeric'}
+                maxLengthinput={10}
               />
 
               <TextDropdown

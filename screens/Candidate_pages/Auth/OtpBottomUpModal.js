@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {COLORS, FONTS, SIZES} from '../../../constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
@@ -53,13 +53,18 @@ const OtpBottomUpModal = ({onPress}) => {
     }
   };
 
-  useEffect(() => {
-    if (verifyOtpResult.success) {
+  useMemo(() => {
+    if (verifyOtpResult.name) {
       onPress();
       // Toast.show({
       //   type:'success',
       //   text1:"OTP verify successfully."
       // })
+    } else if (verifyOtpResult.FLAG == 'F') {
+      Toast.show({
+        type: 'error',
+        text1: JSON.stringify(verifyOtpResult?.MSG),
+      });
     }
   }, [verifyOtpResult]);
 
@@ -98,7 +103,8 @@ const OtpBottomUpModal = ({onPress}) => {
                 textAlign: 'center',
                 ...FONTS.body3,
               }}>
-              OTP has been send to on Registered Mobile number, Please submit 6 digits OTP.
+              OTP has been send to on Registered Mobile number, Please submit 6
+              digits OTP.
             </Text>
 
             {/* otp input boxes */}
@@ -107,7 +113,7 @@ const OtpBottomUpModal = ({onPress}) => {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'center',
-                alignItems:'center',
+                alignItems: 'center',
                 marginTop: 30,
               }}>
               <TextInput

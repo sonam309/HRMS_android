@@ -228,6 +228,21 @@ const Login = props => {
       });
   };
 
+
+  const getPermission = async () => {
+  const res =   await requestPermission()
+  if(res){
+    navigation.navigate('QRScanner')
+  } else {
+    Toast.show({
+      type: "error",
+      text1: "Please allow camera permission to scan qr code"
+    })
+  }
+
+ 
+  }
+
   return (
     <View style={styles.container}>
       <Loader loaderVisible={loaderVisible} />
@@ -492,7 +507,7 @@ const Login = props => {
                     onPress={() => {
                       hasPermission
                         ? navigation.navigate('QRScanner')
-                        : requestPermission();
+                        : getPermission()
                       // setOpenScanner(true);
                     }}
                     style={{

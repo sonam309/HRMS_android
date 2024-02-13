@@ -20,8 +20,17 @@ const locationSlice = createSlice({
       state.locationLoading = false;
     });
   },
+
+  reducers: {
+    resetLocationListData(state, action) {
+      state.locationListData = {};
+      state.locationLoading= false
+    },
+  },
 });
 
+
+export const {resetLocationListData} = locationSlice.actions;
 export default locationSlice.reducer;
 
 export const getLocationList = createAsyncThunk(
