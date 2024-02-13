@@ -39,6 +39,12 @@ import {COLORS, FONTS, SIZES, icons} from '../../../constants';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import FormInput from '../../../components/FormInput';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+  useCodeScanner,
+} from 'react-native-vision-camera';
 
 const Login = props => {
   let page = null;
@@ -52,6 +58,7 @@ const Login = props => {
   const [greaterVersion, setGreaterVersion] = useState(false);
   const [openVersionModal, setOpenVersionModal] = useState(true);
   const [newApkVersion, setNewApkVersion] = useState('');
+  const {hasPermission, requestPermission} = useCameraPermission();
 
   const userInfo = {
     userId: '',
@@ -483,7 +490,9 @@ const Login = props => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('QRScanner');
+                      hasPermission
+                        ? navigation.navigate('QRScanner')
+                        : requestPermission();
                       // setOpenScanner(true);
                     }}
                     style={{

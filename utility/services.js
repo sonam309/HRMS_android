@@ -7,4 +7,4 @@ export const VERSIONS = {
   olderVersion: '3.7',
 };
 
-export const AxiosLog = false;
+export const AxiosLog = true;

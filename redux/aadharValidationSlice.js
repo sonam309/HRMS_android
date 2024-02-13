@@ -33,7 +33,7 @@ const aadharValidationSlice = createSlice({
       builder.addMatcher(isAnyOf(otpValidation.fulfilled), (state, action) => {
         state.otpLoading = false;
         state.verifyOtpResult = action.payload;
-        console.log("otpValidation",action.payload);
+        // console.log("otpValidation",action.payload);
       });
       builder.addMatcher(isAnyOf(otpValidation.rejected), (state, action) => {
         state.otpLoading = false;

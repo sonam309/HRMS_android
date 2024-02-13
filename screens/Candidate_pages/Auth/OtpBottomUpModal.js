@@ -56,10 +56,10 @@ const OtpBottomUpModal = ({onPress}) => {
   useEffect(() => {
     if (verifyOtpResult.success) {
       onPress();
-      Toast.show({
-        type:'success',
-        text1:"OTP verify successfully."
-      })
+      // Toast.show({
+      //   type:'success',
+      //   text1:"OTP verify successfully."
+      // })
     }
   }, [verifyOtpResult]);
 
@@ -98,8 +98,7 @@ const OtpBottomUpModal = ({onPress}) => {
                 textAlign: 'center',
                 ...FONTS.body3,
               }}>
-              Please enter 6 digit OTP has been send to on Register Mobile
-              number
+              OTP has been send to on Registered Mobile number, Please submit 6 digits OTP.
             </Text>
 
             {/* otp input boxes */}
@@ -108,6 +107,7 @@ const OtpBottomUpModal = ({onPress}) => {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'center',
+                alignItems:'center',
                 marginTop: 30,
               }}>
               <TextInput

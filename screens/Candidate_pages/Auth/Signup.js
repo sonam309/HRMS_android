@@ -40,6 +40,7 @@ import OtpBottomUpModal from './OtpBottomUpModal';
 import LocationBottomUpModal from './LocationBottomUpModal';
 import Loader from '../../../components/Loader';
 import Micons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {showAlert, closeAlert} from 'react-native-customisable-alert';
 
 const Signup = ({route, params}) => {
   const typeInterview = route.params.interviewType;
@@ -70,6 +71,7 @@ const Signup = ({route, params}) => {
   const [dob, setDob] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [posttitleLoading, setPosttitleLoading] = useState(false);
 
   const [gender, setGender] = useState([]);
@@ -306,12 +308,27 @@ const Signup = ({route, params}) => {
         text1: 'Please enter College/University',
       });
       return false;
-    } else if (selectLocation == 0) {
+    } else if (typeInterview == 366 && selectLocation == 0) {
       Toast.show({
         type: 'error',
         text1: 'Please Select Location',
       });
       return false;
+    } else if (experience && currentEmployer === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter Current Epmloyer',
+      });
+    } else if (experience && lastEmployer === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter Last Employer',
+      });
+    } else if (experience && currentCtc === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Plaese enter Current CTC',
+      });
     } else {
       return true;
     }
@@ -401,8 +418,8 @@ const Signup = ({route, params}) => {
           passMonth: bypass6month,
         }),
       );
-     
 
+      setSubmitLoader(true);
       try {
         let res = await fetch(`${API}/api/addCandidate`, {
           method: 'POST',
@@ -411,29 +428,64 @@ const Signup = ({route, params}) => {
 
         const finalRes = await res?.json();
         console.log(finalRes);
+        setSubmitLoader(false);
         if (finalRes) {
           Toast.show({
             type: finalRes?.Result[0]?.FLAG === 'S' ? 'success' : 'error',
-            text1: JSON.stringify(finalRes?.Result[0]?.MSG),
+            text1: finalRes?.Result[0]?.MSG,
           });
           // navigation.goBack();
         }
+        {
+          finalRes?.Result[0]?.CANDIDATE_ID &&
+            showAlert({
+              title: `Candidate ID- ${finalRes?.Result[0]?.CANDIDATE_ID}`,
+              customIcon: 'none',
+              message: 'Use this ID, Reset your password & Login to proceed.',
+              alertType: 'error',
+              btnLabel: 'ok',
+              onPress: () => closeAlert(),
+            });
+        }
+        setaadharNum('');
+        setFirstname('');
+        setLastName('');
+        setFatherName('');
+        setMotherName('');
+        setDob('');
+        setEmail('');
+        setPhone('');
+        setMaritialStatusValue(0);
+        setCurrentEmployer('');
+        setlastEmployer('');
+        setCurrentCtc('');
+        setAddress('');
+        setGenderValue(0);
+        setDesiredPay('');
+        setCity('');
+        setStateValue(0);
+        setPostalCode('');
+        setCollege('');
+        setSelectLocation(0);
+        loactaionBottomView(false);
 
         navigation.navigate('CandidateLogin');
       } catch (error) {
         // console.log(error);
+        setSubmitLoader(false);
         Toast.show({
           type: 'error',
-          // text1: JSON.stringify(error),
-          text1: 'error',
+          text1: JSON.stringify(error),
+          // text1: 'error',
         });
       }
-    } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Plesae fill all Mandatory feilds.',
-      });
     }
+    // else {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Plesae fill all Mandatory feilds.',
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -505,14 +557,15 @@ const Signup = ({route, params}) => {
   }, [aadharNum]);
 
   useEffect(() => {
-    if (aadharValidationResult.status_code === 200) {
+    if (aadharValidationResult?.status_code === 200) {
+      console.log('aadahrresult', aadharValidationResult);
       setOtpBottomView(true);
     } else {
       {
-        aadharValidationResult.message &&
+        aadharValidationResult?.message &&
           Toast.show({
             type: 'error',
-            text1: aadharValidationResult.message,
+            text1: aadharValidationResult?.message,
           });
       }
     }
@@ -520,22 +573,22 @@ const Signup = ({route, params}) => {
 
   useEffect(() => {
     if (verifyOtpResult.success) {
-      setFirstname(verifyOtpResult.name.split(' ')[0].trim());
-      setLastName(verifyOtpResult.name.split(' ')[1].trim());
-      setFatherName(verifyOtpResult.careOff);
-      setDob(verifyOtpResult.dob);
-      setAddress(verifyOtpResult.address);
-      setPostalCode(verifyOtpResult.zip);
+      setFirstname(verifyOtpResult?.name?.split(' ')[0]?.trim());
+      setLastName(verifyOtpResult?.name?.split(' ')[1]?.trim());
+      setFatherName(verifyOtpResult?.careOff);
+      setDob(verifyOtpResult?.dob);
+      setAddress(verifyOtpResult?.address);
+      setPostalCode(verifyOtpResult?.zip);
 
-      if (gender.length > 0 && verifyOtpResult.gender) {
+      if (gender?.length > 0 && verifyOtpResult?.gender) {
         const filteredgender = gender?.filter(
-          post => post.LOCAL_LANG === verifyOtpResult.gender,
+          post => post?.LOCAL_LANG === verifyOtpResult?.gender,
         );
 
         console.log('first', filteredgender);
 
-        setSelectedGender(filteredgender[0].PARAM_NAME);
-        setGenderValue(filteredgender[0].PARAM_ID);
+        setSelectedGender(filteredgender[0]?.PARAM_NAME);
+        setGenderValue(filteredgender[0]?.PARAM_ID);
       }
     } else {
       setaadharNum('');
@@ -548,609 +601,648 @@ const Signup = ({route, params}) => {
         flex: 1,
         backgroundColor: COLORS.white,
       }}>
-      <Header />
+      <Header title={'Add Candidate'} />
 
-      <Loader loaderVisible={loading} />
+      {submitLoader ? (
+        // <View style={{alignItems: 'center', marginTop: '30%'}}>
+        //   <ActivityIndicator color={COLORS.orange1} size={'large'} />
+        //   <Text
+        //     style={{
+        //       ...FONTS.h3,
+        //       fontWeight: '500',
+        //       color: COLORS.orange1,
+        //       marginTop: SIZES.base,
+        //     }}>
+        //     Loading your details
+        //   </Text>
+        // </View>
 
-      <KeyboardAwareScrollView
-        // bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          flex: 1,
-          paddingHorizontal: SIZES.radius,
-        }}>
-        <ScrollView>
-          <View>
-            <Text style={[styles.caption, {color: COLORS.red}]}>
-              * Mandatory fields
-            </Text>
-            <FormInput
-              label="Aadhar No."
-              // placeholder={'xxxx-xxxx-xxxx'}
-              labelColor={COLORS.black}
-              value={aadharNum}
-              onChange={setaadharNum}
-            />
-            {optBottomView && (
-              <BottomUpModal
-                isVisible={optBottomView}
-                onClose={() => {
-                  setOtpBottomView(false);
-                }}>
-                <OtpBottomUpModal onPress={() => setOtpBottomView(false)} />
-              </BottomUpModal>
-            )}
-          </View>
+        <Loader loaderVisible={submitLoader} />
+      ) : (
+        <>
+          <Loader loaderVisible={loading} />
 
-          <View>
-            <Text style={styles.caption}>Choose your experience</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingTop: SIZES.base,
-                gap: SIZES.radius,
-              }}>
-              <TouchableOpacity
-                onPress={() => setExperience(!experience)}
-                style={{
-                  borderWidth: 1,
-                  borderColor: experience ? COLORS.lightGray1 : COLORS.orange1,
-                  padding: SIZES.base,
-                  borderRadius: SIZES.base,
-                }}>
-                <Text
-                  style={{
-                    color: experience ? COLORS.gray : COLORS.black,
-                  }}>
-                  Fresher
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => setExperience(!experience)}
-                style={{
-                  borderWidth: 1,
-                  borderColor: !experience ? COLORS.lightGray1 : COLORS.orange1,
-                  padding: SIZES.base,
-                  borderRadius: SIZES.base,
-                }}>
-                <Text
-                  style={{
-                    color: !experience ? COLORS.gray : COLORS.black,
-                  }}>
-                  Experience
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <TextDropdown
-            caption={'Post Title'}
-            data={postTitle}
-            setData={setSelectedPostTitle}
-            setIdvalue={setSelectedPostTitleValue}
-            defaultButtonText={
-              posttitleLoading ? 'Loading...' : selectedPostTitle
-            }
-            captionStyle={styles.caption}
-            disabled
-            required
-          />
-          <FormInput
-            label="First Name"
-            placeholder={'First Name'}
-            labelColor={COLORS.black}
-            value={firstname}
-            onChange={setFirstname}
-            editable={false}
-          />
-
-          <FormInput
-            label="Last Name"
-            placeholder={'Last Name'}
-            labelColor={COLORS.black}
-            value={lastName}
-            onChange={setLastName}
-            editable={false}
-          />
-
-          <FormInput
-            label="Father Name"
-            placeholder={'Father Name'}
-            labelColor={COLORS.black}
-            value={fatherName}
-            onChange={setFatherName}
-            editable={false}
-          />
-
-          <FormInput
-            label="Mother Name"
-            placeholder={'Mother Name'}
-            labelColor={COLORS.black}
-            value={motherName}
-            inputStyle={{color: COLORS.black}}
-            onChange={setMotherName}
-            editable={true}
-          />
-
-          <DateButton
-            caption={'Date of Birth'}
-            date={dob}
-            setDate={setDob}
-            captionStyle={styles.caption}
-            required={true}
-          />
-
-          <FormInput
-            label="Email"
-            placeholder={'Email'}
-            labelColor={COLORS.black}
-            value={email}
-            onChange={setEmail}
-          />
-
-          <TextDropdown
-            caption={'Gender'}
-            data={gender}
-            setData={setSelectedGender}
-            setIdvalue={setGenderValue}
-            defaultButtonText={selectedGender}
-            captionStyle={styles.caption}
-            required
-            disabled
-          />
-
-          <FormInput
-            label="Phone"
-            placeholder={'Phone'}
-            labelColor={COLORS.black}
-            value={phone}
-            onChange={setPhone}
-          />
-
-          <TextDropdown
-            caption={'Marital Status'}
-            data={maritalStatus}
-            setData={setSelectedMaritalstatus}
-            setIdvalue={setMaritialStatusValue}
-            defaultButtonText={selectedMaritalstatus}
-            captionStyle={styles.caption}
-            required
-          />
-
-          {/* <FormInput
-            label="Department"
-            placeholder={'Depatment'}
-            labelColor={COLORS.black}
-            value={'IT'}
-            editable={false}
-          /> */}
-
-          <TextDropdown
-            caption={'Department'}
-            data={department}
-            setData={setSelectedDepartment}
-            setIdvalue={setSelectedDepValue}
-            defaultButtonText={selectedDepartment}
-            captionStyle={styles.caption}
-            disabled
-            required
-          />
-
-          {experience && (
-            <>
-              <FormInput
-                label="Current Employer"
-                placeholder={'Current Employer'}
-                labelColor={COLORS.black}
-                value={currentEmployer}
-                onChange={setCurrentEmployer}
-              />
-
-              <FormInput
-                label="Last Employer"
-                placeholder={'Last Employer'}
-                labelColor={COLORS.black}
-                value={lastEmployer}
-                onChange={setlastEmployer}
-              />
-
-              <FormInput
-                label="Current CTC(Monthly)"
-                placeholder={'Current CTC(Monthly)'}
-                labelColor={COLORS.black}
-                value={currentCtc}
-                onChange={setCurrentCtc}
-                keyboardType="number"
-              />
-            </>
-          )}
-
-          <FormInput
-            label="Address"
-            placeholder={'Address'}
-            labelColor={COLORS.black}
-            value={address}
-            onChange={setAddress}
-            multiline
-            inputStyle={{height: 120}}
-          />
-          <FormInput
-            label="Desired Pay (Monthly)"
-            placeholder={''}
-            labelColor={COLORS.black}
-            value={desiredPay}
-            onChange={setDesiredPay}
-            required={false}
-            keyboardType="number"
-          />
-
-          {/* <TextDropdown
-            caption={'Country'}
-            data={countryData}
-            setData={setCountry}
-            setIdvalue={setCountryValue}
-            defaultButtonText={country}
-            captionStyle={styles.caption}
-          /> */}
-
-          <FormInput
-            label="Country"
-            placeholder={'Country'}
-            labelColor={COLORS.black}
-            value={'India'}
-            onChange={setCountry}
-            editable={false}
-          />
-
-          <FormInput
-            label="City"
-            placeholder={'City'}
-            labelColor={COLORS.black}
-            value={city}
-            onChange={setCity}
-          />
-
-          <TextDropdown
-            caption={'State'}
-            data={state}
-            search={true}
-            setData={setSelectedState}
-            setIdvalue={setStateValue}
-            defaultButtonText={selectedState}
-            captionStyle={styles.caption}
-            required
-          />
-
-          <FormInput
-            label="Postal Code"
-            placeholder={'Postal Code'}
-            labelColor={COLORS.black}
-            value={postalCode}
-            onChange={setPostalCode}
-            keyboardType="number"
-          />
-
-          <View
-            style={{
-              marginVertical: SIZES.base,
+          <KeyboardAwareScrollView
+            // bounces={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flex: 1,
+              paddingHorizontal: SIZES.radius,
             }}>
-            <Text style={styles.caption}>
-              Resume <Text style={{color: COLORS.red, ...FONTS.h3}}>*</Text>
-            </Text>
-            {resume?.name ? (
-              <View
-                style={{
-                  paddingVertical: SIZES.radius * 1.3,
-                  borderWidth: 1,
-                  borderRadius: SIZES.radius,
-                  borderColor: COLORS.lightGray1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: SIZES.radius,
-                }}>
-                <Text
-                  style={{
-                    color: COLORS.darkGray2,
-                  }}>
-                  {resume.name.slice(0, 12)}
+            <ScrollView>
+              <View>
+                <Text style={[styles.caption, {color: COLORS.red}]}>
+                  * Mandatory fields
                 </Text>
+                <FormInput
+                  label="Aadhar No."
+                  // placeholder={'xxxx-xxxx-xxxx'}
+                  labelColor={COLORS.black}
+                  value={aadharNum}
+                  onChange={setaadharNum}
+                  keyboardType={'numeric'}
+                />
+
+                {optBottomView && (
+                  <BottomUpModal
+                    isVisible={optBottomView}
+                    onClose={() => {
+                      setOtpBottomView(false);
+                    }}>
+                    <OtpBottomUpModal onPress={() => setOtpBottomView(false)} />
+                  </BottomUpModal>
+                )}
+              </View>
+
+              <View>
+                <Text style={styles.caption}>Choose your experience</Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: SIZES.padding,
+                    paddingTop: SIZES.base,
+                    gap: SIZES.radius,
                   }}>
                   <TouchableOpacity
-                    onPress={() => {
-                      setResume({});
-                    }}>
-                    <Image
-                      source={icons.cross}
-                      style={{
-                        height: 25,
-                        width: 25,
-                        tintColor: COLORS.red,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <View
+                    onPress={() => setExperience(!experience)}
                     style={{
-                      backgroundColor: COLORS.disableOrange1,
+                      borderWidth: 1,
+                      borderColor: experience
+                        ? COLORS.lightGray1
+                        : COLORS.orange1,
                       padding: SIZES.base,
-                      borderRadius: 50,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      borderRadius: SIZES.base,
                     }}>
-                    <Image
-                      source={esignIcon}
+                    <Text
                       style={{
-                        height: 44,
-                        width: 44,
-                        tintColor: COLORS.orange,
-                      }}
-                    />
-                  </View>
+                        color: experience ? COLORS.gray : COLORS.black,
+                      }}>
+                      Fresher
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => setExperience(!experience)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: !experience
+                        ? COLORS.lightGray1
+                        : COLORS.orange1,
+                      padding: SIZES.base,
+                      borderRadius: SIZES.base,
+                    }}>
+                    <Text
+                      style={{
+                        color: !experience ? COLORS.gray : COLORS.black,
+                      }}>
+                      Experience
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-            ) : (
-              <TouchableOpacity
-                onPress={() => selectResume()}
+
+              <TextDropdown
+                caption={'Post Title'}
+                data={postTitle}
+                setData={setSelectedPostTitle}
+                setIdvalue={setSelectedPostTitleValue}
+                defaultButtonText={
+                  posttitleLoading ? 'Loading...' : selectedPostTitle
+                }
+                captionStyle={styles.caption}
+                disabled
+                required
+              />
+              <FormInput
+                label="First Name"
+                placeholder={'First Name'}
+                labelColor={COLORS.black}
+                value={firstname}
+                onChange={setFirstname}
+                editable={false}
+              />
+
+              <FormInput
+                label="Last Name"
+                placeholder={'Last Name'}
+                labelColor={COLORS.black}
+                value={lastName}
+                onChange={setLastName}
+                editable={false}
+              />
+
+              <FormInput
+                label="Father Name"
+                placeholder={'Father Name'}
+                labelColor={COLORS.black}
+                value={fatherName}
+                onChange={setFatherName}
+                editable={false}
+              />
+
+              <FormInput
+                label="Mother Name"
+                placeholder={'Mother Name'}
+                labelColor={COLORS.black}
+                value={motherName}
+                inputStyle={{color: COLORS.black}}
+                onChange={setMotherName}
+                editable={true}
+              />
+
+              {/* <DateButton
+                caption={'Date of Birth'}
+                date={dob}
+                setDate={setDob}
+                captionStyle={styles.caption}
+                required={true}
+              /> */}
+
+              <FormInput
+                label="Date of Birth"
+                placeholder={'Email'}
+                labelColor={COLORS.black}
+                value={dob}
+                onChange={setDob}
+                editable={false}
+              />
+
+              <FormInput
+                label="Email"
+                placeholder={'Email'}
+                labelColor={COLORS.black}
+                value={email}
+                onChange={setEmail}
+              />
+
+              <TextDropdown
+                caption={'Gender'}
+                data={gender}
+                setData={setSelectedGender}
+                setIdvalue={setGenderValue}
+                defaultButtonText={selectedGender}
+                captionStyle={styles.caption}
+                required
+                disabled
+              />
+
+              <FormInput
+                label="Phone"
+                placeholder={'Phone'}
+                labelColor={COLORS.black}
+                value={phone}
+                onChange={setPhone}
+                keyboardType={'numeric'}
+              />
+
+              <TextDropdown
+                caption={'Marital Status'}
+                data={maritalStatus}
+                setData={setSelectedMaritalstatus}
+                setIdvalue={setMaritialStatusValue}
+                defaultButtonText={selectedMaritalstatus}
+                captionStyle={styles.caption}
+                required
+              />
+
+              {/* <FormInput
+      label="Department"
+      placeholder={'Depatment'}
+      labelColor={COLORS.black}
+      value={'IT'}
+      editable={false}
+    /> */}
+
+              <TextDropdown
+                caption={'Department'}
+                data={department}
+                setData={setSelectedDepartment}
+                setIdvalue={setSelectedDepValue}
+                defaultButtonText={selectedDepartment}
+                captionStyle={styles.caption}
+                disabled
+                required
+              />
+
+              {experience && (
+                <>
+                  <FormInput
+                    label="Current Employer"
+                    placeholder={'Current Employer'}
+                    labelColor={COLORS.black}
+                    value={currentEmployer}
+                    onChange={setCurrentEmployer}
+                  />
+
+                  <FormInput
+                    label="Last Employer"
+                    placeholder={'Last Employer'}
+                    labelColor={COLORS.black}
+                    value={lastEmployer}
+                    onChange={setlastEmployer}
+                  />
+
+                  <FormInput
+                    label="Current CTC(Monthly)"
+                    placeholder={'Current CTC(Monthly)'}
+                    labelColor={COLORS.black}
+                    value={currentCtc}
+                    onChange={setCurrentCtc}
+                    keyboardType={'numeric'}
+                  />
+                </>
+              )}
+
+              <FormInput
+                label="Address"
+                placeholder={'Address'}
+                labelColor={COLORS.black}
+                value={address}
+                onChange={setAddress}
+                multiline
+                inputStyle={{height: 120}}
+              />
+              <FormInput
+                label="Desired Pay (Monthly)"
+                placeholder={''}
+                labelColor={COLORS.black}
+                value={desiredPay}
+                onChange={setDesiredPay}
+                required={false}
+                keyboardType={'numeric'}
+              />
+
+              {/* <TextDropdown
+      caption={'Country'}
+      data={countryData}
+      setData={setCountry}
+      setIdvalue={setCountryValue}
+      defaultButtonText={country}
+      captionStyle={styles.caption}
+    /> */}
+
+              <FormInput
+                label="Country"
+                placeholder={'Country'}
+                labelColor={COLORS.black}
+                value={'India'}
+                onChange={setCountry}
+                editable={false}
+              />
+
+              <FormInput
+                label="City"
+                placeholder={'City'}
+                labelColor={COLORS.black}
+                value={city}
+                onChange={setCity}
+              />
+
+              <TextDropdown
+                caption={'State'}
+                data={state}
+                search={true}
+                setData={setSelectedState}
+                setIdvalue={setStateValue}
+                defaultButtonText={selectedState}
+                captionStyle={styles.caption}
+                required
+                // searchPlaceholder={'Search state...'}
+              />
+
+              <FormInput
+                label="Postal Code"
+                placeholder={'Postal Code'}
+                labelColor={COLORS.black}
+                value={postalCode}
+                onChange={setPostalCode}
+                editable={false}
+                keyboardType={'numeric'}
+              />
+
+              <View
                 style={{
-                  paddingVertical: SIZES.radius * 1.3,
-                  borderWidth: 1,
-                  borderRadius: SIZES.radius,
-                  borderColor: COLORS.lightGray1,
+                  marginVertical: SIZES.base,
                 }}>
-                <Text
-                  style={{
-                    marginLeft: SIZES.padding,
-                    color: COLORS.gray,
-                  }}>
-                  Select Resume
+                <Text style={styles.caption}>
+                  Resume <Text style={{color: COLORS.red, ...FONTS.h3}}>*</Text>
                 </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <TextDropdown
-            caption={'Higher education obtained'}
-            data={heigherEdu}
-            setData={setHigherEducationObtained}
-            setIdvalue={setHigherEducationObtainedValue}
-            defaultButtonText={higherEducationObtained}
-            captionStyle={styles.caption}
-            required
-          />
-
-          <FormInput
-            label="College/University"
-            placeholder={'College/University'}
-            labelColor={COLORS.black}
-            value={college}
-            onChange={setCollege}
-          />
-          {/* <Text>{typeInterview}</Text> */}
-          {typeInterview == 366 ? (
-            <View>
-              <TouchableOpacity onPress={() => interviewLocataionClick()}>
-                <LinearGradient
-                  angle={45}
-                  useAngle={true}
-                  style={{
-                    height: 55,
-                    marginTop: 20,
-                    justifyContent: 'center',
-
-                    borderRadius: SIZES.base,
-                  }}
-                  colors={[COLORS.green, COLORS.lightGreen]}>
+                {resume?.name ? (
                   <View
                     style={{
+                      paddingVertical: SIZES.radius * 1.3,
+                      borderWidth: 1,
+                      borderRadius: SIZES.radius,
+                      borderColor: COLORS.lightGray1,
                       flexDirection: 'row',
+                      alignItems: 'center',
                       justifyContent: 'space-between',
-                      paddingHorizontal: 10,
+                      paddingHorizontal: SIZES.radius,
                     }}>
-                    <View style={{flexDirection: 'row'}}>
-                      <Text
-                        style={{
-                          color: COLORS.white,
-                          ...FONTS.body4,
-                          fontSize: 16,
+                    <Text
+                      style={{
+                        color: COLORS.darkGray2,
+                      }}>
+                      {resume.name.slice(0, 12)}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: SIZES.padding,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setResume({});
                         }}>
-                        Interview Location
-                      </Text>
-                      <Text
+                        <Image
+                          source={icons.cross}
+                          style={{
+                            height: 25,
+                            width: 25,
+                            tintColor: COLORS.red,
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View
                         style={{
-                          color: COLORS.red,
-                          ...FONTS.h4,
-                          fontSize: 16,
-                          padding: 4,
+                          backgroundColor: COLORS.disableOrange1,
+                          padding: SIZES.base,
+                          borderRadius: 50,
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}>
-                        *
-                      </Text>
+                        <Image
+                          source={esignIcon}
+                          style={{
+                            height: 44,
+                            width: 44,
+                            tintColor: COLORS.orange,
+                          }}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => selectResume()}
+                    style={{
+                      paddingVertical: SIZES.radius * 1.3,
+                      borderWidth: 1,
+                      borderRadius: SIZES.radius,
+                      borderColor: COLORS.lightGray1,
+                    }}>
+                    <Text
+                      style={{
+                        marginLeft: SIZES.padding,
+                        color: COLORS.gray,
+                      }}>
+                      Upload Resume
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
 
-                      {locationLoading ? (
-                        <ActivityIndicator
-                          size={'small'}
+              <TextDropdown
+                caption={'Higher education obtained'}
+                data={heigherEdu}
+                setData={setHigherEducationObtained}
+                setIdvalue={setHigherEducationObtainedValue}
+                defaultButtonText={higherEducationObtained}
+                captionStyle={styles.caption}
+                required
+              />
+
+              <FormInput
+                label="College/University"
+                placeholder={'College/University'}
+                labelColor={COLORS.black}
+                value={college}
+                onChange={setCollege}
+              />
+              {/* <Text>{typeInterview}</Text> */}
+              {typeInterview == 366 ? (
+                <View>
+                  <TouchableOpacity onPress={() => interviewLocataionClick()}>
+                    <LinearGradient
+                      angle={45}
+                      useAngle={true}
+                      style={{
+                        height: 55,
+                        marginTop: 20,
+                        justifyContent: 'center',
+
+                        borderRadius: SIZES.base,
+                      }}
+                      colors={[COLORS.green, COLORS.lightGreen]}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          paddingHorizontal: 10,
+                        }}>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text
+                            style={{
+                              color: COLORS.white,
+                              ...FONTS.body4,
+                              fontSize: 16,
+                            }}>
+                            Interview Location
+                          </Text>
+                          <Text
+                            style={{
+                              color: COLORS.red,
+                              ...FONTS.h4,
+                              fontSize: 16,
+                              padding: 4,
+                            }}>
+                            *
+                          </Text>
+
+                          {locationLoading ? (
+                            <ActivityIndicator
+                              size={'small'}
+                              color={COLORS.white}
+                            />
+                          ) : (
+                            ''
+                          )}
+                        </View>
+
+                        <Micons
+                          name="map-marker-radius-outline"
+                          size={25}
                           color={COLORS.white}
                         />
-                      ) : (
-                        ''
-                      )}
-                    </View>
+                      </View>
+                    </LinearGradient>
+                  </TouchableOpacity>
 
-                    <Micons
-                      name="map-marker-radius-outline"
-                      size={25}
-                      color={COLORS.white}
-                    />
-                  </View>
+                  {loactaionBottomView && (
+                    <BottomUpModal
+                      isVisible={loactaionBottomView}
+                      onClose={() => {
+                        setLocationBottomView(false);
+                      }}>
+                      <LocationBottomUpModal
+                        onPress={() => setLocationBottomView(false)}
+                        locationData={locationListData}
+                        selectLocation={selectLocation}
+                        setSelectLocation={setSelectLocation}
+                      />
+                    </BottomUpModal>
+                  )}
+                </View>
+              ) : (
+                ''
+              )}
+              <View>
+                <FormInput
+                  label="Reference 1"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={reference1}
+                  onChange={setReference1}
+                  required={false}
+                />
+
+                <FormInput
+                  label="Reference 1 Satya Employee Code"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref1EmpCode}
+                  onChange={setRef1EmpCode}
+                  required={false}
+                />
+                <FormInput
+                  label="Reference 1 Mobile Number"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref1MobileNo}
+                  onChange={setRef1MobileNo}
+                  required={false}
+                />
+                <FormInput
+                  label="Reference 1 Email Id"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref1Email}
+                  onChange={setRef1Email}
+                  required={false}
+                />
+
+                <FormInput
+                  label="Reference 2"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={reference2}
+                  onChange={setReference2}
+                  required={false}
+                />
+
+                <FormInput
+                  label="Reference 2 Satya Employee Code"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref2EmpCode}
+                  onChange={setRef2EmpCode}
+                  required={false}
+                />
+                <FormInput
+                  label="Reference 2 Mobile Number"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref2MobileNo}
+                  onChange={setRef2MobileNo}
+                  required={false}
+                />
+                <FormInput
+                  label="Reference 2 Email Id"
+                  // placeholder={'Postal Code'}
+                  labelColor={COLORS.black}
+                  value={ref2Email}
+                  onChange={setRef2Email}
+                  required={false}
+                />
+
+                {/* <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={() =>
+            setBypass6month(bypass6month == 'true' ? 'false' : 'true')
+          }
+          style={{
+            alignItems: 'center',
+            width: responsiveWidth(96),
+            padding: SIZES.font,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: COLORS.green,
+              ...FONTS.body3,
+              textAlign: 'center',
+            }}>
+            Bypass 6 month
+          </Text>
+          {bypass6month === 'true' ? (
+            <Micons
+              name="checkbox-marked-circle-outline"
+              size={25}
+              color={COLORS.orange}
+            />
+          ) : (
+            <Micons
+              name="checkbox-blank-circle-outline"
+              size={25}
+              color={COLORS.orange}
+            />
+          )}
+         
+        </TouchableOpacity>
+      </View> */}
+              </View>
+            </ScrollView>
+
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                width: responsiveWidth(100),
+                alignSelf: 'center',
+                paddingVertical: SIZES.base,
+              }}>
+              <TouchableOpacity
+                onPress={onSubmit}
+                disabled={
+                  typeInterview == 366 && selectLocation == 0 ? true : false
+                }>
+                <LinearGradient
+                  style={{
+                    height: 50,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: SIZES.radius,
+                    marginHorizontal: SIZES.radius,
+                  }}
+                  colors={
+                    typeInterview == 366 && selectLocation == 0
+                      ? [COLORS.gray, COLORS.gray]
+                      : [COLORS.orange1, COLORS.lightOrange]
+                  }>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      ...FONTS.h4,
+                    }}>
+                    Submit
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
-
-              {loactaionBottomView && (
-                <BottomUpModal
-                  isVisible={loactaionBottomView}
-                  onClose={() => {
-                    setLocationBottomView(false);
-                  }}>
-                  <LocationBottomUpModal
-                    onPress={() => setLocationBottomView(false)}
-                    locationData={locationListData}
-                    selectLocation={selectLocation}
-                    setSelectLocation={setSelectLocation}
-                  />
-                </BottomUpModal>
-              )}
             </View>
-          ) : (
-            ''
-          )}
-          <View>
-            <FormInput
-              label="Reference 1"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={reference1}
-              onChange={setReference1}
-              required={false}
-            />
-
-            <FormInput
-              label="Reference 1 Satya Employee Code"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref1EmpCode}
-              onChange={setRef1EmpCode}
-              required={false}
-            />
-            <FormInput
-              label="Reference 1 Mobile Number"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref1MobileNo}
-              onChange={setRef1MobileNo}
-              required={false}
-            />
-            <FormInput
-              label="Reference 1 Email Id"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref1Email}
-              onChange={setRef1Email}
-              required={false}
-            />
-
-            <FormInput
-              label="Reference 2"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={reference2}
-              onChange={setReference2}
-              required={false}
-            />
-
-            <FormInput
-              label="Reference 2 Satya Employee Code"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref2EmpCode}
-              onChange={setRef2EmpCode}
-              required={false}
-            />
-            <FormInput
-              label="Reference 2 Mobile Number"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref2MobileNo}
-              onChange={setRef2MobileNo}
-              required={false}
-            />
-            <FormInput
-              label="Reference 2 Email Id"
-              // placeholder={'Postal Code'}
-              labelColor={COLORS.black}
-              value={ref2Email}
-              onChange={setRef2Email}
-              required={false}
-            />
-
-            {/* <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                onPress={() =>
-                  setBypass6month(bypass6month == 'true' ? 'false' : 'true')
-                }
-                style={{
-                  alignItems: 'center',
-                  width: responsiveWidth(96),
-                  padding: SIZES.font,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    color: COLORS.green,
-                    ...FONTS.body3,
-                    textAlign: 'center',
-                  }}>
-                  Bypass 6 month
-                </Text>
-                {bypass6month === 'true' ? (
-                  <Micons
-                    name="checkbox-marked-circle-outline"
-                    size={25}
-                    color={COLORS.orange}
-                  />
-                ) : (
-                  <Micons
-                    name="checkbox-blank-circle-outline"
-                    size={25}
-                    color={COLORS.orange}
-                  />
-                )}
-               
-              </TouchableOpacity>
-            </View> */}
-          </View>
-        </ScrollView>
-
-        <View
-          style={{
-            backgroundColor: COLORS.white,
-            width: responsiveWidth(100),
-            alignSelf: 'center',
-            paddingVertical: SIZES.base,
-          }}>
-          <TouchableOpacity
-            onPress={onSubmit}
-            disabled={selectLocation == 0 ? true : false}>
-            <LinearGradient
-              style={{
-                height: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: SIZES.radius,
-                marginHorizontal: SIZES.radius,
-              }}
-              colors={
-                selectLocation == 0
-                  ? [COLORS.gray, COLORS.gray]
-                  : [COLORS.orange1, COLORS.lightOrange]
-              }>
-              <Text
-                style={{
-                  color: COLORS.white,
-                  ...FONTS.h4,
-                }}>
-                Submit
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
+        </>
+      )}
     </View>
   );
 };

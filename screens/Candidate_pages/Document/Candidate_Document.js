@@ -199,7 +199,7 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-        70, // Quality (0-100)
+        80, // Quality (0-100)
           90
         );
 
@@ -282,7 +282,7 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-          70, // Quality (0-100)
+          80, // Quality (0-100)
           90
         );
 

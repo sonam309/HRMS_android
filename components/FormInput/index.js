@@ -13,7 +13,7 @@ const FormInput = ({
   appendComponent,
   onChange,
   secureTextEntry,
-  keyboardType = 'default',
+  keyboardType,
   autoCompleteType = 'off',
   autoCapitalize = 'none',
   errorMsg = '',

@@ -3,6 +3,7 @@ import {COLORS, FONTS, SIZES} from '../../constants';
 import {useFocusEffect} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 import {
   View,
   Text,
@@ -235,6 +236,7 @@ const CandidateDashboard = props => {
       };
 
       launchCamera(options, res => {
+        console.log("firstrewsss",res)
         if (res.didCancel) {
           console.log('User cancelled image picker');
         } else if (res.error) {
@@ -249,7 +251,7 @@ const CandidateDashboard = props => {
 
           let profilePicData = {
             candidateId: candidateId,
-            profillePic: res.assets[0]?.fileName,
+            profillePic: res?.assets[0]?.fileName,
             operFlag: 'A',
           };
 

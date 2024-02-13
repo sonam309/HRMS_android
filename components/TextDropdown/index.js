@@ -15,6 +15,7 @@ const TextDropdown = ({
   disabled = false,
   search,
   required = false,
+  searchPlaceholder,
 }) => {
   const dropdownRef = useRef({});
 
@@ -35,6 +36,7 @@ const TextDropdown = ({
       </Text>
       <SelectDropdown
         search={search}
+        searchPlaceHolder='Search...'
         ref={dropdownParamRef ? dropdownParamRef : dropdownRef}
         dropdownStyle={{
           backgroundColor: COLORS.white,
