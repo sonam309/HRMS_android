@@ -199,8 +199,8 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-        80, // Quality (0-100)
-          90
+          95, // Quality (0-100)
+          // 90ß
         );
 
         compressedUri = resizedImage.uri;
@@ -282,8 +282,8 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-          80, // Quality (0-100)
-          90
+          95, // Quality (0-100)
+          // 90
         );
 
         compressedUri = resizedImage.uri;
