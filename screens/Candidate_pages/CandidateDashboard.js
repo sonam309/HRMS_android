@@ -106,14 +106,14 @@ const CandidateDashboard = props => {
 
     axios.post(`${API}/api/saveEsignDataNew`, data).then(response => {
       const result = response.data.Result;
-      // console.log('esignDatasssss', result[0]);
+      console.log('esignDatasssss', result[0]);
       setEsignCount(result[0]?.ESSIGN_CNT);
       // setLoaderVisible(false);
     });
   };
 
   useEffect(() => {
-    // console.log("126666",candidateOfferCheckResult?.PROFILE_PIC === null)
+    console.log("126666",candidateOfferCheckResult?.EMP_CREATION_FLAG)
     // setProfilePic(candidateOfferCheckResult?.PROFILE_PIC);
     if (candidateOfferCheckResult?.PROFILE_PIC === null && !showPicModal) {
       console.log('171');

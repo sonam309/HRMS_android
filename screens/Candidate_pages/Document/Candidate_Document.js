@@ -199,7 +199,7 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-          95, // Quality (0-100)
+          100, // Quality (0-100)
           // 90ß
         );
 
@@ -282,7 +282,7 @@ const Candidate_Document = props => {
           800, // Width
           600, // Height
           'JPEG', // Format
-          95, // Quality (0-100)
+          100, // Quality (0-100)
           // 90
         );
 
@@ -1314,13 +1314,13 @@ const Candidate_Document = props => {
                 12,
                 '',
               )} */}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[16],
                 13,
                 'imp',
-              )}
+              )} */}
               {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
@@ -1335,13 +1335,13 @@ const Candidate_Document = props => {
                 15,
                 experience === 'Yes' && 'imp',
               )}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[19],
                 16,
                 'imp',
-              )}
+              )} */}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
@@ -1356,13 +1356,13 @@ const Candidate_Document = props => {
                 18,
                 'imp',
               )}
-              {otherFilesUploader(
+              {/* {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,
                 document[22],
                 19,
                 'imp',
-              )}
+              )} */}
               {otherFilesUploader(
                 otherFiles,
                 setOtherFiles,

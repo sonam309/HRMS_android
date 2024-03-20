@@ -53,7 +53,7 @@ const Details = props => {
   const [HTMLdata, setHTMLdata] = useState(null);
   const [data, setData] = useState(null);
   const [disableBtn, setDisableBtn] = useState(false);
-  const [loaderVisible, setLoaderVisible] = useState(true);
+  const [loaderVisible, setLoaderVisible] = useState(false);
   const userId = useSelector(state => state.auth.userId);
 
   const [finalTemplate, setFinalTemplate] = useState('');
@@ -261,8 +261,9 @@ const Details = props => {
           Remark: salaryRemark,
         })
         .then(response => {
-          const returnedData = response?.data;
           setLoaderVisible(false);
+
+          const returnedData = response?.data;
 
           Toast.show({
             type: 'success',
@@ -280,6 +281,7 @@ const Details = props => {
           });
         });
     } else {
+      setLoaderVisible(false);
       Toast.show({type: 'error', text1: 'Please enter Remark!'});
     }
   };
@@ -376,6 +378,9 @@ const Details = props => {
     totalData = await totalData.json();
     totalData = totalData.Result[0]?.MAIL_BODY;
     setHTMLdata(totalData);
+
+    console.log("htmlData", html);
+
   };
 
   // Fetching salary allocation data
@@ -391,6 +396,7 @@ const Details = props => {
         setData(returnedData);
         console.log("remarkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",returnedData)
         setSalaryRemark(returnedData?.Table[0]?.REMARK);
+        console.log("remakkk",returnedData?.Table[0]?.REMARK)
       });
   };
 
@@ -668,6 +674,8 @@ const Details = props => {
 
   useEffect(() => {
     if (data && HTMLdata) {
+      console.log("datatatattatatat677", data);
+      console.log("67777777", HTMLdata);
       updating();
     }
   }, [data, HTMLdata]);

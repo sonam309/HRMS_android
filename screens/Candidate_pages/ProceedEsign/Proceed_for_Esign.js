@@ -29,6 +29,9 @@ import GetLocation from 'react-native-get-location';
 import Loader from '../../../components/Loader';
 import axios from 'axios';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import moment from 'moment';
+import {parse} from 'date-fns';
+import {date} from 'yup';
 
 let EsignModule;
 let eventEmitter;
@@ -49,8 +52,8 @@ const Proceed_for_Esign = props => {
     state => state.candidateAuth,
   );
 
-  const [isMobileOtp, setIsMobileOtp] = useState(true);
-  const [isBiometric, setIsBiometric] = useState(false);
+  const [isMobileOtp, setIsMobileOtp] = useState(false);
+  const [isBiometric, setIsBiometric] = useState(true);
   const [candidateName, setCandidateName] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [candidateMobileNo, setCandidateMobileNo] = useState('');
@@ -87,12 +90,22 @@ const Proceed_for_Esign = props => {
   const [longitude, setLongitude] = useState(false);
 
   useEffect(() => {
-    console.log('Index', index);
+    console.log('datattatatSonam', candidateList[index]);
+
+    if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
+      setIsMobileOtp(true);
+      setIsBiometric(false);
+    } else if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
+      setIsMobileOtp(true);
+      setIsBiometric(false);
+    } else {
+      setIsBiometric(true);
+      setIsMobileOtp(false);
+    }
   }, []);
 
   useEffect(() => {
     setPredefinedData();
-    console.log('checkDataWhatCome', candidateList);
   }, [candidateList]);
 
   const setPredefinedData = () => {
@@ -156,11 +169,6 @@ const Proceed_for_Esign = props => {
   const checkConfigration = () => {
     console.log('filenammememme', candidateList[index]?.DOCUMENT_TYPE);
 
-    // if (fileName.includes('Appointment')) {
-    //   setLoanType('A');
-    // } else if (fileName.includes('JoiningKit')) {
-    //   setLoanType('K');
-    // } else {
     if (candidateList[index]?.DOCUMENT_TYPE === 'JOINING KIT') {
       console.log('1');
       setLoanType('K');
@@ -615,12 +623,45 @@ const Proceed_for_Esign = props => {
   };
 
   const getAxisData = () => {
-    console.log('getCoordinateDat', coordinatesList.XYAXIS);
-    setXYAXIS(coordinatesList?.XYAXIS);
+    // let getDate=moment(candidateList[index]?.CREATED_ON).format("DD-MMM-YYYY");
+
+    const createdDate = moment(
+      JSON.stringify(candidateList[index]?.CREATED_ON),
+      'MMM DD YYYY h:mmA',
+    );
+
+    const date2 = moment('feb 28 2024', 'MMM DD YYYY');
+
+    const formattedDate = createdDate.format('DD-MM-YYYY');
+    const formattedDate2 = date2.format('DD-MM-YYYY');
+
+    console.log('dateStr', formattedDate, formattedDate2);
+
+    // console.log('getCoordinateDat', coordinatesList.XYAXIS);
+    if (candidateList[index]?.DOCUMENT_TYPE === 'Appointment Letter') {
+      if (candidateList[index]?.POST === 'EDO L') {
+        if (createdDate < date2) {
+          console.log('first');
+          setXYAXIS(
+            '{"1":[{"x":360 ,"y":150}],"2":[{"x":360,"y":130}],"3":[{"x":400,"y":60}],"4":[{"x":360,"y":120}],"5":[{"x":360,"y":40}]}',
+          );
+        } else {
+          setXYAXIS(coordinatesList?.XYAXIS);
+        }
+      } else {
+        setXYAXIS(coordinatesList?.XYAXIS);
+      }
+    } else {
+      console.log('second');
+      setXYAXIS(coordinatesList?.XYAXIS);
+    }
+
     // setXYAXIS('{"1":[{"x":320 ,"y":130}],"2":[{"x":320,"y":10}],"3":[{"x":320,"y":40}],"4":[{"x":320,"y":400}],"5":[{"x":320,"y":180}]}');
     setDocumentName(coordinatesList?.Document_name);
     setNumberOfPages(coordinatesList?.NUMBER_OF_PAGES);
     setDocTypeView(false);
+
+    console.log('coordinates', XYAXIS);
   };
 
   return (

@@ -586,13 +586,24 @@ const PersonalBottomView = ({onPress}) => {
               />
             </View>
 
-            <View style={{width: '48%', paddingHorizontal: 3,}}>
+            <View style={{width: '48%', paddingHorizontal: 5,flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
               <DateButton
                 caption={'Date of Marriage'}
                 date={marriageDate}
                 setDate={setMarriageDate}
                 // isShow={false}
+              
               />
+              <TouchableOpacity
+              onPress={()=>{setMarriageDate('')}}>
+              <Icon
+                name="reload"
+                size={25}
+                color={COLORS.red}
+                style={{marginTop:40,marginLeft:5,}}
+              />
+              </TouchableOpacity>
+
             </View>
           </View>
 

@@ -137,6 +137,8 @@ const Signup = ({route, params}) => {
   const [aadharNum, setaadharNum] = useState('');
   const [optBottomView, setOtpBottomView] = useState(false);
 
+  const [isReference, setIsRefernece] = useState(false);
+
   //   state variable ends
   function addLeadingZero(number) {
     return number < 10 ? '0' + number : number;
@@ -184,30 +186,6 @@ const Signup = ({route, params}) => {
   // }
 
   const isFormValidated = () => {
-    console.log(
-      '1778888',
-      aadharNum,
-      firstname,
-      lastName,
-      fatherName,
-      motherName,
-      dob,
-      email,
-      genderValue,
-      phone,
-      maritialStatusValue,
-      selectedDepValue,
-      address,
-      country,
-      city,
-      stateValue,
-      resume?.name,
-      higherEducationObtainedValue,
-      college,
-      selectLocation,
-      // bypass6month,
-    );
-
     if (aadharNum === '') {
       Toast.show({
         type: 'error',
@@ -337,6 +315,20 @@ const Signup = ({route, params}) => {
         type: 'error',
         text1: 'Plaese enter Current CTC',
       });
+    } else if (isReference !== '' && isReference == 'true') {
+      if (
+        (reference1 === '' &&
+          ref1EmpCode === '' &&
+          ref1MobileNo === '' &&
+          referEmailId === '') ||
+        (reference2 =
+          '' && ref2EmpCode === '' && ref2MobileNo === '' && ref2Email === '')
+      ) {
+        Toast.show({
+          type: 'error',
+          text1: 'Please enter atleast one reference details',
+        });
+      }
     } else {
       return true;
     }
@@ -435,7 +427,7 @@ const Signup = ({route, params}) => {
         });
 
         const finalRes = await res?.json();
-        console.log("ghgyugyuy",finalRes);
+        console.log('ghgyugyuy', finalRes);
         setSubmitLoader(false);
         if (finalRes) {
           Toast.show({
@@ -494,11 +486,11 @@ const Signup = ({route, params}) => {
 
   useEffect(() => {
     if (postTitle.length > 0 && route.params.jobId) {
-      console.log('testttt');
+      // console.log('testttt');
       const filteredJob = postTitle?.filter(
         post => Number(post.PARAM_ID) === Number(route.params.jobId),
       );
-      console.log('filteredJob', filteredJob);
+      // console.log('filteredJob', filteredJob);
       setSelectedPostTitle(filteredJob[0].PARAM_NAME);
       setSelectedPostTitleValue(filteredJob[0].PARAM_ID);
     }
@@ -548,10 +540,10 @@ const Signup = ({route, params}) => {
     getDropdownData('A');
     getDropdownData(7);
     getDropdownData(33);
-    return ()=> {
+    return () => {
       dispatch(resetLocationListData());
       dispatch(resetAadharResult());
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -599,14 +591,13 @@ const Signup = ({route, params}) => {
         setGenderValue(filteredgender[0]?.PARAM_ID);
       }
     } else {
-      
       setaadharNum('');
     }
   }, [verifyOtpResult]);
 
   useEffect(() => {
     const backAction = () => {
-      navigation.navigate('CandidateLogin')
+      navigation.navigate('CandidateLogin');
       return true;
     };
     const backHandler = BackHandler.addEventListener(
@@ -1154,11 +1145,57 @@ z
                 ''
               )}
               <View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginTop: 8,
+                    padding: 5,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setIsRefernece(isReference == 'true' ? 'false' : 'true')
+                    }
+                    style={{
+                      alignItems: 'center',
+                      width: '100%',
+                      padding: SIZES.base,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      style={{
+                        color: COLORS.green,
+                        ...FONTS.body3,
+                        textAlign: 'center',
+                      }}>
+                      Is Refernece? 
+                      {/* {JSON.stringify(isReference)} */}
+                    </Text>
+                    {isReference === 'true' ? (
+                      <Icons
+                        name="checkbox-marked-circle-outline"
+                        size={25}
+                        color={COLORS.orange}
+                      />
+                    ) : (
+                      <Icons
+                        name="checkbox-blank-circle-outline"
+                        size={25}
+                        color={COLORS.orange}
+                      />
+                    )}
+                    {/* </View> */}
+                  </TouchableOpacity>
+                </View>
+
                 <FormInput
                   label="Reference 1"
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={reference1}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setReference1}
                   required={false}
                 />
@@ -1168,6 +1205,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref1EmpCode}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef1EmpCode}
                   required={false}
                 />
@@ -1176,6 +1214,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref1MobileNo}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef1MobileNo}
                   required={false}
                 />
@@ -1184,6 +1223,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref1Email}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef1Email}
                   required={false}
                 />
@@ -1193,6 +1233,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={reference2}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setReference2}
                   required={false}
                 />
@@ -1202,6 +1243,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref2EmpCode}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef2EmpCode}
                   required={false}
                 />
@@ -1210,6 +1252,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref2MobileNo}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef2MobileNo}
                   required={false}
                 />
@@ -1218,6 +1261,7 @@ z
                   // placeholder={'Postal Code'}
                   labelColor={COLORS.black}
                   value={ref2Email}
+                  editable={isReference == 'true' ? true : false}
                   onChange={setRef2Email}
                   required={false}
                 />

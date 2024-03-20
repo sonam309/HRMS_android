@@ -236,20 +236,23 @@ const PersonalAddressBottomView = ({onPress}) => {
       presentSelectedCountryValue === '' ||
       presentSelectedStateValue === '' ||
       presentAddress === '' ||
+      presentAddress === undefined ||
       presentCity === '' ||
+      presentCity == undefined ||
       presentPinCode === '' ||
-      presentSubDivision === '' ||
-      presentThana === '' ||
-      presentPostOffice === '' ||
+      presentPinCode === undefined ||
+      presentDistrict===''||
+      presentDistrict===undefined||
       permanentSelectedCountryValue === '' ||
       permanentSelectedStateValue === '' ||
       permanentAddress === '' ||
+      permanentAddress === undefined ||
       permanentCity === '' ||
+      permanentCity === undefined ||
       permanentPinCode === '' ||
+      permanentPinCode === undefined ||
       permanentDistrict === '' ||
-      permanentSubDivision === '' ||
-      permanentThana === '' ||
-      permanentPostOffice === ''
+      permanentDistrict === undefined 
     ) {
       return false;
     } else return true;
@@ -257,7 +260,26 @@ const PersonalAddressBottomView = ({onPress}) => {
 
   // saving data to backend
   const saveAddressDetails = async operFlag => {
-    // console.warn("Saving data");
+    console.log(
+      'check validation',
+      presentSelectedCountryValue,
+      presentSelectedStateValue,
+      presentAddress,
+      presentCity,
+      presentPinCode,
+      presentSubDivision,
+      presentThana,
+      presentPostOffice,
+      permanentSelectedCountryValue,
+      permanentSelectedStateValue,
+      permanentAddress,
+      permanentCity,
+      permanentPinCode,
+      permanentDistrict,
+      permanentSubDivision,
+      permanentThana,
+      permanentPostOffice,
+    );
     if (ValidateForm()) {
       setLoaderVisible(true);
       try {
@@ -500,7 +522,7 @@ const PersonalAddressBottomView = ({onPress}) => {
 
           <Text
             style={{color: 'green', paddingHorizontal: 6, paddingVertical: 3}}>
-            District
+            District<Text style={{color: 'red', fontWeight: 500}}>*</Text>
           </Text>
           <TextInput
             style={[
@@ -526,6 +548,7 @@ const PersonalAddressBottomView = ({onPress}) => {
 
           <TextDropdown
             caption={'State'}
+            required
             data={states}
             setData={setPresentSelectedState}
             setIdvalue={setPresentSelectedStateValue}
@@ -636,7 +659,7 @@ const PersonalAddressBottomView = ({onPress}) => {
           {/* Permanent Address */}
           <Text
             style={{color: 'green', paddingHorizontal: 6, paddingVertical: 3}}>
-            Permanent Address
+            Permanent Address<Text style={{color: 'red', fontWeight: 500}}>*</Text>
           </Text>
           <TextInput
             style={[
@@ -654,7 +677,7 @@ const PersonalAddressBottomView = ({onPress}) => {
 
           <Text
             style={{color: 'green', paddingHorizontal: 6, paddingVertical: 3}}>
-            Pin Code
+            Pin Code<Text style={{color: 'red', fontWeight: 500}}>*</Text>
           </Text>
           <TextInput
             style={[
@@ -670,7 +693,7 @@ const PersonalAddressBottomView = ({onPress}) => {
 
           <Text
             style={{color: 'green', paddingHorizontal: 6, paddingVertical: 3}}>
-            District
+            District<Text style={{color: 'red', fontWeight: 500}}>*</Text>
           </Text>
           <TextInput
             style={[
@@ -684,7 +707,7 @@ const PersonalAddressBottomView = ({onPress}) => {
 
           <Text
             style={{color: 'green', paddingHorizontal: 6, paddingVertical: 3}}>
-            City
+            City<Text style={{color: 'red', fontWeight: 500}}>*</Text>
           </Text>
           <TextInput
             style={[
@@ -699,6 +722,7 @@ const PersonalAddressBottomView = ({onPress}) => {
           <TextDropdown
             caption={'State'}
             data={states}
+            required
             setData={setPermanentSelectedState}
             setIdvalue={setPermanentSelectedStateValue}
             defaultButtonText={permanentSelectedState}
@@ -789,7 +813,7 @@ const PersonalAddressBottomView = ({onPress}) => {
           {approvalFlag !== 'A' ? (
             <TouchableOpacity
               onPress={() =>
-                filledDetails?.PIN_CODE||filledDetails?.PERMANENT_PIN_CODE
+                filledDetails?.PIN_CODE || filledDetails?.PERMANENT_PIN_CODE
                   ? saveAddressDetails('E')
                   : saveAddressDetails('A')
               }>
